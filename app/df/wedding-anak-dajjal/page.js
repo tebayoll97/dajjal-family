@@ -16,7 +16,7 @@ const WEDDING_ASSETS = {
   groom: "https://drive.google.com/thumbnail?id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur&sz=w1600",
   bride: "https://drive.google.com/thumbnail?id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr&sz=w1600",
   // Direct file endpoint so the browser can stream the audio after user interaction.
-  music: "https://drive.google.com/uc?export=download&id=1Grw6mUZMjH2_dR-zVJfh5JqLc44VYmwo",
+  music: "/audio/Payung%20Teduh%20%20Akad%20Cover%20by%20Hanin%20Dhiya.mp3",
 };
 
 const words = {
