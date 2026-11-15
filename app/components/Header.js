@@ -19,7 +19,6 @@ const copy = {
     profile: "Profile",
     admin: "Admin",
     settings: "Settings",
-    wedding: "Wedding",
     language: "Language",
     open: "Open navigation",
     close: "Close navigation",
@@ -34,7 +33,6 @@ const copy = {
     profile: "Profil",
     admin: "Admin",
     settings: "Pengaturan",
-    wedding: "Wedding",
     language: "Bahasa",
     open: "Buka navigasi",
     close: "Tutup navigasi",
@@ -117,7 +115,6 @@ export default function Header() {
   ];
   const toolLinks = [
     { label: t.settings, route: "/settings" },
-    { label: t.wedding, route: "/df/wedding" },
   ];
 
   return (
