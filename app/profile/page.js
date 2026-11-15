@@ -211,16 +211,16 @@ export default function ProfilePage() {
       <div className="df-profile-content max-w-3xl mx-auto">
 
         {player.profileIdentityEnabled && !player.username && (
-          <section className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 ui-card">
+          <section className="df-profile-task mt-6 ui-card">
             <div className="flex items-start gap-3">
-              <span className="text-2xl" aria-hidden="true">✦</span>
+              <span className="df-profile-task-icon" aria-hidden="true">✦</span>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-black tracking-widest text-amber-300">{language === "id" ? "TASK PROFIL" : "PROFILE TASK"}</p>
-                <h2 className="mt-1 text-lg font-bold text-white">{language === "id" ? "Lengkapi profil pemainmu" : "Complete your player profile"}</h2>
-                <p className="mt-1 text-sm text-gray-300">{language === "id" ? "Tambahkan nama tampilan dan username unik agar identitasmu siap digunakan di leaderboard dan fitur akun." : "Add a display name and unique username to use your identity across leaderboards and account features."}</p>
+                <p className="df-profile-task-label">{language === "id" ? "TASK PROFIL" : "PROFILE TASK"}</p>
+                <h2 className="df-profile-task-title">{language === "id" ? "Lengkapi profil pemainmu" : "Complete your player profile"}</h2>
+                <p className="df-profile-task-copy">{language === "id" ? "Tambahkan nama tampilan dan username unik agar identitasmu siap digunakan di leaderboard dan fitur akun." : "Add a display name and unique username to use your identity across leaderboards and account features."}</p>
                 <div className="mt-3 flex items-center justify-between gap-3">
-                  <span className="text-xs text-amber-200">{language === "id" ? "Username belum diatur" : "Username not set"}</span>
-                  <Link href="/profile/edit" className="shrink-0 rounded-lg bg-amber-400 px-4 py-2 text-xs font-black text-black">{language === "id" ? "LENGKAPI" : "COMPLETE"}</Link>
+                  <span className="df-profile-task-status">{language === "id" ? "Username belum diatur" : "Username not set"}</span>
+                  <Link href="/profile/edit" className="df-profile-task-action">{language === "id" ? "LENGKAPI" : "COMPLETE"}</Link>
                 </div>
               </div>
             </div>
@@ -393,7 +393,7 @@ export default function ProfilePage() {
 
         <Link
           href="/games"
-          className="block text-center mt-8 w-full rounded-xl bg-purple-600 hover:bg-purple-500 py-4 font-bold tracking-wider transition"
+          className="df-profile-games-link mt-8"
         >
           {language === "id" ? "JELAJAHI SEMUA GAME" : "EXPLORE ALL GAMES"}
         </Link>
