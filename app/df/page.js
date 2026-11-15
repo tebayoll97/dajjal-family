@@ -4,6 +4,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "../components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 
 const copy = {
   en: {
@@ -129,7 +130,7 @@ export default function DajjalFamilyHome() {
         <p className="df-section-subtitle">{t.gamesSub}</p>
         <div className="df-event-card">
           <div><h3>{t.gamesTitle}</h3><p>{t.gamesText}</p></div>
-          <Link href="/games" className="df-button">{t.enterGames}</Link>
+          <Link href={withLocalePrefix("/games", language)} className="df-button">{t.enterGames}</Link>
         </div>
       </section>
 
@@ -138,7 +139,7 @@ export default function DajjalFamilyHome() {
         <p className="df-section-subtitle">{t.weddingPlatformSub}</p>
         <div className="df-event-card">
           <div><h3>{t.weddingBuilder}</h3><p>{t.weddingBuilderText}</p></div>
-          <Link href="/df/wedding" className="df-button">{t.exploreWedding}</Link>
+          <Link href={withLocalePrefix("/df/wedding", language)} className="df-button">{t.exploreWedding}</Link>
         </div>
       </section>
       <section className="df-section" id="events">
@@ -146,7 +147,7 @@ export default function DajjalFamilyHome() {
         <p className="df-section-subtitle">{t.eventsSub}</p>
         <div className="df-event-card">
           <div><h3>{t.wedding}</h3><p>{t.weddingText}</p></div>
-          <Link href="/df/wedding-anak-dajjal" className="df-button">{t.openInvite}</Link>
+          <Link href={withLocalePrefix("/df/wedding-anak-dajjal", language)} className="df-button">{t.openInvite}</Link>
         </div>
       </section>
     </main>
