@@ -215,8 +215,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       duration: 850,
       easing: "ease-out-cubic",
       offset: 90,
-      once: false,
-      mirror: true,
+      once: true,
+      mirror: false,
       anchorPlacement: "top-bottom",
       disable: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     });
