@@ -156,3 +156,11 @@
 - Extended RSVP API validation to accept the pending maybe attendance value. No database schema, records, or policies were changed; database compatibility for this value still requires runtime verification.
 - Added responsive bottom-navigation styling, safe-area spacing, keyboard focus, and reduced-motion handling.
 - Source is committed on main. Build, browser QA, and deployment were not run while the Vercel quota pause remains in effect.
+
+
+## 2026-11-15 — Anak Dajjal & Malika invitation decisions
+- Removed the invitation opening gate so the public route opens directly on the invitation page.
+- Removed the map action from the event section; event address and schedule details remain. No Join Live action was present in the current page source.
+- Replaced the Digital Gift section with a Darkwar Survival Dawn Badge-styled Player ID section. The current emblem is an original CSS placeholder, not the official game badge asset; the actual player ID and official logo asset have not yet been supplied.
+- Guestbook submissions are marked approved by the server and appear in the existing approved-message list without admin moderation. No database schema, records, policies, or production settings were changed.
+- Source implementation only; deployment and live QA remain pending while Vercel release quota is paused.
