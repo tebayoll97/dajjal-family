@@ -11,9 +11,11 @@ import { useLanguage } from "../../components/LanguageProvider";
 import "./wedding.css";
 
 const WEDDING_ASSETS = {
-  couple: "https://drive.google.com/uc?export=view&id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh",
-  groom: "https://drive.google.com/uc?export=view&id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur",
-  bride: "https://drive.google.com/uc?export=view&id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr",
+  // Google Drive public image endpoints optimized for direct browser rendering.
+  couple: "https://drive.google.com/thumbnail?id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh&sz=w1600",
+  groom: "https://drive.google.com/thumbnail?id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur&sz=w1600",
+  bride: "https://drive.google.com/thumbnail?id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr&sz=w1600",
+  // Direct file endpoint so the browser can stream the audio after user interaction.
   music: "https://drive.google.com/uc?export=download&id=1Grw6mUZMjH2_dR-zVJfh5JqLc44VYmwo",
 };
 
@@ -320,7 +322,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       <div className="wedding-topbar" hidden={!invitationOpened}>
         <Link className="wedding-back" href="/df">♛ <span>DAJJAL FAMILY UNIVERSE</span></Link>
         <div className="wedding-tools">
-          <button className="wedding-music" type="button" onClick={toggleMusic} disabled={!eventInfo?.music_url} aria-pressed={musicOn}>{musicOn ? t.musicOn : t.musicOff} ♫</button>
+          <button className="wedding-music" type="button" onClick={toggleMusic} aria-pressed={musicOn}>{musicOn ? t.musicOn : t.musicOff} ♫</button>
         </div>
       </div>
 
