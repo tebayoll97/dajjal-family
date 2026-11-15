@@ -352,9 +352,9 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
             <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
             <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
-            {eventInfo?.gift_info?.trim() && <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>}
+            <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
             {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>}
-            <a href={eventInfo?.love_story?.trim() ? "#story" : galleryItems.length ? "#gallery" : "#countdown"}><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
+            <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
           </nav>
 
           {countdown && (
@@ -410,13 +410,11 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          {eventInfo?.gift_info?.trim() && (
-            <section className="wedding-section" id="gift" data-aos="fade-left">
-              <p className="wedding-kicker">{t.gift}</p>
-              <h2 className="wedding-section-heading">{t.gift}</h2>
-              <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo.gift_info}</p></div>
-            </section>
-          )}
+          <section className="wedding-section" id="gift" data-aos="fade-left">
+            <p className="wedding-kicker">{t.gift}</p>
+            <h2 className="wedding-section-heading">{t.gift}</h2>
+            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.gift_info?.trim() || (language === "id" ? "Informasi hadiah akan diumumkan." : "Gift information will be announced.")}</p></div>
+          </section>
 
           {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && (
             <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
