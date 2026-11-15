@@ -10,6 +10,13 @@ import { supabase } from "../../../lib/supabase";
 import { useLanguage } from "../../components/LanguageProvider";
 import "./wedding.css";
 
+const WEDDING_ASSETS = {
+  couple: "https://drive.google.com/uc?export=view&id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh",
+  groom: "https://drive.google.com/uc?export=view&id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur",
+  bride: "https://drive.google.com/uc?export=view&id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr",
+  music: "https://drive.google.com/uc?export=download&id=1Grw6mUZMjH2_dR-zVJfh5JqLc44VYmwo",
+};
+
 const words = {
   en: {
     eyebrow: "A LITTLE CELEBRATION, A LOT OF LOVE",
@@ -125,6 +132,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState("");
   const [musicOn, setMusicOn] = useState(false);
+  const [invitationOpened, setInvitationOpened] = useState(false);
+  const [celebrationActive, setCelebrationActive] = useState(false);
   const [copied, setCopied] = useState(false);
   const audioRef = useRef(null);
 
@@ -254,7 +263,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   };
 
   const toggleMusic = async () => {
-    if (!eventInfo?.music_url || !audioRef.current) return;
+    if (!audioRef.current) return;
     if (musicOn) {
       audioRef.current.pause();
       setMusicOn(false);
@@ -286,19 +295,39 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(window.location.href)}`, "_blank", "noopener,noreferrer");
   };
 
+  const openInvitation = async () => {
+    setInvitationOpened(true);
+    setCelebrationActive(true);
+    window.setTimeout(() => setCelebrationActive(false), 4200);
+    if (audioRef.current) {
+      try { await audioRef.current.play(); setMusicOn(true); }
+      catch { setMusicOn(false); }
+    }
+  };
+
   return (
     <main className="wedding-page">
-      <div className="wedding-topbar">
+      {!invitationOpened && (
+        <section className="wedding-opening" aria-label="Buka undangan">
+          <div className="wedding-opening-florals" aria-hidden="true">❀ ❧ ❀</div>
+          <img className="wedding-opening-couple" src={WEDDING_ASSETS.couple} alt="Anak Dajjal dan Malika" />
+          <h1>Anak Dajjal <span>&amp;</span> Malika</h1>
+          <p>Kepada Seluruh pemain Darkwar Survival</p>
+          <button type="button" onClick={openInvitation}>✉ Buka Undangan</button>
+        </section>
+      )}
+      {celebrationActive && <div className="wedding-confetti" aria-hidden="true">{Array.from({length:28},(_,i)=><i key={i} style={{"--i":i}} />)}</div>}
+      <div className="wedding-topbar" hidden={!invitationOpened}>
         <Link className="wedding-back" href="/df">♛ <span>DAJJAL FAMILY UNIVERSE</span></Link>
         <div className="wedding-tools">
           <button className="wedding-music" type="button" onClick={toggleMusic} disabled={!eventInfo?.music_url} aria-pressed={musicOn}>{musicOn ? t.musicOn : t.musicOff} ♫</button>
         </div>
       </div>
 
-      <div className="wedding-content">
+      <div className="wedding-content" hidden={!invitationOpened}>
           <section className="wedding-hero" id="couple" data-aos="fade-right">
             <div className="wedding-ornament">✦ ❧ ✦</div>
-            <h1>{eventInfo?.invitation_title || t.title}</h1>
+            <h1>Anak Dajjal &amp; Malika</h1>
             <p className="wedding-intro">{t.intro}</p>
             <div className="couple-frame">
               <div className="couple-placeholder">
@@ -311,7 +340,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
             </div>
-            <h2 className="couple-names">{eventInfo?.couple_display || t.couple}</h2>
+            <h2 className="couple-names">Anak Dajjal &amp; Malika</h2>
+            <div className="wedding-note wedding-family-note">
+              <strong>{t.parents}</strong>
+              <p>Dajjal &amp; Veylora</p>
+              <p>JinuYourIdol &amp; Bubuah</p>
+            </div>
             {(eventInfo?.groom_parent_names || eventInfo?.bride_parent_names) && (
               <div className="wedding-note">
                 <strong>{t.parents}</strong>
@@ -319,6 +353,17 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 {eventInfo?.bride_parent_names && <p>{eventInfo.bride_parent_names}</p>}
               </div>
             )}
+          </section>
+
+          <section className="wedding-section wedding-family-panel" id="groom" data-aos="fade-up">
+            <img src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
+            <h2>Anak Dajjal</h2>
+            <p>Putra dari Dajjal &amp; Veylora</p>
+          </section>
+          <section className="wedding-section wedding-family-panel" id="bride" data-aos="fade-up">
+            <img src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
+            <h2>Malika</h2>
+            <p>Putri dari JinuYourIdol &amp; Bubuah</p>
           </section>
 
           <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
@@ -431,7 +476,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
       </div>
 
-      {eventInfo?.music_url && <audio ref={audioRef} src={eventInfo.music_url} loop preload="none" /> }
+      <button className="wedding-music-float" type="button" onClick={toggleMusic} aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"} aria-pressed={musicOn}>{musicOn ? "♫" : "♪̸"}</button>
+      <audio ref={audioRef} src={WEDDING_ASSETS.music} loop preload="none" />
     </main>
   );
 }
