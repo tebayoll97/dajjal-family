@@ -93,3 +93,41 @@
   .df-site-footer-nav { gap:.7rem 1rem; margin-top:1.3rem; }
   .df-site-footer-bottom { align-items:flex-start; flex-direction:column; }
 }
+
+
+/* Public wedding invitation: transparent minimal header */
+.df-site-header.df-site-header--wedding{
+  position:sticky;top:0;z-index:700;
+  border:0!important;background:transparent!important;
+  box-shadow:none!important;backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.df-site-header--wedding .df-site-header-inner{
+  width:100%;min-height:54px;padding:5px max(12px,env(safe-area-inset-left)) 5px max(12px,env(safe-area-inset-right));
+}
+.df-site-header--wedding .df-site-brand-group{gap:0}
+.df-site-header--wedding .df-site-nav-toggle{
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  color:#586c58!important;font-size:1.35rem;
+}
+.df-site-header--wedding .df-site-nav-toggle:hover,
+.df-site-header--wedding .df-site-nav-toggle[aria-expanded="true"]{
+  background:rgba(231,190,205,.22)!important;border:0!important;
+}
+.df-site-header--wedding .df-site-actions{gap:0}
+.df-site-header--wedding .df-site-language{
+  padding:2px;border:0!important;border-radius:99px;
+  background:transparent!important;box-shadow:none!important;
+}
+.df-site-header--wedding .df-site-language button{
+  min-width:34px;min-height:32px;color:#657762!important;
+  background:transparent!important;border-radius:99px;
+}
+.df-site-header--wedding .df-site-language button[aria-pressed="true"]{
+  color:#7e4a60!important;background:rgba(235,194,207,.55)!important;
+}
+.df-site-header--wedding .df-site-navigation-pane{
+  border:1px solid rgba(145,111,124,.22);
+  background:rgba(255,250,248,.97);color:#51464a;
+  box-shadow:0 12px 32px rgba(72,52,60,.14);
+}
