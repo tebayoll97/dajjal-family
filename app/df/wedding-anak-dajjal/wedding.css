@@ -1065,3 +1065,78 @@
  .df-main .wedding-page .wedding-countdown .detail-grid article h3{font-size:1.35rem}
  .df-main .wedding-page .wedding-countdown .detail-grid article p{font-size:.55rem}
 }
+
+
+/* Final invitation corrections — fixed language control, clean panel titles and couple layout */
+.df-shell:has(.wedding-page) .df-footer{display:none!important}
+.df-site-header--wedding .df-site-language{
+  position:fixed!important;top:calc(env(safe-area-inset-top) + 12px)!important;right:max(14px,env(safe-area-inset-right))!important;
+  z-index:1000!important;display:flex;gap:.25rem;padding:.28rem;
+  border:1px solid #e8c6d7;border-radius:999px;background:rgba(255,250,248,.96);
+  box-shadow:0 6px 20px rgba(143,83,112,.16);backdrop-filter:blur(14px);
+}
+.df-site-header--wedding .df-site-language button{
+  min-width:42px;min-height:36px;padding:.45rem .65rem;border:0;border-radius:999px;
+  background:transparent;color:#805a70;font:800 .68rem/1 Arial,sans-serif;cursor:pointer;
+}
+.df-site-header--wedding .df-site-language button[aria-pressed="true"]{
+  color:#63344d;background:linear-gradient(135deg,#ffb9cf,#ffc98e);
+}
+.df-main .wedding-page .wedding-invitation-eyebrow{
+  margin:1.1rem auto .5rem!important;padding-top:3.1rem!important;
+}
+.df-main .wedding-page .wedding-opening h1{
+  display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important;
+  line-height:1.02!important;
+}
+.df-main .wedding-page .wedding-opening h1 .opening-name,
+.df-main .wedding-page .wedding-opening h1 .opening-amp{display:block!important}
+.df-main .wedding-page .wedding-opening h1 .opening-amp{
+  margin:.08em 0;font-family:"Great Vibes",cursive!important;font-size:.78em!important;
+  color:#b77a91!important;
+}
+.df-main .wedding-page .wedding-couple-panel{
+  display:flex;flex-direction:column;align-items:center;gap:1.4rem;
+}
+.df-main .wedding-page .wedding-couple-panel .wedding-family-panel{
+  width:100%;margin:0;padding:0;border:0;background:transparent;box-shadow:none;
+}
+.df-main .wedding-page .wedding-family-panel h2{
+  margin:.5rem 0 .15rem!important;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-style:normal!important;font-weight:400!important;
+  font-size:clamp(2.7rem,9vw,4rem)!important;line-height:1.05!important;
+  color:#a64f76!important;
+}
+.df-main .wedding-page .wedding-family-panel p{
+  margin:.25rem 0 0!important;color:#788b73!important;
+  font:600 1rem/1.7 var(--w-body,Arial,sans-serif)!important;
+}
+.df-main .wedding-page .wedding-couple-amp{
+  margin:-.15rem 0;font:400 clamp(3rem,10vw,4.4rem)/.9 "Great Vibes",cursive;
+  color:#b77a91;text-align:center;
+}
+.df-main .wedding-page .wedding-family-photo{
+  opacity:1;transform:translateY(0) scale(1);
+  transform-origin:center;will-change:transform,opacity;
+}
+.df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-family-photo{
+  animation:wedding-photo-reveal .9s cubic-bezier(.2,.72,.22,1) both;
+}
+.df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-bride .wedding-family-photo{
+  animation-delay:.18s;
+}
+@keyframes wedding-photo-reveal{
+  from{opacity:.35;transform:translateY(24px) scale(.94)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@media(max-width:480px){
+  .df-site-header--wedding .df-site-language{top:calc(env(safe-area-inset-top) + 8px)!important;right:12px!important}
+  .df-main .wedding-page .wedding-invitation-eyebrow{padding-top:3rem!important;font-size:1.65rem!important}
+  .df-main .wedding-page .wedding-family-panel h2{font-size:3rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-family-photo{
+    animation:none!important;opacity:1!important;transform:none!important;
+  }
+}
