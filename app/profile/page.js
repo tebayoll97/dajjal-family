@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
-import GoogleAccountLink from "../components/GoogleAccountLink";
 import AccountLogout from "../components/AccountLogout";
 import GameCharacter from "@/lib/GameCharacter";
 
@@ -81,7 +80,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [avatarFailed, setAvatarFailed] = useState(false);
-  const [account, setAccount] = useState({ email: "", provider: "", lastSignInAt: null });
+  const [account, setAccount] = useState({ email: "", lastSignInAt: null });
 
   useEffect(() => {
     let active = true;
@@ -102,10 +101,8 @@ export default function ProfilePage() {
           return;
         }
 
-        const provider = session.user.app_metadata?.provider || session.user.app_metadata?.providers?.[0] || "";
         if (active) setAccount({
           email: session.user.email || "",
-          provider: provider ? provider.toUpperCase() : t.unknown,
           lastSignInAt: session.user.last_sign_in_at || null,
         });
 
@@ -400,13 +397,11 @@ export default function ProfilePage() {
               <span className="text-[10px] font-bold tracking-widest text-gray-500">{t.email}</span>
               <span className="text-sm font-semibold text-white break-all">{account.email || "—"}</span>
             </div>
-            <div className="grid grid-cols-2 gap-3 border-t border-purple-500/10 pt-3">
-              <div className="min-w-0"><span className="text-[10px] font-bold tracking-widest text-gray-500">{t.provider}</span><p className="text-xs font-bold text-purple-200 mt-1">{account.provider || t.unknown}</p></div>
-              <div className="min-w-0"><span className="text-[10px] font-bold tracking-widest text-gray-500">{t.lastSignIn}</span><p className="text-xs font-bold text-purple-200 mt-1">{account.lastSignInAt ? new Date(account.lastSignInAt).toLocaleDateString(t.dateLocale) : t.unknown}</p></div>
+            <div className="border-t border-purple-500/10 pt-3">
+              <span className="text-[10px] font-bold tracking-widest text-gray-500">{t.lastSignIn}</span>
+              <p className="text-xs font-bold text-purple-200 mt-1">{account.lastSignInAt ? new Date(account.lastSignInAt).toLocaleDateString(t.dateLocale) : t.unknown}</p>
             </div>
           </div>
-
-          <GoogleAccountLink />
 
           <AccountLogout />
         </section>
