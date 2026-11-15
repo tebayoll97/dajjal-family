@@ -496,3 +496,13 @@ When requested, implement the account profile experience with display name, uniq
 - Removed the duplicate Google-connected account panel and its component from Profile. Kept the existing Account Security panel with login email and last sign-in time; no authentication provider/session logic was changed.
 - No database, schema, player records, game progress, or account data was modified.
 - Application changes are committed on `main`; production build and interactive browser QA must be recorded separately. Design System remains Draft until owner visual verification on mobile/desktop and both themes.
+
+
+## 20. Wedding product scope — owner decision 2026-11-15
+- Dajjal Family no longer develops or maintains a general-purpose Wedding Invitation Builder.
+- The sole Wedding experience is the public invitation page for Anak Dajjal & Malika at `/df/wedding-anak-dajjal`.
+- Use undangan.io only as a public design/experience reference; implement original code and assets.
+- Preserve the public invitation renderer, public data endpoint, RSVP and Guestbook endpoints, invitation records, and required media/styles.
+- Retire Builder navigation, dashboard/editor/preview routes, and owner CRUD/publish APIs. Legacy Builder URLs redirect to the canonical public invitation.
+- Do not drop Wedding database tables, columns, policies, functions, invitation records, RSVP/Guestbook submissions, or storage objects without a separate dependency review, recovery plan, and explicit owner authorization.
+- This product direction supersedes earlier Builder navigation and platform expansion notes. It does not authorize unrelated Wedding data cleanup.
