@@ -1027,3 +1027,41 @@
 @media(prefers-reduced-motion:reduce){
  .df-main .wedding-page .wedding-opening button{transition:none}
 }
+
+
+/* Countdown — one horizontal timer row, not separate content panels */
+.df-main .wedding-page .wedding-countdown{
+  width:min(100%,680px);margin:2rem auto 0;padding:1.2rem .25rem 0;
+  border-top:1px solid rgba(190,116,146,.24);text-align:center;
+}
+.df-main .wedding-page .wedding-countdown .wedding-kicker{
+  margin:0 0 1rem;color:#a85d7d;letter-spacing:.16em;
+}
+.df-main .wedding-page .wedding-countdown .detail-grid{
+  display:flex!important;flex-flow:row nowrap!important;
+  align-items:center;justify-content:center;gap:clamp(.45rem,2.5vw,1rem);
+  width:100%;margin:0 auto;padding:0;
+}
+.df-main .wedding-page .wedding-countdown .detail-grid article{
+  flex:0 1 112px;min-width:0;aspect-ratio:1/1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.2rem;padding:.55rem;border:1px solid rgba(179,102,136,.2);
+  border-radius:50%;
+  background:linear-gradient(145deg,#f9dce7 0%,#f2c8d8 55%,#f7e3e9 100%)!important;
+  box-shadow:0 5px 14px rgba(174,91,128,.12);
+}
+.df-main .wedding-page .wedding-countdown .detail-grid article h3{
+  margin:0;color:#8f496b!important;
+  font:500 clamp(1.45rem,5.5vw,2.15rem)/1.1 "Nunito Sans",Arial,sans-serif;
+  font-variant-numeric:tabular-nums;
+}
+.df-main .wedding-page .wedding-countdown .detail-grid article p{
+  margin:0;color:#8d6578!important;
+  font:600 clamp(.58rem,2.3vw,.78rem)/1.2 "Nunito Sans",Arial,sans-serif;
+}
+@media(max-width:380px){
+ .df-main .wedding-page .wedding-countdown .detail-grid{gap:.35rem}
+ .df-main .wedding-page .wedding-countdown .detail-grid article{padding:.35rem}
+ .df-main .wedding-page .wedding-countdown .detail-grid article h3{font-size:1.35rem}
+ .df-main .wedding-page .wedding-countdown .detail-grid article p{font-size:.55rem}
+}
