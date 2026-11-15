@@ -38,7 +38,7 @@ const words = {
     send: "SEND RSVP",
     guestbook: "Guestbook",
     guestbookText: "Leave a kind note for the happy couple.",
-    message: "Your message",
+    message: "Your message / prayer",
     sign: "WRITE A MESSAGE",
     note: "Guestbook messages will appear after admin approval.",
     footer: "ONE FAMILY. ENDLESS STORIES.",
@@ -60,7 +60,7 @@ const words = {
     photoAlt: "Anak Dajjal and Malika",
     navCouple: "COUPLE", navEvent: "EVENT", navGift: "GIFT", navWishes: "WISHES", navMore: "MORE",
     attendancePending: "Not sure yet", wishesTitle: "Wishes & Prayers", wishesIntro: "Leave your attendance confirmation and a message for the couple.",
-    message: "Your message / prayer", sendWishes: "SEND", wishesSuccess: "Thank you. Your response and message have been received.",
+    sendWishes: "SEND", wishesSuccess: "Thank you. Your response and message have been received.",
     wishesPartial: "Your attendance was saved, but your message could not be sent. Please contact the host.",
     wishesError: "Something went wrong. Please try again.", wishesNote: "Messages appear after admin approval.",
   },
@@ -91,7 +91,7 @@ const words = {
     send: "KIRIM RSVP",
     guestbook: "Buku Tamu",
     guestbookText: "Tinggalkan pesan manis untuk kedua mempelai.",
-    message: "Pesan Anda",
+    message: "Pesan / Doa",
     sign: "TULIS PESAN",
     note: "Pesan buku tamu akan ditampilkan setelah disetujui admin.",
     footer: "SATU KELUARGA. CERITA TANPA BATAS.",
@@ -113,7 +113,7 @@ const words = {
     photoAlt: "Anak Dajjal dan Malika",
     navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "HADIAH", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
     attendancePending: "Belum Pasti", wishesTitle: "Ucapan & Doa", wishesIntro: "Sampaikan konfirmasi kehadiran dan pesan untuk kedua karakter.",
-    message: "Pesan / Doa", sendWishes: "KIRIM", wishesSuccess: "Terima kasih. Konfirmasi dan pesan Anda berhasil dikirim.",
+    sendWishes: "KIRIM", wishesSuccess: "Terima kasih. Konfirmasi dan pesan Anda berhasil dikirim.",
     wishesPartial: "Konfirmasi kehadiran tersimpan, tetapi pesan belum berhasil dikirim. Silakan hubungi penyelenggara.",
     wishesError: "Terjadi kendala. Silakan coba kembali.", wishesNote: "Pesan akan ditampilkan setelah disetujui admin.",
   },
@@ -125,13 +125,10 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [opened, setOpened] = useState(false);
   const [guestName, setGuestName] = useState("");
   const [eventInfo, setEventInfo] = useState(null);
-  const [invitationId, setInvitationId] = useState(null);
   const [galleryItems, setGalleryItems] = useState([]);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [countdown, setCountdown] = useState(null);
   const [guestbookEntries, setGuestbookEntries] = useState([]);
-  const [guestbookStatus, setGuestbookStatus] = useState("");
-  const [guestbookLoading, setGuestbookLoading] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState("");
   const [musicOn, setMusicOn] = useState(false);
@@ -148,7 +145,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       if (!active || !publicData.invitation) return;
       const id = publicData.invitation.id;
       const profile = publicData.profile || {};
-      setInvitationId(id);
       setEventInfo({
         ...profile,
         rsvp_enabled: profile.rsvp_enabled === true,
