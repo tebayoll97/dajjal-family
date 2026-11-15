@@ -55,6 +55,8 @@ const words = {
     sending: "SENDING…",
     musicOff: "MUSIC OFF",
     musicOn: "MUSIC ON",
+    countdown: "COUNTDOWN TO THE CELEBRATION", days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
+    eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", gift: "DIGITAL GIFT", address: "ADDRESS", openMap: "OPEN MAP",
     photoAlt: "Anak Dajjal and Malika",
   },
   id: {
@@ -101,6 +103,8 @@ const words = {
     sending: "MENGIRIM…",
     musicOff: "MUSIK MATI",
     musicOn: "MUSIK NYALA",
+    countdown: "MENUJU HARI BAHAGIA", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
+    eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", gift: "HADIAH DIGITAL", address: "ALAMAT", openMap: "BUKA PETA",
     photoAlt: "Anak Dajjal dan Malika",
   },
 };
@@ -114,6 +118,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [invitationId, setInvitationId] = useState(null);
   const [galleryItems, setGalleryItems] = useState([]);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [countdown, setCountdown] = useState(null);
   const [guestbookEntries, setGuestbookEntries] = useState([]);
   const [guestbookStatus, setGuestbookStatus] = useState("");
   const [guestbookLoading, setGuestbookLoading] = useState(false);
@@ -140,6 +145,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         guestbook_enabled: profile.guestbook_enabled === true,
         invitation_title: publicData.invitation.title,
         couple_photo_url: profile.main_photo_url,
+        groom_parent_names: profile.groom_parent_names || "",
+        bride_parent_names: profile.bride_parent_names || "",
+        address: profile.address || "",
+        maps_url: profile.maps_url || "",
+        love_story: profile.love_story || "",
+        gift_info: profile.gift_info || "",
         schedule: Array.isArray(profile.event_schedule) ? profile.event_schedule.join(" · ") : "",
         couple_display: [profile.groom_name, profile.bride_name].filter(Boolean).join(" & "),
         event_date: profile.event_date,
@@ -156,6 +167,34 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     loadWeddingData();
     return () => { active = false; };
   }, [invitationSlug]);
+
+  useEffect(() => {
+    if (!eventInfo?.event_date) {
+      setCountdown(null);
+      return;
+    }
+    const timeMatch = String(eventInfo.event_time || "").match(/^(\d{1,2}):(\d{2})/);
+    const hour = timeMatch ? timeMatch[1].padStart(2, "0") : "00";
+    const minute = timeMatch ? timeMatch[2] : "00";
+    const target = new Date(String(eventInfo.event_date) + "T" + hour + ":" + minute + ":00").getTime();
+    if (!Number.isFinite(target)) {
+      setCountdown(null);
+      return;
+    }
+    const updateCountdown = () => {
+      const remaining = Math.max(0, target - Date.now());
+      setCountdown({
+        days: Math.floor(remaining / 86400000),
+        hours: Math.floor((remaining % 86400000) / 3600000),
+        minutes: Math.floor((remaining % 3600000) / 60000),
+        seconds: Math.floor((remaining % 60000) / 1000),
+        complete: remaining === 0,
+      });
+    };
+    updateCountdown();
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(timer);
+  }, [eventInfo?.event_date, eventInfo?.event_time]);
 
   useEffect(() => {
     if (galleryItems.length < 2) return;
@@ -314,8 +353,36 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
             </div>
             <h2 className="couple-names">{eventInfo?.couple_display || t.couple}</h2>
+            {(eventInfo?.groom_parent_names || eventInfo?.bride_parent_names) && (
+              <div className="wedding-note">
+                <strong>{t.parents}</strong>
+                {eventInfo?.groom_parent_names && <p>{eventInfo.groom_parent_names}</p>}
+                {eventInfo?.bride_parent_names && <p>{eventInfo.bride_parent_names}</p>}
+              </div>
+            )}
             <p className="couple-subtitle">MALIKA — KEDELAI HITAM PILIHAN</p>
           </section>
+
+          {countdown && (
+            <section className="wedding-section wedding-countdown" data-aos="fade-up" aria-label={t.countdown}>
+              <p className="wedding-kicker">{t.countdown}</p>
+              {countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
+                <div className="detail-grid">
+                  {[[countdown.days,t.days],[countdown.hours,t.hours],[countdown.minutes,t.minutes],[countdown.seconds,t.seconds]].map(([value,label])=>(
+                    <article key={label}><h3>{String(value).padStart(2,"0")}</h3><p>{label}</p></article>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {eventInfo?.love_story?.trim() && (
+            <section className="wedding-section" id="story" data-aos="fade-right">
+              <p className="wedding-kicker">{t.story}</p>
+              <h2 className="wedding-section-heading">{t.story}</h2>
+              <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo.love_story}</p></div>
+            </section>
+          )}
 
           {galleryItems.length > 0 && (
             <section className="wedding-section wedding-gallery-section" data-aos="fade-left">
@@ -341,8 +408,21 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <article><span>⌖</span><h3>{eventInfo?.venue || t.venue}</h3><p>LOCATION</p></article>
               <article><span>♧</span><h3>{eventInfo?.event_time || t.time}</h3><p>TIME</p></article>
             </div>
-            <div className="wedding-note">{t.schedule}<p>{eventInfo?.schedule || t.scheduleText}</p></div>
+            <div className="wedding-note">
+              <strong>{t.schedule}</strong>
+              <p>{eventInfo?.schedule || t.scheduleText}</p>
+              {eventInfo?.address && <><strong>{t.address}</strong><p>{eventInfo.address}</p></>}
+              {/^(https?:\\/\\/)/i.test(eventInfo?.maps_url || "") && <p><a href={eventInfo.maps_url} target="_blank" rel="noopener noreferrer">{t.openMap} ↗</a></p>}
+            </div>
           </section>
+
+          {eventInfo?.gift_info?.trim() && (
+            <section className="wedding-section" id="gift" data-aos="fade-left">
+              <p className="wedding-kicker">{t.gift}</p>
+              <h2 className="wedding-section-heading">{t.gift}</h2>
+              <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo.gift_info}</p></div>
+            </section>
+          )}
 
           {eventInfo?.rsvp_enabled && (
             <section className="wedding-section wedding-rsvp" data-aos="fade-left">
