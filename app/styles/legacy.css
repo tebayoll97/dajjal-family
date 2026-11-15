@@ -130,3 +130,47 @@ h1, h2, h3, h4 { text-wrap: balance; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms; animation-iteration-count: 1; transition-duration: .01ms; }
 }
+
+/* Shared interaction motion and accessible modal surfaces. */
+.ui-motion,
+.ui-interactive {
+  transition: transform 220ms var(--df-motion-standard), opacity 220ms ease,
+    border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+.ui-interactive:active { transform: scale(.985); }
+[role="alertdialog"], [role="dialog"], .ui-popup, [data-popup-panel], [data-modal-panel] {
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--df-shadow-lg);
+}
+[role="alertdialog"]::before, [role="dialog"]::before, .ui-popup::before,
+[data-popup-panel]::before, [data-modal-panel]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  pointer-events: none;
+  background: var(--df-gradient-brand);
+  opacity: .85;
+}
+dialog[open]::backdrop { animation: df-popup-enter 180ms ease-out both; }
+
+/* Immersive arcade viewport: scoped to actual gameplay, not standard pages. */
+html:has(.mini-game-screen),
+body:has(.mini-game-screen) {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
+}
+body:has(.mini-game-screen) > * { min-height: 0; }
+.mini-game-screen { isolation: isolate; overscroll-behavior: none; touch-action: manipulation; }
+.mini-game-screen :is(button, a) { flex-shrink: 0; }
+@media (max-height: 720px) {
+  .mini-game-screen { gap: .35rem; }
+  .mini-game-screen > div { gap: .35rem; }
+  .mini-game-screen .ui-title { padding-block: .4rem; }
+  .mini-game-screen .ui-subtitle { margin-top: .25rem; }
+}
