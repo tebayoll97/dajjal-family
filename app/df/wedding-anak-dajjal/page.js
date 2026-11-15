@@ -355,7 +355,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-section wedding-couple-panel" id="couple" data-panel-number="02" data-aos="fade-up">
             <div className="wedding-family-panel wedding-groom">
-              <p className="wedding-groom-message"><strong>Assalamu'alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
+              <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
               <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="eager" />
               <h2>Anak Dajjal</h2>
               <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
