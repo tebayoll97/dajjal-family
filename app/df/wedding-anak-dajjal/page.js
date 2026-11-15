@@ -58,7 +58,11 @@ const words = {
     countdown: "COUNTDOWN TO THE CELEBRATION", days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
     eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", gift: "DIGITAL GIFT", address: "ADDRESS", openMap: "OPEN MAP",
     photoAlt: "Anak Dajjal and Malika",
-    navEvent: "THE CELEBRATION", navStory: "OUR STORY", navGallery: "GALLERY", navGift: "GIFT", navRsvp: "RSVP", navGuestbook: "GUESTBOOK",
+    navCouple: "COUPLE", navEvent: "EVENT", navGift: "GIFT", navWishes: "WISHES", navMore: "MORE",
+    attendancePending: "Not sure yet", wishesTitle: "Wishes & Prayers", wishesIntro: "Leave your attendance confirmation and a message for the couple.",
+    message: "Your message / prayer", sendWishes: "SEND", wishesSuccess: "Thank you. Your response and message have been received.",
+    wishesPartial: "Your attendance was saved, but your message could not be sent. Please contact the host.",
+    wishesError: "Something went wrong. Please try again.", wishesNote: "Messages appear after admin approval.",
   },
   id: {
     eyebrow: "SEDIKIT KEMERIAHAN, BANYAK CINTA",
@@ -107,7 +111,11 @@ const words = {
     countdown: "MENUJU HARI BAHAGIA", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
     eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", gift: "HADIAH DIGITAL", address: "ALAMAT", openMap: "BUKA PETA",
     photoAlt: "Anak Dajjal dan Malika",
-    navEvent: "ACARA", navStory: "KISAH", navGallery: "GALERI", navGift: "HADIAH", navRsvp: "KONFIRMASI", navGuestbook: "BUKU TAMU",
+    navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "HADIAH", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
+    attendancePending: "Belum Pasti", wishesTitle: "Ucapan & Doa", wishesIntro: "Sampaikan konfirmasi kehadiran dan pesan untuk kedua karakter.",
+    message: "Pesan / Doa", sendWishes: "KIRIM", wishesSuccess: "Terima kasih. Konfirmasi dan pesan Anda berhasil dikirim.",
+    wishesPartial: "Konfirmasi kehadiran tersimpan, tetapi pesan belum berhasil dikirim. Silakan hubungi penyelenggara.",
+    wishesError: "Terjadi kendala. Silakan coba kembali.", wishesNote: "Pesan akan ditampilkan setelah disetujui admin.",
   },
 };
 
@@ -219,60 +227,41 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     return () => AOS.refresh();
   }, [opened]);
 
-  const submitGuestbook = async (event) => {
-    event.preventDefault();
-    setGuestbookLoading(true);
-    setGuestbookStatus("");
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    try {
-      const response = await fetch("/api/wedding/guestbook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: invitationSlug,
-          guest_name: String(data.get("guestbook_name") || "").trim(),
-          message: String(data.get("guestbook_message") || "").trim(),
-          language,
-          website: String(data.get("website") || ""),
-        }),
-      });
-      if (!response.ok) throw new Error("Guestbook submission failed");
-    } catch {
-      setGuestbookLoading(false);
-      setGuestbookStatus("error");
-      return;
-    }
-    setGuestbookLoading(false);
-    form.reset();
-    setGuestbookStatus("success");
-  };
-
-  const submitRsvp = async (event) => {
+  const submitWishes = async (event) => {
     event.preventDefault();
     setRsvpLoading(true);
     setRsvpStatus("");
     const form = event.currentTarget;
     const data = new FormData(form);
+    const guestNameValue = String(data.get("guest_name") || "").trim();
+    const messageValue = String(data.get("guestbook_message") || "").trim();
+    const honeypot = String(data.get("website") || "");
+    let rsvpSaved = false;
     try {
-      const response = await fetch("/api/wedding/rsvp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: invitationSlug,
-          guest_name: String(data.get("guest_name") || "").trim(),
-          invited_name: String(data.get("invited_name") || "").trim(),
-          guest_count: Number(data.get("guest_count")),
-          attendance: String(data.get("attendance") || ""),
-          language,
-          website: String(data.get("website") || ""),
-        }),
-      });
-      if (!response.ok) throw new Error("RSVP submission failed");
+      if (eventInfo?.rsvp_enabled) {
+        const rsvpResponse = await fetch("/api/wedding/rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: invitationSlug, guest_name: guestNameValue, invited_name: "",
+            guest_count: 1, attendance: String(data.get("attendance") || ""), language, website: honeypot,
+          }),
+        });
+        if (!rsvpResponse.ok) throw new Error("RSVP submission failed");
+        rsvpSaved = true;
+      }
+      if (eventInfo?.guestbook_enabled) {
+        const guestbookResponse = await fetch("/api/wedding/guestbook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: invitationSlug, guest_name: guestNameValue, message: messageValue, language, website: honeypot }),
+        });
+        if (!guestbookResponse.ok) throw new Error("Guestbook submission failed");
+      }
       form.reset();
       setRsvpStatus("success");
     } catch {
-      setRsvpStatus("error");
+      setRsvpStatus(rsvpSaved ? "partial" : "error");
     } finally {
       setRsvpLoading(false);
     }
@@ -338,7 +327,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
       {opened && (
         <div className="wedding-content">
-          <section className="wedding-hero" data-aos="fade-right">
+          <section className="wedding-hero" id="couple" data-aos="fade-right">
             <div className="wedding-ornament">✦ ❧ ✦</div>
             <p className="wedding-kicker">{t.opened}</p>
             <h1>{eventInfo?.invitation_title || t.title}</h1>
@@ -364,17 +353,16 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             )}
           </section>
 
-          <nav className="wedding-section-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
-            <a href="#event">{t.navEvent}</a>
-            {eventInfo?.love_story?.trim() && <a href="#story">{t.navStory}</a>}
-            {galleryItems.length > 0 && <a href="#gallery">{t.navGallery}</a>}
-            {eventInfo?.gift_info?.trim() && <a href="#gift">{t.navGift}</a>}
-            {eventInfo?.rsvp_enabled && <a href="#rsvp">{t.navRsvp}</a>}
-            {eventInfo?.guestbook_enabled && <a href="#guestbook">{t.navGuestbook}</a>}
+          <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
+            <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
+            <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
+            {eventInfo?.gift_info?.trim() && <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>}
+            {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>}
+            <a href={eventInfo?.love_story?.trim() ? "#story" : galleryItems.length ? "#gallery" : "#countdown"}><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
           </nav>
 
           {countdown && (
-            <section className="wedding-section wedding-countdown" data-aos="fade-up" aria-label={t.countdown}>
+            <section className="wedding-section wedding-countdown" id="countdown" data-aos="fade-up" aria-label={t.countdown}>
               <p className="wedding-kicker">{t.countdown}</p>
               {countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
                 <div className="detail-grid">
@@ -434,47 +422,34 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </section>
           )}
 
-          {eventInfo?.rsvp_enabled && (
-            <section className="wedding-section wedding-rsvp" id="rsvp" data-aos="fade-left">
-              <p className="wedding-kicker">KINDLY RESPOND</p>
-              <h2 className="wedding-section-heading">{t.rsvp}</h2>
-              <p className="section-copy">{t.rsvpText}</p>
-              <form className="wedding-form" onSubmit={submitRsvp}>
-                <label>{t.name}<input required name="guest_name" maxLength="100" placeholder={t.name} /></label>
-                <label>{t.invitedName}<input name="invited_name" maxLength="100" placeholder={t.invitedName} /></label>
-                <label>{t.guestCount}<input required type="number" name="guest_count" min="1" max="10" defaultValue="1" /></label>
-                <label>{t.attendance}
-                  <select required name="attendance" defaultValue="yes">
-                    <option value="yes">{t.yes}</option>
-                    <option value="no">{t.no}</option>
-                  </select>
-                </label>
-                <label aria-hidden="true" style={{ position: "absolute", left: "-10000px" }}>Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
-                <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.rsvpSend}</button>
-                {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.rsvpSuccess : t.submitError}</p>}
+          {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && (
+            <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
+              <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
+              <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
+              <p className="section-copy">{t.wishesIntro}</p>
+              <form className="wedding-form" onSubmit={submitWishes}>
+                <label>{language === "id" ? "Nama" : "Name"}<input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
+                {eventInfo?.rsvp_enabled && (
+                  <fieldset className="wedding-attendance">
+                    <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span aria-hidden="true">*</span></legend>
+                    <label><input required type="radio" name="attendance" value="yes" />{language === "id" ? "Hadir" : "Attending"}</label>
+                    <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
+                    <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
+                  </fieldset>
+                )}
+                {eventInfo?.guestbook_enabled && (
+                  <label>{t.message}<textarea required name="guestbook_message" rows="4" maxLength="500" placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /></label>
+                )}
+                <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
+                <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
+                {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
               </form>
+              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>}
+              {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
             </section>
           )}
 
-          {eventInfo?.guestbook_enabled && (
-          <section className="wedding-section wedding-guestbook" id="guestbook" data-aos="fade-right">
-            <p className="wedding-kicker">WORDS FROM THE HEART</p>
-            <h2 className="wedding-section-heading">{t.guestbook}</h2>
-            <p className="section-copy">{t.guestbookText}</p>
-            <form className="wedding-form" onSubmit={submitGuestbook}>
-              <label>{t.name}<input required name="guestbook_name" maxLength="100" placeholder={t.name} /></label>
-              <label>{t.message}<textarea required name="guestbook_message" rows="4" maxLength="500" placeholder={t.message} /></label>
-              <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
-              <button className="wedding-primary" type="submit" disabled={guestbookLoading}>{guestbookLoading ? t.sending : t.sign}</button>
-              {guestbookStatus && <p className="form-notice" role="status">{guestbookStatus === "success" ? t.guestbookSuccess : t.submitError}</p>}
-            </form>
-            <p className="guestbook-note">✧ {t.note}</p>
-            {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
-            
-          </section>
-          )}
-
-          <section className="wedding-share" data-aos="fade-left">
+          <section className="wedding-share" id="share" data-aos="fade-left">
             <p className="wedding-kicker">SPREAD THE JOY</p>
             <h2 className="wedding-section-heading">{t.couple}</h2>
             <div className="share-actions">
