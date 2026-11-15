@@ -7,16 +7,15 @@ import Footer from "./Footer";
 
 export default function RouteChrome({ children }) {
   const pathname = stripLocalePrefix(usePathname() || "/");
-  const isDFRoute = pathname === "/df" || pathname.startsWith("/df/");
-  const isNewHome = pathname === "/";
+  const isImmersiveGame = pathname.startsWith("/games/run-jump") || pathname.startsWith("/games/mamah-ngamuk");
+
+  if (isImmersiveGame) return <div className="df-immersive-route">{children}</div>;
 
   return (
-    <>
-      {!isDFRoute && !isNewHome && <Header />}
-      <div className="flex-1 w-full">
-        <div className={isNewHome ? "" : "ui-route-frame"}>{children}</div>
-      </div>
-      {!isDFRoute && !isNewHome && <Footer />}
-    </>
+    <div className="df-site-shell">
+      <Header />
+      <div className="df-site-main">{children}</div>
+      <Footer />
+    </div>
   );
 }
