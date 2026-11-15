@@ -319,13 +319,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         </section>
       )}
       {celebrationActive && <div className="wedding-confetti" aria-hidden="true">{Array.from({length:28},(_,i)=><i key={i} style={{"--i":i}} />)}</div>}
-      <div className="wedding-topbar" hidden={!invitationOpened}>
-        <Link className="wedding-back" href="/df">♛ <span>DAJJAL FAMILY UNIVERSE</span></Link>
-        <div className="wedding-tools">
-          <button className="wedding-music" type="button" onClick={toggleMusic} aria-pressed={musicOn}>{musicOn ? t.musicOn : t.musicOff} ♫</button>
-        </div>
-      </div>
-
       <div className="wedding-content" hidden={!invitationOpened}>
           <section className="wedding-hero" id="couple" data-aos="fade-right">
             <div className="wedding-ornament">✦ ❧ ✦</div>
@@ -333,11 +326,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <p className="wedding-intro">{t.intro}</p>
             <div className="couple-frame">
               <div className="couple-placeholder">
-                {eventInfo?.couple_photo_url ? <img className="couple-photo" src={eventInfo.couple_photo_url} alt={t.photoAlt} /> : <><span className="placeholder-crown">♛</span>
-                <strong>ANAK DAJJAL</strong>
-                <span className="placeholder-amp">&</span>
-                <strong>MALIKA</strong>
-                <small>ANAK DAJJAL <span aria-hidden="true">✦</span> MALIKA</small></>}
+                <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
               </div>
               <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
@@ -471,8 +460,10 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
       </div>
 
-      <button className="wedding-music-float" type="button" onClick={toggleMusic} aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"} aria-pressed={musicOn}>{musicOn ? "♫" : "♪̸"}</button>
-      <audio ref={audioRef} src={WEDDING_ASSETS.music} loop preload="none" />
+      <button className="wedding-music-float" type="button" onClick={toggleMusic} aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"} aria-pressed={musicOn}>
+        <span aria-hidden="true">{musicOn ? "♫" : "♪"}</span>
+      </button>
+      <audio ref={audioRef} src={WEDDING_ASSETS.music.replace("export=download", "export=open")} loop preload="auto" onError={() => setMusicOn(false)} />
     </main>
   );
 }
