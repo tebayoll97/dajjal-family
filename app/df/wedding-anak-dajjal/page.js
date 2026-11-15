@@ -437,7 +437,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
               </form>}
-              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>
+              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>}
               {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
