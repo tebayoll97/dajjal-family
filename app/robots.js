@@ -8,10 +8,9 @@ const privatePathPrefixes = [
   "/register",
   "/design-system",
   "/character-test",
-  "/df/wedding/",
 ];
 
-const privateExactPaths = ["/df/wedding"];
+const privateExactPaths = [];
 
 const disallow = [
   "/api",
