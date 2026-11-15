@@ -412,7 +412,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <strong>{t.schedule}</strong>
               <p>{eventInfo?.schedule || t.scheduleText}</p>
               {eventInfo?.address && <><strong>{t.address}</strong><p>{eventInfo.address}</p></>}
-              {/^(https?:\\/\\/)/i.test(eventInfo?.maps_url || "") && <p><a href={eventInfo.maps_url} target="_blank" rel="noopener noreferrer">{t.openMap} ↗</a></p>}
+              {(eventInfo?.maps_url?.startsWith("https://") || eventInfo?.maps_url?.startsWith("http://")) && <p><a href={eventInfo.maps_url} target="_blank" rel="noopener noreferrer">{t.openMap} ↗</a></p>}
             </div>
           </section>
 
