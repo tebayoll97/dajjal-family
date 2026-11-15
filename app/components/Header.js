@@ -181,17 +181,19 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <nav className="df-mobile-quick-nav" aria-label={language === "id" ? "Navigasi utama" : "Primary navigation"}>
-        {[
-          { label: t.home, route: "/" },
-          { label: t.games, route: "/games" },
-          { label: t.profile, route: "/profile" },
-        ].map((item) => (
-          <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined}>
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+      {!pathname.startsWith("/df/wedding-anak-dajjal") && (
+        <nav className="df-mobile-quick-nav" aria-label={language === "id" ? "Navigasi utama" : "Primary navigation"}>
+          {[
+            { label: t.home, route: "/" },
+            { label: t.games, route: "/games" },
+            { label: t.profile, route: "/profile" },
+          ].map((item) => (
+            <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined}>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
