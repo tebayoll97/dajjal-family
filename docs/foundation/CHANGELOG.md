@@ -137,3 +137,12 @@
 - Preserved the public invitation renderer, public read API, RSVP, Guestbook, invitation alias, required media/styles, and all existing database records/schema.
 - Expanded the public invitation allowlist and rendering for family details, event countdown, address/map, Love Story, and digital-gift information when available; added localized metadata and hreflang.
 - Source changes are on `main`. Build and browser QA remain pending; no Supabase schema/data operation was performed.
+
+## Single invitation experience refinement — 2026-11-15
+
+- Added a compact section-navigation bar to the public Anak Dajjal & Malika invitation, with links shown only for sections that have content or are enabled.
+- Added stable anchor targets for event details, gallery, RSVP, and Guestbook; existing Love Story and gift anchors remain.
+- Improved mobile horizontal scrolling, sticky positioning, keyboard focus visibility, and reduced-motion behavior for the navigation.
+- Removed an unrelated legacy subtitle and replaced the photo placeholder's instructional sentence with a neutral couple label; no photo or audio assets were fabricated.
+- Improved gallery image fallback text and localized previous/next accessible labels.
+- Source implementation is on `main`; build, deployment, and browser QA remain pending. No database or invitation records were changed.
