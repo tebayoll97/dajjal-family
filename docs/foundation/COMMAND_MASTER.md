@@ -485,3 +485,13 @@ When requested, implement the account profile experience with display name, uniq
 - Vercel Production deployment `dpl_13dnaMysxaQVEUek2C9CAWc5vwbf` reached READY for that exact commit; aliases `dajjalfamily.com` and `www.dajjalfamily.com` are attached. This verifies build/deployment only, not interactive browser QA.
 - Static source checks confirmed global navigation and Tools links, token-page wrappers, theme-aware dialog markers, and no `!important` in the changed page styles. No database, account, player, game progress, or invitation data/schema was changed.
 - Owner must still verify the navigation pane, both themes, mobile sizing, Profile, Settings, and Game Library dialogs on the live site. Design System remains Draft pending visual, keyboard, accessibility, and responsive QA.
+
+
+## 37. Persistent desktop navigation and Profile polish — 2026-11-15
+
+- Owner direction: desktop standard routes use a persistent left sidebar/two-column layout; remove the clickable navigation toggle beside the DF logo. Mobile retains a compact three-item navigation row (Home/Games/Profile) directly below the brand title.
+- Added a shared GlobalSidebar for standard non-home routes, with Main Menu and Tools groups. The homepage retains its own established two-sidebar layout; immersive gameplay routes remain exempt.
+- Simplified the shared header to the DF brand, theme control, and language switch. Removed the header dropdown navigation control.
+- Reworked Profile page surfaces to consume Master Foundation semantic tokens, with a clearer identity card/avatar treatment and responsive spacing. Removed the duplicate GoogleAccountLink panel; the existing account-security section continues to show login email, provider, and last sign-in. No authentication integration or account data was changed.
+- Source branch: feature/global-two-layout-profile-polish. Build, visual QA, accessibility QA, and production release remain pending.
+- No database, account, player, game progress, or invitation data/schema was changed.
