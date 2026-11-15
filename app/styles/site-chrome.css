@@ -111,8 +111,8 @@
 .df-profile-page .ui-card { border-color:var(--df-border); background:var(--df-surface); color:var(--df-text); box-shadow:var(--df-shadow-sm); }
 .df-profile-page .ui-card :is(.text-white,.text-gray-300,.text-gray-400,.text-gray-500) { color:var(--df-text-secondary); }
 .df-profile-page .ui-card :is(.text-white.font-black,.text-white.font-bold) { color:var(--df-text); }
-.df-profile-page .ui-card :is(.bg-\\[\\#151020\\],.bg-black\\/20,.bg-black\\/10) { background:var(--df-surface-raised); }
-.df-profile-page .ui-card :is(.border-purple-500\\/30,.border-purple-500\\/20,.border-purple-500\\/10,.border-white\\/5) { border-color:var(--df-border); }
+.df-profile-page .ui-card [class*="bg-[#151020]"],.df-profile-page .ui-card [class*="bg-black"] { background:var(--df-surface-raised); }
+.df-profile-page .ui-card [class*="border-purple"],.df-profile-page .ui-card [class*="border-white"] { border-color:var(--df-border); }
 .df-profile-page .ui-card .text-purple-400 { color:var(--df-primary); }
 .df-profile-page .ui-card .text-purple-300,.df-profile-page .ui-card .text-purple-200 { color:var(--df-primary-hover); }
 .df-profile-page .ui-card a { color:var(--df-primary-hover); }
