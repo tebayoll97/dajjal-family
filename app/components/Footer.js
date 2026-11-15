@@ -12,7 +12,7 @@ const copy = {
   },
   id: {
     tagline: "Satu Akun. Satu Profil. Banyak Pengalaman. Satu Universe.",
-    universe: "Universe Keluarga", games: "Game", settings: "Pengaturan", wedding: "Wedding", profile: "Profil", rights: "Hak cipta dilindungi.",
+    universe: "Universe Keluarga", games: "Game", settings: "Pengaturan", profile: "Profil", rights: "Hak cipta dilindungi.",
     statement: "SEMESTA DIGITAL YANG TERUS BERKEMBANG.",
   },
 };
