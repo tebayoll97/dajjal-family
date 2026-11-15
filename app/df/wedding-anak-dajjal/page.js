@@ -318,7 +318,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           <div className="wedding-opening-florals" aria-hidden="true">❀ ❧ ❀</div>
           <img className="wedding-opening-couple" src={WEDDING_ASSETS.couple} alt="Anak Dajjal dan Malika" />
           <h1><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h1>
-          <p>Kepada Seluruh pemain Darkwar Survival</p>
+          <div className="wedding-opening-recipient"><span>Kepada Yth Bapak/Ibu/Saudara/i</span><strong>Seluruh pemain Darkwar Survival</strong></div>
           <button type="button" onClick={openInvitation}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="5" width="18" height="14" rx="2.5" />
@@ -332,9 +332,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       <div className="wedding-content" hidden={!invitationOpened}>
           <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
           <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
-            <div className="wedding-ornament">✦ ❧ ✦</div>
-            <h1>Anak Dajjal &amp; Malika</h1>
-            <p className="wedding-intro">{t.intro}</p>
             <div className="couple-frame">
               <div className="couple-placeholder">
                 <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
@@ -342,6 +339,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
             </div>
+            <h1 className="wedding-hero-couple-name"><span>Anak Dajjal</span><span className="wedding-hero-amp">&amp;</span><span>Malika</span></h1>
+            <p className="wedding-hero-date">{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</p>
             <div className="wedding-countdown" id="countdown" aria-label={t.countdown}>
               <p className="wedding-kicker">{t.countdown}</p>
               {countdown ? (countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
@@ -356,46 +355,17 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-section wedding-couple-panel" id="couple" data-panel-number="02" data-aos="fade-up">
             <div className="wedding-family-panel wedding-groom">
-              <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
+              <p className="wedding-groom-message"><strong>Assalamu'alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
+              <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="eager" />
               <h2>Anak Dajjal</h2>
               <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
             </div>
             <div className="wedding-couple-amp" aria-hidden="true">&amp;</div>
             <div className="wedding-family-panel wedding-bride">
-              <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
+              <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="eager" />
               <h2>Malika</h2>
               <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
             </div>
-          </section>
-
-          <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
-            <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
-            <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
-            <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
-            <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
-            <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
-          </nav>
-
-
-          <section className="wedding-section" id="story" data-panel-number="03" data-aos="fade-up">
-            <h2 className="wedding-section-heading">{t.story}</h2>
-            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
-          </section>
-
-          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="04" data-aos="fade-up">
-            <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
-            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
-            {galleryItems.length > 0 ? (
-              <div className="wedding-gallery-viewer">
-                <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || t.photoAlt} className="wedding-gallery-image" />
-                <div className="wedding-gallery-controls">
-                  <button type="button" aria-label={language === "id" ? "Foto sebelumnya" : "Previous photo"} onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)}>‹</button>
-                  <span>{galleryIndex + 1} / {galleryItems.length}</span>
-                  <button type="button" aria-label={language === "id" ? "Foto berikutnya" : "Next photo"} onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)}>›</button>
-                </div>
-                {galleryItems[galleryIndex]?.title && <p className="wedding-gallery-caption">{galleryItems[galleryIndex].title}</p>}
-              </div>
-            ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
           </section>
 
           <section className="wedding-section" id="event" data-panel-number="05" data-aos="fade-up">
@@ -411,6 +381,36 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p>{eventInfo?.schedule || t.scheduleText}</p>
               {eventInfo?.address && <><strong>{t.address}</strong><p>{eventInfo.address}</p></>}
             </div>
+          </section>
+
+          <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
+            <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
+            <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
+            <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
+            <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
+            <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
+          </nav>
+
+
+          <section className="wedding-section" id="story" data-panel-number="04" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{t.story}</h2>
+            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
+          </section>
+
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="05" data-aos="fade-up">
+            <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
+            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
+            {galleryItems.length > 0 ? (
+              <div className="wedding-gallery-viewer">
+                <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || t.photoAlt} className="wedding-gallery-image" />
+                <div className="wedding-gallery-controls">
+                  <button type="button" aria-label={language === "id" ? "Foto sebelumnya" : "Previous photo"} onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)}>‹</button>
+                  <span>{galleryIndex + 1} / {galleryItems.length}</span>
+                  <button type="button" aria-label={language === "id" ? "Foto berikutnya" : "Next photo"} onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)}>›</button>
+                </div>
+                {galleryItems[galleryIndex]?.title && <p className="wedding-gallery-caption">{galleryItems[galleryIndex].title}</p>}
+              </div>
+            ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
           </section>
 
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="06" data-aos="fade-up">
