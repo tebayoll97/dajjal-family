@@ -860,3 +860,60 @@
   display:block;width:100%;height:100%;max-height:560px;object-fit:contain;
   margin:0 auto;
 }
+
+
+/* Invitation music toggle: visible off state and tactile scale feedback */
+.df-main .wedding-page .wedding-music-float{
+  position:fixed;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  background:linear-gradient(145deg,#a65d7b,#783c58)!important;
+  color:#fff8fb!important;
+  border:1px solid rgba(255,255,255,.7)!important;
+  box-shadow:0 8px 22px rgba(120,60,88,.3)!important;
+  transform:scale(1);
+  transform-origin:center;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease,background .22s ease;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.df-main .wedding-page .wedding-music-float:active{
+  transform:scale(.84);
+  box-shadow:0 3px 10px rgba(120,60,88,.22)!important;
+}
+.df-main .wedding-page .wedding-music-float.is-playing{
+  background:linear-gradient(145deg,#c27696,#8e4969)!important;
+  transform:scale(1.06);
+  box-shadow:0 0 0 5px rgba(194,118,150,.18),0 9px 24px rgba(120,60,88,.3)!important;
+}
+.df-main .wedding-page .wedding-music-float.is-off{
+  background:linear-gradient(145deg,#95516f,#71364f)!important;
+}
+.df-main .wedding-page .wedding-music-icon{
+  font:700 1.55rem/1 Georgia,serif;
+  transition:transform .22s ease,opacity .22s ease;
+}
+.df-main .wedding-page .wedding-music-off-mark{
+  position:absolute;
+  top:12px;right:12px;
+  display:grid;place-items:center;
+  width:18px;height:18px;
+  border:1.5px solid #fff;
+  border-radius:50%;
+  background:#71364f;
+  color:#fff;
+  font:900 .9rem/1 Arial,sans-serif;
+  box-shadow:0 1px 4px rgba(50,20,35,.3);
+}
+.df-main .wedding-page .wedding-music-float.is-playing .wedding-music-icon{
+  animation:wedding-music-bounce 1.1s ease-in-out infinite alternate;
+}
+@keyframes wedding-music-bounce{
+  from{transform:scale(.94) rotate(-8deg)}
+  to{transform:scale(1.12) rotate(8deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .df-main .wedding-page .wedding-music-float,
+  .df-main .wedding-page .wedding-music-icon{transition:none;animation:none!important}
+}
