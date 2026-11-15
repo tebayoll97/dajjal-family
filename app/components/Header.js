@@ -43,6 +43,7 @@ export default function Header() {
   const pathname = stripLocalePrefix(usePathname() || "/");
   const { language, setLanguage } = useLanguage();
   const t = copy[language] || copy.id;
+  const isWeddingInvitation = pathname.startsWith("/df/wedding-anak-dajjal");
   const [isAdmin, setIsAdmin] = useState(false);
   const [navigationOpen, setNavigationOpen] = useState(false);
   const navigationRef = useRef(null);
@@ -118,7 +119,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="df-site-header">
+    <header className={"df-site-header" + (isWeddingInvitation ? " df-site-header--wedding" : "")}>
       <div className="df-site-header-inner">
         <div className="df-site-brand-group" ref={navigationRef}>
           <button
@@ -131,6 +132,7 @@ export default function Header() {
           >
             <span aria-hidden="true">{navigationOpen ? "×" : "☰"}</span>
           </button>
+          {!isWeddingInvitation && (
           <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
             <span className="df-site-brand-mark" aria-hidden="true">DF</span>
             <span className="df-site-brand-copy">
@@ -138,6 +140,7 @@ export default function Header() {
               <small>ONE FAMILY. MANY POSSIBILITIES.</small>
             </span>
           </Link>
+          )}
 
           {navigationOpen && (
             <nav id="df-global-navigation" className="df-site-navigation-pane" aria-label={t.navigation}>
@@ -174,7 +177,7 @@ export default function Header() {
         </div>
 
         <div className="df-site-actions">
-          <ThemeToggle />
+          {!isWeddingInvitation && <ThemeToggle />}
           <div className="df-site-language" role="group" aria-label={t.language}>
             <button type="button" onClick={() => setLanguage("id")} aria-pressed={language === "id"}>ID</button>
             <button type="button" onClick={() => setLanguage("en")} aria-pressed={language === "en"}>EN</button>
