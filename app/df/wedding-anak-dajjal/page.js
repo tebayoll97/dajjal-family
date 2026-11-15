@@ -16,8 +16,6 @@ const words = {
     title: "The Royal Wedding",
     invite: "You are warmly invited to celebrate",
     couple: "Anak Dajjal & Malika",
-    open: "OPEN INVITATION",
-    opened: "THE INVITATION IS OPEN",
     intro: "Two characters, one joyful chapter. Join us for a day filled with smiles, warmth, and treasured memories.",
     reception: "Wedding Reception",
     date: "Date to be announced",
@@ -40,7 +38,6 @@ const words = {
     guestbookText: "Leave a kind note for the happy couple.",
     message: "Your message / prayer",
     sign: "WRITE A MESSAGE",
-    note: "Guestbook messages will appear after admin approval.",
     footer: "ONE FAMILY. ENDLESS STORIES.",
     coming: "This feature is being prepared. Your information has not been sent yet.",
     music: "MUSIC",
@@ -50,27 +47,25 @@ const words = {
     copied: "Link copied",
     count: "Guests",
     rsvpSuccess: "Thank you. Your RSVP has been received.",
-    guestbookSuccess: "Thank you. Your message was sent for approval.",
+    guestbookSuccess: "Thank you. Your message is now published.",
     submitError: "Something went wrong. Please try again.",
     sending: "SENDING…",
     musicOff: "MUSIC OFF",
     musicOn: "MUSIC ON",
     countdown: "COUNTDOWN TO THE CELEBRATION", days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
-    eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", gift: "DIGITAL GIFT", address: "ADDRESS", openMap: "OPEN MAP",
+    eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", playerId: "PLAYER ID", address: "ADDRESS",
     photoAlt: "Anak Dajjal and Malika",
-    navCouple: "COUPLE", navEvent: "EVENT", navGift: "GIFT", navWishes: "WISHES", navMore: "MORE",
+    navCouple: "COUPLE", navEvent: "EVENT", navGift: "PLAYER ID", navWishes: "WISHES", navMore: "MORE",
     attendancePending: "Not sure yet", wishesTitle: "Wishes & Prayers", wishesIntro: "Leave your attendance confirmation and a message for the couple.",
     sendWishes: "SEND", wishesSuccess: "Thank you. Your response and message have been received.",
     wishesPartial: "Your attendance was saved, but your message could not be sent. Please contact the host.",
-    wishesError: "Something went wrong. Please try again.", wishesNote: "Messages appear after admin approval.",
+    wishesError: "Something went wrong. Please try again.",
   },
   id: {
     eyebrow: "SEDIKIT KEMERIAHAN, BANYAK CINTA",
     title: "Pernikahan Kerajaan",
     invite: "Dengan hangat kami mengundang Anda untuk merayakan",
     couple: "Anak Dajjal & Malika",
-    open: "BUKA UNDANGAN",
-    opened: "UNDANGAN TELAH DIBUKA",
     intro: "Dua karakter, satu babak penuh keceriaan. Mari rayakan hari istimewa dengan senyum, kehangatan, dan kenangan indah.",
     reception: "Resepsi Pernikahan",
     date: "Tanggal akan diumumkan",
@@ -93,7 +88,6 @@ const words = {
     guestbookText: "Tinggalkan pesan manis untuk kedua mempelai.",
     message: "Pesan / Doa",
     sign: "TULIS PESAN",
-    note: "Pesan buku tamu akan ditampilkan setelah disetujui admin.",
     footer: "SATU KELUARGA. CERITA TANPA BATAS.",
     coming: "Fitur ini sedang disiapkan. Informasi Anda belum dikirim.",
     music: "MUSIK",
@@ -103,26 +97,25 @@ const words = {
     copied: "Tautan disalin",
     count: "Tamu",
     rsvpSuccess: "Terima kasih. Konfirmasi kehadiran Anda sudah diterima.",
-    guestbookSuccess: "Terima kasih. Pesan Anda dikirim untuk ditinjau admin.",
+    guestbookSuccess: "Terima kasih. Pesan Anda berhasil dipublikasikan.",
     submitError: "Terjadi kendala. Silakan coba kembali.",
     sending: "MENGIRIM…",
     musicOff: "MUSIK MATI",
     musicOn: "MUSIK NYALA",
     countdown: "MENUJU HARI BAHAGIA", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
-    eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", gift: "HADIAH DIGITAL", address: "ALAMAT", openMap: "BUKA PETA",
+    eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", playerId: "ID PEMAIN", address: "ALAMAT",
     photoAlt: "Anak Dajjal dan Malika",
-    navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "HADIAH", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
+    navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "ID PEMAIN", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
     attendancePending: "Belum Pasti", wishesTitle: "Ucapan & Doa", wishesIntro: "Sampaikan konfirmasi kehadiran dan pesan untuk kedua karakter.",
     sendWishes: "KIRIM", wishesSuccess: "Terima kasih. Konfirmasi dan pesan Anda berhasil dikirim.",
     wishesPartial: "Konfirmasi kehadiran tersimpan, tetapi pesan belum berhasil dikirim. Silakan hubungi penyelenggara.",
-    wishesError: "Terjadi kendala. Silakan coba kembali.", wishesNote: "Pesan akan ditampilkan setelah disetujui admin.",
+    wishesError: "Terjadi kendala. Silakan coba kembali.",
   },
 };
 
 export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-malika" } = {}) {
   const { language } = useLanguage();
   const t = words[language] || words.en;
-  const [opened, setOpened] = useState(false);
   const [guestName, setGuestName] = useState("");
   const [eventInfo, setEventInfo] = useState(null);
   const [galleryItems, setGalleryItems] = useState([]);
@@ -154,9 +147,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         groom_parent_names: profile.groom_parent_names || "",
         bride_parent_names: profile.bride_parent_names || "",
         address: profile.address || "",
-        maps_url: profile.maps_url || "",
         love_story: profile.love_story || "",
-        gift_info: profile.gift_info || "",
         schedule: Array.isArray(profile.event_schedule) ? profile.event_schedule.join(" · ") : "",
         couple_display: [profile.groom_name, profile.bride_name].filter(Boolean).join(" & "),
         event_date: profile.event_date,
@@ -209,7 +200,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   }, [galleryItems.length]);
 
   useEffect(() => {
-    if (!opened) return;
     AOS.init({
       duration: 850,
       easing: "ease-out-cubic",
@@ -221,7 +211,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     });
     AOS.refreshHard();
     return () => AOS.refresh();
-  }, [opened]);
+  }, []);
 
   const submitWishes = async (event) => {
     event.preventDefault();
@@ -305,27 +295,9 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         </div>
       </div>
 
-      {!opened && (
-        <section className="wedding-opening">
-          <div className="opening-sparkle">✦　❧　✦</div>
-          <p className="wedding-kicker">{t.eyebrow}</p>
-          <div className="envelope" aria-hidden="true">
-            <div className="envelope-card"><span>♛</span><small>YOU ARE INVITED</small><strong>A & M</strong></div>
-            <div className="envelope-flap" />
-          </div>
-          <p className="opening-invite">{t.invite}</p>
-          <h1>{eventInfo?.couple_display || t.couple}</h1>
-          {guestName && <p className="guest-name">{language === "id" ? "Kepada Yth." : "Dear"} {guestName}</p>}
-          <button className="wedding-primary" type="button" onClick={() => { setOpened(true); if (eventInfo?.music_url && audioRef.current) audioRef.current.play().then(() => setMusicOn(true)).catch(() => setMusicOn(false)); }}>{t.open} <span>✧</span></button>
-          <p className="opening-footnote">ROYAL PLAYFUL EDITION</p>
-        </section>
-      )}
-
-      {opened && (
-        <div className="wedding-content">
+      <div className="wedding-content">
           <section className="wedding-hero" id="couple" data-aos="fade-right">
             <div className="wedding-ornament">✦ ❧ ✦</div>
-            <p className="wedding-kicker">{t.opened}</p>
             <h1>{eventInfo?.invitation_title || t.title}</h1>
             <p className="wedding-intro">{t.intro}</p>
             <div className="couple-frame">
@@ -406,14 +378,22 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <strong>{t.schedule}</strong>
               <p>{eventInfo?.schedule || t.scheduleText}</p>
               {eventInfo?.address && <><strong>{t.address}</strong><p>{eventInfo.address}</p></>}
-              {(eventInfo?.maps_url?.startsWith("https://") || eventInfo?.maps_url?.startsWith("http://")) && <p><a href={eventInfo.maps_url} target="_blank" rel="noopener noreferrer">{t.openMap} ↗</a></p>}
             </div>
           </section>
 
-          <section className="wedding-section" id="gift" data-aos="fade-left">
-            <p className="wedding-kicker">{t.gift}</p>
-            <h2 className="wedding-section-heading">{t.gift}</h2>
-            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.gift_info?.trim() || (language === "id" ? "Informasi hadiah akan diumumkan." : "Gift information will be announced.")}</p></div>
+          <section className="wedding-section wedding-player-id" id="gift" data-aos="fade-left">
+            <p className="wedding-kicker">{t.playerId}</p>
+            <h2 className="wedding-section-heading">{t.playerId}</h2>
+            <div className="dawn-badge-card">
+              <div className="dawn-badge-emblem" role="img" aria-label="Dawn Badge Darkwar Survival">
+                <span className="dawn-badge-emblem__crown" aria-hidden="true">✦</span>
+                <strong>DAWN</strong><small>BADGE</small>
+              </div>
+              <div className="dawn-badge-copy">
+                <strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span>
+                <p>{language === "id" ? "ID pemain akan ditampilkan di sini." : "The player ID will appear here."}</p>
+              </div>
+            </div>
           </section>
 
           <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
@@ -437,7 +417,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
               </form>}
-              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>}
               {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
@@ -450,8 +429,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <button type="button" onClick={copyLink}>{copied ? t.copied : t.copy}</button>
             </div>
           </section>
-        </div>
-      )}
+      </div>
 
       {eventInfo?.music_url && <audio ref={audioRef} src={eventInfo.music_url} loop preload="none" /> }
     </main>
