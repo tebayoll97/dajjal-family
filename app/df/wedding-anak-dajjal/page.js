@@ -420,7 +420,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
-              <form className="wedding-form" onSubmit={submitWishes}>
+              {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
                 <label>{language === "id" ? "Nama" : "Name"}<input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
                 {eventInfo?.rsvp_enabled && (
                   <fieldset className="wedding-attendance">
@@ -436,8 +436,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
-              </form>
-              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>}
+              </form>}
+              {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>
               {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
