@@ -146,3 +146,13 @@
 - Removed an unrelated legacy subtitle and replaced the photo placeholder's instructional sentence with a neutral couple label; no photo or audio assets were fabricated.
 - Improved gallery image fallback text and localized previous/next accessible labels.
 - Source implementation is on `main`; build, deployment, and browser QA remain pending. No database or invitation records were changed.
+
+
+## Unified invitation navigation and wishes form — 2026-11-15
+
+- Replaced the public invitation's horizontal section links with a fixed five-item bottom navigation: Mempelai, Acara, Hadiah, Ucapan, and Lain-lain (English labels localized).
+- Combined RSVP and Guestbook into one Ucapan & Doa form with player name, attendance choices (Hadir / Belum Pasti / Tidak Hadir), and message/prayer; approved guestbook messages remain visible below the form.
+- Kept the existing RSVP and Guestbook API endpoints and database tables; the form submits to the existing endpoints and reports partial success if RSVP is stored but Guestbook submission fails.
+- Extended RSVP API validation to accept the pending maybe attendance value. No database schema, records, or policies were changed; database compatibility for this value still requires runtime verification.
+- Added responsive bottom-navigation styling, safe-area spacing, keyboard focus, and reduced-motion handling.
+- Source is committed on main. Build, browser QA, and deployment were not run while the Vercel quota pause remains in effect.
