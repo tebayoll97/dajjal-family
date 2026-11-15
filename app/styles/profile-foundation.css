@@ -1,0 +1,31 @@
+/* Profile page — full Master Foundation identity and data surfaces. */
+.df-profile-page{background:var(--df-bg);color:var(--df-text);padding-block:clamp(1.5rem,4vw,3.5rem)}
+.df-profile-content{width:min(100%,52rem)}
+.df-profile-page .ui-card{background:var(--df-surface);color:var(--df-text);border-color:var(--df-border);box-shadow:var(--df-shadow-sm)}
+.df-profile-identity-card{overflow:hidden;padding:clamp(1rem,3vw,2rem)}
+.df-profile-identity-row{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:clamp(1rem,3vw,2rem)}
+.df-profile-avatar{width:112px;height:112px;flex:0 0 auto;border-color:var(--df-primary);background:var(--df-primary-soft)}
+.df-profile-identity-copy{min-width:0}
+.df-profile-eyebrow{margin:0 0 .5rem;color:var(--df-primary-hover);font-size:.65rem;font-weight:850;letter-spacing:.17em}
+.df-profile-page-title{margin:0;color:var(--df-text);font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:900;letter-spacing:.015em}
+.df-profile-name{margin:.35rem 0 0;color:var(--df-text);font-size:clamp(1.35rem,3vw,2rem);font-weight:850;line-height:1.2;overflow-wrap:anywhere}
+.df-profile-server{display:inline-flex;margin:.65rem 0 0;padding:.35rem .65rem;border:1px solid var(--df-border);border-radius:999px;background:var(--df-surface-raised);color:var(--df-text-secondary);font-size:.68rem;font-weight:800;letter-spacing:.1em}
+.df-profile-edit-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;margin-top:1rem;padding:.55rem 1rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-primary-soft);color:var(--df-primary-hover);font-size:.72rem;font-weight:850;letter-spacing:.06em;text-decoration:none;transition:background var(--df-duration-fast),border-color var(--df-duration-fast)}
+.df-profile-edit-link:hover{background:var(--df-primary-soft);border-color:var(--df-primary)}
+.df-profile-data-card{border-color:var(--df-border)!important;background:var(--df-surface)!important;color:var(--df-text)!important}
+.df-profile-page .text-white{color:var(--df-text)}
+.df-profile-page .text-gray-300,.df-profile-page .text-gray-400{color:var(--df-text-secondary)}
+.df-profile-page .text-gray-500{color:var(--df-text-muted)}
+.df-profile-page .text-purple-200,.df-profile-page .text-purple-300{color:var(--df-primary-hover)}
+.df-profile-page .bg-black\/20,.df-profile-page .bg-black\/10{background:var(--df-surface-raised)}
+.df-profile-page .border-white\/5{border-color:var(--df-border)}
+.df-profile-page :is(h2,h3){color:var(--df-text)}
+.df-profile-security{padding:clamp(1rem,2.5vw,1.5rem);border:1px solid var(--df-border);border-radius:var(--df-radius-xl);background:var(--df-surface-raised)}
+.df-profile-page :is(a,button):focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
+@media(max-width:560px){
+ .df-profile-page{padding-inline:.8rem}
+ .df-profile-identity-row{grid-template-columns:1fr;justify-items:center;text-align:center;gap:1rem}
+ .df-profile-avatar{width:104px;height:104px}
+ .df-profile-edit-link{width:100%}
+ .df-profile-security{padding:1rem}
+}
