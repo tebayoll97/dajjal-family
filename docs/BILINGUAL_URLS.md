@@ -25,7 +25,7 @@ The client language switch writes the preference cookie and navigates to the sam
 ## SEO and privacy
 - The root layout supplies a locale-aware canonical URL for the current localized path. Language alternates (`hreflang`) are declared only by page metadata after both language versions have been verified as published; they are not inherited globally by private, game, or untranslated routes.
 - Page-specific hardcoded unprefixed canonicals were removed from the leaderboard and immersive game layouts so they inherit the locale-aware root canonical.
-- Private account/admin/settings and wedding-builder paths receive `noindex,nofollow` metadata from the root layout.
+- Private account/admin/settings paths receive `noindex,nofollow` metadata from the root layout. The retired `/df/wedding` builder entry redirects to the public Anak Dajjal & Malika invitation; the public invitation remains indexable.
 - `robots.txt` disallows private paths in both unprefixed and localized forms. This is crawler guidance only; server-side authentication and authorization remain the actual access controls.
 - Sitemap emits both locale variants only for the enumerated public routes whose page content is implemented in both languages: homepage, section landing pages, Game Library, DF home, and the public wedding invitation.
 - Do not claim full localized SEO coverage until metadata, translated content, and sitemap route validity have been audited for every public page.
