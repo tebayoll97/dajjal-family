@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
 import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
 
@@ -17,8 +19,26 @@ const items = [
 export default function GlobalSidebar() {
   const pathname = stripLocalePrefix(usePathname() || "/");
   const { language } = useLanguage();
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    let active = true;
+    async function verify(session) {
+      if (!session?.access_token) { if (active) setIsAdmin(false); return; }
+      try {
+        const response = await fetch("/api/admin/me", { headers: { Authorization: `Bearer ${session.access_token}` }, cache: "no-store" });
+        const result = await response.json();
+        if (active) setIsAdmin(response.ok && result.success === true);
+      } catch { if (active) setIsAdmin(false); }
+    }
+    supabaseAdminClient.auth.getSession().then(({ data }) => verify(data.session));
+    const { data: { subscription } } = supabaseAdminClient.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") setIsAdmin(false);
+      else if (["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)) verify(session);
+    });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, []);
   const active = (route) => route === "/" ? pathname === "/" : pathname === route || pathname.startsWith(route + "/");
-  const main = items.filter((item) => !item.group);
+  const main = [...items.filter((item) => !item.group), ...(isAdmin ? [{ route: "/admin", icon: "◆", id: "Admin", en: "Admin" }] : [])];
   const tools = items.filter((item) => item.group);
   const renderItems = (list) => list.map((item) => (
     <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={active(item.route) ? "page" : undefined} className="df-global-side-link">
