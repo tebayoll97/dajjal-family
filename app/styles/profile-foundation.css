@@ -29,3 +29,37 @@
  .df-profile-edit-link{width:100%}
  .df-profile-security{padding:1rem}
 }
+
+
+/* Profile task prompt and navigation CTA use semantic actions, not legacy palette utilities. */
+.df-profile-page .df-profile-task {
+  display:flex; align-items:flex-start; gap:1rem; padding:clamp(1rem,2.5vw,1.35rem);
+  border:1px solid color-mix(in srgb,var(--df-warning) 35%,var(--df-border));
+  border-radius:var(--df-radius-lg);
+  background:color-mix(in srgb,var(--df-warning) 8%,var(--df-surface));
+}
+.df-profile-task-icon { flex:0 0 auto; color:var(--df-warning); font-size:1.4rem; line-height:1.4; }
+.df-profile-task-label { margin:0; color:var(--df-warning); font-size:.62rem; font-weight:900; letter-spacing:.14em; }
+.df-profile-task-title { margin:.3rem 0 0; color:var(--df-text); font-size:1rem; font-weight:850; }
+.df-profile-task-copy { margin:.35rem 0 0; color:var(--df-text-secondary); font-size:.82rem; line-height:1.65; }
+.df-profile-task-status { color:var(--df-text-muted); font-size:.7rem; font-weight:700; }
+.df-profile-task-action {
+  display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center;
+  min-height:36px; padding:.5rem .8rem; border:1px solid var(--df-primary);
+  border-radius:var(--df-radius-md); background:var(--df-primary);
+  color:var(--df-on-primary); font-size:.66rem; font-weight:900; text-decoration:none;
+}
+.df-profile-task-action:hover { background:var(--df-primary-hover); border-color:var(--df-primary-hover); }
+.df-profile-games-link {
+  display:flex; align-items:center; justify-content:center; min-height:48px;
+  padding:.8rem 1.2rem; border:1px solid var(--df-primary); border-radius:var(--df-radius-lg);
+  background:var(--df-primary); color:var(--df-on-primary); font-size:.75rem;
+  font-weight:900; letter-spacing:.08em; text-align:center; text-decoration:none;
+  transition:background var(--df-duration-fast),border-color var(--df-duration-fast);
+}
+.df-profile-games-link:hover { background:var(--df-primary-hover); border-color:var(--df-primary-hover); }
+@media(max-width:560px) {
+  .df-profile-task { flex-wrap:wrap; }
+  .df-profile-task-action { margin-left:auto; }
+  .df-profile-games-link { min-height:44px; }
+}

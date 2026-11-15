@@ -452,3 +452,10 @@ The Design System remains **Draft — Pending Approval** until live visual check
 Standard desktop routes now use a shared two-column workspace with a persistent left navigation sidebar; the Home page keeps its established sidebar composition. On mobile, a compact primary navigation row (Beranda, Game, Profil) sits below the header and the sidebar-style navigation is available from the mobile navigation trigger. The desktop header has no navigation trigger beside the DF brand.
 
 The Profile identity area groups the avatar with the page title, player nickname, server, and edit action. Profile page surfaces consume semantic theme tokens, and the duplicate Google-connected panel has been removed while email and last sign-in details remain in Account Security. This is an implementation update, not design-system approval; both themes, desktop/mobile, keyboard behavior, and live route QA remain pending.
+
+
+## 20. Profile action surfaces — 2026-11-15
+
+- Profile's remaining task prompt and Explore Games action now use semantic warning/primary tokens rather than fixed amber/purple utility colors.
+- The current navigation baseline remains: desktop persistent sidebar, mobile sidebar-style menu plus Beranda/Game/Profil quick row, and no visible desktop toggle beside the DF logo.
+- The Design System remains Draft until both themes, desktop/mobile layouts, keyboard navigation, and accessibility are visually verified.

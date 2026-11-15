@@ -496,3 +496,12 @@ When requested, implement the account profile experience with display name, uniq
 - Removed the duplicate Google-connected account panel and its component from Profile. Kept the existing Account Security panel with login email and last sign-in time; no authentication provider/session logic was changed.
 - No database, schema, player records, game progress, or account data was modified.
 - Application changes are committed on `main`; production build and interactive browser QA must be recorded separately. Design System remains Draft until owner visual verification on mobile/desktop and both themes.
+
+
+## 38. Profile visual consistency follow-up — 2026-11-15
+
+- Owner asked to refine remaining Profile elements under Master Foundation, especially the player identity presentation and duplicated Google-connected security panel.
+- Re-verified the current main baseline: desktop persistent GlobalSidebar/two-column workspace is already present on standard non-home routes; Home retains its established two-sidebar layout. The desktop navigation toggle is hidden by the desktop media rule, while the mobile sidebar-style pane remains available and the Beranda/Game/Profil quick row is rendered below the brand header.
+- The current Profile baseline already places the avatar beside the player identity block on desktop and stacks it on narrow mobile. The duplicate GoogleAccountLink panel is already absent; the existing security card retains email and last-sign-in details.
+- This follow-up replaces the remaining amber profile-task and purple game-navigation utility treatments with semantic Master Foundation tokens. No navigation behavior, Auth/session behavior, database, account, player, game progress, or invitation data/schema was changed.
+- Source branch: feature/mobile-sidebar-and-profile-foundation. Build and visual QA pending; do not merge/release while Vercel reports deployment rate limiting.
