@@ -38,11 +38,6 @@ const copy = {
     wedding: "The Royal Wedding",
     weddingText: "Anak Dajjal & Malika · Digital Wedding Invitation",
     openInvite: "OPEN INVITATION",
-    weddingPlatform: "Wedding Experiences",
-    weddingPlatformSub: "Create and manage your own digital wedding invitation.",
-    weddingBuilder: "Wedding Invitation Builder",
-    weddingBuilderText: "Design a personal invitation, add your event details, and share it with your guests.",
-    exploreWedding: "EXPLORE WEDDING",
   },
   id: {
     eyebrow: "SELAMAT DATANG DI UNIVERSE KAMI",
@@ -75,11 +70,6 @@ const copy = {
     wedding: "Pernikahan Kerajaan",
     weddingText: "Anak Dajjal & Malika · Undangan Pernikahan Digital",
     openInvite: "BUKA UNDANGAN",
-    weddingPlatform: "Layanan Wedding",
-    weddingPlatformSub: "Buat dan kelola undangan pernikahan digitalmu sendiri.",
-    weddingBuilder: "Wedding Invitation Builder",
-    weddingBuilderText: "Rancang undangan personal, tambahkan detail acara, dan bagikan kepada para tamu.",
-    exploreWedding: "JELAJAHI WEDDING",
   },
 };
 
@@ -134,14 +124,6 @@ export default function DajjalFamilyHome() {
         </div>
       </section>
 
-      <section className="df-section" id="wedding-platform">
-        <h2 className="df-section-heading">{t.weddingPlatform}</h2>
-        <p className="df-section-subtitle">{t.weddingPlatformSub}</p>
-        <div className="df-event-card">
-          <div><h3>{t.weddingBuilder}</h3><p>{t.weddingBuilderText}</p></div>
-          <Link href={withLocalePrefix("/df/wedding", language)} className="df-button">{t.exploreWedding}</Link>
-        </div>
-      </section>
       <section className="df-section" id="events">
         <h2 className="df-section-heading">{t.events}</h2>
         <p className="df-section-subtitle">{t.eventsSub}</p>
