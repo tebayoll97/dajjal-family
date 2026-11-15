@@ -7,7 +7,7 @@ import { withLocalePrefix } from "@/lib/localePath";
 const copy = {
   en: {
     tagline: "One Account. One Profile. Multiple Experiences. One Universe.",
-    universe: "Family Universe", games: "Games", settings: "Settings", wedding: "Wedding", profile: "Profile", rights: "All rights reserved.",
+    universe: "Family Universe", games: "Games", settings: "Settings", profile: "Profile", rights: "All rights reserved.",
     statement: "A DIGITAL UNIVERSE BUILT TO GROW.",
   },
   id: {
@@ -24,7 +24,6 @@ export default function Footer() {
     [t.universe, "/df"],
     [t.games, "/games"],
     [t.settings, "/settings"],
-    [t.wedding, "/df/wedding"],
     [t.profile, "/profile"],
   ];
 
