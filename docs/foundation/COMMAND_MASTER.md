@@ -496,3 +496,13 @@ When requested, implement the account profile experience with display name, uniq
 - Removed the duplicate Google-connected account panel and its component from Profile. Kept the existing Account Security panel with login email and last sign-in time; no authentication provider/session logic was changed.
 - No database, schema, player records, game progress, or account data was modified.
 - Application changes are committed on `main`; production build and interactive browser QA must be recorded separately. Design System remains Draft until owner visual verification on mobile/desktop and both themes.
+
+
+## 37. Persistent desktop navigation and Profile polish — 2026-11-15
+
+- Owner direction: desktop standard routes use a persistent left sidebar/two-column layout; remove the clickable navigation toggle beside the DF logo. Mobile retains a compact three-item navigation row (Home/Games/Profile) directly below the brand title.
+- Added a shared GlobalSidebar for standard non-home routes, with Main Menu and Tools groups and server-verified Admin visibility. The homepage retains its established two-sidebar layout; immersive gameplay routes remain exempt.
+- Simplified the shared header to the DF brand, theme control, and language switch. Removed the header dropdown navigation control.
+- Preserved the latest main-branch Profile identity layout (avatar beside the player identity copy on desktop, stacked responsively on narrow mobile) and removed only the duplicate GoogleAccountLink panel. The existing account-security section still displays login email, sign-in provider, and last sign-in.
+- Added token-aware Profile surface styling for both themes. Build, visual QA, accessibility QA, and production release remain pending.
+- Source branch: feature/global-two-layout-profile-polish-v2. No database, account, player, game progress, or invitation data/schema was changed.
