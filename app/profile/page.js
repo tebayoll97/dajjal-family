@@ -207,16 +207,8 @@ export default function ProfilePage() {
     : "-";
 
   return (
-    <main className="df-token-page df-profile-page min-h-[70vh] bg-[#080711] text-white px-5 py-10">
-      <div className="max-w-xl mx-auto">
-
-        <p className="text-purple-400 text-xs tracking-[0.3em]">
-          DAJJAL FAMILY · GAMING UNIVERSE
-        </p>
-
-        <h1 className="text-3xl font-black mt-3 ui-title">
-          {t.title}
-        </h1>
+    <main className="df-token-page df-profile-page min-h-[70vh] px-5 py-10">
+      <div className="df-profile-content max-w-3xl mx-auto">
 
         {player.profileIdentityEnabled && !player.username && (
           <section className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 ui-card">
@@ -236,9 +228,9 @@ export default function ProfilePage() {
         )}
 
         {/* PLAYER PROFILE */}
-        <div className="mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-6 ui-card">
-
-          <div className="w-28 h-28 rounded-full overflow-hidden bg-purple-600/20 border-2 border-purple-400/50 flex items-center justify-center mx-auto">
+        <section className="df-profile-identity-card mt-6 rounded-2xl border border-purple-500/30 bg-[#151020] p-6 ui-card">
+          <div className="df-profile-identity-row">
+          <div className="df-profile-avatar w-28 h-28 rounded-full overflow-hidden bg-purple-600/20 border-2 border-purple-400/50 flex items-center justify-center">
             {player.avatar_url && !avatarFailed ? (
               <img
                 src={player.avatar_url}
@@ -253,20 +245,14 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <h2 className="text-2xl font-bold text-center mt-4 ui-section-title">
-            {player.nickname}
-          </h2>
-
-          <p className="text-purple-300 text-sm text-center mt-1">
-            Server {player.server_number || "—"}
-          </p>
-
-          <Link
-            href="/profile/edit"
-            className="block text-center mt-5 w-full rounded-xl border border-purple-400/40 bg-purple-500/10 hover:bg-purple-500/20 py-3 text-purple-200 font-bold tracking-wider transition"
-          >
-            ✎ {t.edit}
-          </Link>
+          </div>
+          <div className="df-profile-identity-copy">
+            <p className="df-profile-eyebrow">DAJJAL FAMILY · GAMING UNIVERSE</p>
+            <h1 className="df-profile-page-title">{t.title}</h1>
+            <h2 className="df-profile-name">{player.nickname}</h2>
+            <p className="df-profile-server">SERVER {player.server_number || "—"}</p>
+            <Link href="/profile/edit" className="df-profile-edit-link">✎ {t.edit}</Link>
+          </div>
 
           <div className="border-t border-purple-500/20 mt-6 pt-5 space-y-4">
 
@@ -298,10 +284,10 @@ export default function ProfilePage() {
             </div>
 
           </div>
-        </div>
+        </section>
 
         {/* UNIVERSAL GAME STATISTICS */}
-        <section className="mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
+        <section className="df-profile-data-card mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
           <p className="text-purple-400 text-xs tracking-[0.25em]">{t.stats}</p>
           <div className="grid grid-cols-3 gap-2 mt-4">
             {[
@@ -376,7 +362,7 @@ export default function ProfilePage() {
         {/* ACCOUNT SECURITY */}
         <section
           id="account-security"
-          className="mt-8 space-y-4 scroll-mt-32"
+          className="df-profile-security mt-8 space-y-4 scroll-mt-32"
         >
           <div>
             <p className="text-purple-400 text-xs tracking-[0.25em]">
