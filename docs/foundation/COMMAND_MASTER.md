@@ -485,3 +485,14 @@ When requested, implement the account profile experience with display name, uniq
 - Vercel Production deployment `dpl_13dnaMysxaQVEUek2C9CAWc5vwbf` reached READY for that exact commit; aliases `dajjalfamily.com` and `www.dajjalfamily.com` are attached. This verifies build/deployment only, not interactive browser QA.
 - Static source checks confirmed global navigation and Tools links, token-page wrappers, theme-aware dialog markers, and no `!important` in the changed page styles. No database, account, player, game progress, or invitation data/schema was changed.
 - Owner must still verify the navigation pane, both themes, mobile sizing, Profile, Settings, and Game Library dialogs on the live site. Design System remains Draft pending visual, keyboard, accessibility, and responsive QA.
+
+
+## 37. Navigation layout refinement and Profile identity adoption — 2026-11-15
+
+- Owner clarified the intended responsive navigation model: the Home desktop sidebar remains the visual reference; standard desktop pages now use a persistent left sidebar in a two-column workspace. Home retains its own existing desktop sidebar to avoid duplicate navigation.
+- Desktop header no longer displays a clickable navigation toggle beside the DF logo. The mobile header retains a navigation trigger that opens the primary navigation pane; a compact Beranda / Game / Profil navigation row remains directly below the header on mobile.
+- Added shared `GlobalSidebar` for non-home standard routes. Main navigation and Tools are grouped consistently, with Settings above Wedding. Immersive game routes remain exempt from the standard shell.
+- Reworked Profile identity composition: player avatar is aligned beside the Profil Pemain heading, nickname, server indicator, and edit action. Profile surfaces now consume semantic Master Foundation tokens in both themes.
+- Removed the duplicate Google-connected account panel and its component from Profile. Kept the existing Account Security panel with login email and last sign-in time; no authentication provider/session logic was changed.
+- No database, schema, player records, game progress, or account data was modified.
+- Application changes are committed on `main`; production build and interactive browser QA must be recorded separately. Design System remains Draft until owner visual verification on mobile/desktop and both themes.
