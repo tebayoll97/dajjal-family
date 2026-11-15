@@ -12,13 +12,13 @@ const copy = {
   en: {
     navigation: "Navigation",
     main: "MAIN MENU",
-    tools: "TOOLS",
     home: "Home",
-    games: "Games",
-    universe: "Family Universe",
+    games: "Gaming",
+    blog: "Blog",
+    products: "Digital Products",
+    universe: "Dajjal Family",
     profile: "Profile",
     admin: "Admin",
-    settings: "Settings",
     language: "Language",
     open: "Open navigation",
     close: "Close navigation",
@@ -26,18 +26,44 @@ const copy = {
   id: {
     navigation: "Navigasi",
     main: "MENU UTAMA",
-    tools: "ALAT",
     home: "Beranda",
-    games: "Game",
-    universe: "Universe Keluarga",
+    games: "Gaming",
+    blog: "Blog",
+    products: "Produk Digital",
+    universe: "Dajjal Family",
     profile: "Profil",
     admin: "Admin",
-    settings: "Pengaturan",
     language: "Bahasa",
     open: "Buka navigasi",
     close: "Tutup navigasi",
   },
 };
+
+function NavigationIcon({ name }) {
+  const common = {
+    width: 20,
+    height: 20,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+    focusable: "false",
+  };
+
+  const paths = {
+    profile: <><circle cx="12" cy="8" r="3.5" /><path d="M5 20c.7-3.3 3.1-5 7-5s6.3 1.7 7 5" /></>,
+    home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9M9 20v-6h6v6" /></>,
+    games: <><path d="M6 8h12a4 4 0 0 1 3.8 5l-1 3.2a2.5 2.5 0 0 1-4.1 1.1L14 15h-4l-2.7 2.3a2.5 2.5 0 0 1-4.1-1.1l-1-3.2A4 4 0 0 1 6 8Z" /><path d="M7 11v4M5 13h4M16.5 12h.01M19 14h.01" /></>,
+    blog: <><path d="M5 3h10l4 4v14H5z" /><path d="M14 3v5h5M8 12h8M8 16h8" /></>,
+    products: <><path d="M4 8h16l-1.5 12h-13z" /><path d="M9 8a3 3 0 0 1 6 0" /><path d="M9 12v2M15 12v2" /></>,
+    universe: <><circle cx="12" cy="12" r="9" /><path d="M3.5 9h17M3.5 15h17M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" /></>,
+  };
+
+  return <svg {...common}>{paths[name]}</svg>;
+}
 
 export default function Header() {
   const pathname = stripLocalePrefix(usePathname() || "/");
@@ -88,91 +114,59 @@ export default function Header() {
 
   useEffect(() => {
     if (!navigationOpen) return undefined;
-    function handlePointer(event) {
-      if (!navigationRef.current?.contains(event.target)) setNavigationOpen(false);
-    }
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     function handleKey(event) {
       if (event.key === "Escape") setNavigationOpen(false);
     }
-    document.addEventListener("pointerdown", handlePointer);
     document.addEventListener("keydown", handleKey);
     return () => {
-      document.removeEventListener("pointerdown", handlePointer);
+      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKey);
     };
   }, [navigationOpen]);
+
+  useEffect(() => {
+    setNavigationOpen(false);
+  }, [pathname]);
 
   function isActive(route) {
     if (route === "/") return pathname === "/";
     return pathname === route || pathname.startsWith(`${route}/`);
   }
 
-  const mainLinks = [
-    { label: t.home, route: "/" },
-    { label: t.games, route: "/games" },
-    { label: t.universe, route: "/df" },
-    { label: t.profile, route: "/profile" },
-    ...(isAdmin ? [{ label: t.admin, route: "/admin" }] : []),
-  ];
-  const toolLinks = [
-    { label: t.settings, route: "/settings" },
+  const primaryLinks = [
+    { label: t.home, route: "/", icon: "home" },
+    { label: t.games, route: "/games", icon: "games" },
+    { label: t.blog, route: "/blog", icon: "blog" },
+    { label: t.products, route: "/digital-products", icon: "products" },
+    { label: t.universe, route: "/df", icon: "universe" },
   ];
 
   return (
     <header className={"df-site-header" + (isWeddingInvitation ? " df-site-header--wedding" : "")}>
       <div className="df-site-header-inner">
-        <div className="df-site-brand-group" ref={navigationRef}>
-          <button
-            type="button"
-            className="df-site-nav-toggle"
-            aria-label={navigationOpen ? t.close : t.open}
-            aria-expanded={navigationOpen}
-            aria-controls="df-global-navigation"
-            onClick={() => setNavigationOpen((open) => !open)}
-          >
-            <span aria-hidden="true">{navigationOpen ? "×" : "☰"}</span>
-          </button>
+        <div className="df-site-brand-group">
           {!isWeddingInvitation && (
-          <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
-            <span className="df-site-brand-mark" aria-hidden="true">DF</span>
-            <span className="df-site-brand-copy">
-              <strong>DAJJAL FAMILY</strong>
-              <small>ONE FAMILY. MANY POSSIBILITIES.</small>
-            </span>
-          </Link>
+            <button
+              type="button"
+              className="df-site-nav-toggle"
+              aria-label={t.open}
+              aria-expanded={navigationOpen}
+              aria-controls="df-global-navigation"
+              onClick={() => setNavigationOpen(true)}
+            >
+              <span aria-hidden="true">☰</span>
+            </button>
           )}
-
-          {navigationOpen && (
-            <nav id="df-global-navigation" className="df-site-navigation-pane" aria-label={t.navigation}>
-              <p className="df-site-navigation-heading">{t.main}</p>
-              <div className="df-site-navigation-links">
-                {mainLinks.map((item) => (
-                  <Link
-                    key={item.route}
-                    href={withLocalePrefix(item.route, language)}
-                    aria-current={isActive(item.route) ? "page" : undefined}
-                    onClick={() => setNavigationOpen(false)}
-                  >
-                    <span>{item.label}</span>
-                    {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
-                  </Link>
-                ))}
-              </div>
-              <p className="df-site-navigation-heading df-site-navigation-tools">{t.tools}</p>
-              <div className="df-site-navigation-links">
-                {toolLinks.map((item) => (
-                  <Link
-                    key={item.route}
-                    href={withLocalePrefix(item.route, language)}
-                    aria-current={isActive(item.route) ? "page" : undefined}
-                    onClick={() => setNavigationOpen(false)}
-                  >
-                    <span>{item.label}</span>
-                    {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
-                  </Link>
-                ))}
-              </div>
-            </nav>
+          {!isWeddingInvitation && (
+            <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
+              <span className="df-site-brand-mark" aria-hidden="true">DF</span>
+              <span className="df-site-brand-copy">
+                <strong>DAJJAL FAMILY</strong>
+                <small>ONE FAMILY. MANY POSSIBILITIES.</small>
+              </span>
+            </Link>
           )}
         </div>
 
@@ -184,19 +178,71 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {!pathname.startsWith("/df/wedding-anak-dajjal") && (
-        <nav className="df-mobile-quick-nav" aria-label={language === "id" ? "Navigasi utama" : "Primary navigation"}>
-          {[
-            { label: t.home, route: "/" },
-            { label: t.games, route: "/games" },
-            { label: t.profile, route: "/profile" },
-          ].map((item) => (
-            <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+
+      {!isWeddingInvitation && navigationOpen && (
+        <div className="df-mobile-navigation-layer">
+          <div className="df-mobile-navigation-backdrop" aria-hidden="true" />
+          <nav
+            ref={navigationRef}
+            id="df-global-navigation"
+            className="df-site-navigation-pane"
+            aria-label={t.navigation}
+            aria-modal="true"
+          >
+            <div className="df-site-navigation-top">
+              <span className="df-site-navigation-brand">DAJJAL FAMILY</span>
+              <button
+                type="button"
+                className="df-site-navigation-close"
+                aria-label={t.close}
+                onClick={() => setNavigationOpen(false)}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+
+            <div className="df-site-navigation-profile">
+              <Link
+                href={withLocalePrefix("/profile", language)}
+                aria-current={isActive("/profile") ? "page" : undefined}
+                onClick={() => setNavigationOpen(false)}
+              >
+                <NavigationIcon name="profile" />
+                <span>{t.profile}</span>
+              </Link>
+            </div>
+
+            <p className="df-site-navigation-heading">{t.main}</p>
+            <div className="df-site-navigation-links">
+              {primaryLinks.map((item) => (
+                <Link
+                  key={item.route}
+                  href={withLocalePrefix(item.route, language)}
+                  aria-current={isActive(item.route) ? "page" : undefined}
+                  onClick={() => setNavigationOpen(false)}
+                >
+                  <NavigationIcon name={item.icon} />
+                  <span className="df-site-navigation-link-label">{item.label}</span>
+                  {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
+                </Link>
+              ))}
+              {isAdmin && (
+                <Link
+                  href={withLocalePrefix("/admin", language)}
+                  aria-current={isActive("/admin") ? "page" : undefined}
+                  onClick={() => setNavigationOpen(false)}
+                >
+                  <NavigationIcon name="profile" />
+                  <span className="df-site-navigation-link-label">{t.admin}</span>
+                  {isActive("/admin") && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
       )}
+
+      {!pathname.startsWith("/df/wedding-anak-dajjal") && null}
     </header>
   );
 }
