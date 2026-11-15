@@ -353,7 +353,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
             <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
             <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
-            {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>}
+            <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
             <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
           </nav>
 
@@ -416,8 +416,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.gift_info?.trim() || (language === "id" ? "Informasi hadiah akan diumumkan." : "Gift information will be announced.")}</p></div>
           </section>
 
-          {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && (
-            <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
+          <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
@@ -440,8 +439,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               </form>
               {eventInfo?.guestbook_enabled && <p className="guestbook-note">✧ {t.wishesNote}</p>}
               {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
-            </section>
-          )}
+            {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
+          </section>
 
           <section className="wedding-share" id="share" data-aos="fade-left">
             <p className="wedding-kicker">SPREAD THE JOY</p>
