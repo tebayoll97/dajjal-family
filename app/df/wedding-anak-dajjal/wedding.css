@@ -1068,7 +1068,7 @@
 
 
 /* Final invitation corrections — fixed language control, clean panel titles and couple layout */
-.df-shell:has(.wedding-page) .df-footer{display:none!important}
+.df-site-shell:has(.wedding-page) .df-site-footer{display:none!important}
 .df-site-header--wedding .df-site-language{
   position:fixed!important;top:calc(env(safe-area-inset-top) + 12px)!important;right:max(14px,env(safe-area-inset-right))!important;
   z-index:1000!important;display:flex;gap:.25rem;padding:.28rem;
