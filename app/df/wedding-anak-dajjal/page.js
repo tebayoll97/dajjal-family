@@ -315,11 +315,18 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           <img className="wedding-opening-couple" src={WEDDING_ASSETS.couple} alt="Anak Dajjal dan Malika" />
           <h1>Anak Dajjal <span>&amp;</span> Malika</h1>
           <p>Kepada Seluruh pemain Darkwar Survival</p>
-          <button type="button" onClick={openInvitation}>✉ Buka Undangan</button>
+          <button type="button" onClick={openInvitation}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <path d="m3.5 7 8.5 6 8.5-6" />
+            </svg>
+            <span>Buka Undangan</span>
+          </button>
         </section>
       )}
       {celebrationActive && <div className="wedding-confetti" aria-hidden="true">{Array.from({length:28},(_,i)=><i key={i} style={{"--i":i}} />)}</div>}
       <div className="wedding-content" hidden={!invitationOpened}>
+          <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
           <section className="wedding-hero" id="couple" data-panel-number="01" data-aos="fade-up">
             <div className="wedding-ornament">✦ ❧ ✦</div>
             <h1>Anak Dajjal &amp; Malika</h1>
