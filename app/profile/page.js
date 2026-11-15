@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
-import GoogleAccountLink from "../components/GoogleAccountLink";
 import AccountLogout from "../components/AccountLogout";
 import GameCharacter from "@/lib/GameCharacter";
 
@@ -210,14 +209,14 @@ export default function ProfilePage() {
     : "-";
 
   return (
-    <main className="df-token-page df-profile-page min-h-[70vh] bg-[#080711] text-white px-5 py-10">
-      <div className="max-w-xl mx-auto">
+    <main className="df-token-page df-profile-page min-h-[70vh] px-4 py-8 sm:px-6 sm:py-10">
+      <div className="df-profile-content">
 
-        <p className="text-purple-400 text-xs tracking-[0.3em]">
+        <p className="df-profile-kicker">
           DAJJAL FAMILY · GAMING UNIVERSE
         </p>
 
-        <h1 className="text-3xl font-black mt-3 ui-title">
+        <h1 className="df-profile-page-title ui-title">
           {t.title}
         </h1>
 
@@ -239,9 +238,9 @@ export default function ProfilePage() {
         )}
 
         {/* PLAYER PROFILE */}
-        <div className="mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-6 ui-card">
+        <div className="df-profile-identity-card mt-6 ui-card">
 
-          <div className="w-28 h-28 rounded-full overflow-hidden bg-purple-600/20 border-2 border-purple-400/50 flex items-center justify-center mx-auto">
+          <div className="df-profile-avatar">
             {player.avatar_url && !avatarFailed ? (
               <img
                 src={player.avatar_url}
@@ -256,11 +255,11 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <h2 className="text-2xl font-bold text-center mt-4 ui-section-title">
+          <h2 className="df-profile-player-name ui-section-title">
             {player.nickname}
           </h2>
 
-          <p className="text-purple-300 text-sm text-center mt-1">
+          <p className="df-profile-server">
             Server {player.server_number || "—"}
           </p>
 
@@ -304,7 +303,7 @@ export default function ProfilePage() {
         </div>
 
         {/* UNIVERSAL GAME STATISTICS */}
-        <section className="mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
+        <section className="df-profile-data-card mt-8 ui-card">
           <p className="text-purple-400 text-xs tracking-[0.25em]">{t.stats}</p>
           <div className="grid grid-cols-3 gap-2 mt-4">
             {[
@@ -395,7 +394,7 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-purple-500/20 bg-[#151020] p-4 space-y-3 ui-card">
+          <div className="df-profile-security-card ui-card">
             <div className="flex flex-col gap-1">
               <span className="text-[10px] font-bold tracking-widest text-gray-500">{t.email}</span>
               <span className="text-sm font-semibold text-white break-all">{account.email || "—"}</span>
@@ -405,8 +404,6 @@ export default function ProfilePage() {
               <div className="min-w-0"><span className="text-[10px] font-bold tracking-widest text-gray-500">{t.lastSignIn}</span><p className="text-xs font-bold text-purple-200 mt-1">{account.lastSignInAt ? new Date(account.lastSignInAt).toLocaleDateString(t.dateLocale) : t.unknown}</p></div>
             </div>
           </div>
-
-          <GoogleAccountLink />
 
           <AccountLogout />
         </section>
