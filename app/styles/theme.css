@@ -132,8 +132,8 @@
 }
 :root[data-theme="light"] html,
 :root[data-theme="light"] body {
-  background: #f5f6fb !important;
-  color: #19172a !important;
+  background: #f5f6fb;
+  color: #19172a;
 }
 :root[data-theme="light"] .ui-page-header,
 :root[data-theme="light"] .ui-frame-h1 {
@@ -143,38 +143,25 @@
 :root[data-theme="light"] .ui-frame-h2,
 :root[data-theme="light"] .ui-frame-h3,
 :root[data-theme="light"] .ui-frame-h4 {
-  color: #242039 !important;
-  border-color: rgba(91,76,145,.16) !important;
-  background: linear-gradient(145deg,#fff,#f3f2f9) !important;
-  box-shadow: 0 7px 22px rgba(40,32,75,.06) !important;
-}
-:root[data-theme="light"] .ui-title,
-:root[data-theme="light"] main h1:not(.welcome-title):not(.ui-heading-h1) {
-  color: #211a37 !important;
-  background: linear-gradient(110deg,#eee9f8,#eaf0f8 72%) !important;
-  border-color: rgba(104,72,167,.22) !important;
+  color: #242039;
+  border-color: rgba(91,76,145,.16);
+  background: linear-gradient(145deg,#fff,#f3f2f9);
+  box-shadow: 0 7px 22px rgba(40,32,75,.06);
 }
 :root[data-theme="light"] .ui-section-title {
-  color: #35264f !important;
-  background: linear-gradient(100deg,#f0edf8,#f6f5fa) !important;
+  color: #35264f;
+  background: linear-gradient(100deg,#f0edf8,#f6f5fa);
 }
 :root[data-theme="light"] .ui-subtitle,
 :root[data-theme="light"] .ui-section-subtitle,
 :root[data-theme="light"] .ui-page-header p,
 :root[data-theme="light"] .ui-frame-h1 p {
-  color: #5e5b72 !important;
+  color: #5e5b72;
 }
-:root[data-theme="light"] header.sticky {
-  color: #242039 !important;
-  background: rgba(255,255,255,.96) !important;
-  border-color: rgba(91,76,145,.16) !important;
-}
-:root[data-theme="light"] header.sticky a,
-:root[data-theme="light"] header.sticky button { color: #51456e; }
-:root[data-theme="light"] footer:not(.df-home-footer) {
-  color: #514b64 !important;
-  background: #fff !important;
-  border-color: rgba(91,76,145,.16) !important;
+:root[data-theme="light"] .df-site-footer {
+  color: var(--df-text);
+  background: var(--df-surface);
+  border-color: var(--df-border);
 }
 :root[data-theme="light"] .df-section-page { color: #211a37; }
 :root[data-theme="light"] .df-section-page-intro,
@@ -231,17 +218,17 @@
   border: 1px solid var(--df-border);
   border-radius: var(--df-radius-xl);
   padding: clamp(1rem, 2vw, 1.5rem);
-  background: linear-gradient(145deg, #fff, #f2f1f9) !important;
+  background: linear-gradient(145deg, #fff, #f2f1f9);
   box-shadow: var(--df-shadow-sm);
 }
 :root[data-theme="light"] .ui-page .ui-card,
 :root[data-theme="light"] .ui-page .ui-card .ui-card,
 :root[data-theme="light"] .ui-page .ui-surface,
 :root[data-theme="light"] .ui-page .ui-panel {
-  color: var(--df-text) !important;
-  border-color: var(--df-border) !important;
-  background: var(--df-surface) !important;
-  box-shadow: var(--df-shadow-sm) !important;
+  color: var(--df-text);
+  border-color: var(--df-border);
+  background: var(--df-surface);
+  box-shadow: var(--df-shadow-sm);
 }
 :root[data-theme="light"] .ui-page .ui-heading-h1,
 :root[data-theme="light"] .ui-page .ui-heading-h2,
@@ -251,31 +238,31 @@
 :root[data-theme="light"] .ui-page h2,
 :root[data-theme="light"] .ui-page h3,
 :root[data-theme="light"] .ui-page h4 {
-  color: var(--df-text) !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  color: var(--df-text);
+  background: transparent;
+  box-shadow: none;
 }
 :root[data-theme="light"] .ui-page .ui-heading-h1 {
-  padding: 0 !important;
-  border: 0 !important;
+  padding: 0;
+  border: 0;
 }
 :root[data-theme="light"] .ui-page .ui-heading-h2,
 :root[data-theme="light"] .ui-page .ui-heading-h3,
 :root[data-theme="light"] .ui-page .ui-heading-h4 {
-  border-top: 0 !important;
-  border-right: 0 !important;
-  border-bottom: 0 !important;
-  border-left-color: var(--ui-heading-line) !important;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left-color: var(--ui-heading-line);
 }
 :root[data-theme="light"] .ui-page .ui-prose,
 :root[data-theme="light"] .ui-page .ui-subtitle,
 :root[data-theme="light"] .ui-page .ui-caption,
 :root[data-theme="light"] .ui-page .ui-field-help,
 :root[data-theme="light"] .ui-page .ui-dialog-body {
-  color: var(--df-text-secondary) !important;
+  color: var(--df-text-secondary);
 }
 :root[data-theme="light"] .ui-page .ui-eyebrow {
-  color: #6848a7 !important;
+  color: #6848a7;
 }
 
 /* Homepage semantic surface mapping. Scoped so legacy routes are unaffected. */

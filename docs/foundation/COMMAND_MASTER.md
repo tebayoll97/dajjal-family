@@ -459,3 +459,15 @@ When requested, implement the account profile experience with display name, uniq
 - Source commit: `63313ea508ad3210668277d78da063c3a14b6f4f`.
 - GitHub source re-fetch checks confirm the concurrency cap and response contract. This is not a substitute for lint/build, performance measurement, or runtime QA; those remain pending until Vercel quota recovery.
 - No merge to `main`, production deployment, live database change, or player data mutation occurred.
+
+## 35. Global Master Foundation visual shell rollout — 2026-11-15
+
+- Owner request: apply the Master Foundation Dajjal Family visual baseline across standard pages, replace the previous shared header/footer, and remove legacy global section/heading rules that use `!important`.
+- Isolated the broad cross-site visual change on `feature/master-foundation-global-shell` because it affects every standard route and has a meaningful regression surface.
+- Replaced the shared Header and Footer with a token-driven, bilingual, responsive global shell. RouteChrome now applies them to all standard routes while preserving immersive MAMAH NGAMUK and RUN & JUMP gameplay routes.
+- Removed the duplicate homepage topbar/content header/footer and the separate DF Universe header/footer. Migrated the DF Universe page surfaces to semantic Master Foundation tokens.
+- Replaced blanket legacy global heading and section framing rules in `app/styles/legacy.css`; removed obsolete generic light-theme heading/sticky-header overrides. Named component primitives remain available. No blanket `main section:has(...)` styling remains in the global compatibility layer.
+- Updated document reset colors to semantic theme tokens and preserved locale-prefixed links in the global shell, homepage, and DF Universe links. Footer links now point only to verified routes.
+- No database, account, player, game progress, or invitation data/schema was changed.
+- Vercel build and visual QA have not been run. Per `docs/aturan-kerja.md`, do not create previews or poll Vercel while the build quota is not known to have recovered. Merge/release remains pending source review and build availability.
+- The Design System document remains Draft until responsive, keyboard, accessibility, and both-theme QA are completed. Page-specific legacy utilities are not all migrated yet; continue token migration incrementally after the shared shell is verified.

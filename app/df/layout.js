@@ -1,6 +1,4 @@
 import "./df.css";
-import DFHeader from "./components/DFHeader";
-import DFFooter from "./components/DFFooter";
 
 export const metadata = {
   title: {
@@ -11,11 +9,5 @@ export const metadata = {
 };
 
 export default function DFLayout({ children }) {
-  return (
-    <div className="df-shell">
-      <DFHeader />
-      <div className="df-main">{children}</div>
-      <DFFooter />
-    </div>
-  );
+  return <div className="df-main">{children}</div>;
 }

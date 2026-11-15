@@ -1,110 +1,54 @@
-
 "use client";
 
 import Link from "next/link";
 import { useLanguage } from "./LanguageProvider";
-import { usePathname } from "next/navigation";
-import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
+import { withLocalePrefix } from "@/lib/localePath";
 
-const translations = {
+const copy = {
   en: {
-    tagline: "One Account. One Profile. Multiple Games. One Universe.",
-    home: "Home",
-    play: "Games",
-    profile: "Profile",
-    copyright: "All rights reserved.",
-    universe: "A WORLD OF GAMES. ONE UNIVERSE.",
+    tagline: "One Account. One Profile. Multiple Experiences. One Universe.",
+    universe: "Family Universe", games: "Games", settings: "Settings", wedding: "Wedding", profile: "Profile", rights: "All rights reserved.",
+    statement: "A DIGITAL UNIVERSE BUILT TO GROW.",
   },
   id: {
-    tagline: "Satu Akun. Satu Profil. Banyak Game. Satu Universe.",
-    home: "Beranda",
-    play: "Game",
-    profile: "Profil",
-    copyright: "Hak cipta dilindungi.",
-    universe: "DUNIA PERMAINAN. SATU SEMESTA.",
+    tagline: "Satu Akun. Satu Profil. Banyak Pengalaman. Satu Universe.",
+    universe: "Universe Keluarga", games: "Game", settings: "Pengaturan", wedding: "Wedding", profile: "Profil", rights: "Hak cipta dilindungi.",
+    statement: "SEMESTA DIGITAL YANG TERUS BERKEMBANG.",
   },
 };
 
 export default function Footer() {
-  const pathname = stripLocalePrefix(usePathname() || "/");
   const { language } = useLanguage();
-  if (pathname?.startsWith("/games/run-jump") || pathname?.startsWith("/games/mamah-ngamuk")) return null;
-  const t = translations[language] || translations.en;
-
-  const navLinks = [
-    { label: t.home, href: withLocalePrefix("/", language) },
-    { label: t.play, href: withLocalePrefix("/games", language) },
-    { label: t.profile, href: withLocalePrefix("/profile", language) },
+  const t = copy[language] || copy.id;
+  const links = [
+    [t.universe, "/df"],
+    [t.games, "/games"],
+    [t.settings, "/settings"],
+    [t.wedding, "/df/wedding"],
+    [t.profile, "/profile"],
   ];
 
   return (
-    <footer className="relative border-t border-purple-500/20 bg-[#080711] mt-auto overflow-hidden">
-
-      {/* Decorative glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-24 bg-purple-600/10 blur-3xl pointer-events-none" />
-
-      <div className="relative max-w-6xl mx-auto px-4 py-10">
-
-        <div className="flex flex-col items-center text-center gap-5">
-
-          {/* Logo */}
-          <Link
-            href={withLocalePrefix("/", language)}
-            className="text-xl font-black tracking-[0.12em] text-white hover:opacity-80 transition"
-          >
-            DAJJAL <span className="text-purple-400">& VEYLORA</span>
+    <footer className="df-site-footer">
+      <div className="df-site-footer-inner">
+        <div className="df-site-footer-brand">
+          <Link href={withLocalePrefix("/", language)} className="df-site-brand">
+            <span className="df-site-brand-mark" aria-hidden="true">DF</span>
+            <span className="df-site-brand-copy">
+              <strong>DAJJAL FAMILY</strong>
+              <small>ONE FAMILY. MANY POSSIBILITIES.</small>
+            </span>
           </Link>
-
-          {/* Tagline */}
-          <p className="text-gray-500 text-xs tracking-wide">
-            {t.tagline}
-          </p>
-
-          {/* Character Links */}
-          <div className="flex items-center gap-3 px-5 py-2.5 rounded-full border border-purple-500/20 bg-purple-500/5">
-            <Link
-              href={withLocalePrefix("/characters/dajjal", language)}
-              className="text-purple-300 hover:text-white transition font-bold text-sm"
-            >
-              †Ðαjjαし•†
-            </Link>
-
-            <span className="text-purple-500/50 text-xs">×</span>
-
-            <Link
-              href={withLocalePrefix("/characters/veylora", language)}
-              className="text-purple-300 hover:text-white transition font-bold text-sm"
-            >
-              †Veyしorα•†
-            </Link>
-          </div>
-
-          {/* Divider */}
-          <div className="w-20 h-px bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
-
-          {/* Navigation */}
-          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-xs text-gray-400 hover:text-purple-300 transition-colors duration-200"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Universe Label */}
-          <p className="text-[9px] tracking-[0.25em] text-purple-400/50 font-semibold mt-1">
-            {t.universe}
-          </p>
-
-          {/* Copyright */}
-          <p className="text-[10px] text-gray-600 mt-1">
-            © 2026 DAJJAL FAMILY · GAMING UNIVERSE. {t.copyright}
-          </p>
-
+          <p>{t.tagline}</p>
+        </div>
+        <nav className="df-site-footer-nav" aria-label={language === "id" ? "Navigasi footer" : "Footer navigation"}>
+          {links.map(([label, route]) => (
+            <Link key={route} href={withLocalePrefix(route, language)}>{label}</Link>
+          ))}
+        </nav>
+        <div className="df-site-footer-bottom">
+          <span>{t.statement}</span>
+          <small>© {new Date().getFullYear()} DAJJAL FAMILY. {t.rights}</small>
         </div>
       </div>
     </footer>
