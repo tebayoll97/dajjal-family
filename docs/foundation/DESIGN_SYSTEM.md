@@ -452,3 +452,11 @@ The Design System remains **Draft — Pending Approval** until live visual check
 Standard desktop routes now use a shared two-column workspace with a persistent left navigation sidebar; the Home page keeps its established sidebar composition. On mobile, a compact primary navigation row (Beranda, Game, Profil) sits below the header and the sidebar-style navigation is available from the mobile navigation trigger. The desktop header has no navigation trigger beside the DF brand.
 
 The Profile identity area groups the avatar with the page title, player nickname, server, and edit action. Profile page surfaces consume semantic theme tokens, and the duplicate Google-connected panel has been removed while email and last sign-in details remain in Account Security. This is an implementation update, not design-system approval; both themes, desktop/mobile, keyboard behavior, and live route QA remain pending.
+
+
+## 19. Navigation and Profile refinement — 2026-11-15
+
+- Standard desktop routes now use a persistent left navigation sidebar; the homepage retains its established two-sidebar layout, and immersive game routes remain exempt.
+- Mobile keeps the compact Home/Games/Profile navigation row below the brand header. The header dropdown toggle is removed.
+- Profile preserves the latest identity layout with the avatar beside the title/name on desktop and stacked on narrow mobile. The duplicate Google-connected panel is removed; the existing email/provider/last-sign-in security panel remains.
+- Profile surfaces use semantic Master Foundation tokens. Do not mark the Design System fully verified until desktop/mobile, light/dark, keyboard, and accessibility QA is complete.
