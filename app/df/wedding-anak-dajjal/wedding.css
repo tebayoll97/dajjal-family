@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Great+Vibes&family=Playfair+Display:wght@600;700;800&display=swap");
 :root{
   --w-ink:#47364f;--w-panel:#fffaf4;--w-burgundy:#a64f76;--w-gold:#d69b42;
   --w-gold-light:#8d5b28;--w-cream:#fffaf2;--w-muted:#776b79;
@@ -973,4 +973,57 @@
     transform:none!important;
     transition:none!important;
   }
+}
+
+
+/* Invitation cover and panel heading typography */
+.df-main .wedding-page .wedding-opening h1{
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-style:normal!important;font-weight:400!important;
+  font-size:clamp(3.2rem,12vw,5.6rem)!important;
+  line-height:1.08!important;letter-spacing:.01em;
+  color:#536b55!important;
+  text-shadow:0 2px 0 rgba(255,255,255,.45);
+}
+.df-main .wedding-page .wedding-opening h1 span{
+  font-family:"Great Vibes",cursive!important;font-style:normal!important;
+  color:#b77a91!important;
+}
+.df-main .wedding-page .wedding-opening button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:.7rem!important;min-height:54px;padding:.85rem 1.65rem!important;
+  border:1px solid rgba(128,91,105,.22)!important;border-radius:999px!important;
+  background:linear-gradient(135deg,#dce8d8 0%,#efcbd8 52%,#f4dfd0 100%)!important;
+  color:#53614f!important;
+  font:800 .92rem/1.2 "Nunito Sans",Arial,sans-serif!important;
+  letter-spacing:.025em;box-shadow:0 9px 24px rgba(102,121,94,.2)!important;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.df-main .wedding-page .wedding-opening button svg{
+  display:block;flex:0 0 20px;width:20px;height:20px;
+}
+.df-main .wedding-page .wedding-opening button span{display:block;line-height:1.2}
+.df-main .wedding-page .wedding-opening button:hover{
+  transform:translateY(-2px);filter:saturate(1.04);
+  box-shadow:0 12px 28px rgba(102,121,94,.25)!important;
+}
+.df-main .wedding-page .wedding-opening button:active{transform:scale(.97)}
+.df-main .wedding-page .wedding-invitation-eyebrow{
+  width:100%;margin:1rem auto 0;padding:0 .75rem;
+  color:#667a61;text-align:center;
+  font:700 clamp(1.65rem,6vw,2.45rem)/1.25 "Playfair Display",Georgia,serif;
+  letter-spacing:.015em;
+  text-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+.df-main .wedding-page .wedding-invitation-eyebrow::after{
+  content:"";display:block;width:74px;height:1px;margin:.7rem auto 0;
+  background:linear-gradient(90deg,transparent,#b58b78,transparent);
+}
+.df-main .wedding-page .wedding-hero{padding-top:1.25rem}
+@media(max-width:480px){
+ .df-main .wedding-page .wedding-invitation-eyebrow{margin-top:.7rem;font-size:1.7rem}
+ .df-main .wedding-page .wedding-hero{padding-top:1rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .df-main .wedding-page .wedding-opening button{transition:none}
 }
