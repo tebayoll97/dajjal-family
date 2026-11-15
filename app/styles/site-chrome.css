@@ -118,9 +118,3 @@
   .df-site-footer-nav { gap: .7rem 1rem; margin-top: 1.3rem; }
   .df-site-footer-bottom { align-items: flex-start; flex-direction: column; }
 }
-/* The homepage keeps its discovery sidebars; its former local header/footer are retired. */
-.df-home-app .df-mobile-topbar,
-.df-home-app .df-content-topbar,
-.df-home-app .df-home-footer,
-.df-home-app .df-drawer-layer { display: none; }
-.df-home-app .df-app-layout { padding-top: 0; }
