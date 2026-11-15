@@ -1,22 +1,22 @@
-# Tools Navigation
+# Wedding product direction
 
-## Purpose
-Provide a dedicated, extensible Tools / Alat category in the primary Dajjal Family navigation pane so utility products can be discovered without expanding the main navigation list.
+## Current decision — 2026-11-15
+The general-purpose Wedding Invitation Builder is retired as a Dajjal Family product. The only wedding experience to maintain is the public digital invitation for **Anak Dajjal & Malika**.
 
-## Current structure
-- Navigation group label: Tools (English) / Alat (Bahasa Indonesia).
-- First item: Wedding Invitation Builder (English) / Pembuat Undangan Pernikahan (Bahasa Indonesia).
-- Destination: `/df/wedding`.
-- The existing Wedding platform, builder, dashboard, preview, and invitation routes remain unchanged. This is a navigation entry point, not a route migration or rewrite.
+## Public invitation
+- Canonical page: `/df/wedding-anak-dajjal`.
+- Legacy invitation alias: `/df/wedding=anak-dajjal-malika` (preserve compatibility and canonical metadata).
+- Keep the public invitation renderer, public invitation data endpoint, RSVP endpoint, Guestbook endpoint, and the assets/styles required by the invitation.
+- Continue supporting Indonesian and English routes and metadata according to `docs/BILINGUAL_URLS.md`.
 
-## Placement and behavior
-- The Tools group appears beneath the Main Menu group in the homepage left sidebar.
-- The same Sidebar component is reused in the mobile navigation drawer, so the item is available on desktop and mobile.
-- Keep labels bilingual through the existing LanguageProvider.
-- Add future tools as child links within this category rather than adding each tool to the primary Main Menu list.
-- Preserve the existing navigation hierarchy and responsive drawer behavior.
+## Retired builder surface
+- Remove Wedding Builder links from the global sidebar, header navigation, footer, and DF Universe landing page.
+- Redirect the old `/df/wedding` entry and its nested builder URLs to the canonical public invitation so old bookmarks do not lead to dead pages.
+- Retire builder-only UI and authenticated invitation CRUD/publish APIs.
+- Do not drop Supabase tables, columns, policies, functions, invitation records, RSVP rows, Guestbook rows, or media as part of application retirement. Database/data cleanup requires a separate review and explicit authorization.
 
-## Scope and verification
-- Implemented in `app/components/HomeExperience.js`.
-- No new route, database schema, API, or authentication behavior was introduced.
-- Build, browser QA, and preview verification are deferred until Vercel quota is expected to recover, per `docs/aturan-kerja.md`.
+## Design direction
+Use publicly observable invitation design patterns from undangan.io as inspiration for the single Anak Dajjal & Malika invitation. Implement original code, layout, copy, and assets; do not copy proprietary source code or protected assets.
+
+## Verification
+Test the canonical public route in Indonesian and English, the legacy alias, all redirects from retired builder paths, public data loading, RSVP, Guestbook, mobile layout, both themes, and sitemap/robots/canonical behavior. Do not claim live verification until a deployment is available and browser QA has been performed.
