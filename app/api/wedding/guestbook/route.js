@@ -32,7 +32,7 @@ export async function POST(request) {
     if (profileError) throw profileError;
     if (profile?.guestbook_enabled !== true) return Response.json({ error: "Guestbook is disabled." }, { status: 403 });
     const { error } = await supabaseAdmin.from("df_guestbook").insert({
-      invitation_id: invitation.id, guest_name: guestName, message, language, is_approved: false,
+      invitation_id: invitation.id, guest_name: guestName, message, language, is_approved: true,
     });
     if (error) throw error;
     return Response.json({ ok: true }, { status: 201, headers: { "Cache-Control": "no-store" } });
