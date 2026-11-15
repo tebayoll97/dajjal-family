@@ -148,12 +148,6 @@
   background: linear-gradient(145deg,#fff,#f3f2f9);
   box-shadow: 0 7px 22px rgba(40,32,75,.06);
 }
-:root[data-theme="light"] .ui-title,
-:root[data-theme="light"] main h1:not(.welcome-title):not(.ui-heading-h1) {
-  color: #211a37;
-  background: linear-gradient(110deg,#eee9f8,#eaf0f8 72%);
-  border-color: rgba(104,72,167,.22);
-}
 :root[data-theme="light"] .ui-section-title {
   color: #35264f;
   background: linear-gradient(100deg,#f0edf8,#f6f5fa);
@@ -164,13 +158,6 @@
 :root[data-theme="light"] .ui-frame-h1 p {
   color: #5e5b72;
 }
-:root[data-theme="light"] header.sticky {
-  color: #242039;
-  background: rgba(255,255,255,.96);
-  border-color: rgba(91,76,145,.16);
-}
-:root[data-theme="light"] header.sticky a,
-:root[data-theme="light"] header.sticky button { color: #51456e; }
 :root[data-theme="light"] .df-site-footer {
   color: var(--df-text);
   background: var(--df-surface);
