@@ -512,3 +512,10 @@ When requested, implement the account profile experience with display name, uniq
 - Added anchor targets and mobile horizontal-scroll behavior, keyboard focus styling, and reduced-motion support.
 - Removed misleading/irrelevant legacy placeholder copy. Photo and audio URLs remain owner-supplied; do not invent or substitute final media.
 - No database/schema/data changes. Build and browser QA remain pending under the current Vercel quota pause.
+
+
+## 20.2 Unified invitation navigation and RSVP/Guestbook — 2026-11-15
+- The public invitation uses a five-destination bottom navigation: Mempelai, Acara, Hadiah, Ucapan, Lain-lain (localized for English).
+- RSVP and Guestbook are presented as one Ucapan & Doa journey: player name, attendance (yes/maybe/no), and message/prayer. Existing endpoints and tables remain in use; no DB schema/data changes are authorized or performed.
+- The combined client flow calls RSVP and Guestbook separately and explicitly reports partial success. The RSVP API now accepts maybe; verify the live database column/check constraints before claiming all three attendance states work end-to-end.
+- Source-level only. Build, deployment, and browser QA remain pending under the Vercel quota pause.
