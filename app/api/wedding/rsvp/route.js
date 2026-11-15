@@ -23,7 +23,7 @@ export async function POST(request) {
     const language = body?.language === "id" ? "id" : "en";
     if (!slug || slug.length > 120 || guestName.length < 1 || guestName.length > 100 ||
         invitedName.length > 100 || !Number.isInteger(guestCount) || guestCount < 1 ||
-        guestCount > 10 || !["yes", "no"].includes(attendance)) {
+        guestCount > 10 || !["yes", "maybe", "no"].includes(attendance)) {
       return Response.json({ error: "Invalid RSVP details." }, { status: 400 });
     }
     const { data: invitation, error: invitationError } = await supabaseAdmin
