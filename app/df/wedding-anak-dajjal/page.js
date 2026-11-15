@@ -460,10 +460,18 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
       </div>
 
-      <button className="wedding-music-float" type="button" onClick={toggleMusic} aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"} aria-pressed={musicOn}>
-        <span aria-hidden="true">{musicOn ? "♫" : "♪"}</span>
+      <button
+        className={"wedding-music-float " + (musicOn ? "is-playing" : "is-off")}
+        type="button"
+        onClick={toggleMusic}
+        aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"}
+        aria-pressed={musicOn}
+        title={musicOn ? "Musik menyala" : "Musik mati"}
+      >
+        <span className="wedding-music-icon" aria-hidden="true">♫</span>
+        {!musicOn && <span className="wedding-music-off-mark" aria-hidden="true">／</span>}
       </button>
-      <audio ref={audioRef} src={WEDDING_ASSETS.music.replace("export=download", "export=open")} loop preload="auto" onError={() => setMusicOn(false)} />
+      <audio ref={audioRef} src={WEDDING_ASSETS.music} loop preload="none" onError={() => setMusicOn(false)} />
     </main>
   );
 }
