@@ -320,7 +320,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       )}
       {celebrationActive && <div className="wedding-confetti" aria-hidden="true">{Array.from({length:28},(_,i)=><i key={i} style={{"--i":i}} />)}</div>}
       <div className="wedding-content" hidden={!invitationOpened}>
-          <section className="wedding-hero" id="couple" data-aos="fade-right">
+          <section className="wedding-hero" id="couple" data-panel-number="01" data-aos="fade-up">
             <div className="wedding-ornament">✦ ❧ ✦</div>
             <h1>Anak Dajjal &amp; Malika</h1>
             <p className="wedding-intro">{t.intro}</p>
@@ -337,14 +337,24 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p>Dajjal &amp; Veylora</p>
               <p>JinuYourIdol &amp; Bubuah</p>
             </div>
+            <div className="wedding-countdown" id="countdown" aria-label={t.countdown}>
+              <p className="wedding-kicker">{t.countdown}</p>
+              {countdown ? (countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
+                <div className="detail-grid">
+                  {[[countdown.days,t.days],[countdown.hours,t.hours],[countdown.minutes,t.minutes],[countdown.seconds,t.seconds]].map(([value,label])=>(
+                    <article key={label}><h3>{String(value).padStart(2,"0")}</h3><p>{label}</p></article>
+                  ))}
+                </div>
+              )) : <p className="section-copy">{language === "id" ? "Hitung mundur akan tampil setelah tanggal acara ditentukan." : "The countdown will appear once the event date is set."}</p>}
+            </div>
           </section>
 
-          <section className="wedding-section wedding-family-panel" id="groom" data-aos="fade-up">
+          <section className="wedding-section wedding-family-panel" id="groom" data-panel-number="02" data-aos="fade-up">
             <img src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
             <h2>Anak Dajjal</h2>
             <p>Putra dari Dajjal &amp; Veylora</p>
           </section>
-          <section className="wedding-section wedding-family-panel" id="bride" data-aos="fade-up">
+          <section className="wedding-section wedding-family-panel" id="bride" data-panel-number="03" data-aos="fade-up">
             <img src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
             <h2>Malika</h2>
             <p>Putri dari JinuYourIdol &amp; Bubuah</p>
@@ -358,31 +368,17 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
           </nav>
 
-          {countdown && (
-            <section className="wedding-section wedding-countdown" id="countdown" data-aos="fade-up" aria-label={t.countdown}>
-              <p className="wedding-kicker">{t.countdown}</p>
-              {countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
-                <div className="detail-grid">
-                  {[[countdown.days,t.days],[countdown.hours,t.hours],[countdown.minutes,t.minutes],[countdown.seconds,t.seconds]].map(([value,label])=>(
-                    <article key={label}><h3>{String(value).padStart(2,"0")}</h3><p>{label}</p></article>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
 
-          {eventInfo?.love_story?.trim() && (
-            <section className="wedding-section" id="story" data-aos="fade-right">
-              <p className="wedding-kicker">{t.story}</p>
-              <h2 className="wedding-section-heading">{t.story}</h2>
-              <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo.love_story}</p></div>
-            </section>
-          )}
+          <section className="wedding-section" id="story" data-panel-number="04" data-aos="fade-up">
+            <p className="wedding-kicker">{t.story}</p>
+            <h2 className="wedding-section-heading">{t.story}</h2>
+            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
+          </section>
 
-          {galleryItems.length > 0 && (
-            <section className="wedding-section wedding-gallery-section" id="gallery" data-aos="fade-left">
-              <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
-              <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="05" data-aos="fade-up">
+            <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
+            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
+            {galleryItems.length > 0 ? (
               <div className="wedding-gallery-viewer">
                 <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || t.photoAlt} className="wedding-gallery-image" />
                 <div className="wedding-gallery-controls">
@@ -392,10 +388,10 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 </div>
                 {galleryItems[galleryIndex]?.title && <p className="wedding-gallery-caption">{galleryItems[galleryIndex].title}</p>}
               </div>
-            </section>
-          )}
+            ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
+          </section>
 
-          <section className="wedding-section" id="event" data-aos="fade-left">
+          <section className="wedding-section" id="event" data-panel-number="06" data-aos="fade-up">
             <p className="wedding-kicker">SAVE THE CELEBRATION</p>
             <h2 className="wedding-section-heading">{t.reception}</h2>
             <div className="detail-grid">
@@ -410,7 +406,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-player-id" id="gift" data-aos="fade-left">
+          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="07" data-aos="fade-up">
             <p className="wedding-kicker">{t.playerId}</p>
             <h2 className="wedding-section-heading">{t.playerId}</h2>
             <div className="dawn-badge-card">
@@ -425,7 +421,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-wishes" id="wishes" data-aos="fade-right">
+          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="08" data-aos="fade-up">
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
@@ -450,7 +446,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
 
-          <section className="wedding-share" id="share" data-aos="fade-left">
+          <section className="wedding-share" id="share" data-panel-number="09" data-aos="fade-up">
             <p className="wedding-kicker">SPREAD THE JOY</p>
             <h2 className="wedding-section-heading">{t.couple}</h2>
             <div className="share-actions">
