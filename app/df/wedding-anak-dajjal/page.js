@@ -346,13 +346,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p>Dajjal &amp; Veylora</p>
               <p>JinuYourIdol &amp; Bubuah</p>
             </div>
-            {(eventInfo?.groom_parent_names || eventInfo?.bride_parent_names) && (
-              <div className="wedding-note">
-                <strong>{t.parents}</strong>
-                {eventInfo?.groom_parent_names && <p>{eventInfo.groom_parent_names}</p>}
-                {eventInfo?.bride_parent_names && <p>{eventInfo.bride_parent_names}</p>}
-              </div>
-            )}
           </section>
 
           <section className="wedding-section wedding-family-panel" id="groom" data-aos="fade-up">
