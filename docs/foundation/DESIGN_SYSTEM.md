@@ -430,3 +430,11 @@ Initial semantic tokens have been added to `app/styles/tokens.css`, with Light M
 Shared component inventory and behavior contracts are documented in `COMPONENT_CATALOG.md`.
 
 This document remains **Draft — Pending Approval** until typography, layout, component rules, and implementation review have been completed. Token creation alone does not mean every existing page has adopted the Design System.
+
+# 17. GLOBAL SHELL IMPLEMENTATION NOTE
+
+A first global implementation pass now provides a shared token-driven Header and Footer across standard routes, with immersive game routes intentionally exempt. The homepage retains its discovery sidebars while using the shared global shell; the DF Universe page now consumes the same semantic theme tokens.
+
+The global legacy compatibility layer no longer applies blanket heading or section-frame styles to every `main` element. Named primitives remain available for gradual migration. Broad legacy `!important` overrides have been removed from the global compatibility and theme stylesheets; reduced-motion safeguards remain scoped to accessibility behavior.
+
+This is an implementation milestone, not design-system approval. Existing page-specific utility classes and bespoke components still require incremental token migration. The document remains **Draft — Pending Approval** until visual, mobile, desktop, keyboard, accessibility, and Dark/Light theme QA are complete.
