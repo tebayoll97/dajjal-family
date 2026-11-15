@@ -20,3 +20,9 @@ Use publicly observable invitation design patterns from undangan.io as inspirati
 
 ## Verification
 Test the canonical public route in Indonesian and English, the legacy alias, all redirects from retired builder paths, public data loading, RSVP, Guestbook, mobile layout, both themes, and sitemap/robots/canonical behavior. Do not claim live verification until a deployment is available and browser QA has been performed.
+
+## Current invitation UX implementation
+- The public invitation now includes a compact, sticky section-navigation row after the hero. It only displays links for sections that are available or enabled.
+- Navigation targets include event details, Love Story, gallery, digital gifts, RSVP, and Guestbook.
+- Keep the experience mobile-first, keyboard-accessible, and respectful of reduced-motion preferences.
+- Request the owner's actual photo and audio URLs when the media slots are ready; do not use invented media or treat placeholders as final assets.
