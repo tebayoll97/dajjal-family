@@ -7,14 +7,12 @@ import { withLocalePrefix } from "@/lib/localePath";
 const copy = {
   en: {
     tagline: "One Account. One Profile. Multiple Experiences. One Universe.",
-    about: "About", games: "Games", knowledge: "Knowledge", contact: "Contact",
-    characters: "Our Characters", rights: "All rights reserved.",
+    universe: "Family Universe", games: "Games", settings: "Settings", wedding: "Wedding", profile: "Profile", rights: "All rights reserved.",
     statement: "A DIGITAL UNIVERSE BUILT TO GROW.",
   },
   id: {
     tagline: "Satu Akun. Satu Profil. Banyak Pengalaman. Satu Universe.",
-    about: "Tentang", games: "Game", knowledge: "Pengetahuan", contact: "Kontak",
-    characters: "Karakter Kami", rights: "Hak cipta dilindungi.",
+    universe: "Universe Keluarga", games: "Game", settings: "Pengaturan", wedding: "Wedding", profile: "Profil", rights: "Hak cipta dilindungi.",
     statement: "SEMESTA DIGITAL YANG TERUS BERKEMBANG.",
   },
 };
@@ -23,11 +21,11 @@ export default function Footer() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const links = [
-    [t.about, "/about"],
+    [t.universe, "/df"],
     [t.games, "/games"],
-    [t.knowledge, "/knowledge"],
-    [t.characters, "/characters/dajjal"],
-    [t.contact, "/contact"],
+    [t.settings, "/settings"],
+    [t.wedding, "/df/wedding"],
+    [t.profile, "/profile"],
   ];
 
   return (
