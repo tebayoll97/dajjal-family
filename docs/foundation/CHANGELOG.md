@@ -127,3 +127,13 @@
 - Kept MAMAH NGAMUK static assets under `public/mini-game`; they are still referenced and were not deleted.
 - Daily Riddle files and features were intentionally left untouched pending a separate explicit removal instruction.
 - Runtime/build verification is pending; no deployment was attempted while the Vercel deployment quota restriction remains in effect.
+
+
+## Wedding product scope reduction — 2026-11-15
+
+- Retired the general-purpose Wedding Invitation Builder from Dajjal Family following the owner's product decision.
+- Removed Builder navigation, dashboard/editor/preview/detail pages, Builder-only account controls, and authenticated invitation CRUD/publish APIs.
+- Redirected legacy Builder URLs to the single public Anak Dajjal & Malika invitation.
+- Preserved the public invitation renderer, public read API, RSVP, Guestbook, invitation alias, required media/styles, and all existing database records/schema.
+- Expanded the public invitation allowlist and rendering for family details, event countdown, address/map, Love Story, and digital-gift information when available; added localized metadata and hreflang.
+- Source changes are on `main`. Build and browser QA remain pending; no Supabase schema/data operation was performed.
