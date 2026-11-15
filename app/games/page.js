@@ -147,7 +147,7 @@ export default function GamesPage() {
     }));
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-10 sm:py-14">
+    <main className="df-token-page df-games-page relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-10 sm:py-14">
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-purple-600/10 blur-[100px]" />
       <div className="relative z-10 mx-auto max-w-5xl">
         <div className="mb-9 text-center">
@@ -164,7 +164,7 @@ export default function GamesPage() {
             <h2 className="text-[10px] font-bold tracking-[0.25em] text-emerald-300 ui-section-title">{t.available}</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-amber-400/25 bg-gradient-to-br from-[#281a25] via-[#171024] to-[#100d19] ui-card">
+            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-amber-400/25 bg-gradient-to-br from-[#281a25] via-[#171024] to-[#100d19] ui-card df-game-card">
               <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-amber-950/80 via-rose-950/60 to-purple-950/80 text-7xl">
                 <span aria-hidden="true">🧹</span>
                 <span className="absolute bottom-4 left-5 rounded-full border border-amber-200/20 bg-black/40 px-3 py-1 text-[9px] font-bold tracking-[0.2em] text-amber-100">FULL SCREEN ACTION</span>
@@ -177,7 +177,7 @@ export default function GamesPage() {
                 <button onClick={handlePlayMamah} disabled={loading} className="mt-auto w-full rounded-xl bg-amber-600 px-7 py-4 text-sm font-black tracking-wider transition hover:bg-amber-500 disabled:opacity-50">{loading ? t.wait : t.play}</button>
               </div>
             </article>
-            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-[#102536] via-[#111827] to-[#100d19] ui-card">
+            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-[#102536] via-[#111827] to-[#100d19] ui-card df-game-card">
               <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-950/80 via-emerald-950/50 to-purple-950/80 text-7xl" aria-hidden="true">🦖</div>
               <div className="flex flex-1 flex-col items-start p-6 sm:p-7">
                 <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-cyan-300">02 · ARCADE GAME</p>
@@ -204,7 +204,7 @@ export default function GamesPage() {
           ) : (
           <div className="grid gap-3 sm:grid-cols-3">
             {games.map((game, index) => (
-              <article key={game.id || game.slug} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] transition duration-300 hover:border-purple-400/30 hover:bg-purple-500/[0.06] ui-card">
+              <article key={game.id || game.slug} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] transition duration-300 hover:border-purple-400/30 hover:bg-purple-500/[0.06] ui-card df-game-card">
                 <div className="relative h-36 overflow-hidden">
                   <img src={game.image} alt={game.alt} loading="lazy" className="h-full w-full object-cover opacity-75 transition duration-500 hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#100d19] via-black/10 to-transparent" />
@@ -225,7 +225,7 @@ export default function GamesPage() {
 
       {showGooglePrompt && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 p-5 backdrop-blur-md" onClick={() => setShowGooglePrompt(false)}>
-          <section role="alertdialog" aria-modal="true" aria-labelledby="mamah-google-title" className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-amber-300/30 bg-gradient-to-b from-[#261a2b] to-[#100d19] p-6 text-center shadow-[0_25px_90px_rgba(0,0,0,.75)] ui-popup ui-card" onClick={(event) => event.stopPropagation()}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="mamah-google-title" className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-amber-300/30 bg-gradient-to-b from-[#261a2b] to-[#100d19] p-6 text-center shadow-[0_25px_90px_rgba(0,0,0,.75)] ui-popup ui-card df-theme-panel" onClick={(event) => event.stopPropagation()}>
             <div className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full bg-amber-500/15 blur-3xl" />
             <div className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-300/25 bg-amber-400/10 text-3xl">🔐</div>
             <p className="relative text-[9px] font-black tracking-[.3em] text-amber-300">ACCOUNT REQUIRED</p>
@@ -242,7 +242,7 @@ export default function GamesPage() {
 
       {showError && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-5 backdrop-blur-sm" onClick={() => setShowError(false)}>
-          <div role="alertdialog" aria-modal="true" aria-labelledby="games-error-title" className="w-full max-w-sm rounded-2xl border border-purple-500/30 bg-[#151020] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.6)] ui-popup ui-gradient-frame ui-card" onClick={(event) => event.stopPropagation()}>
+          <div role="alertdialog" aria-modal="true" aria-labelledby="games-error-title" className="w-full max-w-sm rounded-2xl border border-purple-500/30 bg-[#151020] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.6)] ui-popup ui-gradient-frame ui-card df-theme-panel" onClick={(event) => event.stopPropagation()}>
             <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-2xl text-red-400">!</div>
             <h2 id="games-error-title" className="text-center text-lg font-black ui-section-title">{t.errorTitle}</h2>
             <p className="mt-3 text-center text-sm text-gray-400">{t.error}</p>

@@ -276,3 +276,50 @@
 }
 :root[data-theme="light"] .df-home-app .df-skip-link{background:var(--df-primary);color:var(--df-on-primary)}
 :root[data-theme="light"] .df-home-app :is(a,button):focus-visible{outline-color:var(--df-focus)}
+
+
+/* Master Foundation adoption pass: account, settings and game-library surfaces. */
+:root[data-theme="light"] .df-token-page {
+  background:var(--df-bg);
+  color:var(--df-text);
+}
+:root[data-theme="light"] .df-token-page .ui-card,
+:root[data-theme="light"] .df-token-page .df-theme-panel,
+:root[data-theme="light"] .df-token-page [class*="bg-[#"],
+:root[data-theme="light"] .df-token-page [class*="bg-black/"] {
+  background:var(--df-surface);
+  color:var(--df-text);
+  border-color:var(--df-border);
+  box-shadow:var(--df-shadow-sm);
+}
+:root[data-theme="light"] .df-token-page [class*="bg-white/"] {
+  background:var(--df-surface-raised);
+}
+:root[data-theme="light"] .df-token-page .text-white { color:var(--df-text); }
+:root[data-theme="light"] .df-token-page .text-gray-300,
+:root[data-theme="light"] .df-token-page .text-gray-400 { color:var(--df-text-secondary); }
+:root[data-theme="light"] .df-token-page .text-gray-500 { color:var(--df-text-muted); }
+:root[data-theme="light"] .df-token-page .text-purple-200,
+:root[data-theme="light"] .df-token-page .text-purple-300 { color:var(--df-primary-hover); }
+:root[data-theme="light"] .df-token-page :is(button,a).text-white[class*="bg-purple-"],
+:root[data-theme="light"] .df-token-page :is(button,a).text-white[class*="bg-amber-"],
+:root[data-theme="light"] .df-token-page :is(button,a).text-white[class*="bg-cyan-"] {
+  color:#fff;
+}
+:root[data-theme="light"] .df-token-page .df-game-card {
+  background:var(--df-surface);
+  color:var(--df-text);
+  border-color:var(--df-border);
+}
+:root[data-theme="light"] .df-token-page .df-game-card :is(h2,h3) { color:var(--df-text); }
+:root[data-theme="light"] .df-token-page .df-theme-panel :is(h1,h2,h3) { color:var(--df-text); }
+:root[data-theme="light"] .df-token-page .df-theme-panel p { color:var(--df-text-secondary); }
+:root[data-theme="light"] .df-token-page input:not([type="range"]),
+:root[data-theme="light"] .df-token-page textarea,
+:root[data-theme="light"] .df-token-page select {
+  background:var(--df-surface-raised);
+  color:var(--df-text);
+  border-color:var(--df-border);
+}
+:root[data-theme="light"] .df-token-page input::placeholder,
+:root[data-theme="light"] .df-token-page textarea::placeholder { color:var(--df-text-muted); }

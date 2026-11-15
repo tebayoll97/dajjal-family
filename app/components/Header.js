@@ -2,18 +2,43 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
 import ThemeToggle from "./ThemeToggle";
-import AccountEntry from "./AccountEntry";
-import audioEngine from "@/lib/audio/AudioEngine";
-import { getAudioSettings, saveAudioSettings } from "@/lib/audio/audioSettings";
 
 const copy = {
-  en: { home: "Home", games: "Games", profile: "Profile", admin: "Admin", settings: "Settings", language: "Language", musicOn: "Turn background music off", musicOff: "Turn background music on" },
-  id: { home: "Beranda", games: "Game", profile: "Profil", admin: "Admin", settings: "Pengaturan", language: "Bahasa", musicOn: "Matikan musik latar", musicOff: "Nyalakan musik latar" },
+  en: {
+    navigation: "Navigation",
+    main: "MAIN MENU",
+    tools: "TOOLS",
+    home: "Home",
+    games: "Games",
+    universe: "Family Universe",
+    profile: "Profile",
+    admin: "Admin",
+    settings: "Settings",
+    wedding: "Wedding",
+    language: "Language",
+    open: "Open navigation",
+    close: "Close navigation",
+  },
+  id: {
+    navigation: "Navigasi",
+    main: "MENU UTAMA",
+    tools: "ALAT",
+    home: "Beranda",
+    games: "Game",
+    universe: "Universe Keluarga",
+    profile: "Profil",
+    admin: "Admin",
+    settings: "Pengaturan",
+    wedding: "Wedding",
+    language: "Bahasa",
+    open: "Buka navigasi",
+    close: "Tutup navigasi",
+  },
 };
 
 export default function Header() {
@@ -21,17 +46,8 @@ export default function Header() {
   const { language, setLanguage } = useLanguage();
   const t = copy[language] || copy.id;
   const [isAdmin, setIsAdmin] = useState(false);
-  const [musicEnabled, setMusicEnabled] = useState(true);
-  const [audioLoaded, setAudioLoaded] = useState(false);
-
-  useEffect(() => {
-    const settings = getAudioSettings();
-    setMusicEnabled(settings.musicEnabled);
-    audioEngine.setMuted(false);
-    audioEngine.setMusicVolume(settings.musicEnabled ? settings.musicVolume : 0);
-    audioEngine.setSfxVolume(settings.sfxEnabled ? settings.sfxVolume : 0);
-    setAudioLoaded(true);
-  }, []);
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const navigationRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -71,62 +87,101 @@ export default function Header() {
     };
   }, []);
 
-  function toggleMusic() {
-    if (!audioLoaded) return;
-    const current = getAudioSettings();
-    const nextEnabled = !current.musicEnabled;
-    const updated = { ...current, musicEnabled: nextEnabled };
-    saveAudioSettings(updated);
-    setMusicEnabled(nextEnabled);
-    audioEngine.setMuted(false);
-    audioEngine.setMusicVolume(nextEnabled ? updated.musicVolume : 0);
-    if (nextEnabled) audioEngine.startMusic();
-    else audioEngine.stopMusic();
-  }
-
-  const navLinks = [
-    { label: t.home, href: withLocalePrefix("/", language), route: "/" },
-    { label: t.games, href: withLocalePrefix("/games", language), route: "/games" },
-    { label: t.profile, href: withLocalePrefix("/profile", language), route: "/profile" },
-    ...(isAdmin ? [{ label: t.admin, href: withLocalePrefix("/admin", language), route: "/admin" }] : []),
-  ];
+  useEffect(() => {
+    if (!navigationOpen) return undefined;
+    function handlePointer(event) {
+      if (!navigationRef.current?.contains(event.target)) setNavigationOpen(false);
+    }
+    function handleKey(event) {
+      if (event.key === "Escape") setNavigationOpen(false);
+    }
+    document.addEventListener("pointerdown", handlePointer);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointer);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [navigationOpen]);
 
   function isActive(route) {
     if (route === "/") return pathname === "/";
     return pathname === route || pathname.startsWith(`${route}/`);
   }
 
+  const mainLinks = [
+    { label: t.home, route: "/" },
+    { label: t.games, route: "/games" },
+    { label: t.universe, route: "/df" },
+    { label: t.profile, route: "/profile" },
+    ...(isAdmin ? [{ label: t.admin, route: "/admin" }] : []),
+  ];
+  const toolLinks = [
+    { label: t.settings, route: "/settings" },
+    { label: t.wedding, route: "/df/wedding" },
+  ];
+
   return (
     <header className="df-site-header">
       <div className="df-site-header-inner">
-        <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
-          <span className="df-site-brand-mark" aria-hidden="true">DF</span>
-          <span className="df-site-brand-copy">
-            <strong>DAJJAL FAMILY</strong>
-            <small>ONE FAMILY. MANY POSSIBILITIES.</small>
-          </span>
-        </Link>
+        <div className="df-site-brand-group" ref={navigationRef}>
+          <button
+            type="button"
+            className="df-site-nav-toggle"
+            aria-label={navigationOpen ? t.close : t.open}
+            aria-expanded={navigationOpen}
+            aria-controls="df-global-navigation"
+            onClick={() => setNavigationOpen((open) => !open)}
+          >
+            <span aria-hidden="true">{navigationOpen ? "×" : "☰"}</span>
+          </button>
+          <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
+            <span className="df-site-brand-mark" aria-hidden="true">DF</span>
+            <span className="df-site-brand-copy">
+              <strong>DAJJAL FAMILY</strong>
+              <small>ONE FAMILY. MANY POSSIBILITIES.</small>
+            </span>
+          </Link>
 
-        <nav className="df-site-nav" aria-label={language === "id" ? "Navigasi utama" : "Main navigation"}>
-          {navLinks.map((item) => (
-            <Link key={item.route} href={item.href} aria-current={isActive(item.route) ? "page" : undefined}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          {navigationOpen && (
+            <nav id="df-global-navigation" className="df-site-navigation-pane" aria-label={t.navigation}>
+              <p className="df-site-navigation-heading">{t.main}</p>
+              <div className="df-site-navigation-links">
+                {mainLinks.map((item) => (
+                  <Link
+                    key={item.route}
+                    href={withLocalePrefix(item.route, language)}
+                    aria-current={isActive(item.route) ? "page" : undefined}
+                    onClick={() => setNavigationOpen(false)}
+                  >
+                    <span>{item.label}</span>
+                    {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
+                  </Link>
+                ))}
+              </div>
+              <p className="df-site-navigation-heading df-site-navigation-tools">{t.tools}</p>
+              <div className="df-site-navigation-links">
+                {toolLinks.map((item) => (
+                  <Link
+                    key={item.route}
+                    href={withLocalePrefix(item.route, language)}
+                    aria-current={isActive(item.route) ? "page" : undefined}
+                    onClick={() => setNavigationOpen(false)}
+                  >
+                    <span>{item.label}</span>
+                    {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
+                  </Link>
+                ))}
+              </div>
+            </nav>
+          )}
+        </div>
 
         <div className="df-site-actions">
+          <ThemeToggle />
           <div className="df-site-language" role="group" aria-label={t.language}>
             <button type="button" onClick={() => setLanguage("id")} aria-pressed={language === "id"}>ID</button>
             <button type="button" onClick={() => setLanguage("en")} aria-pressed={language === "en"}>EN</button>
           </div>
-          <button className="df-site-icon-button" type="button" onClick={toggleMusic} disabled={!audioLoaded}
-            aria-label={musicEnabled ? t.musicOn : t.musicOff} aria-pressed={musicEnabled} title="Background music">
-            <span aria-hidden="true">{musicEnabled ? "♫" : "♪"}</span>
-          </button>
-          <ThemeToggle />
-          <Link className="df-site-icon-button" href={withLocalePrefix("/settings", language)} aria-label={t.settings} title={t.settings}>⚙</Link>
-          <span className="df-site-account"><AccountEntry /></span>
         </div>
       </div>
     </header>

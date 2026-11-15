@@ -358,7 +358,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="min-h-[70vh] bg-[#080711] text-white px-4 py-8 sm:py-10">
+    <main className="df-token-page df-settings-page min-h-[70vh] bg-[#080711] text-white px-4 py-8 sm:py-10">
       <div className="max-w-2xl mx-auto">
 
         {/* PAGE HEADER */}

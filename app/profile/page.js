@@ -210,7 +210,7 @@ export default function ProfilePage() {
     : "-";
 
   return (
-    <main className="min-h-[70vh] bg-[#080711] text-white px-5 py-10">
+    <main className="df-token-page df-profile-page min-h-[70vh] bg-[#080711] text-white px-5 py-10">
       <div className="max-w-xl mx-auto">
 
         <p className="text-purple-400 text-xs tracking-[0.3em]">

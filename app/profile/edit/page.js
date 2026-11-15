@@ -415,7 +415,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#080711] px-4 py-10">
+    <main className="df-token-page df-profile-edit-page min-h-screen bg-[#080711] px-4 py-10">
       <div className="max-w-xl mx-auto">
 
         <Link
@@ -583,7 +583,7 @@ export default function EditProfilePage() {
         </div>
       {successOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-md p-5">
-          <div role="alertdialog" aria-modal="true" aria-labelledby="profile-success-title" className="w-full max-w-sm rounded-3xl border border-emerald-400/30 bg-[#151020] p-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.65)] ui-popup ui-gradient-frame ui-card">
+          <div role="alertdialog" aria-modal="true" aria-labelledby="profile-success-title" className="df-theme-panel w-full max-w-sm rounded-3xl border border-emerald-400/30 bg-[#151020] p-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.65)] ui-popup ui-gradient-frame ui-card">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-4xl text-emerald-300">✓</div>
             <h2 id="profile-success-title" className="mt-5 text-xl font-black text-emerald-300 ui-section-title">
               {isID ? "PROFIL BERHASIL DIPERBARUI!" : "PROFILE UPDATED!"}
