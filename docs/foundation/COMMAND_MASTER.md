@@ -506,3 +506,9 @@ When requested, implement the account profile experience with display name, uniq
 - Retire Builder navigation, dashboard/editor/preview routes, and owner CRUD/publish APIs. Legacy Builder URLs redirect to the canonical public invitation.
 - Do not drop Wedding database tables, columns, policies, functions, invitation records, RSVP/Guestbook submissions, or storage objects without a separate dependency review, recovery plan, and explicit owner authorization.
 - This product direction supersedes earlier Builder navigation and platform expansion notes. It does not authorize unrelated Wedding data cleanup.
+
+## 20.1 Single invitation UX refinement — 2026-11-15
+- Added responsive in-page section navigation to the sole public invitation, with conditional links for available sections.
+- Added anchor targets and mobile horizontal-scroll behavior, keyboard focus styling, and reduced-motion support.
+- Removed misleading/irrelevant legacy placeholder copy. Photo and audio URLs remain owner-supplied; do not invent or substitute final media.
+- No database/schema/data changes. Build and browser QA remain pending under the current Vercel quota pause.
