@@ -368,19 +368,26 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section" id="event" data-panel-number="05" data-aos="fade-up">
-            <p className="wedding-kicker">SAVE THE CELEBRATION</p>
-            <h2 className="wedding-section-heading">{t.reception}</h2>
-            <div className="detail-grid">
-              <article><span>◷</span><h3>{eventInfo?.event_date ? new Date(`${eventInfo.event_date}T00:00:00`).toLocaleDateString(language === "id" ? "id-ID" : "en-US", { dateStyle: "long" }) : t.date}</h3><p>DATE</p></article>
-              <article><span>⌖</span><h3>{eventInfo?.venue || t.venue}</h3><p>LOCATION</p></article>
-              <article><span>♧</span><h3>{eventInfo?.event_time || t.time}</h3><p>TIME</p></article>
+          <p className="wedding-invitation-eyebrow wedding-event-eyebrow">Rangkaian Acara</p>
+          <section className="wedding-section wedding-event-panel" id="event" data-panel-number="03" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Resepsi</h2>
+            <div className="wedding-event-detail">
+              <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+              <strong>{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</strong>
+              <p>21.00 Waktu Server - Selesai</p>
             </div>
-            <div className="wedding-note">
-              <strong>{t.schedule}</strong>
-              <p>{eventInfo?.schedule || t.scheduleText}</p>
-              {eventInfo?.address && <><strong>{t.address}</strong><p>{eventInfo.address}</p></>}
+            <div className="wedding-event-detail">
+              <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              <strong>Di Panti Asuhan Anak Ceria</strong>
+              <p>Jl. IDs, Koordinat X[556]</p>
+              <p>Kode state #278</p>
             </div>
+          </section>
+
+          <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="04" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Menanam Kedelai</h2>
+            <div className="wedding-planting-icon" aria-hidden="true">🌱</div>
+            <p className="section-copy">Kita mencoba untuk membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami.</p>
           </section>
 
           <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
@@ -392,12 +399,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </nav>
 
 
-          <section className="wedding-section" id="story" data-panel-number="04" data-aos="fade-up">
+          <section className="wedding-section" id="story" data-panel-number="05" data-aos="fade-up">
             <h2 className="wedding-section-heading">{t.story}</h2>
             <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
           </section>
 
-          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="05" data-aos="fade-up">
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="06" data-aos="fade-up">
             <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
             <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
             {galleryItems.length > 0 ? (
@@ -413,7 +420,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
           </section>
 
-          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="06" data-aos="fade-up">
+          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="07" data-aos="fade-up">
             <h2 className="wedding-section-heading">{t.playerId}</h2>
             <div className="dawn-badge-card">
               <div className="dawn-badge-emblem" role="img" aria-label="Dawn Badge Darkwar Survival">
@@ -427,7 +434,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="07" data-aos="fade-up">
+          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="08" data-aos="fade-up">
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
@@ -452,7 +459,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
 
-          <section className="wedding-share" id="share" data-panel-number="08" data-aos="fade-up">
+          <section className="wedding-share" id="share" data-panel-number="09" data-aos="fade-up">
             <p className="wedding-kicker">SPREAD THE JOY</p>
             <h2 className="wedding-section-heading">{t.couple}</h2>
             <div className="share-actions">
