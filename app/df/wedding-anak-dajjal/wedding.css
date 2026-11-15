@@ -1214,3 +1214,94 @@
   .df-main .wedding-page .wedding-bride .wedding-family-photo{opacity:1;transform:none}
   .df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-bride .wedding-family-photo{animation:none!important}
 }
+
+
+/* Corrective pass: wedding invitation layout selectors match the actual RouteChrome DOM. */
+.df-workspace-main:has(.wedding-page){padding:0!important;min-width:0!important}
+.df-site-header.df-site-header--wedding{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;
+  width:0!important;height:0!important;min-height:0!important;overflow:visible!important;
+  z-index:2000!important;pointer-events:none!important;
+}
+.df-site-header--wedding .df-site-header-inner{position:static!important;height:0!important;overflow:visible!important}
+.df-site-header--wedding .df-site-actions{
+  position:static!important;display:block!important;pointer-events:none!important;
+}
+.df-site-header--wedding .df-site-language{
+  position:fixed!important;top:calc(env(safe-area-inset-top) + 10px)!important;
+  right:max(12px,env(safe-area-inset-right))!important;z-index:2100!important;
+  display:flex!important;pointer-events:auto!important;
+}
+.df-main .wedding-page .wedding-opening,
+.wedding-page .wedding-opening{
+  box-sizing:border-box;width:100%;height:100vh;height:100svh;height:100dvh;
+  min-height:0!important;max-height:100dvh;overflow:hidden!important;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;
+  overscroll-behavior:none;touch-action:pan-x;
+  padding:calc(env(safe-area-inset-top) + .55rem) 1rem calc(env(safe-area-inset-bottom) + .55rem);
+}
+.wedding-page .wedding-opening-couple{width:min(76vw,44svh,390px);max-height:44svh;object-fit:contain;flex:0 1 auto;min-height:0}
+.wedding-page .wedding-opening h1{flex:0 0 auto;margin:0!important}
+.wedding-page .wedding-opening-recipient{flex:0 0 auto}
+.wedding-page .wedding-opening button{flex:0 0 auto}
+.wedding-page .wedding-hero-couple-name{
+  display:flex!important;flex-direction:column;align-items:center;gap:0;
+  margin:1rem auto .2rem!important;text-align:center;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(2.8rem,9vw,4.4rem)!important;font-weight:400!important;line-height:.95!important;
+  color:#a64f76!important;
+}
+.wedding-page .wedding-hero-couple-name>span{display:block}
+.wedding-page .wedding-hero-couple-name .wedding-hero-amp{color:#638b72!important;font-size:.72em;line-height:.9}
+.wedding-page .wedding-couple-panel .wedding-family-photo{
+  display:block;opacity:0;transform:translate3d(0,28px,0) scale(.94);
+  transform-origin:center;will-change:opacity,transform;
+}
+.wedding-page .wedding-couple-panel.aos-animate .wedding-groom .wedding-family-photo{
+  animation:wedding-couple-photo-in .9s cubic-bezier(.2,.72,.22,1) .05s both!important;
+}
+.wedding-page .wedding-couple-panel.aos-animate .wedding-bride .wedding-family-photo{
+  animation:wedding-couple-photo-in .95s cubic-bezier(.2,.72,.22,1) .28s both!important;
+}
+@keyframes wedding-couple-photo-in{
+  from{opacity:0;transform:translate3d(0,30px,0) scale(.92)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+.wedding-page .wedding-event-eyebrow{margin:1.5rem auto .5rem!important;padding-top:0!important}
+.wedding-page .wedding-event-panel,
+.wedding-page .wedding-planting-panel{
+  display:flex;flex-direction:column;align-items:center;text-align:center!important;
+}
+.wedding-page .wedding-event-panel .wedding-section-heading,
+.wedding-page .wedding-planting-panel .wedding-section-heading{
+  width:100%;text-align:center!important;
+}
+.wedding-page .wedding-event-detail{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.45rem;width:100%;margin:1rem auto 1.25rem;text-align:center!important;
+  color:#68445c;
+}
+.wedding-page .wedding-event-icon{
+  display:block;width:34px;height:34px;margin:0 auto .25rem;
+  fill:none;stroke:#a6537b;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+.wedding-page .wedding-event-detail strong{
+  display:block;font-weight:900;font-size:clamp(1rem,3.4vw,1.2rem);
+  color:#79516f;text-align:center;
+}
+.wedding-page .wedding-event-detail p{
+  margin:0!important;text-align:center!important;color:#795d72;
+  font-size:clamp(.92rem,3vw,1.05rem);line-height:1.65;
+}
+.wedding-page .wedding-planting-icon{font-size:2.5rem;line-height:1.2;margin:.35rem auto .8rem}
+.wedding-page .wedding-planting-panel .section-copy{
+  max-width:680px;margin:0 auto;text-align:center!important;
+}
+@media(max-height:620px){
+  .wedding-page .wedding-opening{gap:.2rem;padding-block:calc(env(safe-area-inset-top) + .2rem) calc(env(safe-area-inset-bottom) + .2rem)}
+  .wedding-page .wedding-opening-couple{width:min(62vw,34svh,270px);max-height:34svh}
+  .wedding-page .wedding-opening h1{font-size:clamp(1.8rem,7vh,3rem)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .wedding-couple-panel .wedding-family-photo{opacity:1!important;transform:none!important;animation:none!important}
+}
