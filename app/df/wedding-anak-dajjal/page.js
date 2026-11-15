@@ -468,8 +468,11 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         aria-pressed={musicOn}
         title={musicOn ? "Musik menyala" : "Musik mati"}
       >
-        <span className="wedding-music-icon" aria-hidden="true">♫</span>
-        {!musicOn && <span className="wedding-music-off-mark" aria-hidden="true">／</span>}
+        <svg className="wedding-music-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+          {musicOn ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" /></> : <path d="m16 9 5 6m0-6-5 6" />}
+        </svg>
+        <span className="wedding-music-state" aria-hidden="true">{musicOn ? "ON" : "OFF"}</span>
       </button>
       <audio ref={audioRef} src={WEDDING_ASSETS.music} loop preload="none" onError={() => setMusicOn(false)} />
     </main>
