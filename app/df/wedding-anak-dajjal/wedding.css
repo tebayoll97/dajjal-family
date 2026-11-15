@@ -825,3 +825,38 @@
 .df-main .wedding-page [hidden]{display:none!important}
 @media(max-width:600px){.df-main .wedding-page .wedding-opening-couple{width:min(92vw,390px);max-height:48vh}.df-main .wedding-page .wedding-family-panel img{width:min(94vw,420px);max-height:460px}.df-main .wedding-page .wedding-music-float{bottom:calc(92px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.df-main .wedding-page .wedding-confetti i{animation:none;display:none}}
+
+
+/* Invitation-specific mobile polish: rose palette, no duplicate site chrome */
+.df-main .wedding-page .wedding-music-float{
+  background:linear-gradient(145deg,#9b526f,#71364f)!important;
+  color:#fff8fb!important;
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 8px 24px rgba(113,54,79,.28)!important;
+}
+.df-main .wedding-page .wedding-music-float span{
+  display:block;font:700 1.65rem/1 Georgia,serif;
+}
+.df-main .wedding-page .wedding-bottom-nav{
+  background:rgba(239,205,218,.97)!important;
+  border-top:1px solid rgba(139,66,96,.28)!important;
+  box-shadow:0 -8px 26px rgba(113,54,79,.12)!important;
+}
+.df-main .wedding-page .wedding-bottom-nav a{
+  color:#793d58!important;
+}
+.df-main .wedding-page .wedding-bottom-nav a small{
+  color:#793d58!important;
+}
+.df-main .wedding-page .wedding-bottom-nav a:hover,
+.df-main .wedding-page .wedding-bottom-nav a:focus-visible{
+  background:rgba(255,245,249,.78)!important;
+  outline-color:#9b526f!important;
+}
+.df-main .wedding-page .couple-frame .couple-placeholder{
+  overflow:hidden;
+}
+.df-main .wedding-page .couple-frame .couple-photo{
+  display:block;width:100%;height:100%;max-height:560px;object-fit:contain;
+  margin:0 auto;
+}
