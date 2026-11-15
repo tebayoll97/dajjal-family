@@ -1,3 +1,5 @@
+import "./df.css";
+
 export const metadata = {
   title: {
     default: "Dajjal Family",
