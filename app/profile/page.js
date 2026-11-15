@@ -244,14 +244,13 @@ export default function ProfilePage() {
               </span>
             )}
           </div>
-
-          </div>
           <div className="df-profile-identity-copy">
             <p className="df-profile-eyebrow">DAJJAL FAMILY · GAMING UNIVERSE</p>
             <h1 className="df-profile-page-title">{t.title}</h1>
             <h2 className="df-profile-name">{player.nickname}</h2>
             <p className="df-profile-server">SERVER {player.server_number || "—"}</p>
             <Link href="/profile/edit" className="df-profile-edit-link">✎ {t.edit}</Link>
+          </div>
           </div>
 
           <div className="border-t border-purple-500/20 mt-6 pt-5 space-y-4">
