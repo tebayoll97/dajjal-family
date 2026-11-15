@@ -748,3 +748,36 @@
 @media(prefers-reduced-motion:reduce){
  .df-main .wedding-page .wedding-section-nav a{transition:none}
 }
+
+
+/* Anak Dajjal & Malika — unified invitation bottom navigation and wishes form */
+.df-main .wedding-page{padding-bottom:calc(108px + env(safe-area-inset-bottom))}
+.df-main .wedding-page .wedding-bottom-nav{
+  position:fixed;z-index:100;left:0;right:0;bottom:0;
+  display:flex;align-items:stretch;justify-content:space-around;gap:.2rem;
+  min-height:78px;padding:.55rem max(.45rem,env(safe-area-inset-left)) calc(.55rem + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(111,139,116,.28);
+  background:rgba(222,233,220,.96);backdrop-filter:blur(16px);
+  box-shadow:0 -8px 28px rgba(35,55,38,.09);
+}
+.df-main .wedding-page .wedding-bottom-nav a{
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;
+  min-height:58px;padding:.3rem .15rem;border-radius:12px;
+  color:#4b5b4c!important;text-decoration:none;
+}
+.df-main .wedding-page .wedding-bottom-nav a span{font:normal 1.65rem/1 Georgia,serif}
+.df-main .wedding-page .wedding-bottom-nav a small{font:600 .68rem/1.2 var(--w-body,Arial,sans-serif);letter-spacing:0;text-align:center}
+.df-main .wedding-page .wedding-bottom-nav a:hover,
+.df-main .wedding-page .wedding-bottom-nav a:focus-visible{background:rgba(255,255,255,.68);outline:2px solid #536b55;outline-offset:1px}
+.df-main .wedding-page .wedding-attendance{display:grid;gap:.65rem;margin:0;padding:0;border:0}
+.df-main .wedding-page .wedding-attendance legend{margin-bottom:.25rem;color:var(--w-text,#4b5b4c);font:700 1rem/1.5 var(--w-body,Arial,sans-serif)}
+.df-main .wedding-page .wedding-attendance legend span{color:#bd5260}
+.df-main .wedding-page .wedding-attendance label{display:flex;align-items:center;gap:.65rem;font-weight:500}
+.df-main .wedding-page .wedding-attendance input{width:19px!important;height:19px;min-height:19px;margin:0;accent-color:#4b5b4c}
+.df-main .wedding-page .wedding-wishes .wedding-form{gap:1.4rem}
+.df-main .wedding-page .wedding-wishes .wedding-primary{width:100%;min-height:54px}
+@media(min-width:768px){
+ .df-main .wedding-page .wedding-bottom-nav{left:50%;right:auto;bottom:1.25rem;width:min(680px,calc(100% - 2rem));transform:translateX(-50%);border:1px solid rgba(111,139,116,.3);border-radius:20px;padding:.55rem 1rem;min-height:76px}
+ .df-main .wedding-page{padding-bottom:130px}
+}
+@media(prefers-reduced-motion:reduce){.df-main .wedding-page .wedding-bottom-nav a{transition:none}}
