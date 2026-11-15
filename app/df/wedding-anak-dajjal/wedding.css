@@ -917,3 +917,27 @@
   .df-main .wedding-page .wedding-music-float,
   .df-main .wedding-page .wedding-music-icon{transition:none;animation:none!important}
 }
+
+
+/* Music control: clean speaker SVG, readable ON/OFF state */
+.df-main .wedding-page .wedding-music-float{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;width:56px;height:56px;padding:5px 4px 4px;border-radius:50%;
+  color:#fff!important;line-height:1;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.df-main .wedding-page .wedding-music-float .wedding-music-icon{
+  display:block;width:24px;height:24px;overflow:visible;animation:none;transition:transform .2s ease;
+}
+.df-main .wedding-page .wedding-music-float .wedding-music-state{
+  display:block;font:900 8px/1 Arial,sans-serif;letter-spacing:.12em;
+}
+.df-main .wedding-page .wedding-music-float.is-playing{
+  background:linear-gradient(145deg,#c27696,#8e4969)!important;transform:scale(1.04);
+  box-shadow:0 0 0 4px rgba(194,118,150,.16),0 9px 24px rgba(120,60,88,.3)!important;
+}
+.df-main .wedding-page .wedding-music-float.is-off{background:linear-gradient(145deg,#95516f,#71364f)!important}
+.df-main .wedding-page .wedding-music-float:active{transform:scale(.9)}
+@media(prefers-reduced-motion:reduce){
+ .df-main .wedding-page .wedding-music-float,.df-main .wedding-page .wedding-music-float .wedding-music-icon{transition:none;animation:none!important}
+}
