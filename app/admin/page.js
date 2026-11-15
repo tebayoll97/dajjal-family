@@ -11,12 +11,10 @@ const copy = {
     checking: "VERIFYING ADMIN ACCESS...",
     title: "ADMIN",
     accent: "DASHBOARD",
-    subtitle: "Your control center for The Daily Riddle.",
+    subtitle: "Your Dajjal Family platform control center.",
     admin: "SIGNED IN AS",
     secure: "SECURE ACCESS VERIFIED",
     management: "MANAGEMENT",
-    riddles: "Daily Riddles",
-    riddlesDesc: "Create, edit, schedule, and manage daily challenges.",
     players: "User Management",
     playersDesc: "Manage login accounts, player profiles, access, and activity.",
     statistics: "Game Statistics",
@@ -41,12 +39,10 @@ const copy = {
     checking: "MEMVERIFIKASI AKSES ADMIN...",
     title: "DASHBOARD",
     accent: "ADMIN",
-    subtitle: "Pusat kendali The Daily Riddle.",
+    subtitle: "Pusat kendali platform Dajjal Family.",
     admin: "MASUK SEBAGAI",
     secure: "AKSES AMAN TERVERIFIKASI",
     management: "PENGELOLAAN",
-    riddles: "Teka-Teki Harian",
-    riddlesDesc: "Buat, edit, jadwalkan, dan kelola tantangan harian.",
     players: "Manajemen Pengguna",
     playersDesc: "Kelola akun login, profil pemain, akses, dan aktivitas.",
     statistics: "Statistik Permainan",
@@ -174,18 +170,9 @@ export default function AdminDashboardPage() {
 
   const modules = [
     {
-      href: "/admin/riddles",
-      icon: "🧩",
-      number: "01",
-      title: t.riddles,
-      description: t.riddlesDesc,
-      available: true,
-      accent: "from-purple-500/20 via-violet-500/5",
-    },
-    {
       href: "/admin/players",
       icon: "👥",
-      number: "02",
+      number: "01",
       title: t.players,
       description: t.playersDesc,
       available: true,
@@ -194,7 +181,7 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/wedding-gallery",
       icon: "💒",
-      number: "03",
+      number: "02",
       title: t.gallery,
       description: t.galleryDesc,
       available: true,
@@ -203,7 +190,7 @@ export default function AdminDashboardPage() {
     {
       href: null,
       icon: "📊",
-      number: "04",
+      number: "03",
       title: t.statistics,
       description: t.statisticsDesc,
       available: false,
@@ -253,7 +240,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">04 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">03 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -15,8 +15,6 @@ const translations = {
     accent: "ADVENTURE",
     description: "Discover different worlds, challenge your mind, and build your journey in one gaming universe.",
     available: "AVAILABLE NOW",
-    daily: "THE DAILY RIDDLE",
-    dailyDesc: "A fresh mystery. Test your knowledge, solve the clues, and compete for points.",
     mamah: "MAMAH NGAMUK",
     mamahDesc: "Escape angry Mamah Veylora, dodge traffic, collect coins, and build your personal record.",
     play: "PLAY NOW",
@@ -38,8 +36,6 @@ const translations = {
     accent: "PETUALANGANMU",
     description: "Jelajahi dunia yang berbeda, tantang pikiranmu, dan bangun perjalananmu dalam satu universe gaming.",
     available: "SUDAH TERSEDIA",
-    daily: "THE DAILY RIDDLE",
-    dailyDesc: "Misteri baru setiap hari. Uji pengetahuan, pecahkan petunjuk, dan kumpulkan poin.",
     mamah: "MAMAH NGAMUK",
     mamahDesc: "Kabur dari Mamah Veylora, hindari kendaraan, kumpulkan koin, dan pecahkan rekor pribadimu.",
     play: "MAIN SEKARANG",
@@ -135,19 +131,6 @@ export default function GamesPage() {
     }
   }
 
-  async function handlePlayDailyRiddle() {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const context = await getPlayerContext();
-      router.push(context.status === "ready" && context.accountType === "google" ? "/game" : "/login?next=%2Fgame");
-    } catch (error) {
-      console.error("Daily Riddle launch error:", error);
-      setShowError(true);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const gameArtwork = {
     "rune-puzzle": { icon: "ᚱ", image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=85", alt: "Ancient glowing runic symbols" },
@@ -155,7 +138,7 @@ export default function GamesPage() {
     "logic-battle": { icon: "✧", image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=900&q=85", alt: "Strategy board game pieces" },
   };
   const games = catalogGames
-    .filter((game) => game.slug !== "daily-riddle" && game.slug !== "mamah-ngamuk" && game.status === "coming_soon")
+    .filter((game) => !["daily-riddle", "mamah-ngamuk", "run-jump"].includes(game.slug) && game.status === "coming_soon")
     .map((game) => ({
       ...game,
       name: game.slug === "rune-puzzle" ? t.rune : game.slug === "memory-challenge" ? t.memory : game.slug === "logic-battle" ? t.logic : game.name,
@@ -180,61 +163,31 @@ export default function GamesPage() {
             <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
             <h2 className="text-[10px] font-bold tracking-[0.25em] text-emerald-300 ui-section-title">{t.available}</h2>
           </div>
-          <article className="relative overflow-hidden rounded-3xl border border-purple-400/30 bg-gradient-to-br from-[#241638] via-[#171024] to-[#100d19] shadow-[0_15px_60px_rgba(88,28,135,0.13)] ui-card">
-            <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-purple-500/15 blur-3xl" />
-            <div className="relative flex flex-col items-stretch sm:flex-row sm:items-center">
-              <div className="relative h-44 w-full overflow-hidden sm:h-64 sm:w-[42%]">
-                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1100&q=90" alt="Mysterious glowing puzzle scene" className="h-full w-full object-cover opacity-80" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#171024] via-transparent to-purple-950/10 sm:bg-gradient-to-r sm:from-transparent sm:to-[#171024]" />
-                <div className="absolute bottom-4 left-5 rounded-full border border-purple-200/20 bg-black/40 px-3 py-1 text-[9px] font-bold tracking-[0.2em] text-purple-100 backdrop-blur">{t.daily}</div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-amber-400/25 bg-gradient-to-br from-[#281a25] via-[#171024] to-[#100d19] ui-card">
+              <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-amber-950/80 via-rose-950/60 to-purple-950/80 text-7xl">
+                <span aria-hidden="true">🧹</span>
+                <span className="absolute bottom-4 left-5 rounded-full border border-amber-200/20 bg-black/40 px-3 py-1 text-[9px] font-bold tracking-[0.2em] text-amber-100">FULL SCREEN ACTION</span>
               </div>
-              <div className="flex flex-1 flex-col items-start gap-4 p-6 sm:p-8">
-
-              <div className="max-w-xl">
-                <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-purple-300">01 · {t.available}</p>
-                <h2 className="text-2xl font-black sm:text-3xl ui-section-title">{t.daily}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-gray-300">{t.dailyDesc}</p>
+              <div className="flex flex-1 flex-col items-start p-6 sm:p-7">
+                <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-amber-300">01 · ACCOUNT GAME</p>
+                <h2 className="text-2xl font-black ui-section-title">{t.mamah}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-gray-300">{t.mamahDesc}</p>
+                <p className="mt-3 text-[10px] font-bold tracking-wider text-amber-200/80">GOOGLE LOGIN REQUIRED</p>
+                <button onClick={handlePlayMamah} disabled={loading} className="mt-auto w-full rounded-xl bg-amber-600 px-7 py-4 text-sm font-black tracking-wider transition hover:bg-amber-500 disabled:opacity-50">{loading ? t.wait : t.play}</button>
               </div>
-              <button onClick={handlePlayDailyRiddle} disabled={loading} className="w-full shrink-0 rounded-xl bg-purple-600 px-7 py-4 text-sm font-black tracking-wider shadow-lg shadow-purple-900/30 transition hover:bg-purple-500 active:scale-[0.98] disabled:opacity-50 sm:w-auto">
-                {loading ? t.wait : t.play}
-              </button>
+            </article>
+            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-[#102536] via-[#111827] to-[#100d19] ui-card">
+              <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-950/80 via-emerald-950/50 to-purple-950/80 text-7xl" aria-hidden="true">🦖</div>
+              <div className="flex flex-1 flex-col items-start p-6 sm:p-7">
+                <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-cyan-300">02 · ARCADE GAME</p>
+                <h2 className="text-2xl font-black ui-section-title">DAJJAL FAMILY JUMP</h2>
+                <p className="mt-3 text-sm leading-relaxed text-gray-300">{language === "id" ? "Lari sejauh mungkin, lompat melewati rintangan, dan pecahkan rekor jarakmu. Bisa dimainkan tanpa login." : "Run as far as you can, jump over obstacles, and beat your distance record. Play without signing in."}</p>
+                <p className="mt-3 text-[10px] font-bold tracking-wider text-cyan-200/80">PUBLIC ARCADE · NO LOGIN REQUIRED</p>
+                <Link href={withLocalePrefix("/games/run-jump", language)} className="mt-auto w-full rounded-xl bg-cyan-700 px-7 py-4 text-center text-sm font-black tracking-wider transition hover:bg-cyan-600">{language === "id" ? "MAIN SEKARANG" : "PLAY NOW"}</Link>
               </div>
-            </div>
-          </article>
-          <article className="relative mt-4 overflow-hidden rounded-3xl border border-amber-400/25 bg-gradient-to-br from-[#281a25] via-[#171024] to-[#100d19] ui-card">
-            <div className="relative flex flex-col items-stretch sm:flex-row sm:items-center">
-              <div className="relative h-44 w-full overflow-hidden bg-gradient-to-br from-amber-950/80 via-rose-950/60 to-purple-950/80 sm:h-64 sm:w-[42%]">
-                <div className="absolute inset-0 flex items-center justify-center text-7xl">🧹</div>
-                <div className="absolute bottom-4 left-5 rounded-full border border-amber-200/20 bg-black/40 px-3 py-1 text-[9px] font-bold tracking-[0.2em] text-amber-100">FULL SCREEN ACTION</div>
-              </div>
-              <div className="flex flex-1 flex-col items-start gap-4 p-6 sm:p-8">
-                <div className="max-w-xl">
-                  <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-amber-300">02 · ACCOUNT GAME</p>
-                  <h2 className="text-2xl font-black sm:text-3xl ui-section-title">{t.mamah}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-300">{t.mamahDesc}</p>
-                  <p className="mt-2 text-[10px] font-bold tracking-wider text-amber-200/80">GOOGLE LOGIN REQUIRED</p>
-                </div>
-                <button onClick={handlePlayMamah} disabled={loading} className="w-full shrink-0 rounded-xl bg-amber-600 px-7 py-4 text-sm font-black tracking-wider sm:w-auto">
-                  {loading ? t.wait : t.play}
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <article className="relative mt-4 overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-[#102536] via-[#111827] to-[#100d19] ui-card">
-            <div className="relative flex flex-col items-stretch sm:flex-row sm:items-center">
-              <div className="relative flex h-44 w-full items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-950/80 via-emerald-950/50 to-purple-950/80 text-7xl sm:h-64 sm:w-[42%]" aria-hidden="true">🦖</div>
-              <div className="flex flex-1 flex-col items-start gap-4 p-6 sm:p-8">
-                <div className="max-w-xl">
-                  <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-cyan-300">03 · ARCADE GAME</p>
-                  <h2 className="text-2xl font-black sm:text-3xl ui-section-title">DAJJAL FAMILY JUMP</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-300">{language === "id" ? "Lari sejauh mungkin, lompat melewati rintangan, dan pecahkan rekor jarakmu. Bisa dimainkan tanpa login." : "Run as far as you can, jump over obstacles, and beat your distance record. Play without signing in."}</p>
-                  <p className="mt-2 text-[10px] font-bold tracking-wider text-cyan-200/80">PUBLIC ARCADE · NO LOGIN REQUIRED</p>
-                </div>
-                <Link href={withLocalePrefix("/games/run-jump", language)} className="w-full shrink-0 rounded-xl bg-cyan-700 px-7 py-4 text-center text-sm font-black tracking-wider transition hover:bg-cyan-600 sm:w-auto">{language === "id" ? "MAIN SEKARANG" : "PLAY NOW"}</Link>
-              </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </section>
 
 

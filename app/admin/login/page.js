@@ -131,7 +131,7 @@ export default function AdminLoginPage() {
           </div>
 
           <p className="text-purple-400 text-xs tracking-[0.3em] mt-6">
-            THE DAILY RIDDLE
+            DAJJAL FAMILY
           </p>
 
           <h1 className="text-3xl font-black mt-3 ui-title">

@@ -21,7 +21,6 @@ const translations = {
   en: {
     home: "Home",
     play: "Games",
-    ranking: "Ranking",
     admin: "Admin",
     settings: "Settings",
     profile: "Profile",
@@ -29,7 +28,6 @@ const translations = {
   id: {
     home: "Beranda",
     play: "Game",
-    ranking: "Peringkat",
     admin: "Admin",
     settings: "Pengaturan",
     profile: "Profil",
@@ -202,12 +200,7 @@ export default function Header() {
       href: withLocalePrefix("/games", language),
       icon: "✦",
     },
-    {
-      name: t.ranking,
-      route: "/leaderboard",
-      href: withLocalePrefix("/leaderboard", language),
-      icon: "♛",
-    },
+
   ];
 
   if (isAdmin) {
@@ -328,7 +321,7 @@ export default function Header() {
         {/* MAIN NAVIGATION */}
         <nav
           className={`grid border-t border-purple-500/10 ${
-            isAdmin ? "grid-cols-5" : "grid-cols-4"
+            isAdmin ? "grid-cols-4" : "grid-cols-3"
           }`}
         >
           {navLinks.map((link) => {

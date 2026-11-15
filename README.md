@@ -1,2 +1,3 @@
-# daily-riddle-dajjal
-Mini game Dajjal and veylora
+# Dajjal Family
+
+A bilingual digital ecosystem for gaming, community, and useful online experiences.

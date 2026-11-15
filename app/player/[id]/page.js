@@ -12,12 +12,12 @@ const translations = {
     loading: "Loading player profile...",
     notFound: "PLAYER NOT FOUND",
     unavailable: "This player profile is unavailable.",
-    back: "BACK TO RANKING",
+    back: "BACK TO GAMES",
     title: "PLAYER PROFILE",
     nickname: "Nickname",
     server: "Server",
     joined: "Joined",
-    backGlobal: "← EXPLORE ALL GAMES",
+    backGlobal: "← EXPLORE GAMES",
     error: "Unable to load player profile.",
     genericError: "Something went wrong.",
     stats: "GAME UNIVERSE STATS",
@@ -37,12 +37,12 @@ const translations = {
     loading: "Memuat profil pemain...",
     notFound: "PEMAIN TIDAK DITEMUKAN",
     unavailable: "Profil pemain ini tidak tersedia.",
-    back: "KEMBALI KE PERINGKAT",
+    back: "KEMBALI KE GAME",
     title: "PROFIL PEMAIN",
     nickname: "Nama Pemain",
     server: "Server",
     joined: "Bergabung",
-    backGlobal: "← JELAJAHI SEMUA GAME",
+    backGlobal: "← JELAJAHI GAME",
     error: "Tidak dapat memuat profil pemain.",
     genericError: "Terjadi kesalahan.",
     stats: "STATISTIK GAME UNIVERSE",
@@ -295,7 +295,7 @@ export default function PublicPlayerProfile() {
         </section>
 
         <Link
-          href="/leaderboard"
+          href="/games"
           className="block text-center mt-6 w-full rounded-xl border border-purple-500/30 hover:bg-purple-500/10 py-4 font-bold tracking-wider transition"
         >
           {t.backGlobal}

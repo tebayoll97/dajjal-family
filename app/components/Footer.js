@@ -11,7 +11,6 @@ const translations = {
     tagline: "One Account. One Profile. Multiple Games. One Universe.",
     home: "Home",
     play: "Games",
-    ranking: "Ranking",
     profile: "Profile",
     copyright: "All rights reserved.",
     universe: "A WORLD OF GAMES. ONE UNIVERSE.",
@@ -20,7 +19,6 @@ const translations = {
     tagline: "Satu Akun. Satu Profil. Banyak Game. Satu Universe.",
     home: "Beranda",
     play: "Game",
-    ranking: "Peringkat",
     profile: "Profil",
     copyright: "Hak cipta dilindungi.",
     universe: "DUNIA PERMAINAN. SATU SEMESTA.",
@@ -36,7 +34,6 @@ export default function Footer() {
   const navLinks = [
     { label: t.home, href: withLocalePrefix("/", language) },
     { label: t.play, href: withLocalePrefix("/games", language) },
-    { label: t.ranking, href: withLocalePrefix("/leaderboard", language) },
     { label: t.profile, href: withLocalePrefix("/profile", language) },
   ];
 
