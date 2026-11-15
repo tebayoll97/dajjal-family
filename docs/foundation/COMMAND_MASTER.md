@@ -471,3 +471,17 @@ When requested, implement the account profile experience with display name, uniq
 - No database, account, player, game progress, or invitation data/schema was changed.
 - Vercel build and visual QA have not been run. Per `docs/aturan-kerja.md`, do not create previews or poll Vercel while the build quota is not known to have recovered. Merge/release remains pending source review and build availability.
 - The Design System document remains Draft until responsive, keyboard, accessibility, and both-theme QA are completed. Page-specific legacy utilities are not all migrated yet; continue token migration incrementally after the shared shell is verified.
+
+
+## 36. Global navigation and Master Foundation adoption follow-up — 2026-11-15
+
+- Owner-reported issues after the first shell rollout: global navigation pane was missing/incomplete; header showed profile, sound, and settings actions; Settings and Wedding were not grouped under Tools; DF Universe event CTAs were oversized on mobile; Game Library, Profile, Settings, and game-library dialogs retained dark-only utility colors in Light Mode.
+- Restored a global navigation trigger immediately to the left of the DF brand. Its panel exposes Home, Games, Family Universe, Profile, Admin (only after server-verified admin status), and a Tools group containing Settings followed by Wedding.
+- Simplified the top-right header controls to ThemeToggle and language only. Removed account/profile and audio quick-toggle controls from the header; account and audio settings remain available in their respective product areas.
+- Added Settings and Wedding links to the homepage Tools navigation.
+- Reduced DF Universe event-card action sizing on mobile and removed forced full-width stretching.
+- Added token-aware page scopes for Game Library, Profile, Profile Edit, and Settings. Light Mode maps legacy dark surface utility classes, card surfaces, dialog panels, and supporting text to semantic tokens. Game Library's account-required and error dialogs use theme-aware panel treatment.
+- Source implementation commit: `f9d7e397ae60b6d12e7d41bf193810bee78afb6a` on `main`.
+- Vercel Production deployment `dpl_13dnaMysxaQVEUek2C9CAWc5vwbf` reached READY for that exact commit; aliases `dajjalfamily.com` and `www.dajjalfamily.com` are attached. This verifies build/deployment only, not interactive browser QA.
+- Static source checks confirmed global navigation and Tools links, token-page wrappers, theme-aware dialog markers, and no `!important` in the changed page styles. No database, account, player, game progress, or invitation data/schema was changed.
+- Owner must still verify the navigation pane, both themes, mobile sizing, Profile, Settings, and Game Library dialogs on the live site. Design System remains Draft pending visual, keyboard, accessibility, and responsive QA.

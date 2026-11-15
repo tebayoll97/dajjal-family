@@ -438,3 +438,10 @@ A first global implementation pass now provides a shared token-driven Header and
 The global legacy compatibility layer no longer applies blanket heading or section-frame styles to every `main` element. Named primitives remain available for gradual migration. Broad legacy `!important` overrides have been removed from the global compatibility and theme stylesheets; reduced-motion safeguards remain scoped to accessibility behavior.
 
 This is an implementation milestone, not design-system approval. Existing page-specific utility classes and bespoke components still require incremental token migration. The document remains **Draft — Pending Approval** until visual, mobile, desktop, keyboard, accessibility, and Dark/Light theme QA are complete.
+
+
+# 18. Follow-up adoption pass — 2026-11-15
+
+A second implementation pass extends semantic theme behavior to the Game Library, Profile, Profile Edit, and Settings routes. Legacy dark-only Tailwind surface utilities and modal panels are mapped to semantic tokens under Light Mode, while the dark palette remains the default. This is a scoped compatibility bridge, not proof that every page-specific utility across the application has been fully migrated. The global navigation pane exposes primary routes and a Tools group with Settings and Wedding. DF Universe event actions have a compact mobile layout.
+
+The Design System remains **Draft — Pending Approval** until live visual checks are completed on mobile and desktop, both themes, keyboard navigation, and relevant dialogs. Continue replacing legacy utility colors with semantic tokens incrementally rather than expanding broad global overrides.
