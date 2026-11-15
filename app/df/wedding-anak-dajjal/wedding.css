@@ -1140,3 +1140,77 @@
     animation:none!important;opacity:1!important;transform:none!important;
   }
 }
+
+
+/* Responsive invitation refinements */
+.df-main .wedding-page{min-width:0;overflow-x:clip}
+.df-main .wedding-page .wedding-opening{
+  height:100vh;height:100svh;height:100dvh;min-height:0;overflow:hidden;overscroll-behavior:none;
+  justify-content:space-evenly;gap:clamp(.35rem,1.5vh,1rem);
+  padding:calc(env(safe-area-inset-top) + clamp(.5rem,2vh,1.2rem)) 1rem calc(env(safe-area-inset-bottom) + clamp(.5rem,2vh,1.2rem));
+}
+.df-main .wedding-page .wedding-opening-florals{inset:2% 0 auto}
+.df-main .wedding-page .wedding-opening-couple{
+  width:min(76vw, min(44svh,390px));max-height:44svh;flex:0 1 auto;min-height:0;
+}
+.df-main .wedding-page .wedding-opening h1{
+  flex:0 0 auto;margin:0!important;font-size:clamp(2.35rem,8.5vw,4.7rem)!important;line-height:.94!important;
+}
+.df-main .wedding-page .wedding-opening-recipient{
+  display:grid;gap:.18rem;flex:0 0 auto;color:#657762;text-align:center;
+  font:600 clamp(.78rem,2.7vw,1.02rem)/1.35 "Nunito Sans",Arial,sans-serif;
+}
+.df-main .wedding-page .wedding-opening-recipient strong{font-weight:900}
+.df-main .wedding-page .wedding-opening button{flex:0 0 auto;min-height:48px!important}
+.df-main .wedding-page .wedding-hero-couple-name{
+  display:flex;flex-direction:column;align-items:center;gap:0;margin:1rem auto .2rem!important;
+  text-align:center;color:#a64f76!important;
+  font:400 clamp(2.8rem,9vw,4.4rem)/.9 "Great Vibes","Brush Script MT",cursive!important;
+}
+.df-main .wedding-page .wedding-hero-couple-name span{display:block}
+.df-main .wedding-page .wedding-hero-couple-name .wedding-hero-amp{color:#b77a91;font-size:.72em;line-height:.9}
+.df-main .wedding-page .wedding-hero-date{
+  margin:.35rem auto 0;color:#6f775d;text-align:center;
+  font:800 clamp(.9rem,3vw,1.1rem)/1.5 "Nunito Sans",Arial,sans-serif;
+}
+.df-main .wedding-page .wedding-countdown .detail-grid article{
+  background:linear-gradient(145deg,#fff0f5 0%,#ffd8e6 52%,#ffe9d9 100%)!important;
+  border:1px solid rgba(166,79,118,.28);
+}
+.df-main .wedding-page .wedding-countdown .detail-grid article h3{color:#71364f!important}
+.df-main .wedding-page .wedding-countdown .detail-grid article p{color:#805064!important}
+.df-main .wedding-page .wedding-groom-message{
+  display:grid;gap:.55rem;width:min(100%,720px);margin:0 auto 1rem!important;
+  color:#536b55;text-align:center;font:600 clamp(.95rem,3vw,1.08rem)/1.65 "Nunito Sans",Arial,sans-serif;
+}
+.df-main .wedding-page .wedding-groom-message strong{font-weight:900}
+.df-main .wedding-page .wedding-bride .wedding-family-photo{opacity:0;transform:translate3d(0,30px,0) scale(.94)}
+.df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-bride .wedding-family-photo{
+  animation:wedding-bride-reveal 1s cubic-bezier(.2,.72,.22,1) .2s both!important;
+}
+@keyframes wedding-bride-reveal{
+  from{opacity:0;transform:translate3d(0,30px,0) scale(.94)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+.df-site-header--wedding .df-site-language{
+  position:fixed!important;top:calc(env(safe-area-inset-top) + 10px)!important;
+  right:max(12px,env(safe-area-inset-right))!important;z-index:1200!important;pointer-events:auto!important;
+}
+@media(max-width:600px){
+  .df-main .wedding-page .wedding-opening-couple{width:min(82vw, min(42svh,340px));max-height:42svh}
+  .df-main .wedding-page .wedding-opening h1{font-size:clamp(2.1rem,8vw,3.7rem)!important}
+  .df-main .wedding-page .wedding-opening-recipient{font-size:clamp(.72rem,3.2vw,.95rem)}
+  .df-main .wedding-page .wedding-opening button{min-height:46px!important;padding:.7rem 1.3rem!important}
+  .df-main .wedding-page .wedding-hero-couple-name{font-size:clamp(2.65rem,12vw,3.8rem)}
+}
+@media(max-height:620px){
+  .df-main .wedding-page .wedding-opening{gap:.2rem;padding-block:calc(env(safe-area-inset-top) + .25rem) calc(env(safe-area-inset-bottom) + .25rem)}
+  .df-main .wedding-page .wedding-opening-couple{width:min(62vw,34svh,270px);max-height:34svh}
+  .df-main .wedding-page .wedding-opening h1{font-size:clamp(1.8rem,7vh,3rem)!important}
+  .df-main .wedding-page .wedding-opening-recipient{font-size:.76rem}
+  .df-main .wedding-page .wedding-opening button{min-height:42px!important;padding:.55rem 1.1rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .df-main .wedding-page .wedding-bride .wedding-family-photo{opacity:1;transform:none}
+  .df-main .wedding-page .wedding-couple-panel.aos-animate .wedding-bride .wedding-family-photo{animation:none!important}
+}
