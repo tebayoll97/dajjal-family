@@ -122,3 +122,18 @@
   .df-profile-page { padding:1.25rem .85rem 2rem; }
   .df-profile-identity-card { border-radius:var(--df-radius-lg); }
 }
+
+
+/* Current Profile identity composition: avatar and identity copy share one responsive row. */
+.df-profile-identity-card { text-align:left; }
+.df-profile-identity-row { display:flex; align-items:center; gap:clamp(1.1rem,3vw,2rem); min-width:0; }
+.df-profile-identity-copy { display:flex; min-width:0; flex:1; flex-direction:column; align-items:flex-start; gap:.3rem; }
+.df-profile-eyebrow { margin:0; color:var(--df-primary); font-size:.62rem; font-weight:850; letter-spacing:.16em; }
+.df-profile-page-title { margin:.2rem 0 .35rem; color:var(--df-text); font-size:clamp(1.35rem,3.2vw,2rem); font-weight:950; letter-spacing:-.04em; line-height:1.1; }
+.df-profile-name { margin:0; color:var(--df-text); font-size:clamp(1.1rem,2.6vw,1.45rem); font-weight:850; }
+.df-profile-edit-link { display:inline-flex; align-items:center; justify-content:center; min-height:38px; margin-top:.65rem; padding:.55rem .9rem; border:1px solid var(--df-border-strong); border-radius:var(--df-radius-md); background:var(--df-primary-soft); color:var(--df-primary-hover); font-size:.68rem; font-weight:850; letter-spacing:.06em; text-decoration:none; }
+.df-profile-edit-link:hover { border-color:var(--df-primary); background:var(--df-primary-soft); }
+@media(max-width:520px) {
+  .df-profile-identity-row { align-items:center; flex-direction:column; text-align:center; }
+  .df-profile-identity-copy { align-items:center; }
+}
