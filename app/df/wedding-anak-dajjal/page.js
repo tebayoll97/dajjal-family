@@ -58,6 +58,7 @@ const words = {
     countdown: "COUNTDOWN TO THE CELEBRATION", days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
     eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", gift: "DIGITAL GIFT", address: "ADDRESS", openMap: "OPEN MAP",
     photoAlt: "Anak Dajjal and Malika",
+    navEvent: "THE CELEBRATION", navStory: "OUR STORY", navGallery: "GALLERY", navGift: "GIFT", navRsvp: "RSVP", navGuestbook: "GUESTBOOK",
   },
   id: {
     eyebrow: "SEDIKIT KEMERIAHAN, BANYAK CINTA",
@@ -106,6 +107,7 @@ const words = {
     countdown: "MENUJU HARI BAHAGIA", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
     eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", gift: "HADIAH DIGITAL", address: "ALAMAT", openMap: "BUKA PETA",
     photoAlt: "Anak Dajjal dan Malika",
+    navEvent: "ACARA", navStory: "KISAH", navGallery: "GALERI", navGift: "HADIAH", navRsvp: "KONFIRMASI", navGuestbook: "BUKU TAMU",
   },
 };
 
@@ -347,7 +349,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <strong>ANAK DAJJAL</strong>
                 <span className="placeholder-amp">&</span>
                 <strong>MALIKA</strong>
-                <small>THE COUPLE&apos;S PHOTO WILL APPEAR HERE</small></>}
+                <small>ANAK DAJJAL <span aria-hidden="true">✦</span> MALIKA</small></>}
               </div>
               <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
@@ -360,8 +362,16 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 {eventInfo?.bride_parent_names && <p>{eventInfo.bride_parent_names}</p>}
               </div>
             )}
-            <p className="couple-subtitle">MALIKA — KEDELAI HITAM PILIHAN</p>
           </section>
+
+          <nav className="wedding-section-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
+            <a href="#event">{t.navEvent}</a>
+            {eventInfo?.love_story?.trim() && <a href="#story">{t.navStory}</a>}
+            {galleryItems.length > 0 && <a href="#gallery">{t.navGallery}</a>}
+            {eventInfo?.gift_info?.trim() && <a href="#gift">{t.navGift}</a>}
+            {eventInfo?.rsvp_enabled && <a href="#rsvp">{t.navRsvp}</a>}
+            {eventInfo?.guestbook_enabled && <a href="#guestbook">{t.navGuestbook}</a>}
+          </nav>
 
           {countdown && (
             <section className="wedding-section wedding-countdown" data-aos="fade-up" aria-label={t.countdown}>
@@ -385,22 +395,22 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           )}
 
           {galleryItems.length > 0 && (
-            <section className="wedding-section wedding-gallery-section" data-aos="fade-left">
+            <section className="wedding-section wedding-gallery-section" id="gallery" data-aos="fade-left">
               <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
               <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
               <div className="wedding-gallery-viewer">
-                <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || "Wedding memory"} className="wedding-gallery-image" />
+                <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || t.photoAlt} className="wedding-gallery-image" />
                 <div className="wedding-gallery-controls">
-                  <button type="button" aria-label="Foto sebelumnya" onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)}>‹</button>
+                  <button type="button" aria-label={language === "id" ? "Foto sebelumnya" : "Previous photo"} onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)}>‹</button>
                   <span>{galleryIndex + 1} / {galleryItems.length}</span>
-                  <button type="button" aria-label="Foto berikutnya" onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)}>›</button>
+                  <button type="button" aria-label={language === "id" ? "Foto berikutnya" : "Next photo"} onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)}>›</button>
                 </div>
                 {galleryItems[galleryIndex]?.title && <p className="wedding-gallery-caption">{galleryItems[galleryIndex].title}</p>}
               </div>
             </section>
           )}
 
-          <section className="wedding-section" data-aos="fade-left">
+          <section className="wedding-section" id="event" data-aos="fade-left">
             <p className="wedding-kicker">SAVE THE CELEBRATION</p>
             <h2 className="wedding-section-heading">{t.reception}</h2>
             <div className="detail-grid">
@@ -425,7 +435,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           )}
 
           {eventInfo?.rsvp_enabled && (
-            <section className="wedding-section wedding-rsvp" data-aos="fade-left">
+            <section className="wedding-section wedding-rsvp" id="rsvp" data-aos="fade-left">
               <p className="wedding-kicker">KINDLY RESPOND</p>
               <h2 className="wedding-section-heading">{t.rsvp}</h2>
               <p className="section-copy">{t.rsvpText}</p>
@@ -447,7 +457,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           )}
 
           {eventInfo?.guestbook_enabled && (
-          <section className="wedding-section wedding-guestbook" data-aos="fade-right">
+          <section className="wedding-section wedding-guestbook" id="guestbook" data-aos="fade-right">
             <p className="wedding-kicker">WORDS FROM THE HEART</p>
             <h2 className="wedding-section-heading">{t.guestbook}</h2>
             <p className="section-copy">{t.guestbookText}</p>
