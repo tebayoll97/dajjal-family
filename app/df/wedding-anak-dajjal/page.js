@@ -126,6 +126,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const { language } = useLanguage();
   const t = words[language] || words.en;
   const [guestName, setGuestName] = useState("");
+  const [messageLength, setMessageLength] = useState(0);
   const [eventInfo, setEventInfo] = useState(null);
   const [galleryItems, setGalleryItems] = useState([]);
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -250,7 +251,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     const attendanceValue = String(data.get("attendance") || "");
     const messageValue = String(data.get("guestbook_message") || "").trim();
     const honeypot = String(data.get("website") || "");
-    if (!guestNameValue || !serverNameValue || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue) {
+    if (!guestNameValue || guestNameValue.length > 16 || !/^\\d{1,4}$/.test(serverNameValue) || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue || messageValue.length > 200) {
       setRsvpStatus("error");
       setRsvpLoading(false);
       return;
@@ -278,6 +279,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         if (!guestbookResponse.ok) throw new Error("Guestbook submission failed");
       }
       form.reset();
+      setMessageLength(0);
       setRsvpStatus("success");
       setRsvpSuccessToast(true);
       const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
@@ -549,15 +551,15 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
-                <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
-                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" maxLength="40" placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
+                <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength={16} placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
+                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} onChange={(event) => { event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 4); }} placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
                 <fieldset className="wedding-attendance">
                   <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span className="wedding-required">*</span></legend>
                   <label><input required type="radio" name="attendance" value="yes" defaultChecked />{language === "id" ? "Hadir" : "Attending"}</label>
                   <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
                   <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
                 </fieldset>
-                <label>{t.message} <span className="wedding-required">*</span><textarea required name="guestbook_message" rows="4" maxLength="500" placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /></label>
+                <label>{t.message} <span className="wedding-required">*</span><textarea required name="guestbook_message" rows="4" maxLength={200} onChange={(event) => setMessageLength(event.target.value.length)} placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /><small className="wedding-message-counter" aria-live="polite">{200 - messageLength}/200</small></label>
                 <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
