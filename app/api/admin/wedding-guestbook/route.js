@@ -121,7 +121,7 @@ export async function PATCH(request) {
     const body = await request.json();
     const id = typeof body?.id === "string" ? body.id.trim() : "";
     const guestName = typeof body?.guest_name === "string" ? body.guest_name.trim() : "";
-    const serverName = typeof body?.server_name === "string" ? body.server_name.trim() : "";
+    const serverName = typeof body?.server_name === "string" ? body.server_name.trim() : "";\n    const dateText = typeof body?.date === "string" ? body.date.trim() : "";\n    const timeText = typeof body?.time === "string" ? body.time.trim() : "";\n    const dateMatch = dateText.match(/^(\\d{2})\\/(\\d{2})\\/(\\d{4})$/);\n    const timeMatch = timeText.match(/^([01]\\d|2[0-3]):([0-5]\\d)$/);\n    const day = dateMatch ? Number(dateMatch[1]) : 0;\n    const month = dateMatch ? Number(dateMatch[2]) : 0;\n    const year = dateMatch ? Number(dateMatch[3]) : 0;\n    const validDate = dateMatch && year >= 2000 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= new Date(Date.UTC(year, month, 0)).getUTCDate();\n    const createdAt = validDate && timeMatch ? `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${timeMatch[1]}:${timeMatch[2]}:00+07:00` : "";
 
     if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\d{1,4}$/.test(serverName)) {
       return Response.json({ error: "Nama atau server tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
@@ -132,10 +132,10 @@ export async function PATCH(request) {
 
     const { data, error } = await supabaseAdmin
       .from("df_guestbook")
-      .update({ guest_name: guestName, server_name: serverName })
+      .update({ guest_name: guestName, server_name: serverName, created_at: createdAt })
       .eq("id", id)
       .eq("invitation_id", invitationId)
-      .select("id, guest_name, server_name")
+      .select("id, guest_name, server_name, created_at")
       .maybeSingle();
 
     if (error) throw error;
