@@ -1329,3 +1329,63 @@
 .wedding-falling-leaves span{position:absolute;top:-12vh;left:calc(var(--leaf-index) * 4.1% + 2%);font-size:clamp(1.2rem,3.6vw,2.3rem);opacity:0;animation:wedding-leaf-fall 4.5s ease-in forwards;animation-delay:calc(var(--leaf-index) * 20ms);filter:drop-shadow(0 3px 3px rgba(78,86,46,.12))}
 @keyframes wedding-leaf-fall{0%{opacity:0;transform:translate3d(0,-5vh,0) rotate(0deg)}12%{opacity:.95}80%{opacity:.9}100%{opacity:0;transform:translate3d(calc((var(--leaf-index) - 11) * 1.8vw),115vh,0) rotate(calc(var(--leaf-index) * 95deg))}}
 @media(prefers-reduced-motion:reduce){.wedding-page .wedding-groom .wedding-family-photo,.wedding-page .wedding-bride .wedding-family-photo{opacity:1!important;transform:none!important;animation:none!important}.wedding-falling-leaves{display:none!important}}
+
+
+/* Critical visibility fix: panel-one names mirror the opening cover typography. */
+.wedding-page .wedding-hero h1.wedding-hero-couple-name{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;gap:0!important;width:100%!important;max-width:100%!important;
+  min-height:3.2em!important;margin:1.1rem auto .35rem!important;padding:.12em .2em!important;
+  overflow:visible!important;visibility:visible!important;opacity:1!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  background:none!important;background-image:none!important;
+  -webkit-background-clip:border-box!important;background-clip:border-box!important;
+  color:#a64f76!important;-webkit-text-fill-color:#a64f76!important;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(3rem,12vw,4.8rem)!important;font-weight:400!important;
+  line-height:1.02!important;letter-spacing:0!important;text-align:center!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.8),0 3px 12px rgba(151,74,111,.12)!important;
+}
+.wedding-page .wedding-hero h1.wedding-hero-couple-name .opening-name{
+  display:block!important;position:relative!important;visibility:visible!important;opacity:1!important;
+  color:#a64f76!important;-webkit-text-fill-color:#a64f76!important;
+  font:400 1em/1.02 "Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  background:none!important;-webkit-background-clip:border-box!important;
+}
+.wedding-page .wedding-hero h1.wedding-hero-couple-name .opening-amp{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  margin:.04em 0!important;color:#638b72!important;-webkit-text-fill-color:#638b72!important;
+  font:400 .72em/.9 "Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  background:none!important;
+}
+
+/* Small floral sticker in the upper-right corner of every numbered panel. */
+.wedding-page [data-panel-number]{
+  position:relative!important;isolation:isolate;
+  overflow:visible!important;
+}
+.wedding-page [data-panel-number]::after{
+  content:"❀";position:absolute;top:12px;right:14px;z-index:5;
+  display:grid;place-items:center;width:42px;height:42px;
+  border:1px solid rgba(218,160,181,.58);border-radius:50%;
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,226,238,.94));
+  color:#c66f96;font:400 1.75rem/1 Georgia,serif;
+  text-shadow:0 1px 0 #fff,0 3px 7px rgba(169,88,123,.18);
+  box-shadow:0 5px 15px rgba(169,88,123,.14);
+  transform-origin:50% 50%;
+  animation:wedding-panel-flower-loop 4.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes wedding-panel-flower-loop{
+  0%,100%{transform:rotate(-10deg) translateY(0) scale(.96)}
+  25%{transform:rotate(8deg) translateY(-3px) scale(1.04)}
+  50%{transform:rotate(18deg) translateY(0) scale(1)}
+  75%{transform:rotate(2deg) translateY(-2px) scale(1.05)}
+}
+@media(max-width:600px){
+  .wedding-page [data-panel-number]::after{top:9px;right:10px;width:34px;height:34px;font-size:1.45rem}
+  .wedding-page .wedding-hero h1.wedding-hero-couple-name{font-size:clamp(2.8rem,13vw,4rem)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page [data-panel-number]::after{animation:none!important}
+}
