@@ -2321,3 +2321,48 @@
 @media(prefers-reduced-motion:reduce){
  .wedding-page [data-aos]{opacity:1!important;transform:none!important}
 }
+
+
+/* GUESTBOOK LOAD MORE — one natural page scroll, no nested scroll container. */
+.wedding-page .wedding-guestbook-list-panel{
+  height:auto!important;
+  max-height:none!important;
+  min-height:0!important;
+  overflow:visible!important;
+  overscroll-behavior: auto!important;
+  scrollbar-width:none!important;
+}
+.wedding-page .wedding-guestbook-list-panel::-webkit-scrollbar{display:none!important}
+.wedding-page .wedding-guestbook-pagination{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;gap:.65rem!important;margin:1.5rem auto 0!important;
+  color:#76566d!important;text-align:center!important;
+}
+.wedding-page .wedding-guestbook-pagination p{margin:0!important;font-size:.82rem!important;font-weight:700!important}
+.wedding-page .wedding-guestbook-pagination button{
+  min-height:46px!important;padding:.75rem 1.35rem!important;border:1px solid #d9a9bd!important;
+  border-radius:999px!important;background:linear-gradient(135deg,#fffafd,#f8dce8)!important;
+  color:#854765!important;font:800 .88rem/1.2 "Nunito Sans",Arial,sans-serif!important;
+  box-shadow:0 7px 18px rgba(145,79,111,.12)!important;cursor:pointer;
+}
+.wedding-page .wedding-guestbook-pagination button:disabled{opacity:.55!important;cursor:wait}
+.wedding-page .wedding-guestbook-end{margin:1.25rem auto 0!important;color:#91627b!important;font-size:.85rem!important;text-align:center!important}
+.wedding-page .wedding-closing-heart-animation{
+  display:block!important;width:max-content!important;margin:.9rem auto 0!important;
+  font-family:system-ui,sans-serif!important;font-size:clamp(2rem,7vw,2.8rem)!important;
+  line-height:1.2!important;transform-origin:center;
+  animation:df-closing-heart-journey 5.8s ease-in-out infinite;
+  filter:drop-shadow(0 5px 9px rgba(196,78,125,.24));
+}
+@keyframes df-closing-heart-journey{
+  0%,100%{transform:translateY(0) scale(1) rotate(0);filter:drop-shadow(0 4px 7px rgba(196,78,125,.18))}
+  12%{transform:translateY(-5px) scale(1.18) rotate(-8deg)}
+  24%{transform:translateY(0) scale(.96) rotate(7deg)}
+  38%{transform:translateY(-9px) scale(1.12) rotate(0)}
+  52%{transform:translateY(1px) scale(1) rotate(8deg)}
+  68%{transform:translateY(-4px) scale(1.2) rotate(-6deg)}
+  82%{transform:translateY(0) scale(.98) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){
+ .wedding-page .wedding-closing-heart-animation{animation:none!important}
+}
