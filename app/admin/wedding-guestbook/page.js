@@ -36,7 +36,11 @@ export default function AdminWeddingGuestbookPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: PAGE_SIZE, total: 0, totalPages: 0 });
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState("");
-  const [confirmEntry, setConfirmEntry] = useState(null);\n  const [editingEntry, setEditingEntry] = useState(null);\n  const [editName, setEditName] = useState("");\n  const [editServer, setEditServer] = useState("");\n  const [savingEdit, setSavingEdit] = useState(false);
+  const [confirmEntry, setConfirmEntry] = useState(null);
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editServer, setEditServer] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
