@@ -2068,8 +2068,8 @@
 }
 
 /* DESKTOP-ONLY WEDDING PRESENTATION
-   All rules are scoped to 761px and wider. Existing mobile styles remain untouched. */
-@media (min-width: 761px) {
+   All rules are scoped to 1024px and wider. Existing mobile and tablet styles remain untouched. */
+@media (min-width: 1024px) {
   .df-workspace-layout:has(.wedding-page) {
     display: block !important;
     width: 100% !important;
