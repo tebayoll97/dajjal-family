@@ -27,7 +27,7 @@ export async function GET(request) {
     const searchParams = new URL(request.url).searchParams;
     const requestedPage = Number.parseInt(searchParams.get("page") || "1", 10);
     const page = Number.isFinite(requestedPage) ? Math.max(1, requestedPage) : 1;
-    const pageSize = 50;
+    const pageSize = 5;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
     const { data, error, count } = await supabaseAdmin.from("df_guestbook")
