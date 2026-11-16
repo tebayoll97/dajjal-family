@@ -1305,3 +1305,27 @@
 @media(prefers-reduced-motion:reduce){
   .wedding-page .wedding-couple-panel .wedding-family-photo{opacity:1!important;transform:none!important;animation:none!important}
 }
+
+
+/* Wedding invitation final execution pass */
+.df-site-header.df-site-header--wedding{position:fixed!important;inset:0 0 auto!important;width:100%!important;height:0!important;min-height:0!important;overflow:visible!important;z-index:5000!important;display:block!important;visibility:visible!important;pointer-events:none!important}
+.df-site-header--wedding .df-site-header-inner{position:static!important;display:block!important;width:100%!important;height:0!important;min-height:0!important;overflow:visible!important;pointer-events:none!important}
+.df-site-header--wedding .df-site-actions{position:static!important;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:none!important}
+.df-site-header--wedding .df-site-language{position:fixed!important;top:calc(env(safe-area-inset-top) + 10px)!important;right:max(12px,env(safe-area-inset-right))!important;z-index:5100!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;padding:4px!important;border:1px solid #e8c6d7!important;border-radius:999px!important;background:rgba(255,250,248,.97)!important;box-shadow:0 6px 20px rgba(143,83,112,.18)!important}
+.df-site-header--wedding .df-site-language button{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:38px!important;min-height:34px!important;color:#805a70!important;background:transparent!important;border:0!important;border-radius:999px!important;font:800 .68rem/1 Arial,sans-serif!important}
+.df-site-header--wedding .df-site-language button[aria-pressed="true"]{color:#63344d!important;background:linear-gradient(135deg,#ffb9cf,#ffc98e)!important}
+.wedding-page .wedding-countdown .detail-grid article{border-radius:18px!important;aspect-ratio:1/1!important}
+.wedding-page .wedding-invitation-eyebrow.wedding-couple-eyebrow{margin:1.4rem auto .5rem!important;padding-top:0!important}
+.wedding-page .wedding-groom,.wedding-page .wedding-bride{display:flex;flex-direction:column;align-items:center;text-align:center}
+.wedding-page .wedding-groom .wedding-family-photo,.wedding-page .wedding-bride .wedding-family-photo{display:block;width:min(100%,520px);height:auto;max-height:620px;object-fit:cover;border-radius:20px;opacity:0;transform:translate3d(0,28px,0) scale(.95);will-change:opacity,transform}
+.wedding-page .wedding-groom.aos-animate .wedding-family-photo,.wedding-page .wedding-bride.aos-animate .wedding-family-photo{animation:wedding-single-photo-reveal .95s cubic-bezier(.2,.72,.22,1) .06s both}
+.wedding-page .wedding-groom .wedding-couple-amp{margin:.6rem auto 0;text-align:center;font:400 clamp(3rem,10vw,4.4rem)/.9 "Great Vibes",cursive;color:#b77a91}
+@keyframes wedding-single-photo-reveal{from{opacity:0;transform:translate3d(0,30px,0) scale(.93)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+.wedding-page .wedding-copy-address{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;min-height:44px;margin:1rem auto 0;padding:.72rem 1.15rem;border:0;border-radius:12px;background:linear-gradient(135deg,#168bff,#0874e8)!important;color:#fff!important;box-shadow:0 7px 18px rgba(22,139,255,.24);font:800 .9rem/1 "Nunito Sans",Arial,sans-serif;cursor:pointer;transition:transform .18s ease,filter .18s ease}
+.wedding-page .wedding-copy-address svg{display:block;flex:0 0 1em;width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wedding-page .wedding-copy-address span{display:block;font:inherit;line-height:1}
+.wedding-page .wedding-copy-address:active{transform:scale(.97)}
+.wedding-falling-leaves{position:fixed;inset:0;z-index:4900;overflow:hidden;pointer-events:none}
+.wedding-falling-leaves span{position:absolute;top:-12vh;left:calc((var(--leaf-index) * 37 + 5) % 100 * 1%);font-size:clamp(1.2rem,3.6vw,2.3rem);opacity:0;animation:wedding-leaf-fall 5s ease-in forwards;animation-delay:calc(var(--leaf-index) * 35ms);filter:drop-shadow(0 3px 3px rgba(78,86,46,.12))}
+@keyframes wedding-leaf-fall{0%{opacity:0;transform:translate3d(0,-5vh,0) rotate(0deg)}12%{opacity:.95}80%{opacity:.9}100%{opacity:0;transform:translate3d(calc((var(--leaf-index) - 11) * 1.8vw),115vh,0) rotate(calc(var(--leaf-index) * 95deg))}}
+@media(prefers-reduced-motion:reduce){.wedding-page .wedding-groom .wedding-family-photo,.wedding-page .wedding-bride .wedding-family-photo{opacity:1!important;transform:none!important;animation:none!important}.wedding-falling-leaves{display:none!important}}
