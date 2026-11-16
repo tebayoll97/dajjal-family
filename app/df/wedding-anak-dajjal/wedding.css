@@ -1498,3 +1498,120 @@
 @media(prefers-reduced-motion:reduce){
   .wedding-page .wedding-story-item[data-aos]{opacity:1!important;transform:none!important}
 }
+
+
+/* OUR STORIES refinements — match the invitation's final panel palette */
+.wedding-page .wedding-stories-section>.wedding-section-heading{
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(2.8rem,10vw,4.3rem)!important;
+  font-weight:400!important;
+  color:#a64f76!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.8),0 3px 12px rgba(151,74,111,.1);
+}
+.wedding-page .wedding-story-card{
+  background:linear-gradient(120deg,#f8d9e6,#f9e7d5,#e2f1e5)!important;
+  border:1px solid rgba(226,190,203,.9)!important;
+  box-shadow:0 8px 22px rgba(118,83,100,.12)!important;
+}
+.wedding-page .wedding-story-card-content{
+  color:#795d72!important;
+}
+.wedding-page .wedding-story-card-content h3{
+  color:#a64f76!important;
+}
+.wedding-page .wedding-story-card-content p{
+  color:#795d72!important;
+}
+.wedding-page .wedding-story-card-content .story-malika{color:#a64f76!important}
+.wedding-page .wedding-story-card-content .story-soybean{color:#94713c!important}
+/* Keep the important upper portion of the second and third illustrations visible. */
+.wedding-page .wedding-story-card>img.wedding-story-image--two,
+.wedding-page .wedding-story-card>img.wedding-story-image--three{
+  object-position:center top!important;
+}
+.wedding-page .wedding-stories-section>.wedding-section-heading{
+  margin-bottom:2.1rem!important;
+}
+
+/* Minimal closing signature below the final invitation panel */
+.wedding-page .wedding-closing{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  width:100%;
+  margin:clamp(2rem,7vw,4rem) auto 1.5rem;
+  padding:0 1rem 2rem;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-align:center;
+}
+.wedding-page .wedding-closing-couple-name{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  margin:0 0 .65rem!important;
+  padding:0!important;
+  border:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:#a64f76!important;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(2.8rem,11vw,4.2rem)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-align:center!important;
+}
+.wedding-page .wedding-closing-couple-name .opening-name{
+  display:block;
+  color:#a64f76!important;
+  -webkit-text-fill-color:#a64f76!important;
+  font:400 1em/1 "Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+}
+.wedding-page .wedding-closing-couple-name .opening-amp{
+  display:block;
+  margin:.02em 0;
+  color:#638b72!important;
+  -webkit-text-fill-color:#638b72!important;
+  font:400 .72em/.85 "Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+}
+.wedding-page .wedding-closing-with-love,
+.wedding-page .wedding-closing-family{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  margin:0!important;
+  color:#795d72!important;
+  font-family:"Nunito Sans",Arial,sans-serif!important;
+  font-size:clamp(1rem,3.8vw,1.25rem)!important;
+  font-weight:700!important;
+  line-height:1.5;
+}
+.wedding-page .wedding-closing-heart{
+  display:block;
+  width:1.15em;
+  height:1.15em;
+  flex:0 0 1.15em;
+  fill:currentColor;
+  stroke:currentColor;
+  stroke-width:1;
+  transform-origin:center;
+  animation:wedding-closing-heartbeat 1.7s ease-in-out infinite;
+}
+.wedding-page .wedding-closing-heart--left{color:#e35d83}
+.wedding-page .wedding-closing-heart--right{color:#d84f70;animation-delay:.35s}
+@keyframes wedding-closing-heartbeat{
+  0%,100%{transform:scale(1) rotate(-5deg)}
+  18%{transform:scale(1.22) rotate(7deg)}
+  36%{transform:scale(1.05) rotate(-8deg)}
+  54%{transform:scale(1.18) rotate(6deg)}
+  72%{transform:scale(1) rotate(-3deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .wedding-closing-heart{animation:none!important}
+}
