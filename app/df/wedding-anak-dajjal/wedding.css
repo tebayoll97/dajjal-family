@@ -2192,3 +2192,91 @@
   }
 }
 
+/* INVITATION COVER: fit every element in one viewport while preserving pull-to-refresh. */
+.df-main .wedding-page .wedding-opening,
+.wedding-page .wedding-opening {
+  height: 100vh;
+  height: 100svh;
+  height: 100dvh;
+  min-height: 0 !important;
+  max-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.35rem, 1.15dvh, .85rem);
+  padding:
+    calc(env(safe-area-inset-top) + clamp(.45rem, 1.4dvh, 1rem))
+    max(1rem, env(safe-area-inset-right))
+    calc(env(safe-area-inset-bottom) + clamp(.45rem, 1.4dvh, 1rem))
+    max(1rem, env(safe-area-inset-left));
+  overflow: hidden !important;
+  overscroll-behavior-y: auto !important;
+  touch-action: pan-y pinch-zoom !important;
+}
+.df-main .wedding-page .wedding-opening-couple,
+.wedding-page .wedding-opening-couple {
+  width: min(76vw, 40dvh, 390px);
+  max-width: 100%;
+  max-height: 40dvh;
+  height: auto;
+  object-fit: contain;
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.df-main .wedding-page .wedding-opening h1,
+.wedding-page .wedding-opening h1 {
+  flex: 0 1 auto;
+  max-width: 100%;
+  margin: 0 !important;
+  font-size: clamp(1.9rem, min(8.5vw, 7.2dvh), 4.7rem) !important;
+  line-height: .92 !important;
+}
+.df-main .wedding-page .wedding-opening-recipient,
+.wedding-page .wedding-opening-recipient {
+  flex: 0 1 auto;
+  max-width: 100%;
+  font-size: clamp(.7rem, min(2.7vw, 2.15dvh), 1.02rem);
+  line-height: 1.25;
+}
+.df-main .wedding-page .wedding-opening button,
+.wedding-page .wedding-opening button {
+  flex: 0 0 auto;
+  min-height: clamp(42px, 6.5dvh, 54px) !important;
+  padding: clamp(.55rem, 1.4dvh, .85rem) clamp(1rem, 3vw, 1.65rem) !important;
+}
+.df-main .wedding-page .wedding-opening-florals,
+.wedding-page .wedding-opening-florals {
+  inset: 1.5% 0 auto;
+  pointer-events: none;
+}
+@media (max-height: 700px) {
+  .df-main .wedding-page .wedding-opening,
+  .wedding-page .wedding-opening {
+    gap: .25rem;
+    padding-top: calc(env(safe-area-inset-top) + .3rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + .3rem);
+  }
+  .df-main .wedding-page .wedding-opening-couple,
+  .wedding-page .wedding-opening-couple {
+    width: min(68vw, 34dvh, 300px);
+    max-height: 34dvh;
+  }
+  .df-main .wedding-page .wedding-opening h1,
+  .wedding-page .wedding-opening h1 {
+    font-size: clamp(1.7rem, min(7.5vw, 6.2dvh), 3.6rem) !important;
+  }
+}
+@media (max-height: 520px) {
+  .df-main .wedding-page .wedding-opening-couple,
+  .wedding-page .wedding-opening-couple {
+    width: min(55vw, 27dvh, 230px);
+    max-height: 27dvh;
+  }
+  .df-main .wedding-page .wedding-opening-recipient,
+  .wedding-page .wedding-opening-recipient {
+    font-size: .68rem;
+  }
+}
+
