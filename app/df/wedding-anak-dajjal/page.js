@@ -364,6 +364,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       <div className="wedding-content" hidden={!invitationOpened}>
           <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
           <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Mempelai Utama</h2>
             <div className="couple-frame">
               <div className="couple-placeholder">
                 <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
@@ -385,8 +386,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <p className="wedding-invitation-eyebrow wedding-couple-eyebrow">Mempelai</p>
           <section className="wedding-section wedding-family-panel wedding-groom" id="couple" data-panel-number="02" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Profil Anak Dajjal</h2>
             <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
             <h2>Anak Dajjal</h2>
@@ -395,14 +396,15 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-family-panel wedding-bride" id="bride" data-panel-number="03" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Profil Malika</h2>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
             <h2>Malika</h2>
             <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
           </section>
 
-          <p className="wedding-invitation-eyebrow wedding-event-eyebrow">Rangkaian Acara</p>
           <section className="wedding-section wedding-event-panel" id="event" data-panel-number="04" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Resepsi</h2>
+            <h2 className="wedding-section-heading">Rangkaian Acara</h2>
+            <h3 className="wedding-event-subheading">Resepsi</h3>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
               <strong>{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</strong>
@@ -482,8 +484,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <h2 className="wedding-panel-title" data-aos="fade-up">Galeri Foto</h2>
           <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07">
+            <h2 className="wedding-section-heading">Galeri Foto</h2>
             <div className="wedding-gallery-grid">
               <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="0" key="gallery-0">
                 <img src="https://drive.google.com/thumbnail?id=1trVpyYoeq7cIdFJ6RwxlXz9oRb7aaQ17&sz=w1600" alt="The Runaway" loading="lazy" decoding="async" />
@@ -506,8 +508,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <h2 className="wedding-panel-title" data-aos="fade-up">Hadiah ke Mempelai</h2>
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Hadiah ke Mempelai</h2>
             <div className="dawn-badge-heading">
               <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
               <div><strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span></div>
@@ -532,11 +534,10 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <h2 className="wedding-panel-title" data-aos="fade-up">Mohon Doa Restu</h2>
           <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
+              <h2 className="wedding-section-heading">Mohon Doa Restu</h2>
               <img className="wishes-dawn-badge" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
-              <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
                 <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
@@ -574,8 +575,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <h2 className="wedding-panel-title" data-aos="fade-up">Bagikan Undangan</h2>
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
+            <h2 className="wedding-section-heading">Bagikan Undangan</h2>
             <p className="wedding-kicker">SPREAD THE JOY</p>
             <p className="share-reward-copy">Bagikan Undangan ini agar mendapat 100 poin plus di surga.</p>
             <div className="share-actions">
