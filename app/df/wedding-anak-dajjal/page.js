@@ -376,7 +376,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <p className="wedding-hero-date">{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</p>
             <div className="wedding-countdown" id="countdown" aria-label={t.countdown}>
               <p className="wedding-kicker">{t.countdown}</p>
-              {countdown ? (countdown.complete ? <h2 className="wedding-section-heading">{t.eventStarted}</h2> : (
+              {countdown ? (countdown.complete ? <h3 className="wedding-countdown-complete-title">{t.eventStarted}</h3> : (
                 <div className="detail-grid">
                   {[[countdown.days,t.days],[countdown.hours,t.hours],[countdown.minutes,t.minutes],[countdown.seconds,t.seconds]].map(([value,label])=>(
                     <article key={label}><h3>{String(value).padStart(2,"0")}</h3><p>{label}</p></article>
