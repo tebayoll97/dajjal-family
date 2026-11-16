@@ -30,6 +30,20 @@ export async function generateMetadata() {
       url: canonical,
       siteName: "Dajjal Family",
       type: "website",
+      images: [
+        {
+          url: "https://drive.google.com/thumbnail?id=106R3DVD9nT5Am1XUMrtYlxvpftCxgXkg&sz=w1200",
+          width: 1200,
+          height: 630,
+          alt: "Undangan Digital Anak Dajjal & Malika — Dajjal Family",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title + " | Dajjal Family",
+      description,
+      images: ["https://drive.google.com/thumbnail?id=106R3DVD9nT5Am1XUMrtYlxvpftCxgXkg&sz=w1200"],
     },
     robots: { index: true, follow: true },
   };
