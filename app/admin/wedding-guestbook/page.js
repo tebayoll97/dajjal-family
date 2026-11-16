@@ -36,7 +36,7 @@ export default function AdminWeddingGuestbookPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: PAGE_SIZE, total: 0, totalPages: 0 });
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState("");
-  const [confirmEntry, setConfirmEntry] = useState(null);
+  const [confirmEntry, setConfirmEntry] = useState(null);\n  const [editingEntry, setEditingEntry] = useState(null);\n  const [editName, setEditName] = useState("");\n  const [editServer, setEditServer] = useState("");\n  const [savingEdit, setSavingEdit] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
@@ -137,6 +137,41 @@ export default function AdminWeddingGuestbookPage() {
     }
   }
 
+  async function saveEntryEdit(event) {
+    event.preventDefault();
+    if (!editingEntry || savingEdit) return;
+    const guestName = editName.trim();
+    const serverName = editServer.trim();
+    if (!guestName || guestName.length > 16 || !/^\\d{1,4}$/.test(serverName)) {
+      setError("Nama maksimal 16 karakter dan server wajib 1–4 angka.");
+      return;
+    }
+    setSavingEdit(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch("/api/admin/wedding-guestbook", {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${adminToken}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ id: editingEntry.id, guest_name: guestName, server_name: serverName }),
+      });
+      const result = await response.json();
+      if (response.status === 401 || response.status === 403) {
+        await supabaseAdminClient.auth.signOut();
+        router.replace("/admin/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
+      setEditingEntry(null);
+      setNotice("Nama dan server berhasil diperbarui.");
+      await loadEntries(page);
+    } catch (err) {
+      setError(err.message || "Gagal menyimpan perubahan.");
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
   const start = pagination.total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const end = Math.min(page * PAGE_SIZE, pagination.total);
 
@@ -220,6 +255,27 @@ export default function AdminWeddingGuestbookPage() {
         )}
       </div>
 
+      {editingEntry && (
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-black/75 px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !savingEdit) setEditingEntry(null); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="guestbook-edit-title" className="w-full max-w-sm rounded-2xl border border-purple-400/25 bg-[#171321] p-5 shadow-2xl sm:p-6">
+            <h2 id="guestbook-edit-title" className="text-lg font-black">Edit Nama &amp; Server</h2>
+            <p className="mt-1 text-sm text-gray-400">Hanya nama dan server yang dapat diubah.</p>
+            <form onSubmit={saveEntryEdit} className="mt-5 space-y-4">
+              <label className="block text-xs font-bold text-gray-300">Nama
+                <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+                <span className="mt-1 block text-[11px] font-normal text-gray-500">{editName.length}/16 karakter</span>
+              </label>
+              <label className="block text-xs font-bold text-gray-300">Server (1–4 angka)
+                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              </label>
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">BATAL</button>
+                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\\d{1,4}$/.test(editServer)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? "MENYIMPAN..." : "SIMPAN"}</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
       {confirmEntry && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-black/75 px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !deletingId) setConfirmEntry(null); }}>
           <section role="dialog" aria-modal="true" aria-labelledby="guestbook-delete-title" className="w-full max-w-sm rounded-2xl border border-red-400/25 bg-[#171321] p-5 shadow-2xl sm:p-6">
