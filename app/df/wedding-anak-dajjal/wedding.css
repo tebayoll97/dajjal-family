@@ -1675,3 +1675,61 @@
   .wedding-page .wedding-gallery-card img{transition:none}
   .wedding-page .wedding-gallery-card[data-aos]{opacity:1!important;transform:none!important}
 }
+
+
+/* Friends' wishes — separate public list panel */
+.wedding-page .wedding-guestbook-list{
+  width:100%;margin:1.6rem 0 2rem;padding:0;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+}
+.wedding-page .wedding-guestbook-list-title{
+  margin:0 0 1.25rem!important;padding:0!important;border:0!important;
+  background:none!important;box-shadow:none!important;
+  color:#a64f76!important;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(2.25rem,8vw,3.4rem)!important;
+  font-weight:400!important;line-height:1.15!important;text-align:center!important;
+}
+.wedding-page .wedding-guestbook-list-panel{
+  padding:clamp(1.2rem,4vw,2rem);
+  border:1px solid #e8dce2;border-radius:22px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 5px 18px rgba(82,66,76,.12);
+}
+.wedding-page .wedding-guest-entry{
+  padding:1.1rem 0;
+  border-bottom:1px solid #eee5e9;
+  text-align:left;
+}
+.wedding-page .wedding-guest-entry:first-child{padding-top:0}
+.wedding-page .wedding-guest-entry:last-child{padding-bottom:0;border-bottom:0}
+.wedding-page .wedding-guest-entry-heading{
+  display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;
+  color:#46594a;font-size:clamp(1rem,3.8vw,1.2rem);line-height:1.45;
+}
+.wedding-page .wedding-guest-entry-heading strong{color:#46594a!important;font-weight:800}
+.wedding-page .wedding-guest-server{color:#647b68;font-size:.92em}
+.wedding-page .wedding-attendance-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:.28rem .7rem;border-radius:7px;
+  font-size:.78rem;font-weight:800;line-height:1.3;
+}
+.wedding-page .wedding-attendance-badge.is-yes{color:#17633d;background:#c9f3d8}
+.wedding-page .wedding-attendance-badge.is-maybe{color:#805b0b;background:#ffed9b}
+.wedding-page .wedding-attendance-badge.is-no{color:#8c3041;background:#ffd6dc}
+.wedding-page .wedding-guest-entry-message{
+  margin:.45rem 0!important;color:#647b68!important;
+  font-size:1rem;line-height:1.65;text-align:left!important;
+  overflow-wrap:anywhere;
+}
+.wedding-page .wedding-guest-entry-time{
+  display:block;margin-top:.55rem;
+  color:#46594a;font-size:.83rem;font-weight:700;
+  line-height:1.5;text-align:left;
+}
+.wedding-page .wedding-guestbook-empty{margin:0;color:#647b68;text-align:center}
+.wedding-page .wedding-required{color:#d43f55!important;font-weight:900}
+.wedding-page .wedding-form .wedding-attendance legend .wedding-required{margin-left:.2rem}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .wedding-guestbook-list[data-aos]{opacity:1!important;transform:none!important}
+}
