@@ -2046,3 +2046,23 @@
 .df-main .wedding-page .wedding-closing-signature .wedding-closing-separator{color:#a64f76!important;font-family:"Nunito Sans",Arial,sans-serif!important;font-size:1rem!important;font-weight:700!important}
 .df-main .wedding-page .wedding-closing-signature .wedding-closing-family{display:inline!important;margin:0!important;font-size:clamp(.72rem,2.7vw,.95rem)!important;letter-spacing:.14em!important}
 @media(max-width:360px){.df-main .wedding-page .wedding-closing-signature{gap:.3rem!important}.df-main .wedding-page .wedding-closing-signature .wedding-closing-with-love{font-size:1.65rem!important}.df-main .wedding-page .wedding-closing-signature .wedding-closing-family{font-size:.68rem!important;letter-spacing:.1em!important}}
+
+
+/* Guestbook: five-message viewport, internal scrolling, and clear identity/status row */
+.wedding-page .wedding-guestbook-list-panel{
+  height:620px;max-height:70vh;min-height:360px;overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#d5a9bb #fff4f7;
+}
+.wedding-page .wedding-guest-entry-heading{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:nowrap}
+.wedding-page .wedding-guest-identity{display:flex;align-items:baseline;gap:.4rem;min-width:0;flex-wrap:wrap}
+.wedding-page .wedding-guest-identity strong{overflow-wrap:anywhere}
+.wedding-page .wedding-guest-server{white-space:nowrap}
+.wedding-page .wedding-attendance-badge{flex:0 0 auto;white-space:nowrap}
+.wedding-page .wedding-guestbook-pagination{display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap;margin:1rem auto 0;color:#76566d;font-size:.82rem;font-weight:800}
+.wedding-page .wedding-guestbook-pagination button{min-height:42px;padding:.65rem 1rem;border:1px solid #e7bdcd;border-radius:12px;background:#fffafd;color:#92506f;font:800 .75rem Arial,sans-serif}
+.wedding-page .wedding-guestbook-pagination button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:480px){
+ .wedding-page .wedding-guestbook-list-panel{height:600px;max-height:68vh;min-height:340px;padding:1rem}
+ .wedding-page .wedding-guest-entry-heading{gap:.4rem;font-size:.94rem}
+ .wedding-page .wedding-attendance-badge{font-size:.68rem;padding:.24rem .45rem}
+}
