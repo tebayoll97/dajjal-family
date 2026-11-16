@@ -423,8 +423,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
               <strong>Panti Asuhan Anak Ceria</strong>
-              <p>Jl. IDs, No. Koordinat [X:239 Y:503]</p>
-              <p>Kode state #278</p>
+              <p>{language === "id" ? "Jl. IDs, Koordinat [X:239 Y:503]" : "IDs Road, Coordinates [X:239 Y:503]"}</p>
+              <p>{language === "id" ? "Kode server #278" : "Server code #278"}</p>
               <button className="wedding-copy-address" type="button" onClick={copyAddress}>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
                 <span>{addressCopied ? (language === "id" ? "Alamat tersalin" : "Address copied") : (language === "id" ? "Salin alamat" : "Copy address")}</span>
@@ -456,7 +456,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>4 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img className="wedding-story-image wedding-story-image--one" src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt="Anak Dajjal bertemu Malika di tengah sawah" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--one" src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt={language === "id" ? "Anak Dajjal bertemu Malika di tengah sawah" : "Anak Dajjal meets Malika in a rice field"} loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>{language === "id" ? "Awal Pertemuan" : "How We Met"}</h3>
                     <p>{language === "id" ? <>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</> : <>I was only trying to escape the strict orphanage caretaker. But in the middle of a rice field, I found <span className="story-accent story-malika">Malika</span> — the <span className="story-accent story-soybean">Black Soybean</span>. From that day on, I cared for her as if she were my own child.</>}</p>
@@ -470,7 +470,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>10 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img className="wedding-story-image wedding-story-image--two" src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt="Anak Dajjal dan Malika berlari bersama di panti asuhan" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--two" src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt={language === "id" ? "Anak Dajjal dan Malika berlari bersama di panti asuhan" : "Anak Dajjal and Malika running together at the orphanage"} loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>{language === "id" ? "Perjalanan Bersama" : "Our Journey Together"}</h3>
                     <p>{language === "id" ? "Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat." : "At the orphanage, at school, and even when the caretaker scolded us, we stayed together. We faced countless troubles, and each one made our bond even stronger."}</p>
@@ -484,7 +484,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>30 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img className="wedding-story-image wedding-story-image--three" src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt="Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--three" src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt={language === "id" ? "Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" : "Anak Dajjal and Malika at the wedding altar with Anak Dajjal’s mother"} loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>{language === "id" ? "Menuju Hari Bencana" : "Towards the Day of Disaster"}</h3>
                     <p>{language === "id" ? "Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!" : "Who would have guessed our story would lead to a wedding? I was born without fertilization, while Malika is a type of seed. It all began with one wish from Anak Dajjal’s mother: she wanted a grandchild as soon as possible!"}</p>
@@ -521,7 +521,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
             <h2 className="wedding-section-heading">{language === "id" ? "Hadiah ke Mempelai" : "Gifts for the Couple"}</h2>
             <div className="dawn-badge-heading">
-              <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
+              <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt={language === "id" ? "Dawn Badge Darkwar Survival" : "Darkwar Survival Dawn Badge"} loading="lazy" />
               <div><strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span></div>
             </div>
             <div className="player-id-subpanels">
