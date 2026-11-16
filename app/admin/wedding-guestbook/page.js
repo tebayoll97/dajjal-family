@@ -20,7 +20,7 @@ function formatDate(value) {
   }).format(new Date(value)) + " WIB";
 }
 
-function attendanceLabel(value) {
+function formatDateInput(value) {\n  if (!value) return "";\n  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value));\n}\n\nfunction formatTimeInput(value) {\n  if (!value) return "";\n  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(value));\n}\n\nfunction attendanceLabel(value) {
   if (value === "yes") return "Hadir";
   if (value === "maybe") return "Belum Pasti";
   if (value === "no") return "Tidak Hadir";
@@ -39,7 +39,7 @@ export default function AdminWeddingGuestbookPage() {
   const [confirmEntry, setConfirmEntry] = useState(null);
   const [editingEntry, setEditingEntry] = useState(null);
   const [editName, setEditName] = useState("");
-  const [editServer, setEditServer] = useState("");
+  const [editServer, setEditServer] = useState("");\n  const [editDate, setEditDate] = useState("");\n  const [editTime, setEditTime] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [editError, setEditError] = useState("");
   const [error, setError] = useState("");
@@ -159,7 +159,7 @@ export default function AdminWeddingGuestbookPage() {
       const response = await fetch("/api/admin/wedding-guestbook", {
         method: "PATCH",
         headers: { Authorization: `Bearer ${adminToken}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ id: editingEntry.id, guest_name: guestName, server_name: serverName }),
+        body: JSON.stringify({ id: editingEntry.id, guest_name: guestName, server_name: serverName, date: editDate, time: editTime }),
       });
       const result = await response.json();
       if (response.status === 401 || response.status === 403) {
@@ -169,7 +169,7 @@ export default function AdminWeddingGuestbookPage() {
       }
       if (!response.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
       setEditingEntry(null);
-      setNotice("Nama dan server berhasil diperbarui.");
+      setNotice("Nama, server, tanggal, dan waktu berhasil diperbarui.");
       await loadEntries(page);
     } catch (err) {
       setEditError(err.message || "Gagal menyimpan perubahan.");
@@ -228,7 +228,7 @@ export default function AdminWeddingGuestbookPage() {
                 </div>
                 <div className="flex shrink-0 items-center justify-between gap-3 border-t border-white/10 pt-3 sm:border-0 sm:pt-0">
                   <span className="text-[10px] font-mono text-gray-600">#{(start + index).toString().padStart(3, "0")}</span>
-                  <button type="button" onClick={() => { setEditingEntry(entry); setEditName(entry.guest_name || ""); setEditServer(entry.server_name || ""); setEditError(""); setError(""); setNotice(""); }} disabled={Boolean(deletingId) || savingEdit} className="min-h-11 min-w-24 rounded-xl border border-purple-300/30 bg-purple-500/10 px-4 py-2 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">
+                  <button type="button" onClick={() => { setEditingEntry(entry); setEditName(entry.guest_name || ""); setEditServer(entry.server_name || ""); setEditDate(formatDateInput(entry.created_at)); setEditTime(formatTimeInput(entry.created_at)); setEditError(""); setError(""); setNotice(""); }} disabled={Boolean(deletingId) || savingEdit} className="min-h-11 min-w-24 rounded-xl border border-purple-300/30 bg-purple-500/10 px-4 py-2 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">
                     EDIT
                   </button>
                   <button type="button" onClick={() => setConfirmEntry(entry)} disabled={Boolean(deletingId)} className="min-h-11 min-w-24 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-xs font-extrabold text-red-200 hover:bg-red-500/20 disabled:opacity-50">
@@ -277,6 +277,12 @@ export default function AdminWeddingGuestbookPage() {
               </label>
               <label className="block text-xs font-bold text-gray-300">Server (1–4 angka)
                 <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              </label>
+              <label className="block text-xs font-bold text-gray-300">Tanggal (DD/MM/YYYY)
+                <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              </label>
+              <label className="block text-xs font-bold text-gray-300">Waktu (HH:mm, WIB)
+                <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">BATAL</button>
