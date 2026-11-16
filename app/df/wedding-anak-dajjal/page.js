@@ -569,7 +569,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
             <h2 className="wedding-section-heading">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
-            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan tamu" : "Guestbook messages"}>
+            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan tamu" : "Guestbook messages"} aria-busy={guestbookPageLoading}>
               {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
                 <article className="wedding-guest-entry" key={entry.id}>
                   <div className="wedding-guest-entry-heading">
