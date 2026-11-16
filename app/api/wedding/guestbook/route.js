@@ -24,12 +24,22 @@ export async function GET(request) {
       .select("guestbook_enabled").eq("invitation_id", invitation.id).maybeSingle();
     if (profileError) throw profileError;
     if (profile?.guestbook_enabled !== true) return Response.json({ entries: [] }, { status: 200, headers: { "Cache-Control": "no-store" } });
-    const { data, error } = await supabaseAdmin.from("df_guestbook")
-      .select("id, guest_name, server_name, attendance, message, created_at")
+    const searchParams = new URL(request.url).searchParams;
+    const requestedPage = Number.parseInt(searchParams.get("page") || "1", 10);
+    const page = Number.isFinite(requestedPage) ? Math.max(1, requestedPage) : 1;
+    const pageSize = 50;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    const { data, error, count } = await supabaseAdmin.from("df_guestbook")
+      .select("id, guest_name, server_name, attendance, message, created_at", { count: "exact" })
       .eq("invitation_id", invitation.id).eq("is_approved", true)
-      .order("created_at", { ascending: false }).limit(50);
+      .order("created_at", { ascending: false }).order("id", { ascending: false }).range(from, to);
     if (error) throw error;
-    return Response.json({ entries: data || [] }, { headers: { "Cache-Control": "no-store" } });
+    const total = count || 0;
+    return Response.json({
+      entries: data || [],
+      pagination: { page, limit: pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Wedding guestbook read:", error);
     return Response.json({ error: "Unable to load guestbook." }, { status: 500, headers: { "Cache-Control": "no-store" } });
