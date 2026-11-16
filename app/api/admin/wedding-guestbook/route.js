@@ -132,8 +132,8 @@ export async function PATCH(request) {
     const validDate = dateMatch && year >= 2000 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= new Date(Date.UTC(year, month, 0)).getUTCDate();
     const createdAt = validDate && timeMatch ? `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${timeMatch[1]}:${timeMatch[2]}:00+07:00` : "";
 
-    if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\d{1,4}$/.test(serverName)) {
-      return Response.json({ error: "Nama atau server tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\d{1,4}$/.test(serverName) || !validDate || !timeMatch) {
+      return Response.json({ error: "Nama, server, tanggal, atau waktu tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
     }
 
     const invitationId = await getInvitationId();
