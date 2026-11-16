@@ -41,6 +41,7 @@ export default function AdminWeddingGuestbookPage() {
   const [editName, setEditName] = useState("");
   const [editServer, setEditServer] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
@@ -151,6 +152,7 @@ export default function AdminWeddingGuestbookPage() {
       return;
     }
     setSavingEdit(true);
+    setEditError("");
     setError("");
     setNotice("");
     try {
@@ -170,7 +172,7 @@ export default function AdminWeddingGuestbookPage() {
       setNotice("Nama dan server berhasil diperbarui.");
       await loadEntries(page);
     } catch (err) {
-      setError(err.message || "Gagal menyimpan perubahan.");
+      setEditError(err.message || "Gagal menyimpan perubahan.");
     } finally {
       setSavingEdit(false);
     }
@@ -226,6 +228,9 @@ export default function AdminWeddingGuestbookPage() {
                 </div>
                 <div className="flex shrink-0 items-center justify-between gap-3 border-t border-white/10 pt-3 sm:border-0 sm:pt-0">
                   <span className="text-[10px] font-mono text-gray-600">#{(start + index).toString().padStart(3, "0")}</span>
+                  <button type="button" onClick={() => { setEditingEntry(entry); setEditName(entry.guest_name || ""); setEditServer(entry.server_name || ""); setEditError(""); setError(""); setNotice(""); }} disabled={Boolean(deletingId) || savingEdit} className="min-h-11 min-w-24 rounded-xl border border-purple-300/30 bg-purple-500/10 px-4 py-2 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">
+                    EDIT
+                  </button>
                   <button type="button" onClick={() => setConfirmEntry(entry)} disabled={Boolean(deletingId)} className="min-h-11 min-w-24 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-xs font-extrabold text-red-200 hover:bg-red-500/20 disabled:opacity-50">
                     HAPUS
                   </button>
@@ -265,6 +270,7 @@ export default function AdminWeddingGuestbookPage() {
             <h2 id="guestbook-edit-title" className="text-lg font-black">Edit Nama &amp; Server</h2>
             <p className="mt-1 text-sm text-gray-400">Hanya nama dan server yang dapat diubah.</p>
             <form onSubmit={saveEntryEdit} className="mt-5 space-y-4">
+              {editError && <p role="alert" className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{editError}</p>}
               <label className="block text-xs font-bold text-gray-300">Nama
                 <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
                 <span className="mt-1 block text-[11px] font-normal text-gray-500">{editName.length}/16 karakter</span>
