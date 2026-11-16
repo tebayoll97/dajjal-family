@@ -142,7 +142,7 @@ export default function AdminWeddingGuestbookPage() {
     if (!editingEntry || savingEdit) return;
     const guestName = editName.trim();
     const serverName = editServer.trim();
-    if (!guestName || guestName.length > 16 || !/^\\d{1,4}$/.test(serverName)) {
+    if (!guestName || guestName.length > 16 || !/^\d{1,4}$/.test(serverName)) {
       setError("Nama maksimal 16 karakter dan server wajib 1–4 angka.");
       return;
     }
@@ -266,11 +266,11 @@ export default function AdminWeddingGuestbookPage() {
                 <span className="mt-1 block text-[11px] font-normal text-gray-500">{editName.length}/16 karakter</span>
               </label>
               <label className="block text-xs font-bold text-gray-300">Server (1–4 angka)
-                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">BATAL</button>
-                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\\d{1,4}$/.test(editServer)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? "MENYIMPAN..." : "SIMPAN"}</button>
+                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\d{1,4}$/.test(editServer)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? "MENYIMPAN..." : "SIMPAN"}</button>
               </div>
             </form>
           </section>
