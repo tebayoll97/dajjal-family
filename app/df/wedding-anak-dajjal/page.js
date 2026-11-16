@@ -14,6 +14,7 @@ const WEDDING_ASSETS = {
   couple: "https://drive.google.com/thumbnail?id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh&sz=w1600",
   groom: "https://drive.google.com/thumbnail?id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur&sz=w1600",
   bride: "https://drive.google.com/thumbnail?id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr&sz=w1600",
+  dawnBadge: "https://drive.google.com/thumbnail?id=14dOaEjtipPK_qnmseG7VDMtSsKiFYGxR&sz=w1600",
   // Direct file endpoint so the browser can stream the audio after user interaction.
   music: "/audio/Payung%20Teduh%20%20Akad%20Cover%20by%20Hanin%20Dhiya.mp3",
 };
@@ -137,6 +138,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [celebrationActive, setCelebrationActive] = useState(false);
   const [copied, setCopied] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
+  const [copiedPlayerId, setCopiedPlayerId] = useState("");
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -294,6 +296,16 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       setMusicOn(true);
     } catch {
       setMusicOn(false);
+    }
+  };
+
+  const copyPlayerId = async (playerId) => {
+    try {
+      await navigator.clipboard.writeText(playerId);
+      setCopiedPlayerId(playerId);
+      window.setTimeout(() => setCopiedPlayerId((current) => current === playerId ? "" : current), 1800);
+    } catch {
+      setCopiedPlayerId("");
     }
   };
 
@@ -470,8 +482,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
+          <h2 className="wedding-panel-title" data-aos="fade-up">Galeri Foto</h2>
           <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07">
-            <h2 className="wedding-section-heading" data-aos="fade-up">Photo Gallery</h2>
             <div className="wedding-gallery-grid">
               <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="0" key="gallery-0">
                 <img src="https://drive.google.com/thumbnail?id=1trVpyYoeq7cIdFJ6RwxlXz9oRb7aaQ17&sz=w1600" alt="The Runaway" loading="lazy" decoding="async" />
@@ -494,24 +506,24 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
+          <h2 className="wedding-panel-title" data-aos="fade-up">Hadiah ke Mempelai</h2>
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
-            <h2 className="wedding-section-heading">{t.playerId}</h2>
             <div className="dawn-badge-card">
-              <div className="dawn-badge-emblem" role="img" aria-label="Dawn Badge Darkwar Survival">
-                <span className="dawn-badge-emblem__crown" aria-hidden="true">✦</span>
-                <strong>DAWN</strong><small>BADGE</small>
-              </div>
+              <img className="dawn-badge-image" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
               <div className="dawn-badge-copy">
                 <strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span>
-                <p>{language === "id" ? "ID pemain akan ditampilkan di sini." : "The player ID will appear here."}</p>
+                <div className="player-id-row"><span>Malika</span><code>1333797681000290</code><button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? "Tersalin" : "Copy ID"}</button></div>
+                <div className="player-id-row"><span>Anak Dajjal</span><code>1122785899000278</code><button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? "Tersalin" : "Copy ID"}</button></div>
               </div>
             </div>
           </section>
 
+          <h2 className="wedding-panel-title" data-aos="fade-up">Mohon Doa Restu</h2>
           <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
-              <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
+              <img className="wishes-dawn-badge" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+              <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
-              <p className="section-copy">{t.wishesIntro}</p>
+              <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
                 <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
                 <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" maxLength="40" placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
@@ -548,12 +560,13 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
+          <h2 className="wedding-panel-title" data-aos="fade-up">Bagikan Undangan</h2>
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
             <p className="wedding-kicker">SPREAD THE JOY</p>
-            <h2 className="wedding-section-heading">{t.couple}</h2>
+            <p className="share-reward-copy">Bagikan Undangan ini agar mendapat 100 poin plus di surga.</p>
             <div className="share-actions">
-              <button type="button" onClick={shareInvite}>{t.share}</button>
-              <button type="button" onClick={copyLink}>{copied ? t.copied : t.copy}</button>
+              <button type="button" onClick={shareInvite}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5 3.8 10.2c-.9.36-.85 1.65.08 1.94l4.5 1.4 1.4 4.5c.29.93 1.58.98 1.94.08L18.5 1.5"/><path d="m8.4 13.6 8.1-8.1"/></svg>{t.share}</button>
+              <button type="button" onClick={copyLink}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>{copied ? t.copied : t.copy}</button>
             </div>
           </section>
           <footer className="wedding-closing" aria-label={language === "id" ? "Penutup undangan" : "Invitation closing"}>
