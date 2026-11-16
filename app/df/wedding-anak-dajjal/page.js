@@ -124,7 +124,7 @@ const words = {
 
 export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-malika" } = {}) {
   const { language } = useLanguage();
-  const t = words[language] || words.en;
+  const t = words[language] || words.id;
   const [guestName, setGuestName] = useState("");
   const [messageLength, setMessageLength] = useState(0);
   const [eventInfo, setEventInfo] = useState(null);
@@ -229,20 +229,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
   useEffect(() => {
     if (!invitationOpened) return undefined;
-    AOS.init({
-      duration: 850,
-      easing: "ease-out-cubic",
-      offset: 90,
-      once: true,
-      mirror: false,
-      anchorPlacement: "top-bottom",
-      disable: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    });
-    const frame = window.requestAnimationFrame(() => AOS.refreshHard());
-    return () => {
-      window.cancelAnimationFrame(frame);
-      AOS.refresh();
-    };
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => {
+      AOS.init({ duration: reducedMotion ? 0 : 850, easing: "ease-out-cubic", offset: 48, once: false, mirror: false, anchorPlacement: "top-bottom", disable: reducedMotion });
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => AOS.refreshHard()));
+    }, 120);
+    return () => { window.clearTimeout(timer); AOS.refreshHard(); };
   }, [invitationOpened]);
 
   const submitWishes = async (event) => {
@@ -363,26 +355,26 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   return (
     <main className="wedding-page">
       {!invitationOpened && (
-        <section className="wedding-opening" aria-label="Buka undangan">
+        <section className="wedding-opening" aria-label={language === "id" ? "Buka undangan" : "Open invitation"}>
           <div className="wedding-opening-florals" aria-hidden="true">❀ ❧ ❀</div>
           <img className="wedding-opening-couple" src={WEDDING_ASSETS.couple} alt="Anak Dajjal dan Malika" />
           <h1><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h1>
-          <div className="wedding-opening-recipient"><span>Kepada Yth Bapak/Ibu/Saudara/i</span><strong>Seluruh pemain Darkwar Survival</strong></div>
+          <div className="wedding-opening-recipient"><span>{language === "id" ? "Kepada Yth. Bapak/Ibu/Saudara/i" : "Dear Friends and Guests"}</span><strong>{language === "id" ? "Seluruh pemain Darkwar Survival" : "All Darkwar Survival Players"}</strong></div>
           <button type="button" onClick={openInvitation}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="5" width="18" height="14" rx="2.5" />
               <path d="m3.5 7 8.5 6 8.5-6" />
             </svg>
-            <span>Buka Undangan</span>
+            <span>{language === "id" ? "Buka Undangan" : "Open Invitation"}</span>
           </button>
         </section>
       )}
       {celebrationActive && <div className="wedding-falling-leaves" aria-hidden="true">{Array.from({length:24},(_,i)=><span key={i} style={{"--leaf-index":i}}>{i%3===0?"🍂":"🍃"}</span>)}</div>}
       {rsvpSuccessToast && <div className="wedding-success-toast" role="status" aria-live="polite"><span className="wedding-success-toast-icon" aria-hidden="true">✓</span><span>{language === "id" ? "Berhasil! Pesan dan konfirmasi Anda telah terkirim." : "Success! Your message and response have been sent."}</span></div>}
       <div className="wedding-content" hidden={!invitationOpened}>
-          <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
+          <p className="wedding-invitation-eyebrow">{language === "id" ? "Undangan Pernikahan" : "Wedding Invitation"}</p>
           <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Yang Berbahagia</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Yang Berbahagia" : "The Happy Couple"}</h2>
             <div className="couple-frame">
               <div className="couple-placeholder">
                 <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
@@ -405,8 +397,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-family-panel wedding-groom" id="couple" data-panel-number="02" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Mempelai Pria</h2>
-            <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
+            <h2 className="wedding-section-heading">{language === "id" ? "Mempelai Pria" : "The Groom"}</h2>
+            <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>{language === "id" ? "Tanpa mengurangi rasa hormat, kami mengundang kalian untuk hadir di acara pernikahan kami." : "With respect and joy, we warmly invite you to celebrate our wedding with us."}</span></p>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
             <h2>Anak Dajjal</h2>
             <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
@@ -414,19 +406,19 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-family-panel wedding-bride" id="bride" data-panel-number="03" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Mempelai Wanita</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Mempelai Wanita" : "The Bride"}</h2>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
             <h2>Malika</h2>
             <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
           </section>
 
           <section className="wedding-section wedding-event-panel" id="event" data-panel-number="04" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Rangkaian Acara</h2>
-            <h3 className="wedding-event-subheading">Resepsi</h3>
+            <h2 className="wedding-section-heading">{language === "id" ? "Rangkaian Acara" : "Wedding Schedule"}</h2>
+            <h3 className="wedding-event-subheading">{language === "id" ? "Resepsi" : "Reception"}</h3>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
               <strong>{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</strong>
-              <p>{eventInfo?.event_time ? `${String(eventInfo.event_time).slice(0, 5).replace(":", ".")} Waktu Server - Selesai` : "Waktu akan diumumkan"}</p>
+              <p>{eventInfo?.event_time ? `${String(eventInfo.event_time).slice(0, 5).replace(":", ".")} ${language === "id" ? "Waktu Server - Selesai" : "Server Time - Until Finished"}` : (language === "id" ? "Waktu akan diumumkan" : "Time to be announced")}</p>
             </div>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
@@ -435,15 +427,15 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p>Kode state #278</p>
               <button className="wedding-copy-address" type="button" onClick={copyAddress}>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
-                <span>{addressCopied ? "Alamat tersalin" : "Salin alamat"}</span>
+                <span>{addressCopied ? (language === "id" ? "Alamat tersalin" : "Address copied") : (language === "id" ? "Salin alamat" : "Copy address")}</span>
               </button>
             </div>
           </section>
 
           <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="05" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Menanam Kedelai</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Menanam Kedelai" : "Planting Soybeans"}</h2>
             <div className="wedding-planting-icon" aria-hidden="true">🌱</div>
-            <p className="section-copy">Kita mencoba membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami. Sebuah perubahan unik yang melambangkan keberanian, kualitas, dan identitas baru.</p>
+            <p className="section-copy">{language === "id" ? "Kita mencoba membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami. Sebuah perubahan unik yang melambangkan keberanian, kualitas, dan identitas baru." : "We are turning the world from green to black, just like our chosen soybeans. A curious transformation that represents courage, quality, and a new identity."}</p>
           </section>
 
           <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
@@ -503,7 +495,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07">
-            <h2 className="wedding-section-heading">Galeri Foto</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Foto" : "Photo Gallery"}</h2>
             <div className="wedding-gallery-grid">
               <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="0" key="gallery-0">
                 <img src="https://drive.google.com/thumbnail?id=1trVpyYoeq7cIdFJ6RwxlXz9oRb7aaQ17&sz=w1600" alt="The Runaway" loading="lazy" decoding="async" />
@@ -527,7 +519,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Hadiah ke Mempelai</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Hadiah ke Mempelai" : "Gifts for the Couple"}</h2>
             <div className="dawn-badge-heading">
               <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
               <div><strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span></div>
@@ -538,7 +530,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="player-id-details">
                   <h3>Malika</h3>
                   <code>1333797681000290</code>
-                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? "Tersalin" : "Copy ID"}</button>
+                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
                 </div>
               </article>
               <article className="player-id-subpanel">
@@ -546,7 +538,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="player-id-details">
                   <h3>Anak Dajjal</h3>
                   <code>1122785899000278</code>
-                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? "Tersalin" : "Copy ID"}</button>
+                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
                 </div>
               </article>
             </div>
@@ -603,8 +595,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Bagikan Undangan</h2>
-            <p>Bagikan Undangan ini agar mendapat 100<br className="share-copy-break" /> poin plus di surga.</p>
+            <h2 className="wedding-section-heading">{language === "id" ? "Bagikan Undangan" : "Share the Invitation"}</h2>
+            <p>{language === "id" ? <>Bagikan undangan ini agar mendapat 100<br className="share-copy-break" /> poin plus di surga.</> : <>Share this invitation and earn 100<br className="share-copy-break" /> bonus points in heaven.</>}</p>
             <div className="share-actions">
               <button type="button" onClick={shareInvite}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5 3.8 10.2c-.9.36-.85 1.65.08 1.94l4.5 1.4 1.4 4.5c.29.93 1.58.98 1.94.08L18.5 1.5"/><path d="m8.4 13.6 8.1-8.1"/></svg>{t.share}</button>
               <button type="button" onClick={copyLink}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>{copied ? t.copied : t.copy}</button>
@@ -620,9 +612,9 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         className={"wedding-music-float " + (musicOn ? "is-playing" : "is-off")}
         type="button"
         onClick={toggleMusic}
-        aria-label={musicOn ? "Matikan musik" : "Nyalakan musik"}
+        aria-label={musicOn ? "Turn music off" : "Turn music on"}
         aria-pressed={musicOn}
-        title={musicOn ? "Musik menyala" : "Musik mati"}
+        title={musicOn ? "Music is on" : "Music is off"}
       >
         <svg className="wedding-music-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M11 5 6 9H3v6h3l5 4V5Z" />
