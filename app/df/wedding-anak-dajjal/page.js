@@ -457,20 +457,28 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07" data-aos="fade-up">
-            <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
-            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
-            {galleryItems.length > 0 ? (
-              <div className="wedding-gallery-viewer">
-                <img src={galleryItems[galleryIndex]?.image_url} alt={galleryItems[galleryIndex]?.title || t.photoAlt} className="wedding-gallery-image" />
-                <div className="wedding-gallery-controls">
-                  <button type="button" aria-label={language === "id" ? "Foto sebelumnya" : "Previous photo"} onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)}>‹</button>
-                  <span>{galleryIndex + 1} / {galleryItems.length}</span>
-                  <button type="button" aria-label={language === "id" ? "Foto berikutnya" : "Next photo"} onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)}>›</button>
-                </div>
-                {galleryItems[galleryIndex]?.title && <p className="wedding-gallery-caption">{galleryItems[galleryIndex].title}</p>}
-              </div>
-            ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07">
+            <h2 className="wedding-section-heading" data-aos="fade-up">Photo Gallery</h2>
+            <div className="wedding-gallery-grid">
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="0" key="gallery-0">
+                <img src="https://drive.google.com/thumbnail?id=1trVpyYoeq7cIdFJ6RwxlXz9oRb7aaQ17&sz=w1600" alt="The Runaway" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="80" key="gallery-1">
+                <img src="https://drive.google.com/thumbnail?id=12OHSVAGQpdgn92mEG68W8fGm_0K9Bcmo&sz=w1600" alt="Best Partners" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="160" key="gallery-2">
+                <img src="https://drive.google.com/thumbnail?id=1pfNX5y5gLboMwMrxAXazZCnBZt3gtfAp&sz=w1600" alt="Trouble Again" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="240" key="gallery-3">
+                <img src="https://drive.google.com/thumbnail?id=19wH_SN_InP9IaGY49uBQ-EmJjvmBie7K&sz=w1600" alt="Through the Rain" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="320" key="gallery-4">
+                <img src="https://drive.google.com/thumbnail?id=18jRHXfnlJsPGsHuMuJsTRlsugnJy3Ggo&sz=w1600" alt="The Wedding Disaster" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="400" key="gallery-5">
+                <img src="https://drive.google.com/thumbnail?id=1kNbCBK8zLfqTHfgn88ckvWqBG8gKc903&sz=w1600" alt="Grandma's Dream" loading="lazy" decoding="async" />
+              </figure>
+            </div>
           </section>
 
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
