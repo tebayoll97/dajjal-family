@@ -1815,3 +1815,89 @@
 @media(prefers-reduced-motion:reduce){
   .wedding-page .wedding-wishes .wishes-dawn-badge{animation:none!important}
 }
+
+
+/* PLAYER ID — dua subpanel identitas dengan Dawn Badge terbaru */
+.wedding-page .wedding-player-id .dawn-badge-card{
+  display:block;width:min(100%,720px);padding:clamp(1rem,3.5vw,1.5rem);
+  border:1px solid rgba(190,125,157,.34);border-radius:22px;
+  background:linear-gradient(135deg,#fffafd 0%,#fff4f7 52%,#f2fbf5 100%);
+  box-shadow:0 10px 28px rgba(123,75,100,.12);
+}
+.wedding-page .dawn-badge-heading{
+  display:flex;align-items:center;justify-content:center;gap:.8rem;
+  margin:0 auto 1.1rem;color:#824365;text-align:left;
+}
+.wedding-page .dawn-badge-image--hero{
+  flex:0 0 76px;width:76px;height:76px;object-fit:contain;
+  animation:dawn-badge-orbit 5.6s ease-in-out infinite,dawn-badge-glow 3.8s ease-in-out infinite;
+}
+.wedding-page .dawn-badge-heading>div{display:grid;gap:.25rem}
+.wedding-page .dawn-badge-heading strong{color:#874566;font:900 .95rem/1.2 "Nunito Sans",Arial,sans-serif;letter-spacing:.12em}
+.wedding-page .dawn-badge-heading span{color:#76566c;font:800 .68rem/1.3 "Nunito Sans",Arial,sans-serif;letter-spacing:.14em}
+.wedding-page .player-id-subpanels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.wedding-page .player-id-subpanel{
+  display:flex;align-items:center;gap:.85rem;min-width:0;padding:1rem;
+  border:1px solid rgba(185,126,153,.28);border-radius:17px;
+  background:linear-gradient(145deg,#fff 0%,#fff5f8 58%,#f2faf5 100%);
+  box-shadow:0 5px 16px rgba(113,73,94,.08);
+}
+.wedding-page .player-id-badge-icon{
+  display:block;flex:0 0 clamp(58px,9vw,82px);width:clamp(58px,9vw,82px);
+  height:clamp(58px,9vw,82px);object-fit:contain;
+  filter:drop-shadow(0 4px 8px rgba(120,73,100,.18));
+  animation:dawn-badge-float 3.7s ease-in-out infinite;
+}
+.wedding-page .player-id-subpanel:nth-child(2) .player-id-badge-icon{
+  animation:dawn-badge-tilt 4.4s ease-in-out infinite;
+  animation-delay:-1.3s;
+}
+.wedding-page .player-id-details{display:grid;justify-items:start;gap:.55rem;min-width:0}
+.wedding-page .player-id-details h3{
+  margin:0!important;color:#854665!important;
+  font:900 clamp(.92rem,2.6vw,1.08rem)/1.25 "Nunito Sans",Arial,sans-serif!important;
+}
+.wedding-page .player-id-details code{
+  color:#594252!important;font:800 clamp(.68rem,2vw,.82rem)/1.4 ui-monospace,monospace!important;
+  overflow-wrap:anywhere;word-break:break-word;
+}
+.wedding-page .player-id-details button{
+  display:inline-flex;align-items:center;justify-content:center;min-height:38px;
+  padding:.55rem 1rem;border:0;border-radius:10px;
+  background:linear-gradient(135deg,#168bff,#0874e8)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font:900 .76rem/1 "Nunito Sans",Arial,sans-serif!important;cursor:pointer;
+  box-shadow:0 5px 13px rgba(22,139,255,.2);
+}
+.wedding-page .player-id-details button:hover{filter:brightness(1.06)}
+@keyframes dawn-badge-orbit{
+  0%,100%{transform:translateY(0) rotate(-7deg) scale(1)}
+  28%{transform:translateY(-5px) rotate(5deg) scale(1.04)}
+  58%{transform:translateY(1px) rotate(10deg) scale(.98)}
+  82%{transform:translateY(-3px) rotate(-2deg) scale(1.03)}
+}
+@keyframes dawn-badge-glow{
+  0%,100%{filter:drop-shadow(0 4px 7px rgba(180,111,32,.2))}
+  50%{filter:drop-shadow(0 7px 13px rgba(224,135,43,.42))}
+}
+@keyframes dawn-badge-float{
+  0%,100%{transform:translateY(0) rotate(-5deg)}
+  50%{transform:translateY(-7px) rotate(5deg)}
+}
+@keyframes dawn-badge-tilt{
+  0%,100%{transform:translateY(0) rotate(5deg) scale(1)}
+  35%{transform:translateY(-6px) rotate(-8deg) scale(1.04)}
+  70%{transform:translateY(1px) rotate(3deg) scale(.98)}
+}
+@media(max-width:620px){
+  .wedding-page .player-id-subpanels{grid-template-columns:1fr;gap:.75rem}
+  .wedding-page .player-id-subpanel{padding:.9rem}
+  .wedding-page .player-id-badge-icon{flex-basis:68px;width:68px;height:68px}
+  .wedding-page .player-id-details{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem .7rem;width:100%}
+  .wedding-page .player-id-details h3{grid-column:1/-1}
+  .wedding-page .player-id-details code{min-width:0}
+  .wedding-page .player-id-details button{grid-column:2;grid-row:2}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .dawn-badge-image--hero,.wedding-page .player-id-badge-icon{animation:none!important}
+}
