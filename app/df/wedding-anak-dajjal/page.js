@@ -458,8 +458,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="wedding-story-card">
                   <img className="wedding-story-image wedding-story-image--one" src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt="Anak Dajjal bertemu Malika di tengah sawah" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
-                    <h3>Awal Pertemuan</h3>
-                    <p>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</p>
+                    <h3>{language === "id" ? "Awal Pertemuan" : "How We Met"}</h3>
+                    <p>{language === "id" ? <>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</> : <>I was only trying to escape the strict orphanage caretaker. But in the middle of a rice field, I found <span className="story-accent story-malika">Malika</span> — the <span className="story-accent story-soybean">Black Soybean</span>. From that day on, I cared for her as if she were my own child.</>}</p>
                   </div>
                 </div>
               </article>
@@ -472,8 +472,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="wedding-story-card">
                   <img className="wedding-story-image wedding-story-image--two" src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt="Anak Dajjal dan Malika berlari bersama di panti asuhan" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
-                    <h3>Perjalanan Bersama</h3>
-                    <p>Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat.</p>
+                    <h3>{language === "id" ? "Perjalanan Bersama" : "Our Journey Together"}</h3>
+                    <p>{language === "id" ? "Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat." : "At the orphanage, at school, and even when the caretaker scolded us, we stayed together. We faced countless troubles, and each one made our bond even stronger."}</p>
                   </div>
                 </div>
               </article>
@@ -486,8 +486,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="wedding-story-card">
                   <img className="wedding-story-image wedding-story-image--three" src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt="Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
-                    <h3>Menuju Hari Bencana</h3>
-                    <p>Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!</p>
+                    <h3>{language === "id" ? "Menuju Hari Bencana" : "Towards the Day of Disaster"}</h3>
+                    <p>{language === "id" ? "Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!" : "Who would have guessed our story would lead to a wedding? I was born without fertilization, while Malika is a type of seed. It all began with one wish from Anak Dajjal’s mother: she wanted a grandchild as soon as possible!"}</p>
                   </div>
                 </div>
               </article>
@@ -530,7 +530,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="player-id-details">
                   <h3>Malika</h3>
                   <code>1333797681000290</code>
-                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
+                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label={language === "id" ? "Salin ID Malika" : "Copy Malika ID"}>{copiedPlayerId === "1333797681000290" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
                 </div>
               </article>
               <article className="player-id-subpanel">
@@ -538,14 +538,14 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <div className="player-id-details">
                   <h3>Anak Dajjal</h3>
                   <code>1122785899000278</code>
-                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
+                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label={language === "id" ? "Salin ID Anak Dajjal" : "Copy Anak Dajjal ID"}>{copiedPlayerId === "1122785899000278" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
                 </div>
               </article>
             </div>
           </section>
 
           <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
-              <h2 className="wedding-section-heading">Mohon Doa Restu</h2>
+              <h2 className="wedding-section-heading">{language === "id" ? "Mohon Doa Restu" : "Your Wishes and Blessings"}</h2>
               <div className="wishes-prayer-icon" role="img" aria-label={language === "id" ? "Doa dan restu" : "Prayer and blessing"}>🙏</div>
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
@@ -559,7 +559,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
                 </fieldset>
                 <label>{t.message} <span className="wedding-required">*</span><textarea required name="guestbook_message" rows="4" maxLength={200} onChange={(event) => setMessageLength(event.target.value.length)} placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /><small className="wedding-message-counter" aria-live="polite">{200 - messageLength}/200</small></label>
-                <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
+                <label className="sr-only" aria-hidden="true">{language === "id" ? "Situs web" : "Website"}<input name="website" tabIndex={-1} autoComplete="off" /></label>
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
               </form>}
@@ -586,7 +586,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               )) : <p className="wedding-guestbook-empty">{language === "id" ? "Belum ada ucapan. Jadilah yang pertama mengirim doa!" : "No wishes yet. Be the first to leave a message!"}</p>}
             </div>
             {guestbookPagination.totalPages > 1 && (
-              <nav className="wedding-guestbook-pagination" aria-label="Guestbook pagination">
+              <nav className="wedding-guestbook-pagination" aria-label={language === "id" ? "Navigasi halaman buku tamu" : "Guestbook pagination"}>
                 <button type="button" onClick={async () => { const next = Math.max(1, guestbookPage - 1); setGuestbookPageLoading(true); try { const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" }); if (response.ok) { const data = await response.json(); setGuestbookEntries(data.entries || []); setGuestbookPagination(data.pagination || guestbookPagination); setGuestbookPage(next); document.querySelector(".wedding-guestbook-list-panel")?.scrollTo({ top: 0, behavior: "smooth" }); } } finally { setGuestbookPageLoading(false); } }} disabled={guestbookPage <= 1 || guestbookPageLoading}>{language === "id" ? "← Sebelumnya" : "← Previous"}</button>
                 <span>{language === "id" ? "Halaman" : "Page"} {guestbookPage} / {guestbookPagination.totalPages}</span>
                 <button type="button" onClick={async () => { const next = Math.min(guestbookPagination.totalPages, guestbookPage + 1); setGuestbookPageLoading(true); try { const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" }); if (response.ok) { const data = await response.json(); setGuestbookEntries(data.entries || []); setGuestbookPagination(data.pagination || guestbookPagination); setGuestbookPage(next); document.querySelector(".wedding-guestbook-list-panel")?.scrollTo({ top: 0, behavior: "smooth" }); } } finally { setGuestbookPageLoading(false); } }} disabled={guestbookPage >= guestbookPagination.totalPages || guestbookPageLoading}>{language === "id" ? "Berikutnya →" : "Next →"}</button>
@@ -604,7 +604,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
           <footer className="wedding-closing" aria-label={language === "id" ? "Penutup undangan" : "Invitation closing"}>
             <h2 className="wedding-closing-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h2>
-            <p className="wedding-closing-signature"><span className="wedding-closing-with-love">With Love</span><span className="wedding-closing-separator" aria-hidden="true">—</span><span className="wedding-closing-family">Dajjal Family</span></p>
+            <p className="wedding-closing-signature"><span className="wedding-closing-with-love">{language === "id" ? "Dengan Cinta" : "With Love"}</span><span className="wedding-closing-separator" aria-hidden="true">—</span><span className="wedding-closing-family">Dajjal Family</span></p>
           </footer>
       </div>
 
