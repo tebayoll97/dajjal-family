@@ -190,7 +190,7 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/wedding-event",
       icon: "🗓️",
-      number: "04",
+      number: "03",
       title: language === "id" ? "Waktu Acara Undangan" : "Wedding Event Time",
       description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.",
       available: true,
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/wedding-guestbook",
       icon: "💬",
-      number: "03",
+      number: "04",
       title: language === "id" ? "Ucapan Guestbook" : "Guestbook Messages",
       description: language === "id" ? "Lihat dan hapus pesan pada undangan pernikahan." : "Review and delete wedding invitation guestbook messages.",
       available: true,
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
     {
       href: null,
       icon: "📊",
-      number: "04",
+      number: "05",
       title: t.statistics,
       description: t.statisticsDesc,
       available: false,
