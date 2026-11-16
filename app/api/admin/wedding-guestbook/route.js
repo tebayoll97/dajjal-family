@@ -123,7 +123,7 @@ export async function PATCH(request) {
     const guestName = typeof body?.guest_name === "string" ? body.guest_name.trim() : "";
     const serverName = typeof body?.server_name === "string" ? body.server_name.trim() : "";
 
-    if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\\d{1,4}$/.test(serverName)) {
+    if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\d{1,4}$/.test(serverName)) {
       return Response.json({ error: "Nama atau server tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
     }
 
