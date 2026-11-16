@@ -1682,14 +1682,6 @@
   width:100%;margin:1.6rem 0 2rem;padding:0;
   background:transparent!important;border:0!important;box-shadow:none!important;
 }
-.wedding-page .wedding-guestbook-list-title{
-  margin:0 0 1.25rem!important;padding:0!important;border:0!important;
-  background:none!important;box-shadow:none!important;
-  color:#a64f76!important;
-  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
-  font-size:clamp(2.25rem,8vw,3.4rem)!important;
-  font-weight:400!important;line-height:1.15!important;text-align:center!important;
-}
 .wedding-page .wedding-guestbook-list-panel{
   padding:clamp(1.2rem,4vw,2rem);
   border:1px solid #e8dce2;border-radius:22px;
@@ -1777,9 +1769,9 @@
   background:linear-gradient(135deg,#168bff,#0874e8);color:#fff;
   font:800 .68rem/1 "Nunito Sans",Arial,sans-serif;cursor:pointer;
 }
-.wedding-page .wedding-wishes .wishes-dawn-badge{
-  display:block;width:clamp(82px,22vw,116px);height:auto;aspect-ratio:1;object-fit:contain;
-  margin:0 auto .8rem;filter:drop-shadow(0 6px 10px rgba(143,83,112,.2));
+ .wedding-page .wedding-wishes .wishes-prayer-icon{
+  display:block;width:clamp(76px,18vw,104px);height:auto;
+  margin:0 auto .8rem;color:#a64f76;filter:drop-shadow(0 6px 10px rgba(143,83,112,.2));
   transform-origin:50% 50%;animation:wishes-dawn-float 3.2s ease-in-out infinite;
 }
 @keyframes wishes-dawn-float{
@@ -1813,7 +1805,7 @@
   .wedding-page .share-actions{display:grid;grid-template-columns:1fr;width:min(100%,320px);margin:auto}
 }
 @media(prefers-reduced-motion:reduce){
-  .wedding-page .wedding-wishes .wishes-dawn-badge{animation:none!important}
+  .wedding-page .wedding-wishes .wishes-prayer-icon{animation:none!important}
 }
 
 
@@ -1843,8 +1835,8 @@
   box-shadow:0 5px 16px rgba(113,73,94,.08);
 }
 .wedding-page .player-id-badge-icon{
-  display:block;flex:0 0 clamp(58px,9vw,82px);width:clamp(58px,9vw,82px);
-  height:clamp(58px,9vw,82px);object-fit:contain;
+  display:block;flex:0 0 clamp(64px,9vw,88px);width:clamp(64px,9vw,88px);
+  height:clamp(64px,9vw,88px);object-fit:cover;border-radius:14px;
   filter:drop-shadow(0 4px 8px rgba(120,73,100,.18));
   animation:dawn-badge-float 3.7s ease-in-out infinite;
 }
@@ -1858,8 +1850,9 @@
   font:900 clamp(.92rem,2.6vw,1.08rem)/1.25 "Nunito Sans",Arial,sans-serif!important;
 }
 .wedding-page .player-id-details code{
-  color:#594252!important;font:800 clamp(.68rem,2vw,.82rem)/1.4 ui-monospace,monospace!important;
-  overflow-wrap:anywhere;word-break:break-word;
+  display:block;max-width:100%;min-width:0;white-space:nowrap;
+  color:#594252!important;font:800 clamp(.62rem,2.5vw,.82rem)/1.4 ui-monospace,monospace!important;
+  overflow:visible;overflow-wrap:normal;word-break:normal;letter-spacing:-.035em;
 }
 .wedding-page .player-id-details button{
   display:inline-flex;align-items:center;justify-content:center;min-height:38px;
@@ -1891,12 +1884,12 @@
 }
 @media(max-width:620px){
   .wedding-page .player-id-subpanels{grid-template-columns:1fr;gap:.75rem}
-  .wedding-page .player-id-subpanel{padding:.9rem}
-  .wedding-page .player-id-badge-icon{flex-basis:68px;width:68px;height:68px}
-  .wedding-page .player-id-details{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem .7rem;width:100%}
+  .wedding-page .player-id-subpanel{display:grid;grid-template-columns:clamp(56px,18vw,76px) minmax(0,1fr);align-items:center;gap:.65rem;padding:.8rem}
+  .wedding-page .player-id-badge-icon{flex-basis:auto;width:100%;height:auto;aspect-ratio:1}
+  .wedding-page .player-id-details{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem .45rem;width:100%}
   .wedding-page .player-id-details h3{grid-column:1/-1}
-  .wedding-page .player-id-details code{min-width:0}
-  .wedding-page .player-id-details button{grid-column:2;grid-row:2}
+  .wedding-page .player-id-details code{font-size:clamp(.58rem,2.65vw,.76rem);letter-spacing:-.045em}
+  .wedding-page .player-id-details button{grid-column:2;grid-row:2;min-height:36px;padding:.5rem .65rem}
 }
 @media(prefers-reduced-motion:reduce){
   .wedding-page .dawn-badge-image--hero,.wedding-page .player-id-badge-icon{animation:none!important}
@@ -1905,6 +1898,7 @@
 
 /* SISTEM JUDUL UTAMA — satu gaya H2 untuk seluruh 10 panel */
 .wedding-page .wedding-section > .wedding-section-heading,
+.wedding-page .wedding-guestbook-list > .wedding-section-heading,
 .wedding-page .wedding-share > .wedding-section-heading,
 .wedding-page .wedding-hero > .wedding-section-heading{
   position:relative!important;
@@ -1929,6 +1923,7 @@
   text-wrap:balance;
 }
 .wedding-page .wedding-section > .wedding-section-heading::after,
+.wedding-page .wedding-guestbook-list > .wedding-section-heading::after,
 .wedding-page .wedding-share > .wedding-section-heading::after,
 .wedding-page .wedding-hero > .wedding-section-heading::after{
   content:""!important;
@@ -1962,9 +1957,17 @@
 }
 @media(max-width:600px){
   .wedding-page .wedding-section > .wedding-section-heading,
+  .wedding-page .wedding-guestbook-list > .wedding-section-heading,
   .wedding-page .wedding-share > .wedding-section-heading,
   .wedding-page .wedding-hero > .wedding-section-heading{
     font-size:clamp(2.55rem,10.5vw,3.5rem)!important;
     margin-bottom:1.5rem!important;
   }
 }
+
+
+/* SUCCESS TOAST — ditampilkan hanya setelah pengiriman berhasil */
+.wedding-page .wedding-success-toast{position:fixed;z-index:10050;top:max(1rem,env(safe-area-inset-top));left:50%;display:flex;align-items:center;gap:.7rem;width:min(calc(100% - 2rem),460px);padding:.95rem 1.1rem;border:1px solid #a7dfbd;border-radius:16px;background:linear-gradient(135deg,#e8fff0,#d5f7e2);color:#145c35;box-shadow:0 12px 34px rgba(24,104,61,.2);font:800 .92rem/1.45 "Nunito Sans",Arial,sans-serif;text-align:left;transform:translateX(-50%);animation:wedding-toast-in .22s ease-out both}
+.wedding-page .wedding-success-toast-icon{display:grid;place-items:center;flex:0 0 1.8rem;width:1.8rem;height:1.8rem;border-radius:50%;background:#198754;color:#fff;font-size:1.1rem;font-weight:900}
+@keyframes wedding-toast-in{from{opacity:0;translate:0 -8px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:reduce){.wedding-page .wedding-success-toast{animation:none}}
