@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { supabase } from "../../../lib/supabase";
 import { useLanguage } from "../../components/LanguageProvider";
 import "./wedding.css";
 
@@ -148,7 +147,6 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       if (!publicResponse.ok) return;
       const publicData = await publicResponse.json();
       if (!active || !publicData.invitation) return;
-      const id = publicData.invitation.id;
       const profile = publicData.profile || {};
       setEventInfo({
         ...profile,
