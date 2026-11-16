@@ -1615,3 +1615,63 @@
 @media(prefers-reduced-motion:reduce){
   .wedding-page .wedding-closing-heart{animation:none!important}
 }
+
+
+/* Photo Gallery — six-photo editorial grid */
+.wedding-page .wedding-gallery-section{
+  display:block!important;
+}
+.wedding-page .wedding-gallery-section>.wedding-section-heading{
+  margin:0 0 clamp(1.8rem,5vw,2.6rem)!important;
+  padding:0!important;
+  border:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:#46594a!important;
+  font-family:"Bree Serif","Cooper Black",Georgia,serif!important;
+  font-size:clamp(2.15rem,7.5vw,3rem)!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  text-align:center!important;
+}
+.wedding-page .wedding-gallery-section>.wedding-section-heading::after{display:none!important;content:none!important}
+.wedding-page .wedding-gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(.7rem,3vw,1.15rem);
+  width:100%;
+  max-width:820px;
+  margin:0 auto;
+  align-items:start;
+}
+.wedding-page .wedding-gallery-card{
+  display:block;
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+  aspect-ratio:3/4;
+  border-radius:16px;
+  background:#f7edf1;
+  box-shadow:0 5px 13px rgba(63,48,57,.16);
+  transform:translateZ(0);
+}
+.wedding-page .wedding-gallery-card img{
+  display:block;
+  width:100%;
+  height:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  object-position:center;
+  border:0;
+  border-radius:inherit;
+  transition:transform .45s ease;
+}
+.wedding-page .wedding-gallery-card:active img{transform:scale(.985)}
+@media(min-width:760px){
+  .wedding-page .wedding-gallery-grid{gap:1.25rem}
+  .wedding-page .wedding-gallery-card{border-radius:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .wedding-gallery-card img{transition:none}
+  .wedding-page .wedding-gallery-card[data-aos]{opacity:1!important;transform:none!important}
+}
