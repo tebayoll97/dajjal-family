@@ -251,7 +251,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     const attendanceValue = String(data.get("attendance") || "");
     const messageValue = String(data.get("guestbook_message") || "").trim();
     const honeypot = String(data.get("website") || "");
-    if (!guestNameValue || guestNameValue.length > 16 || !/^\\d{1,4}$/.test(serverNameValue) || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue || messageValue.length > 200) {
+    if (!guestNameValue || guestNameValue.length > 16 || !/^\d{1,4}$/.test(serverNameValue) || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue || messageValue.length > 200) {
       setRsvpStatus("error");
       setRsvpLoading(false);
       return;
@@ -552,7 +552,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
                 <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength={16} placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
-                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} onChange={(event) => { event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 4); }} placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
+                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} onChange={(event) => { event.target.value = event.target.value.replace(/\D/g, "").slice(0, 4); }} placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
                 <fieldset className="wedding-attendance">
                   <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span className="wedding-required">*</span></legend>
                   <label><input required type="radio" name="attendance" value="yes" defaultChecked />{language === "id" ? "Hadir" : "Attending"}</label>
