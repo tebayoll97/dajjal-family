@@ -109,3 +109,40 @@ export async function DELETE(request) {
     return Response.json({ error: "Gagal menghapus pesan." }, { status: 500, headers: { "Cache-Control": "no-store" } });
   }
 }
+
+
+export async function PATCH(request) {
+  const auth = await verifyAdmin(request);
+  if (!auth.authorized) {
+    return Response.json({ error: auth.error }, { status: auth.status, headers: { "Cache-Control": "no-store" } });
+  }
+
+  try {
+    const body = await request.json();
+    const id = typeof body?.id === "string" ? body.id.trim() : "";
+    const guestName = typeof body?.guest_name === "string" ? body.guest_name.trim() : "";
+    const serverName = typeof body?.server_name === "string" ? body.server_name.trim() : "";
+
+    if (!UUID_PATTERN.test(id) || guestName.length < 1 || guestName.length > 16 || !/^\\d{1,4}$/.test(serverName)) {
+      return Response.json({ error: "Nama atau server tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
+
+    const invitationId = await getInvitationId();
+    if (!invitationId) return Response.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+
+    const { data, error } = await supabaseAdmin
+      .from("df_guestbook")
+      .update({ guest_name: guestName, server_name: serverName })
+      .eq("id", id)
+      .eq("invitation_id", invitationId)
+      .select("id, guest_name, server_name")
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return Response.json({ error: "Pesan tidak ditemukan." }, { status: 404 });
+    return Response.json({ success: true, entry: data }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    console.error("Admin wedding guestbook update:", error);
+    return Response.json({ error: "Gagal memperbarui data pesan." }, { status: 500, headers: { "Cache-Control": "no-store" } });
+  }
+}
