@@ -132,6 +132,9 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [countdown, setCountdown] = useState(null);
   const [guestbookEntries, setGuestbookEntries] = useState([]);
+  const [guestbookPage, setGuestbookPage] = useState(1);
+  const [guestbookPagination, setGuestbookPagination] = useState({ page: 1, total: 0, totalPages: 0 });
+  const [guestbookPageLoading, setGuestbookPageLoading] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState("");
   const [rsvpSuccessToast, setRsvpSuccessToast] = useState(false);
@@ -176,11 +179,13 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       });
       if (Array.isArray(profile.gallery_urls)) setGalleryItems(profile.gallery_urls.map((url,index)=>({id:index,title:"",image_url:url})));
       if (profile.guestbook_enabled === true) {
-        const messagesResponse = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
+        const messagesResponse = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=1", { cache: "no-store" });
         if (!active) return;
         if (messagesResponse.ok) {
           const messagesData = await messagesResponse.json();
           setGuestbookEntries(Array.isArray(messagesData.entries) ? messagesData.entries : []);
+          setGuestbookPagination(messagesData.pagination || { page: 1, total: 0, totalPages: 0 });
+          setGuestbookPage(1);
         }
       }
     }
@@ -282,10 +287,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       setMessageLength(0);
       setRsvpStatus("success");
       setRsvpSuccessToast(true);
-      const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
+      const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=1", { cache: "no-store" });
       if (refreshedMessages.ok) {
         const refreshedData = await refreshedMessages.json();
         setGuestbookEntries(Array.isArray(refreshedData.entries) ? refreshedData.entries : []);
+        setGuestbookPagination(refreshedData.pagination || { page: 1, total: 0, totalPages: 0 });
+        setGuestbookPage(1);
       }
     } catch {
       setRsvpStatus(rsvpSaved ? "partial" : "error");
@@ -569,12 +576,14 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
             <h2 className="wedding-section-heading">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
-            <div className="wedding-guestbook-list-panel">
+            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan, gulir untuk melihat pesan lainnya" : "Guestbook messages, scroll to see more"}>
               {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
                 <article className="wedding-guest-entry" key={entry.id}>
                   <div className="wedding-guest-entry-heading">
-                    <strong>{entry.guest_name}</strong>
-                    <span className="wedding-guest-server">- [{entry.server_name || "—"}]</span>
+                    <div className="wedding-guest-identity">
+                      <strong>{entry.guest_name}</strong>
+                      <span className="wedding-guest-server">- #{entry.server_name || "—"}</span>
+                    </div>
                     <span className={"wedding-attendance-badge " + (entry.attendance === "yes" ? "is-yes" : entry.attendance === "maybe" ? "is-maybe" : "is-no")}>
                       {entry.attendance === "yes" ? (language === "id" ? "Hadir" : "Attending") : entry.attendance === "maybe" ? t.attendancePending : entry.attendance === "no" ? (language === "id" ? "Tidak Hadir" : "Not Attending") : (language === "id" ? "Tamu" : "Guest")}
                     </span>
@@ -584,6 +593,13 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 </article>
               )) : <p className="wedding-guestbook-empty">{language === "id" ? "Belum ada ucapan. Jadilah yang pertama mengirim doa!" : "No wishes yet. Be the first to leave a message!"}</p>}
             </div>
+            {guestbookPagination.totalPages > 1 && (
+              <nav className="wedding-guestbook-pagination" aria-label="Guestbook pagination">
+                <button type="button" onClick={async () => { const next = Math.max(1, guestbookPage - 1); setGuestbookPageLoading(true); try { const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" }); if (response.ok) { const data = await response.json(); setGuestbookEntries(data.entries || []); setGuestbookPagination(data.pagination || guestbookPagination); setGuestbookPage(next); document.querySelector(".wedding-guestbook-list-panel")?.scrollTo({ top: 0, behavior: "smooth" }); } } finally { setGuestbookPageLoading(false); } }} disabled={guestbookPage <= 1 || guestbookPageLoading}>{language === "id" ? "← Sebelumnya" : "← Previous"}</button>
+                <span>{language === "id" ? "Halaman" : "Page"} {guestbookPage} / {guestbookPagination.totalPages}</span>
+                <button type="button" onClick={async () => { const next = Math.min(guestbookPagination.totalPages, guestbookPage + 1); setGuestbookPageLoading(true); try { const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" }); if (response.ok) { const data = await response.json(); setGuestbookEntries(data.entries || []); setGuestbookPagination(data.pagination || guestbookPagination); setGuestbookPage(next); document.querySelector(".wedding-guestbook-list-panel")?.scrollTo({ top: 0, behavior: "smooth" }); } } finally { setGuestbookPageLoading(false); } }} disabled={guestbookPage >= guestbookPagination.totalPages || guestbookPageLoading}>{language === "id" ? "Berikutnya →" : "Next →"}</button>
+              </nav>
+            )}
           </section>
 
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
