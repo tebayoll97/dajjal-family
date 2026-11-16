@@ -20,7 +20,17 @@ function formatDate(value) {
   }).format(new Date(value)) + " WIB";
 }
 
-function formatDateInput(value) {\n  if (!value) return "";\n  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value));\n}\n\nfunction formatTimeInput(value) {\n  if (!value) return "";\n  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(value));\n}\n\nfunction attendanceLabel(value) {
+function formatDateInput(value) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value));
+}
+
+function formatTimeInput(value) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(value));
+}
+
+function attendanceLabel(value) {
   if (value === "yes") return "Hadir";
   if (value === "maybe") return "Belum Pasti";
   if (value === "no") return "Tidak Hadir";
@@ -286,7 +296,7 @@ export default function AdminWeddingGuestbookPage() {
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">BATAL</button>
-                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\d{1,4}$/.test(editServer)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? "MENYIMPAN..." : "SIMPAN"}</button>
+                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\d{1,4}$/.test(editServer) || !/^\d{2}\/\d{2}\/\d{4}$/.test(editDate) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(editTime)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? "MENYIMPAN..." : "SIMPAN"}</button>
               </div>
             </form>
           </section>
