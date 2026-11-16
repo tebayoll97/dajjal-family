@@ -1326,6 +1326,6 @@
 .wedding-page .wedding-copy-address span{display:block;font:inherit;line-height:1}
 .wedding-page .wedding-copy-address:active{transform:scale(.97)}
 .wedding-falling-leaves{position:fixed;inset:0;z-index:4900;overflow:hidden;pointer-events:none}
-.wedding-falling-leaves span{position:absolute;top:-12vh;left:calc((var(--leaf-index) * 37 + 5) % 100 * 1%);font-size:clamp(1.2rem,3.6vw,2.3rem);opacity:0;animation:wedding-leaf-fall 5s ease-in forwards;animation-delay:calc(var(--leaf-index) * 35ms);filter:drop-shadow(0 3px 3px rgba(78,86,46,.12))}
+.wedding-falling-leaves span{position:absolute;top:-12vh;left:calc(var(--leaf-index) * 4.1% + 2%);font-size:clamp(1.2rem,3.6vw,2.3rem);opacity:0;animation:wedding-leaf-fall 4.5s ease-in forwards;animation-delay:calc(var(--leaf-index) * 20ms);filter:drop-shadow(0 3px 3px rgba(78,86,46,.12))}
 @keyframes wedding-leaf-fall{0%{opacity:0;transform:translate3d(0,-5vh,0) rotate(0deg)}12%{opacity:.95}80%{opacity:.9}100%{opacity:0;transform:translate3d(calc((var(--leaf-index) - 11) * 1.8vw),115vh,0) rotate(calc(var(--leaf-index) * 95deg))}}
 @media(prefers-reduced-motion:reduce){.wedding-page .wedding-groom .wedding-family-photo,.wedding-page .wedding-bride .wedding-family-photo{opacity:1!important;transform:none!important;animation:none!important}.wedding-falling-leaves{display:none!important}}
