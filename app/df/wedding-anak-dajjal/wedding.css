@@ -2066,3 +2066,129 @@
  .wedding-page .wedding-guest-entry-heading{gap:.4rem;font-size:.94rem}
  .wedding-page .wedding-attendance-badge{font-size:.68rem;padding:.24rem .45rem}
 }
+
+/* DESKTOP-ONLY WEDDING PRESENTATION
+   All rules are scoped to 761px and wider. Existing mobile styles remain untouched. */
+@media (min-width: 761px) {
+  .df-workspace-layout:has(.wedding-page) {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+  }
+  .df-workspace-layout:has(.wedding-page) > .df-global-sidebar {
+    display: none !important;
+  }
+  .df-workspace-layout:has(.wedding-page) > .df-workspace-main {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .df-main .wedding-page {
+    width: 100% !important;
+    min-height: 100vh;
+    padding: 0 0 3.5rem !important;
+    overflow: clip;
+  }
+  .df-main .wedding-page .wedding-content {
+    width: min(calc(100% - 4rem), 1120px) !important;
+    max-width: 1120px !important;
+    margin: 0 auto !important;
+  }
+  .df-main .wedding-page .wedding-invitation-eyebrow {
+    margin: 2.5rem auto 1.5rem !important;
+    font-size: 1.15rem !important;
+    letter-spacing: .08em;
+  }
+  .df-main .wedding-page .wedding-hero {
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin: 0 auto 2rem !important;
+    padding: 2.8rem clamp(2rem, 5vw, 5rem) 3rem !important;
+    border: 1px solid rgba(210, 155, 181, .32);
+    border-radius: 30px;
+    background: linear-gradient(145deg, rgba(255,255,255,.48), rgba(255,238,246,.68));
+    box-shadow: 0 18px 55px rgba(139, 83, 111, .09);
+  }
+  .df-main .wedding-page .wedding-hero > .wedding-section-heading {
+    margin-bottom: 2rem !important;
+    font-size: clamp(3.8rem, 5vw, 5.2rem) !important;
+  }
+  .df-main .wedding-page .couple-frame {
+    width: min(100%, 620px) !important;
+    margin: 2.2rem auto 2rem !important;
+    padding: 14px !important;
+    border-radius: 30px !important;
+  }
+  .df-main .wedding-page .couple-photo {
+    max-height: 720px !important;
+    min-height: 420px !important;
+    object-fit: contain !important;
+  }
+  .df-main .wedding-page .wedding-hero-couple-name {
+    margin: 1.5rem auto .8rem !important;
+    font-size: clamp(4rem, 6vw, 5.8rem) !important;
+    line-height: 1.12 !important;
+  }
+  .df-main .wedding-page .wedding-hero-date {
+    margin: 1rem auto 1.8rem !important;
+    font-size: 1.05rem !important;
+  }
+  .df-main .wedding-page .wedding-countdown {
+    width: min(100%, 760px) !important;
+    margin: 2rem auto 0 !important;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(189, 109, 145, .22);
+  }
+  .df-main .wedding-page .wedding-countdown .detail-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    margin: 1.2rem auto 0 !important;
+  }
+  .df-main .wedding-page .wedding-countdown .detail-grid article {
+    min-height: 112px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem !important;
+  }
+
+  /* One continuous vertical reading flow: every invitation section occupies its own row. */
+  .df-main .wedding-page .wedding-section,
+  .df-main .wedding-page .wedding-share,
+  .df-main .wedding-page .wedding-guestbook-list {
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin: 2rem auto !important;
+    padding: clamp(2.4rem, 4vw, 3.6rem) !important;
+    border-radius: 28px !important;
+  }
+  .df-main .wedding-page .wedding-section > .wedding-section-heading,
+  .df-main .wedding-page .wedding-share > .wedding-section-heading,
+  .df-main .wedding-page .wedding-guestbook-list > .wedding-section-heading {
+    font-size: clamp(3.2rem, 4vw, 4.2rem) !important;
+    margin-bottom: 1.8rem !important;
+  }
+  .df-main .wedding-page .wedding-section > p,
+  .df-main .wedding-page .wedding-share > p {
+    max-width: 760px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-size: 1rem !important;
+    line-height: 1.85 !important;
+  }
+  .df-main .wedding-page .wedding-form {
+    width: min(100%, 680px) !important;
+  }
+  .df-main .wedding-page .wedding-bottom-nav {
+    display: none !important;
+  }
+  .df-main .wedding-page .wedding-closing {
+    max-width: 1120px;
+    margin-inline: auto !important;
+    padding-bottom: 1.5rem !important;
+  }
+}
+
