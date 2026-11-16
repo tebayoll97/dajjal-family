@@ -168,9 +168,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       });
       if (Array.isArray(profile.gallery_urls)) setGalleryItems(profile.gallery_urls.map((url,index)=>({id:index,title:"",image_url:url})));
       if (profile.guestbook_enabled === true) {
-        const messagesResult = await supabase.from("df_guestbook").select("id, guest_name, message, created_at").eq("invitation_id", id).eq("is_approved", true).order("created_at", { ascending: false }).limit(30);
+        const messagesResponse = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
         if (!active) return;
-        if (messagesResult.data) setGuestbookEntries(messagesResult.data);
+        if (messagesResponse.ok) {
+          const messagesData = await messagesResponse.json();
+          setGuestbookEntries(Array.isArray(messagesData.entries) ? messagesData.entries : []);
+        }
       }
     }
     loadWeddingData();
@@ -236,8 +239,15 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     const form = event.currentTarget;
     const data = new FormData(form);
     const guestNameValue = String(data.get("guest_name") || "").trim();
+    const serverNameValue = String(data.get("server_name") || "").trim();
+    const attendanceValue = String(data.get("attendance") || "");
     const messageValue = String(data.get("guestbook_message") || "").trim();
     const honeypot = String(data.get("website") || "");
+    if (!guestNameValue || !serverNameValue || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue) {
+      setRsvpStatus("error");
+      setRsvpLoading(false);
+      return;
+    }
     let rsvpSaved = false;
     try {
       if (eventInfo?.rsvp_enabled) {
@@ -245,8 +255,8 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            slug: invitationSlug, guest_name: guestNameValue, invited_name: "",
-            guest_count: 1, attendance: String(data.get("attendance") || ""), language, website: honeypot,
+            slug: invitationSlug, guest_name: guestNameValue, server_name: serverNameValue, invited_name: "",
+            guest_count: 1, attendance: attendanceValue, language, website: honeypot,
           }),
         });
         if (!rsvpResponse.ok) throw new Error("RSVP submission failed");
@@ -256,12 +266,17 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         const guestbookResponse = await fetch("/api/wedding/guestbook", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug: invitationSlug, guest_name: guestNameValue, message: messageValue, language, website: honeypot }),
+          body: JSON.stringify({ slug: invitationSlug, guest_name: guestNameValue, server_name: serverNameValue, attendance: attendanceValue, message: messageValue, language, website: honeypot }),
         });
         if (!guestbookResponse.ok) throw new Error("Guestbook submission failed");
       }
       form.reset();
       setRsvpStatus("success");
+      const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
+      if (refreshedMessages.ok) {
+        const refreshedData = await refreshedMessages.json();
+        setGuestbookEntries(Array.isArray(refreshedData.entries) ? refreshedData.entries : []);
+      }
     } catch {
       setRsvpStatus(rsvpSaved ? "partial" : "error");
     } finally {
@@ -500,24 +515,39 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
-                <label>{language === "id" ? "Nama" : "Name"}<input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
-                {eventInfo?.rsvp_enabled && (
-                  <fieldset className="wedding-attendance">
-                    <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span aria-hidden="true">*</span></legend>
-                    <label><input required type="radio" name="attendance" value="yes" />{language === "id" ? "Hadir" : "Attending"}</label>
-                    <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
-                    <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
-                  </fieldset>
-                )}
-                {eventInfo?.guestbook_enabled && (
-                  <label>{t.message}<textarea required name="guestbook_message" rows="4" maxLength="500" placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /></label>
-                )}
+                <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength="100" placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
+                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" maxLength="40" placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
+                <fieldset className="wedding-attendance">
+                  <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span className="wedding-required">*</span></legend>
+                  <label><input required type="radio" name="attendance" value="yes" />{language === "id" ? "Hadir" : "Attending"}</label>
+                  <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
+                  <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
+                </fieldset>
+                <label>{t.message} <span className="wedding-required">*</span><textarea required name="guestbook_message" rows="4" maxLength="500" placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /></label>
                 <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
                 <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
                 {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
               </form>}
-              {guestbookEntries.length > 0 && <div className="approved-messages">{guestbookEntries.map((entry) => <article key={entry.id}><strong>{entry.guest_name}</strong><p>{entry.message}</p></article>)}</div>}
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
+          </section>
+
+          <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
+            <h2 className="wedding-guestbook-list-title">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
+            <div className="wedding-guestbook-list-panel">
+              {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
+                <article className="wedding-guest-entry" key={entry.id}>
+                  <div className="wedding-guest-entry-heading">
+                    <strong>{entry.guest_name}</strong>
+                    <span className="wedding-guest-server">- [{entry.server_name || "—"}]</span>
+                    <span className={"wedding-attendance-badge " + (entry.attendance === "yes" ? "is-yes" : entry.attendance === "maybe" ? "is-maybe" : "is-no")}>
+                      {entry.attendance === "yes" ? (language === "id" ? "Hadir" : "Attending") : entry.attendance === "maybe" ? t.attendancePending : entry.attendance === "no" ? (language === "id" ? "Tidak Hadir" : "Not Attending") : (language === "id" ? "Tamu" : "Guest")}
+                    </span>
+                  </div>
+                  <p className="wedding-guest-entry-message">{entry.message}</p>
+                  <time className="wedding-guest-entry-time" dateTime={entry.created_at}>{new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(entry.created_at))} - {new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-GB", { timeZone: "Asia/Jakarta", weekday: "long", day: "2-digit", month: "short", year: "numeric" }).format(new Date(entry.created_at)).replace(/\./g, "").toUpperCase()}</time>
+                </article>
+              )) : <p className="wedding-guestbook-empty">{language === "id" ? "Belum ada ucapan. Jadilah yang pertama mengirim doa!" : "No wishes yet. Be the first to leave a message!"}</p>}
+            </div>
           </section>
 
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
