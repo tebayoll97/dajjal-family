@@ -111,7 +111,7 @@ const words = {
     sending: "MENGIRIM…",
     musicOff: "MUSIK MATI",
     musicOn: "MUSIK NYALA",
-    countdown: "MENUJU HARI BAHAGIA", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
+    countdown: "Menuju Hari Bahaya", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
     eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", playerId: "ID PEMAIN", address: "ALAMAT", sonOf: "Putra dari", daughterOf: "Putri dari", father: "Bapak", mother: "Ibu",
     photoAlt: "Anak Dajjal dan Malika",
     navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "HADIAH", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
@@ -137,6 +137,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [invitationOpened, setInvitationOpened] = useState(false);
   const [celebrationActive, setCelebrationActive] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [addressCopied, setAddressCopied] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -283,6 +284,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     }
   };
 
+  const copyAddress = async () => {
+    const addressText = "Panti Asuhan Anak Ceria #278 [X:291 Y:501]";
+    try { await navigator.clipboard.writeText(addressText); setAddressCopied(true); window.setTimeout(() => setAddressCopied(false), 2200); }
+    catch { setAddressCopied(false); }
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -304,7 +311,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const openInvitation = async () => {
     setInvitationOpened(true);
     setCelebrationActive(true);
-    window.setTimeout(() => setCelebrationActive(false), 4200);
+    window.setTimeout(() => setCelebrationActive(false), 5000);
     if (audioRef.current) {
       try { await audioRef.current.play(); setMusicOn(true); }
       catch { setMusicOn(false); }
@@ -328,7 +335,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </button>
         </section>
       )}
-      {celebrationActive && <div className="wedding-confetti" aria-hidden="true">{Array.from({length:28},(_,i)=><i key={i} style={{"--i":i}} />)}</div>}
+      {celebrationActive && <div className="wedding-falling-leaves" aria-hidden="true">{Array.from({length:24},(_,i)=><span key={i} style={{"--leaf-index":i}}>{i%3===0?"🍂":"🍃"}</span>)}</div>}
       <div className="wedding-content" hidden={!invitationOpened}>
           <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
           <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
@@ -353,23 +360,23 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-couple-panel" id="couple" data-panel-number="02" data-aos="fade-up">
-            <div className="wedding-family-panel wedding-groom">
-              <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
-              <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="eager" />
-              <h2>Anak Dajjal</h2>
-              <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
-            </div>
+          <p className="wedding-invitation-eyebrow wedding-couple-eyebrow">Mempelai</p>
+          <section className="wedding-section wedding-family-panel wedding-groom" id="couple" data-panel-number="02" data-aos="fade-up">
+            <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
+            <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
+            <h2>Anak Dajjal</h2>
+            <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
             <div className="wedding-couple-amp" aria-hidden="true">&amp;</div>
-            <div className="wedding-family-panel wedding-bride">
-              <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="eager" />
-              <h2>Malika</h2>
-              <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
-            </div>
+          </section>
+
+          <section className="wedding-section wedding-family-panel wedding-bride" id="bride" data-panel-number="03" data-aos="fade-up">
+            <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
+            <h2>Malika</h2>
+            <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
           </section>
 
           <p className="wedding-invitation-eyebrow wedding-event-eyebrow">Rangkaian Acara</p>
-          <section className="wedding-section wedding-event-panel" id="event" data-panel-number="03" data-aos="fade-up">
+          <section className="wedding-section wedding-event-panel" id="event" data-panel-number="04" data-aos="fade-up">
             <h2 className="wedding-section-heading">Resepsi</h2>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
@@ -378,13 +385,17 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              <strong>Di Panti Asuhan Anak Ceria</strong>
-              <p>Jl. IDs, Koordinat X[556]</p>
+              <strong>Panti Asuhan Anak Ceria</strong>
+              <p>Jl. IDs, No. Koordinat [X:239 Y:503]</p>
               <p>Kode state #278</p>
+              <button className="wedding-copy-address" type="button" onClick={copyAddress}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
+                <span>{addressCopied ? "Alamat tersalin" : "Salin alamat"}</span>
+              </button>
             </div>
           </section>
 
-          <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="04" data-aos="fade-up">
+          <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="05" data-aos="fade-up">
             <h2 className="wedding-section-heading">Menanam Kedelai</h2>
             <div className="wedding-planting-icon" aria-hidden="true">🌱</div>
             <p className="section-copy">Kita mencoba untuk membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami.</p>
@@ -399,12 +410,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </nav>
 
 
-          <section className="wedding-section" id="story" data-panel-number="05" data-aos="fade-up">
+          <section className="wedding-section" id="story" data-panel-number="06" data-aos="fade-up">
             <h2 className="wedding-section-heading">{t.story}</h2>
             <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
           </section>
 
-          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="06" data-aos="fade-up">
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07" data-aos="fade-up">
             <p className="wedding-kicker">OUR PRECIOUS MOMENTS</p>
             <h2 className="wedding-section-heading">{language === "id" ? "Galeri Kenangan" : "Our Photo Gallery"}</h2>
             {galleryItems.length > 0 ? (
@@ -420,7 +431,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             ) : <div className="wedding-note"><p>{language === "id" ? "Foto kenangan akan ditambahkan di sini." : "Gallery photos will be added here."}</p></div>}
           </section>
 
-          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="07" data-aos="fade-up">
+          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
             <h2 className="wedding-section-heading">{t.playerId}</h2>
             <div className="dawn-badge-card">
               <div className="dawn-badge-emblem" role="img" aria-label="Dawn Badge Darkwar Survival">
@@ -434,7 +445,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
           </section>
 
-          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="08" data-aos="fade-up">
+          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA KARAKTER" : "A NOTE FOR THE COUPLE"}</p>
               <h2 className="wedding-section-heading">{t.wishesTitle}</h2>
               <p className="section-copy">{t.wishesIntro}</p>
@@ -459,7 +470,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
           </section>
 
-          <section className="wedding-share" id="share" data-panel-number="09" data-aos="fade-up">
+          <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
             <p className="wedding-kicker">SPREAD THE JOY</p>
             <h2 className="wedding-section-heading">{t.couple}</h2>
             <div className="share-actions">
