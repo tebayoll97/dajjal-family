@@ -419,7 +419,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>4 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt="Anak Dajjal bertemu Malika di tengah sawah" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--one" src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt="Anak Dajjal bertemu Malika di tengah sawah" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>Awal Pertemuan</h3>
                     <p>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</p>
@@ -433,7 +433,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>10 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt="Anak Dajjal dan Malika berlari bersama di panti asuhan" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--two" src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt="Anak Dajjal dan Malika berlari bersama di panti asuhan" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>Perjalanan Bersama</h3>
                     <p>Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat.</p>
@@ -447,7 +447,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   <span>30 November 2026</span>
                 </div>
                 <div className="wedding-story-card">
-                  <img src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt="Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" loading="lazy" decoding="async" />
+                  <img className="wedding-story-image wedding-story-image--three" src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt="Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" loading="lazy" decoding="async" />
                   <div className="wedding-story-card-content">
                     <h3>Menuju Hari Bencana</h3>
                     <p>Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!</p>
@@ -520,6 +520,11 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <button type="button" onClick={copyLink}>{copied ? t.copied : t.copy}</button>
             </div>
           </section>
+          <footer className="wedding-closing" aria-label={language === "id" ? "Penutup undangan" : "Invitation closing"}>
+            <h2 className="wedding-closing-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h2>
+            <p className="wedding-closing-with-love"><svg className="wedding-closing-heart wedding-closing-heart--left" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg><span>With Love</span></p>
+            <p className="wedding-closing-family">Dajjal Family <svg className="wedding-closing-heart wedding-closing-heart--right" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg></p>
+          </footer>
       </div>
 
       <button
