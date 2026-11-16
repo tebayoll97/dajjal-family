@@ -47,9 +47,9 @@ export async function POST(request) {
     const attendance = body?.attendance;
     const message = typeof body?.message === "string" ? body.message.trim() : "";
     const language = body?.language === "id" ? "id" : "en";
-    if (!slug || slug.length > 120 || guestName.length < 1 || guestName.length > 100 ||
-        serverName.length < 1 || serverName.length > 40 ||
-        !["yes", "maybe", "no"].includes(attendance) || message.length < 1 || message.length > 500) {
+    if (!slug || slug.length > 120 || guestName.length < 1 || guestName.length > 16 ||
+        !/^\\d{1,4}$/.test(serverName) ||
+        !["yes", "maybe", "no"].includes(attendance) || message.length < 1 || message.length > 200) {
       return Response.json({ error: "Invalid guestbook details." }, { status: 400 });
     }
     const invitation = await getInvitation(slug);
