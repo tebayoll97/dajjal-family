@@ -586,7 +586,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
             <h2 className="wedding-section-heading">Bagikan Undangan</h2>
-            <p>Bagikan Undangan ini agar mendapat 100 poin plus di surga.</p>
+            <p>Bagikan Undangan ini agar mendapat 100<br className="share-copy-break" /> poin plus di surga.</p>
             <div className="share-actions">
               <button type="button" onClick={shareInvite}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5 3.8 10.2c-.9.36-.85 1.65.08 1.94l4.5 1.4 1.4 4.5c.29.93 1.58.98 1.94.08L18.5 1.5"/><path d="m8.4 13.6 8.1-8.1"/></svg>{t.share}</button>
               <button type="button" onClick={copyLink}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>{copied ? t.copied : t.copy}</button>
