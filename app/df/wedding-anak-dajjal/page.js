@@ -346,7 +346,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
               <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
               <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
             </div>
-            <h1 className="wedding-hero-couple-name"><span>Anak Dajjal</span><span className="wedding-hero-amp">&amp;</span><span>Malika</span></h1>
+            <h1 className="wedding-hero-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h1>
             <p className="wedding-hero-date">{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</p>
             <div className="wedding-countdown" id="countdown" aria-label={t.countdown}>
               <p className="wedding-kicker">{t.countdown}</p>
