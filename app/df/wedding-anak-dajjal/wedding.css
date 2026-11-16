@@ -1389,3 +1389,112 @@
 @media(prefers-reduced-motion:reduce){
   .wedding-page [data-panel-number]::after{animation:none!important}
 }
+
+
+/* OUR STORIES — reference-inspired stacked timeline cards */
+.wedding-page #story.wedding-stories-section{
+  display:block!important;
+  padding:clamp(1.25rem,4vw,2.4rem)!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.wedding-page #story.wedding-stories-section::after{display:none!important;content:none!important}
+.wedding-page .wedding-stories-section>.wedding-section-heading{
+  margin:.2rem 0 2.4rem!important;
+  padding:.2rem 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:#435546!important;
+  font-family:"Playfair Display",Georgia,serif!important;
+  font-size:clamp(2rem,7vw,3rem)!important;
+  font-weight:800!important;
+  line-height:1.15!important;
+  text-align:center!important;
+}
+.wedding-page .wedding-stories-section>.wedding-section-heading::after{display:none!important;content:none!important}
+.wedding-page .wedding-stories-list{
+  display:grid;
+  gap:2.7rem;
+  width:min(100%,760px);
+  margin:0 auto;
+}
+.wedding-page .wedding-story-item{
+  display:grid;
+  gap:1rem;
+  min-width:0;
+}
+.wedding-page .wedding-story-date{
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  min-height:1.55em;
+  margin:0;
+  color:#435546;
+  font:800 clamp(1rem,3.6vw,1.18rem)/1.35 "Nunito Sans",Arial,sans-serif;
+  text-align:left;
+}
+.wedding-page .wedding-story-date svg{
+  display:block;
+  flex:0 0 1em;
+  width:1em;
+  height:1em;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.wedding-page .wedding-story-card{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.86);
+  border-radius:22px;
+  background:#46594a;
+  box-shadow:0 8px 20px rgba(48,67,53,.16);
+}
+.wedding-page .wedding-story-card>img{
+  display:block;
+  width:100%;
+  aspect-ratio:16/10;
+  object-fit:cover;
+  object-position:center;
+  background:#e8eee6;
+}
+.wedding-page .wedding-story-card-content{
+  padding:clamp(1.25rem,5vw,2.2rem) clamp(1.1rem,5vw,2.4rem) clamp(1.5rem,5vw,2.4rem);
+  color:#e4eadf;
+  text-align:left;
+}
+.wedding-page .wedding-story-card-content h3{
+  margin:0 0 1.1rem!important;
+  color:#e1eadf!important;
+  font-family:"Great Vibes","Brush Script MT","Segoe Script",cursive!important;
+  font-size:clamp(1.9rem,7vw,2.45rem)!important;
+  font-weight:400!important;
+  line-height:1.15!important;
+  text-align:center;
+}
+.wedding-page .wedding-story-card-content p{
+  margin:0!important;
+  color:#e0e8dd!important;
+  font:400 clamp(.98rem,3.6vw,1.13rem)/1.72 "Nunito Sans",Arial,sans-serif!important;
+  text-align:left!important;
+  overflow-wrap:anywhere;
+}
+.wedding-page .wedding-story-card-content .story-accent{
+  font-weight:900;
+}
+.wedding-page .wedding-story-card-content .story-malika{color:#f2b6cb!important}
+.wedding-page .wedding-story-card-content .story-soybean{color:#e8ca82!important}
+@media(max-width:600px){
+  .wedding-page #story.wedding-stories-section{padding:1rem .15rem!important}
+  .wedding-page .wedding-stories-section>.wedding-section-heading{margin-bottom:2rem!important}
+  .wedding-page .wedding-stories-list{gap:2.2rem}
+  .wedding-page .wedding-story-card{border-radius:19px}
+  .wedding-page .wedding-story-card>img{aspect-ratio:16/10}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-page .wedding-story-item[data-aos]{opacity:1!important;transform:none!important}
+}
