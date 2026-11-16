@@ -188,9 +188,18 @@ export default function AdminDashboardPage() {
       accent: "from-pink-500/20 via-rose-500/5",
     },
     {
+      href: "/admin/wedding-guestbook",
+      icon: "💬",
+      number: "03",
+      title: language === "id" ? "Ucapan Guestbook" : "Guestbook Messages",
+      description: language === "id" ? "Lihat dan hapus pesan pada undangan pernikahan." : "Review and delete wedding invitation guestbook messages.",
+      available: true,
+      accent: "from-emerald-500/20 via-teal-500/5",
+    },
+    {
       href: null,
       icon: "📊",
-      number: "03",
+      number: "04",
       title: t.statistics,
       description: t.statisticsDesc,
       available: false,
@@ -240,7 +249,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">03 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">04 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
