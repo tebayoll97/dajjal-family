@@ -14,7 +14,7 @@ const WEDDING_ASSETS = {
   couple: "https://drive.google.com/thumbnail?id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh&sz=w1600",
   groom: "https://drive.google.com/thumbnail?id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur&sz=w1600",
   bride: "https://drive.google.com/thumbnail?id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr&sz=w1600",
-  dawnBadge: "https://drive.google.com/thumbnail?id=14dOaEjtipPK_qnmseG7VDMtSsKiFYGxR&sz=w1600",
+  dawnBadge: "https://drive.google.com/thumbnail?id=12zXhOGi5_Y-gPL_Wrkods-aqxx1KBW2v&sz=w1600",
   // Direct file endpoint so the browser can stream the audio after user interaction.
   music: "/audio/Payung%20Teduh%20%20Akad%20Cover%20by%20Hanin%20Dhiya.mp3",
 };
@@ -508,13 +508,27 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <h2 className="wedding-panel-title" data-aos="fade-up">Hadiah ke Mempelai</h2>
           <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
-            <div className="dawn-badge-card">
-              <img className="dawn-badge-image" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
-              <div className="dawn-badge-copy">
-                <strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span>
-                <div className="player-id-row"><span>Malika</span><code>1333797681000290</code><button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? "Tersalin" : "Copy ID"}</button></div>
-                <div className="player-id-row"><span>Anak Dajjal</span><code>1122785899000278</code><button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? "Tersalin" : "Copy ID"}</button></div>
-              </div>
+            <div className="dawn-badge-heading">
+              <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt="Dawn Badge Darkwar Survival" loading="lazy" />
+              <div><strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span></div>
+            </div>
+            <div className="player-id-subpanels">
+              <article className="player-id-subpanel">
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+                <div className="player-id-details">
+                  <h3>Malika</h3>
+                  <code>1333797681000290</code>
+                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label="Copy ID Malika">{copiedPlayerId === "1333797681000290" ? "Tersalin" : "Copy ID"}</button>
+                </div>
+              </article>
+              <article className="player-id-subpanel">
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+                <div className="player-id-details">
+                  <h3>Anak Dajjal</h3>
+                  <code>1122785899000278</code>
+                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label="Copy ID Anak Dajjal">{copiedPlayerId === "1122785899000278" ? "Tersalin" : "Copy ID"}</button>
+                </div>
+              </article>
             </div>
           </section>
 
