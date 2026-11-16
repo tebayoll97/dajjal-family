@@ -133,6 +133,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [guestbookEntries, setGuestbookEntries] = useState([]);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState("");
+  const [rsvpSuccessToast, setRsvpSuccessToast] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
   const [invitationOpened, setInvitationOpened] = useState(false);
   const [celebrationActive, setCelebrationActive] = useState(false);
@@ -140,6 +141,12 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [addressCopied, setAddressCopied] = useState(false);
   const [copiedPlayerId, setCopiedPlayerId] = useState("");
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (!rsvpSuccessToast) return undefined;
+    const timer = window.setTimeout(() => setRsvpSuccessToast(false), 3000);
+    return () => window.clearTimeout(timer);
+  }, [rsvpSuccessToast]);
 
   useEffect(() => {
     setGuestName(new URLSearchParams(window.location.search).get("to") || "");
@@ -272,6 +279,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
       }
       form.reset();
       setRsvpStatus("success");
+      setRsvpSuccessToast(true);
       const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug), { cache: "no-store" });
       if (refreshedMessages.ok) {
         const refreshedData = await refreshedMessages.json();
@@ -361,10 +369,11 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
         </section>
       )}
       {celebrationActive && <div className="wedding-falling-leaves" aria-hidden="true">{Array.from({length:24},(_,i)=><span key={i} style={{"--leaf-index":i}}>{i%3===0?"🍂":"🍃"}</span>)}</div>}
+      {rsvpSuccessToast && <div className="wedding-success-toast" role="status" aria-live="polite"><span className="wedding-success-toast-icon" aria-hidden="true">✓</span><span>{language === "id" ? "Berhasil! Pesan dan konfirmasi Anda telah terkirim." : "Success! Your message and response have been sent."}</span></div>}
       <div className="wedding-content" hidden={!invitationOpened}>
           <p className="wedding-invitation-eyebrow">Undangan Pernikahan</p>
           <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Mempelai Utama</h2>
+            <h2 className="wedding-section-heading">Yang Berbahagia</h2>
             <div className="couple-frame">
               <div className="couple-placeholder">
                 <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
@@ -387,7 +396,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-family-panel wedding-groom" id="couple" data-panel-number="02" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Profil Anak Dajjal</h2>
+            <h2 className="wedding-section-heading">Mempelai Pria</h2>
             <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>Tanpa mengurangi rasa hormat. Kami memberi info kepada kalian pada acara pernikahan kami.</span></p>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
             <h2>Anak Dajjal</h2>
@@ -396,7 +405,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-section wedding-family-panel wedding-bride" id="bride" data-panel-number="03" data-aos="fade-up">
-            <h2 className="wedding-section-heading">Profil Malika</h2>
+            <h2 className="wedding-section-heading">Mempelai Wanita</h2>
             <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
             <h2>Malika</h2>
             <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
@@ -516,7 +525,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             </div>
             <div className="player-id-subpanels">
               <article className="player-id-subpanel">
-                <img className="player-id-badge-icon" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
                 <div className="player-id-details">
                   <h3>Malika</h3>
                   <code>1333797681000290</code>
@@ -524,7 +533,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 </div>
               </article>
               <article className="player-id-subpanel">
-                <img className="player-id-badge-icon" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
                 <div className="player-id-details">
                   <h3>Anak Dajjal</h3>
                   <code>1122785899000278</code>
@@ -536,7 +545,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
               <h2 className="wedding-section-heading">Mohon Doa Restu</h2>
-              <img className="wishes-dawn-badge" src={WEDDING_ASSETS.dawnBadge} alt="" aria-hidden="true" />
+              <svg className="wishes-prayer-icon" viewBox="0 0 64 64" role="img" aria-label={language === "id" ? "Doa dan restu" : "Prayer and blessing"}><path d="M20 8c-3 0-5 2-5 5v14l-4-5c-2-2-5-1-6 1-1 2 0 4 1 6l11 17c2 4 6 6 11 6h8c7 0 12-5 12-12V25c0-3-2-5-5-5-1 0-2 0-3 1v-4c0-3-2-5-5-5-1 0-2 0-3 1-1-3-5-4-7-2-1-2-2-3-5-3Z" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 19v13m9-16v16m9-11v11M11 29l7 11m30-9-1 9" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/></svg>
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
@@ -544,7 +553,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                 <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" maxLength="40" placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
                 <fieldset className="wedding-attendance">
                   <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span className="wedding-required">*</span></legend>
-                  <label><input required type="radio" name="attendance" value="yes" />{language === "id" ? "Hadir" : "Attending"}</label>
+                  <label><input required type="radio" name="attendance" value="yes" defaultChecked />{language === "id" ? "Hadir" : "Attending"}</label>
                   <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
                   <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
                 </fieldset>
@@ -557,7 +566,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
 
           <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
-            <h2 className="wedding-guestbook-list-title">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
+            <h2 className="wedding-section-heading">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
             <div className="wedding-guestbook-list-panel">
               {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
                 <article className="wedding-guest-entry" key={entry.id}>
@@ -577,8 +586,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
             <h2 className="wedding-section-heading">Bagikan Undangan</h2>
-            <p className="wedding-kicker">SPREAD THE JOY</p>
-            <p className="share-reward-copy">Bagikan Undangan ini agar mendapat 100 poin plus di surga.</p>
+            <p>Bagikan Undangan ini agar mendapat 100 poin plus di surga.</p>
             <div className="share-actions">
               <button type="button" onClick={shareInvite}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5 3.8 10.2c-.9.36-.85 1.65.08 1.94l4.5 1.4 1.4 4.5c.29.93 1.58.98 1.94.08L18.5 1.5"/><path d="m8.4 13.6 8.1-8.1"/></svg>{t.share}</button>
               <button type="button" onClick={copyLink}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>{copied ? t.copied : t.copy}</button>
