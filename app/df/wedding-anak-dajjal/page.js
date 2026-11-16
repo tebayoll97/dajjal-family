@@ -419,7 +419,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
               <strong>{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</strong>
-              <p>21.00 Waktu Server - Selesai</p>
+              <p>{eventInfo?.event_time ? `${String(eventInfo.event_time).slice(0, 5).replace(":", ".")} Waktu Server - Selesai` : "Waktu akan diumumkan"}</p>
             </div>
             <div className="wedding-event-detail">
               <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
@@ -436,7 +436,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="05" data-aos="fade-up">
             <h2 className="wedding-section-heading">Menanam Kedelai</h2>
             <div className="wedding-planting-icon" aria-hidden="true">🌱</div>
-            <p className="section-copy">Kita mencoba untuk membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami.</p>
+            <p className="section-copy">Kita mencoba membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami. Sebuah perubahan unik yang melambangkan keberanian, kualitas, dan identitas baru.</p>
           </section>
 
           <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
@@ -547,7 +547,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
               <h2 className="wedding-section-heading">Mohon Doa Restu</h2>
-              <svg className="wishes-prayer-icon" viewBox="0 0 64 64" role="img" aria-label={language === "id" ? "Doa dan restu" : "Prayer and blessing"}><path d="M20 8c-3 0-5 2-5 5v14l-4-5c-2-2-5-1-6 1-1 2 0 4 1 6l11 17c2 4 6 6 11 6h8c7 0 12-5 12-12V25c0-3-2-5-5-5-1 0-2 0-3 1v-4c0-3-2-5-5-5-1 0-2 0-3 1-1-3-5-4-7-2-1-2-2-3-5-3Z" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 19v13m9-16v16m9-11v11M11 29l7 11m30-9-1 9" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/></svg>
+              <div className="wishes-prayer-icon" role="img" aria-label={language === "id" ? "Doa dan restu" : "Prayer and blessing"}>🙏</div>
               <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
               <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
               {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
@@ -596,8 +596,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </section>
           <footer className="wedding-closing" aria-label={language === "id" ? "Penutup undangan" : "Invitation closing"}>
             <h2 className="wedding-closing-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h2>
-            <p className="wedding-closing-with-love"><svg className="wedding-closing-heart wedding-closing-heart--left" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg><span>With Love</span></p>
-            <p className="wedding-closing-family">Dajjal Family <svg className="wedding-closing-heart wedding-closing-heart--right" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg></p>
+            <p className="wedding-closing-signature"><span className="wedding-closing-with-love">With Love</span><span className="wedding-closing-separator" aria-hidden="true">—</span><span className="wedding-closing-family">Dajjal Family</span></p>
           </footer>
       </div>
 
