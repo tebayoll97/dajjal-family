@@ -188,6 +188,15 @@ export default function AdminDashboardPage() {
       accent: "from-pink-500/20 via-rose-500/5",
     },
     {
+      href: "/admin/wedding-event",
+      icon: "🗓️",
+      number: "04",
+      title: language === "id" ? "Waktu Acara Undangan" : "Wedding Event Time",
+      description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.",
+      available: true,
+      accent: "from-amber-500/20 via-orange-500/5",
+    },
+    {
       href: "/admin/wedding-guestbook",
       icon: "💬",
       number: "03",
@@ -249,7 +258,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">04 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">05 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
