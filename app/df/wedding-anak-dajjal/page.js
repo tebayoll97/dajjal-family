@@ -135,6 +135,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [guestbookPage, setGuestbookPage] = useState(1);
   const [guestbookPagination, setGuestbookPagination] = useState({ page: 1, total: 0, totalPages: 0 });
   const [guestbookPageLoading, setGuestbookPageLoading] = useState(false);
+  const [guestbookLoadError, setGuestbookLoadError] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState("");
   const [rsvpSuccessToast, setRsvpSuccessToast] = useState(false);
@@ -568,7 +569,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
 
           <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
             <h2 className="wedding-section-heading">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
-            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan, gulir untuk melihat pesan lainnya" : "Guestbook messages, scroll to see more"}>
+            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan tamu" : "Guestbook messages"}>
               {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
                 <article className="wedding-guest-entry" key={entry.id}>
                   <div className="wedding-guest-entry-heading">
@@ -592,6 +593,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                   if (guestbookPageLoading || guestbookPage >= guestbookPagination.totalPages) return;
                   const next = guestbookPage + 1;
                   setGuestbookPageLoading(true);
+                  setGuestbookLoadError(false);
                   try {
                     const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" });
                     if (!response.ok) throw new Error("Unable to load more guestbook entries");
@@ -600,13 +602,14 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
                     setGuestbookPagination(data.pagination || guestbookPagination);
                     setGuestbookPage(next);
                   } catch {
-                    setRsvpStatus("error");
+                    setGuestbookLoadError(true);
                   } finally {
                     setGuestbookPageLoading(false);
                   }
                 }} disabled={guestbookPageLoading}>
                   {guestbookPageLoading ? (language === "id" ? "Memuat..." : "Loading...") : (language === "id" ? "Muat Lebih Banyak ↓" : "Load More ↓")}
                 </button>
+                {guestbookLoadError && <p role="alert">{language === "id" ? "Ucapan berikutnya gagal dimuat. Silakan coba lagi." : "Could not load more wishes. Please try again."}</p>}
               </div>
             )}
             {guestbookEntries.length > 0 && guestbookPage >= guestbookPagination.totalPages && (
