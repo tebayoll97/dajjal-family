@@ -49,7 +49,9 @@ export default function AdminWeddingGuestbookPage() {
   const [confirmEntry, setConfirmEntry] = useState(null);
   const [editingEntry, setEditingEntry] = useState(null);
   const [editName, setEditName] = useState("");
-  const [editServer, setEditServer] = useState("");\n  const [editDate, setEditDate] = useState("");\n  const [editTime, setEditTime] = useState("");
+  const [editServer, setEditServer] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [editTime, setEditTime] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [editError, setEditError] = useState("");
   const [error, setError] = useState("");
@@ -157,8 +159,8 @@ export default function AdminWeddingGuestbookPage() {
     if (!editingEntry || savingEdit) return;
     const guestName = editName.trim();
     const serverName = editServer.trim();
-    if (!guestName || guestName.length > 16 || !/^\d{1,4}$/.test(serverName)) {
-      setError("Nama maksimal 16 karakter dan server wajib 1–4 angka.");
+    if (!guestName || guestName.length > 16 || !/^\d{1,4}$/.test(serverName) || !/^\d{2}\/\d{2}\/\d{4}$/.test(editDate) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(editTime)) {
+      setEditError("Nama/server atau format tanggal dan waktu tidak valid. Gunakan DD/MM/YYYY dan HH:mm.");
       return;
     }
     setSavingEdit(true);
@@ -277,8 +279,8 @@ export default function AdminWeddingGuestbookPage() {
       {editingEntry && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-black/75 px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !savingEdit) setEditingEntry(null); }}>
           <section role="dialog" aria-modal="true" aria-labelledby="guestbook-edit-title" className="w-full max-w-sm rounded-2xl border border-purple-400/25 bg-[#171321] p-5 shadow-2xl sm:p-6">
-            <h2 id="guestbook-edit-title" className="text-lg font-black">Edit Nama &amp; Server</h2>
-            <p className="mt-1 text-sm text-gray-400">Hanya nama dan server yang dapat diubah.</p>
+            <h2 id="guestbook-edit-title" className="text-lg font-black">Edit Data Guestbook</h2>
+            <p className="mt-1 text-sm text-gray-400">Ubah nama, server, tanggal, dan waktu pesan.</p>
             <form onSubmit={saveEntryEdit} className="mt-5 space-y-4">
               {editError && <p role="alert" className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{editError}</p>}
               <label className="block text-xs font-bold text-gray-300">Nama
