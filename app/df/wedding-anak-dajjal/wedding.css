@@ -2280,3 +2280,44 @@
   }
 }
 
+
+
+/* COVER REBALANCE — use the available screen instead of leaving oversized blank bands. */
+.df-main .wedding-page .wedding-opening,
+.wedding-page .wedding-opening{
+  min-height:100svh!important;
+  height:100svh!important;
+  height:100dvh!important;
+  justify-content:space-evenly!important;
+  gap:clamp(.6rem,2.1dvh,1.4rem)!important;
+  padding:clamp(1rem,3dvh,2rem) max(1rem,env(safe-area-inset-right)) calc(clamp(1rem,3dvh,2rem) + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left))!important;
+}
+.df-main .wedding-page .wedding-opening-couple,
+.wedding-page .wedding-opening-couple{
+  width:min(88vw,52dvh,480px)!important;
+  max-height:52dvh!important;
+  flex:0 1 auto!important;
+}
+.df-main .wedding-page .wedding-opening h1,
+.wedding-page .wedding-opening h1{
+  font-size:clamp(2.35rem,min(10vw,8dvh),5rem)!important;
+  line-height:.96!important;
+}
+.df-main .wedding-page .wedding-opening-recipient,
+.wedding-page .wedding-opening-recipient{
+  font-size:clamp(.82rem,min(3.3vw,2.5dvh),1.12rem)!important;
+  line-height:1.35!important;
+}
+.df-main .wedding-page .wedding-opening button,
+.wedding-page .wedding-opening button{
+  min-height:clamp(48px,7dvh,62px)!important;
+  font-size:clamp(.9rem,3.5vw,1.15rem)!important;
+}
+@media(max-height:700px){
+ .df-main .wedding-page .wedding-opening-couple,.wedding-page .wedding-opening-couple{width:min(78vw,40dvh,340px)!important;max-height:40dvh!important}
+ .df-main .wedding-page .wedding-opening h1,.wedding-page .wedding-opening h1{font-size:clamp(1.9rem,min(8vw,6.5dvh),3.8rem)!important}
+ .df-main .wedding-page .wedding-opening{gap:.45rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .wedding-page [data-aos]{opacity:1!important;transform:none!important}
+}
