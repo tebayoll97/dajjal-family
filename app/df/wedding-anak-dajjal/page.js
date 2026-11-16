@@ -410,9 +410,51 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
           </nav>
 
 
-          <section className="wedding-section" id="story" data-panel-number="06" data-aos="fade-up">
-            <h2 className="wedding-section-heading">{t.story}</h2>
-            <div className="wedding-note"><p style={{ whiteSpace: "pre-line" }}>{eventInfo?.love_story?.trim() || (language === "id" ? "Kisah kedua mempelai akan ditambahkan di sini." : "The couple's story will be added here.")}</p></div>
+          <section className="wedding-section wedding-stories-section" id="story" data-panel-number="06">
+            <h2 className="wedding-section-heading" data-aos="fade-up">{language === "id" ? "Kisah Kami" : "Our Stories"}</h2>
+            <div className="wedding-stories-list">
+              <article className="wedding-story-item" data-aos="fade-up">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>4 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt="Anak Dajjal bertemu Malika di tengah sawah" loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>Awal Pertemuan</h3>
+                    <p>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</p>
+                  </div>
+                </div>
+              </article>
+
+              <article className="wedding-story-item" data-aos="fade-up" data-aos-delay="100">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>10 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt="Anak Dajjal dan Malika berlari bersama di panti asuhan" loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>Perjalanan Bersama</h3>
+                    <p>Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat.</p>
+                  </div>
+                </div>
+              </article>
+
+              <article className="wedding-story-item" data-aos="fade-up" data-aos-delay="150">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>30 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt="Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>Menuju Hari Bencana</h3>
+                    <p>Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!</p>
+                  </div>
+                </div>
+              </article>
+            </div>
           </section>
 
           <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07" data-aos="fade-up">
