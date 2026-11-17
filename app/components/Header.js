@@ -18,7 +18,6 @@ const copy = {
     games: "Gaming",
     blog: "Blog",
     products: "Digital Products",
-    universe: "Dajjal Family",
     profile: "Profile",
     admin: "Admin",
     knowledge: "Knowledge",
@@ -174,6 +173,9 @@ export default function Header() {
   }
 
   const navigationGroups = [
+    { id: "home", label: t.home, icon: "home", items: [
+      { label: t.home, route: "/", icon: "home" },
+    ]},
     { id: "gaming", label: t.games, icon: "games", items: [
       { label: t.gameLibrary, route: "/games", icon: "games" },
       { label: t.mamahNgamuk, route: "/games/mamah-ngamuk", icon: "games" },
