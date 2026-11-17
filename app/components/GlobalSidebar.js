@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
@@ -30,7 +31,7 @@ export default function GlobalSidebar() {
   return (
     <aside className="df-global-sidebar">
       <Link href={withLocalePrefix("/", language)} className="df-global-sidebar-brand">
-        <span className="df-global-sidebar-mark">DF</span>
+        <Image className="df-global-sidebar-mark" src="/dajjalfamily_icon_192.png" alt="" width={42} height={42} />
         <span><strong>DAJJAL FAMILY</strong><small>ONE FAMILY. MANY POSSIBILITIES.</small></span>
       </Link>
       {groups.map((group) => (
