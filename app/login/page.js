@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import GameCharacter from "@/lib/GameCharacter";
 import { useLanguage } from "../components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 
 function isGoogleUser(user) {
   return user?.app_metadata?.provider === "google" ||
@@ -20,13 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  function getNextPath() {
-    const value = new URLSearchParams(window.location.search).get("next") || "/games";
-    return value.startsWith("/") && !value.startsWith("//") ? value : "/games";
-  }
+  const profilePath = withLocalePrefix("/profile", language);
 
   useEffect(() => {
     let active = true;
@@ -42,9 +35,6 @@ export default function LoginPage() {
 
         if (session.user.is_anonymous) {
           if (active) {
-            setError(isID
-              ? "Silakan masuk dengan Google atau email dan kata sandi."
-              : "Please sign in with Google or email and password.");
             setLoading(false);
           }
           return;
@@ -62,7 +52,7 @@ export default function LoginPage() {
           if (!response.ok) throw new Error(result.error || "Unable to prepare player profile.");
         }
 
-        if (active) router.replace(getNextPath());
+        if (active) router.replace(profilePath);
       } catch (err) {
         console.error("Login completion error:", err);
         if (active) {
@@ -74,33 +64,7 @@ export default function LoginPage() {
 
     finishLogin();
     return () => { active = false; };
-  }, [router, isID]);
-
-  async function handlePasswordLogin(event) {
-    event.preventDefault();
-    if (busy) return;
-    setBusy(true);
-    setError("");
-    try {
-      const cleanEmail = email.trim();
-      if (!cleanEmail || !password) {
-        throw new Error(isID ? "Masukkan email dan kata sandi." : "Enter your email and password.");
-      }
-
-      const { error: loginError } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password,
-      });
-      if (loginError) throw loginError;
-      router.replace(getNextPath());
-    } catch (err) {
-      // Keep credential failures generic; do not disclose whether an email exists.
-      setError(isID
-        ? "Email atau kata sandi tidak valid. Periksa kembali atau gunakan Google."
-        : "Invalid email or password. Check your details or use Google.");
-      setBusy(false);
-    }
-  }
+  }, [router, profilePath, isID]);
 
   async function handleGoogleLogin() {
     if (busy) return;
@@ -110,7 +74,7 @@ export default function LoginPage() {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) throw sessionError;
       const options = {
-        redirectTo: `${window.location.origin}/login?next=${encodeURIComponent(getNextPath())}`,
+        redirectTo: window.location.origin + withLocalePrefix("/login", language),
         queryParams: { prompt: "select_account" },
       };
 
@@ -136,60 +100,47 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <main className="min-h-[65vh] flex flex-col items-center justify-center gap-3 bg-[#080711] text-purple-200">
-        <GameCharacter character="veylora" expression="thinking" animation="float" size={76} />
-        <p className="text-xs tracking-[.2em] animate-pulse">{isID ? "MEMERIKSA AKUN..." : "CHECKING ACCOUNT..."}</p>
+      <main className="flex min-h-[calc(100dvh-72px)] items-center justify-center px-5 py-12">
+        <p className="text-sm text-[var(--df-text-secondary)]" role="status">
+          {isID ? "Memeriksa akun..." : "Checking account..."}
+        </p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-[70vh] flex items-center justify-center bg-[#080711] px-4 py-10 text-white">
-      <section className="w-full max-w-md rounded-3xl border border-purple-500/30 bg-[#151020] p-7 text-center shadow-2xl ui-card">
-        <p className="text-[10px] font-bold tracking-[.3em] text-purple-300">DAJJAL FAMILY · GAMING UNIVERSE</p>
-        <h1 className="mt-4 text-3xl font-black ui-title">{isID ? "MASUK KE UNIVERSE" : "ENTER THE UNIVERSE"}</h1>
-        <p className="mt-3 text-sm leading-relaxed text-gray-400">
-          {isID
-            ? "Masuk dengan email dan kata sandi akunmu, atau lanjutkan langsung dengan Google."
-            : "Sign in with your account email and password, or continue directly with Google."}
-        </p>
-        <form onSubmit={handlePasswordLogin} className="mt-7 space-y-3 text-left">
-          <label className="block text-xs font-semibold text-gray-300">
-            {isID ? "EMAIL" : "EMAIL"}
-            <input type="email" autoComplete="username" required value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              className="mt-2 w-full rounded-xl border border-purple-500/20 bg-black/30 px-4 py-3 text-white outline-none focus:border-purple-500" />
-          </label>
-          <label className="block text-xs font-semibold text-gray-300">
-            {isID ? "KATA SANDI" : "PASSWORD"}
-            <input type="password" autoComplete="current-password" required value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-purple-500/20 bg-black/30 px-4 py-3 text-white outline-none focus:border-purple-500" />
-          </label>
-          <button type="submit" disabled={busy}
-            className="w-full rounded-xl border border-purple-400/40 bg-purple-700/30 px-5 py-3 font-bold text-white transition hover:bg-purple-700/50 disabled:opacity-50">
-            {busy ? (isID ? "MEMERIKSA..." : "SIGNING IN...") : (isID ? "MASUK DENGAN EMAIL" : "SIGN IN WITH EMAIL")}
-          </button>
-        </form>
-        <div className="my-5 flex items-center gap-3 text-[10px] font-bold tracking-widest text-gray-500">
-          <span className="h-px flex-1 bg-white/10"></span>
-          {isID ? "ATAU" : "OR"}
-          <span className="h-px flex-1 bg-white/10"></span>
-        </div>
-        <button type="button" onClick={handleGoogleLogin} disabled={busy}
-          className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-white px-5 py-4 font-bold text-gray-900 transition hover:bg-gray-100 disabled:opacity-50">
-          <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
+    <main className="flex min-h-[calc(100dvh-72px)] items-center justify-center px-5 py-12">
+      <section className="w-full max-w-md text-center" aria-labelledby="login-title">
+        <h1 id="login-title" className="text-3xl font-semibold tracking-tight text-[var(--df-text)] sm:text-4xl">
+          {isID ? "Masuk atau Daftar" : "Log in or Sign up"}
+        </h1>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={busy}
+          className="mt-10 flex min-h-16 w-full items-center justify-center gap-3 rounded-full border border-[var(--df-border-strong)] bg-[var(--df-surface)] px-6 py-4 text-base font-semibold text-[var(--df-text)] shadow-sm transition hover:border-[var(--df-primary)] hover:bg-[var(--df-surface-raised)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--df-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--df-bg)] disabled:cursor-wait disabled:opacity-60"
+        >
+          <svg viewBox="0 0 48 48" className="h-6 w-6 shrink-0" aria-hidden="true">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.06 13.22l7.98 6.19C11.93 13.72 17.45 9.5 24 9.5z" transform="translate(0 4)"/>
             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.73 6C44.43 37.95 46.98 31.75 46.98 24.55z"/>
             <path fill="#FBBC05" d="M10.04 28.59A14.4 14.4 0 0 1 9.27 24c0-1.59.27-3.13.77-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.86.92 7.51 2.56 10.78l7.48-6.19z" transform="translate(0 4)"/>
             <path fill="#34A853" d="M24 48c6.47 0 11.9-2.13 15.93-5.8l-7.73-6c-2.14 1.45-4.87 2.3-8.2 2.3-6.55 0-12.07-4.22-14.04-10.09l-7.98 6.19C6.51 42.62 14.62 48 24 48z" transform="translate(0 -4)"/>
           </svg>
-          {busy ? (isID ? "MENGHUBUNGKAN..." : "CONNECTING...") : (isID ? "LANJUTKAN DENGAN GOOGLE" : "CONTINUE WITH GOOGLE")}
+          <span>{busy ? (isID ? "Menghubungkan..." : "Connecting...") : "Continue with Google"}</span>
         </button>
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
-        <Link href="/" className="mt-6 inline-block text-xs text-gray-500 hover:text-purple-300">{isID ? "KEMBALI KE BERANDA" : "BACK TO HOME"}</Link>
+
+        <p className="mt-6 text-sm text-[var(--df-text-secondary)]">
+          {isID ? "Satu akun untuk semua fitur" : "One account for all features"}
+        </p>
+
+        {error && (
+          <p role="alert" className="mt-6 rounded-xl border border-[var(--df-danger)]/30 bg-[var(--df-danger)]/10 px-4 py-3 text-sm text-[var(--df-danger)]">
+            {error}
+          </p>
+        )}
       </section>
     </main>
   );
+
 }
