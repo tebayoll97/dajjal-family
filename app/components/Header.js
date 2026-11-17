@@ -48,7 +48,7 @@ const copy = {
     profile: "Profil",
     admin: "Admin",
     knowledge: "Pengetahuan",
-    tools: "Tools",
+    tools: "Alat",
     settings: "Pengaturan",
     business: "Bisnis",
     community: "Komunitas",
@@ -100,7 +100,8 @@ export default function Header() {
   const isWeddingInvitation = pathname.startsWith("/df/wedding-anak-dajjal");
   const [isAdmin, setIsAdmin] = useState(false);
   const [navigationOpen, setNavigationOpen] = useState(false);
-  const [openGroups, setOpenGroups] = useState({ gaming: true });
+  const [openGroup, setOpenGroup] = useState(null);
+  const navigationHistoryRef = useRef(false);
   const [portalReady, setPortalReady] = useState(false);
   const navigationRef = useRef(null);
   const triggerRef = useRef(null);
@@ -151,19 +152,50 @@ export default function Header() {
     if (!navigationOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    window.history.pushState({ ...(window.history.state || {}), dfNavigationOpen: true }, "");
+    navigationHistoryRef.current = true;
     function handleKey(event) {
-      if (event.key === "Escape") setNavigationOpen(false);
+      if (event.key === "Escape") closeNavigation();
+    }
+    function handlePopState() {
+      if (navigationHistoryRef.current) {
+        navigationHistoryRef.current = false;
+        setNavigationOpen(false);
+      }
     }
     document.addEventListener("keydown", handleKey);
+    window.addEventListener("popstate", handlePopState);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKey);
+      window.removeEventListener("popstate", handlePopState);
       triggerRef.current?.focus();
     };
   }, [navigationOpen]);
 
+  function closeNavigation() {
+    setNavigationOpen(false);
+    if (navigationHistoryRef.current) {
+      navigationHistoryRef.current = false;
+      window.history.back();
+    }
+  }
+
+  function navigateFromDrawer() {
+    if (navigationHistoryRef.current) {
+      navigationHistoryRef.current = false;
+      window.history.replaceState(
+        Object.fromEntries(Object.entries(window.history.state || {}).filter(([key]) => key !== "dfNavigationOpen")),
+        "",
+        window.location.href
+      );
+    }
+    setNavigationOpen(false);
+  }
+
   useEffect(() => {
     setNavigationOpen(false);
+    setOpenGroup(null);
   }, [pathname]);
 
   function isActive(route) {
@@ -172,9 +204,6 @@ export default function Header() {
   }
 
   const navigationGroups = [
-    { id: "home", label: t.home, icon: "home", items: [
-      { label: t.home, route: "/", icon: "home" },
-    ]},
     { id: "gaming", label: t.games, icon: "games", items: [
       { label: t.gameLibrary, route: "/games", icon: "games" },
       { label: t.mamahNgamuk, route: "/games/mamah-ngamuk", icon: "games" },
@@ -196,6 +225,7 @@ export default function Header() {
       { label: t.universe, route: "/df", icon: "universe" },
     ]},
   ];
+  const activeGroupId = navigationGroups.find((group) => group.items.some((item) => isActive(item.route)))?.id || null;
   const adminItems = [
     { label: t.admin, route: "/admin", icon: "profile" },
     { label: t.adminUsers, route: "/admin/players", icon: "profile" },
@@ -250,7 +280,7 @@ export default function Header() {
           type="button"
           className="df-mobile-navigation-backdrop"
           aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"}
-          onClick={() => setNavigationOpen(false)}
+          onClick={closeNavigation}
         />
         <nav
           ref={navigationRef}
@@ -262,28 +292,28 @@ export default function Header() {
         >
           <div className="df-site-navigation-top">
             <span className="df-site-navigation-brand">DAJJAL FAMILY</span>
-            <button type="button" className="df-site-navigation-close" aria-label={t.close} onClick={() => setNavigationOpen(false)}>
+            <button type="button" className="df-site-navigation-close" aria-label={t.close} onClick={closeNavigation}>
               <span aria-hidden="true">×</span>
             </button>
           </div>
           <div className="df-site-navigation-content">
-            <NavigationProfileCard onNavigate={() => setNavigationOpen(false)} />
+            <NavigationProfileCard onNavigate={navigateFromDrawer} />
             <p className="df-site-navigation-heading">{t.main}</p>
             <div className="df-site-navigation-groups">
               {navigationGroups.map((group) => {
-                const expanded = Boolean(openGroups[group.id]) || group.items.some((item) => isActive(item.route));
+                const expanded = (openGroup === null ? activeGroupId === group.id : openGroup === group.id);
                 const groupId = `df-navigation-group-${group.id}`;
                 return (
                   <section className="df-site-navigation-group" key={group.id}>
                     <button type="button" className="df-site-navigation-group-trigger" aria-expanded={expanded} aria-controls={groupId}
-                      onClick={() => setOpenGroups((current) => ({ ...current, [group.id]: !current[group.id] }))}>
+                      onClick={() => setOpenGroup((current) => current === group.id ? null : group.id)}>
                       <NavigationIcon name={group.icon} />
                       <span>{group.label}</span>
                       <span className="df-site-navigation-chevron" aria-hidden="true">{expanded ? "−" : "+"}</span>
                     </button>
                     {expanded && <div id={groupId} className="df-site-navigation-submenu">
                       {group.items.map((item) => (
-                        <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={() => setNavigationOpen(false)}>
+                        <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}>
                           <span>{item.label}</span>
                           {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
                         </Link>
@@ -293,12 +323,12 @@ export default function Header() {
                 );
               })}
               {isAdmin && <section className="df-site-navigation-group">
-                <button type="button" className="df-site-navigation-group-trigger" aria-expanded={Boolean(openGroups.admin) || adminItems.some((item) => isActive(item.route))} aria-controls="df-navigation-group-admin"
-                  onClick={() => setOpenGroups((current) => ({ ...current, admin: !current.admin }))}>
-                  <NavigationIcon name="profile" /><span>{t.admin}</span><span className="df-site-navigation-chevron" aria-hidden="true">{openGroups.admin ? "−" : "+"}</span>
+                <button type="button" className="df-site-navigation-group-trigger" aria-expanded={(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")} aria-controls="df-navigation-group-admin"
+                  onClick={() => setOpenGroup((current) => current === "admin" ? null : "admin")}>
+                  <NavigationIcon name="profile" /><span>{t.admin}</span><span className="df-site-navigation-chevron" aria-hidden="true">{(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? "−" : "+"}</span>
                 </button>
-                {(openGroups.admin || adminItems.some((item) => isActive(item.route))) && <div id="df-navigation-group-admin" className="df-site-navigation-submenu">
-                  {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={() => setNavigationOpen(false)}><span>{item.label}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
+                {(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") && <div id="df-navigation-group-admin" className="df-site-navigation-submenu">
+                  {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}><span>{item.label}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
                 </div>}
               </section>}
             </div>
