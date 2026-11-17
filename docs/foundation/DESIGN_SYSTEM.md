@@ -467,3 +467,10 @@ The Design System remains **Draft — Pending Approval** until live visual check
 Standard desktop routes now use a shared two-column workspace with a persistent left navigation sidebar; the Home page keeps its established sidebar composition. On mobile, a compact primary navigation row (Beranda, Game, Profil) sits below the header and the sidebar-style navigation is available from the mobile navigation trigger. The desktop header has no navigation trigger beside the DF brand.
 
 The Profile identity area groups the avatar with the page title, player nickname, server, and edit action. Profile page surfaces consume semantic theme tokens, and the duplicate Google-connected panel has been removed while email and last sign-in details remain in Account Security. This is an implementation update, not design-system approval; both themes, desktop/mobile, keyboard behavior, and live route QA remain pending.
+
+
+## 9.2 First global shell and homepage adoption
+
+The Homepage, shared Header, standard GlobalSidebar, and shared Footer are the first migration boundary for the Global Theme Preset Engine. Their color-bearing styles must consume root semantic tokens supplied by the active registry preset. Homepage-specific layout remains scoped to `.df-home-app`, while visual values (surfaces, text, borders, actions, focus, decorative gradients/glows, and overlays) are resolved through tokens. Shared navigation and footer components use the same token contract on desktop and mobile.
+
+Do not add independent Light/Dark color overrides or preset-specific hardcoded values to these migrated areas. New identity presets must be implemented in `themeTokens.js`, not in page CSS. Wedding-only overrides, Couple page identity, and immersive Games are explicit isolation boundaries. Implementation is pending visual, keyboard, responsive, and four-way preset/mode QA.
