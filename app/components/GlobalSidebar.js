@@ -6,8 +6,8 @@ import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
 
 const labels = {
-  id: { main: "MENU UTAMA", tools: "ALAT", home: "Beranda", games: "Game", universe: "Universe Keluarga", profile: "Profil", settings: "Pengaturan", promise: "JANJI DF", promiseText: "Semesta digital yang terus berkembang, dibangun dari gagasan, pengalaman, dan manusia.", world: "DUNIA PENUH KEMUNGKINAN", worldText: "Jelajahi gagasan, pengalaman, dan proyek yang terus berkembang." },
-  en: { main: "MAIN MENU", tools: "TOOLS", home: "Home", games: "Games", universe: "Family Universe", profile: "Profile", settings: "Settings", promise: "THE DF PROMISE", promiseText: "A growing digital universe built around ideas, experiences, and people.", world: "A WORLD OF POSSIBILITIES", worldText: "Explore ideas, experiences, and projects made to grow." },
+  id: { main: "MENU UTAMA", gaming: "Gaming", library: "Perpustakaan Game", mamah: "Mamah Ngamuk", run: "Lari & Lompat", knowledge: "Pengetahuan", blog: "Blog", tools: "Tools", products: "Produk Digital", business: "Bisnis", community: "Komunitas", settings: "Pengaturan", universe: "Universe Keluarga", profile: "Profil", promise: "JANJI DF", promiseText: "Semesta digital yang terus berkembang, dibangun dari gagasan, pengalaman, dan manusia.", world: "DUNIA PENUH KEMUNGKINAN", worldText: "Jelajahi gagasan, pengalaman, dan proyek yang terus berkembang." },
+  en: { main: "MAIN MENU", gaming: "Gaming", library: "Game Library", mamah: "Mamah Ngamuk", run: "Run & Jump", knowledge: "Knowledge", blog: "Blog", tools: "Tools", products: "Digital Products", business: "Business", community: "Community", settings: "Settings", universe: "Family Universe", profile: "Profile", promise: "THE DF PROMISE", promiseText: "A growing digital universe built around ideas, experiences, and people.", world: "A WORLD OF POSSIBILITIES", worldText: "Explore ideas, experiences, and projects made to grow." },
 };
 
 export default function GlobalSidebar() {
@@ -16,14 +16,15 @@ export default function GlobalSidebar() {
   const t = labels[language] || labels.id;
   const groups = [
     { title: t.main, items: [
-      { label: t.home, route: "/", icon: "⌂" },
-      { label: t.games, route: "/games", icon: "▣" },
-      { label: t.universe, route: "/df", icon: "▤" },
-      { label: t.profile, route: "/profile", icon: "◎" },
+      { label: t.gaming, route: "/games", icon: "🎮" },
+      { label: t.knowledge, route: "/knowledge", icon: "✦" },
+      { label: t.blog, route: "/blog", icon: "▤" },
+      { label: t.products, route: "/digital-products", icon: "◇" },
+      { label: t.business, route: "/business", icon: "⌂" },
+      { label: t.community, route: "/community", icon: "◎" },
+      { label: t.universe, route: "/df", icon: "◈" },
     ]},
-    { title: t.tools, items: [
-      { label: t.settings, route: "/settings", icon: "⚙" },
-    ]},
+    { title: t.tools, items: [{ label: t.settings, route: "/settings", icon: "⚙" }] },
   ];
   const active = (route) => route === "/" ? pathname === "/" : pathname === route || pathname.startsWith(route + "/");
   return (
