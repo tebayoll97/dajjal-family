@@ -142,3 +142,40 @@
 @media(prefers-reduced-motion:reduce){
   .df-home-app *{scroll-behavior:auto;animation-duration:.01ms;transition-duration:.01ms}
 }
+
+
+/* Preset-aware homepage identity details. Keep this layer scoped to Home. */
+.df-home-app{
+  --df-home-brand-gradient:var(--df-home-brand-gradient, var(--df-gradient-brand));
+  --df-home-brand-glow:var(--df-home-brand-glow, var(--df-primary-soft));
+  --df-home-orbit:var(--df-home-orbit, var(--df-border-strong));
+  --df-home-orbit-accent:var(--df-home-orbit-accent, var(--df-accent));
+  background:
+    radial-gradient(ellipse at 52% -20%,var(--df-home-brand-glow),transparent 45%),
+    var(--df-home-bg);
+}
+.df-home-app .df-welcome h1 em,
+.df-home-app .df-feature-strip h2 em{
+  background:var(--df-home-brand-gradient);
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.df-home-app .df-welcome-glow{
+  background:var(--df-home-brand-glow);
+}
+.df-home-app .df-orbit{
+  border-color:var(--df-home-orbit);
+}
+.df-home-app .df-orbit-dot{
+  background:var(--df-home-orbit-accent);
+  box-shadow:0 0 18px color-mix(in srgb,var(--df-home-orbit-accent) 55%,transparent);
+}
+.df-home-app .df-orbit-core{
+  background:linear-gradient(145deg,var(--df-home-action-soft),color-mix(in srgb,var(--df-home-accent) 12%,transparent));
+}
+.df-home-app .df-category-card:focus-visible,
+.df-home-app .df-primary-button:focus-visible,
+.df-home-app .df-secondary-button:focus-visible{
+  outline-color:var(--df-home-focus);
+}
