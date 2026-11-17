@@ -135,7 +135,7 @@
 .df-home-app .df-mobile-drawer .df-nav-link:hover{color:var(--df-home-text);background:var(--df-home-action-soft)}
 .df-home-app :is(a,button):focus-visible{outline:3px solid var(--df-home-focus);outline-offset:3px}
 .df-home-app .df-skip-link{background:var(--df-home-action);color:var(--df-on-primary)}
-.df-home-app .df-drawer-layer{background:rgba(8,7,17,.64)}
+.df-home-app .df-drawer-layer{background:color-mix(in srgb,var(--df-bg) 72%,transparent)}
 .df-home-app .df-orbit{border-color:var(--df-home-border-strong)}
 .df-home-app .df-orbit-core{background:var(--df-home-action-soft);color:var(--df-home-action);border:1px solid var(--df-home-border-strong)}
 .df-home-app .df-orbit-dot{background:var(--df-home-accent)}
@@ -182,7 +182,6 @@
   --df-home-line:var(--df-border);
   --df-home-purple:var(--df-primary);
   --df-home-cyan:var(--df-accent);
-  --df-home-brand-gradient:var(--df-home-brand-gradient);
 }
 .df-home-app .df-sidebar {
   background:var(--df-home-surface);
