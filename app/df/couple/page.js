@@ -206,24 +206,32 @@ export default function CoupleProfilePage() {
           </div>
           <div className="df-couple-character-grid">
             <article className="df-couple-character-card" data-character="dajjal">
-              <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.dajjal, t.dajjalTitle)} aria-label={t.openPhoto + ": " + t.dajjalTitle}>
-                <img src={photos.dajjal} alt={t.dajjalTitle + " character render"} loading="lazy" />
-              </button>
-              <div className="df-couple-character-copy">
+              <div className="df-couple-character-heading">
                 <p className="df-couple-character-role">{t.dajjalRole}</p>
-                <h3>{t.dajjalTitle}</h3>
-                <p>{t.dajjalDescription}</p>
+              </div>
+              <div className="df-couple-character-body">
+                <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.dajjal, t.dajjalTitle)} aria-label={t.openPhoto + ": " + t.dajjalTitle}>
+                  <img src={photos.dajjal} alt={t.dajjalTitle + " character render"} loading="lazy" />
+                </button>
+                <div className="df-couple-character-copy">
+                  <h3>{t.dajjalTitle}</h3>
+                  <p>{t.dajjalDescription}</p>
+                </div>
               </div>
               <span className="df-couple-character-index" aria-hidden="true">01</span>
             </article>
             <article className="df-couple-character-card" data-character="veylora">
-              <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.veylora, t.veyloraTitle)} aria-label={t.openPhoto + ": " + t.veyloraTitle}>
-                <img src={photos.veylora} alt={t.veyloraTitle + " character render"} loading="lazy" />
-              </button>
-              <div className="df-couple-character-copy">
+              <div className="df-couple-character-heading">
                 <p className="df-couple-character-role">{t.veyloraRole}</p>
-                <h3>{t.veyloraTitle}</h3>
-                <p>{t.veyloraDescription}</p>
+              </div>
+              <div className="df-couple-character-body">
+                <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.veylora, t.veyloraTitle)} aria-label={t.openPhoto + ": " + t.veyloraTitle}>
+                  <img src={photos.veylora} alt={t.veyloraTitle + " character render"} loading="lazy" />
+                </button>
+                <div className="df-couple-character-copy">
+                  <h3>{t.veyloraTitle}</h3>
+                  <p>{t.veyloraDescription}</p>
+                </div>
               </div>
               <span className="df-couple-character-index" aria-hidden="true">02</span>
             </article>
