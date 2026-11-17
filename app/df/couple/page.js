@@ -138,8 +138,9 @@ export default function CoupleProfilePage() {
     const slide = track?.children[index];
     if (!track || !slide) return;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const targetLeft = slide.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
     track.scrollTo({
-      left: slide.offsetLeft - track.offsetLeft,
+      left: targetLeft,
       behavior: reduceMotion ? "auto" : "smooth",
     });
   };
