@@ -726,5 +726,13 @@ The first implementation pass applies the published global preset token contract
 This is a source implementation milestone, not a declaration of completed visual QA. Verify both presets in both modes, responsive breakpoints, keyboard focus, contrast, navigation states, and page isolation before marking the Design System fully adopted. Avoid adding page-local color declarations to these migrated areas; extend the registry token maps instead.
 
 
+### Shared navigation, footer, and contextual settings rules — 2026-11-18
+- All visitor-facing navigation labels and badges must be localized for Indonesian and English; do not add a one-language-only menu item.
+- The Family Universe navigation may expose the public Anak Dajjal wedding invitation at `/df/wedding-anak-dajjal`, labeled “Pernikahan Anak Dajjal” (ID) and “Anak Dajjal's Wedding” (EN), with a localized “Acara” / “Event” badge.
+- The event badge is a shared Global Theme Preset component and must consume semantic badge color tokens from every global preset; honor `prefers-reduced-motion`.
+- Admin navigation exposes the existing Theme Preset Manager at `/admin/theme` using localized labels and existing server-verified admin access.
+- There is no general-purpose visitor Settings page. Retired `/settings` requests redirect to Profile. Feature settings remain with their owning feature: global theme in Admin, account in Profile, global audio in its controller, gameplay in each game, and wedding-event configuration in Wedding Admin.
+- Keep technical settings modules and identifiers that remain in use; retiring the general page is not permission to delete audio, theme, or event configuration logic.
+
 ### Game Library localization and display-name rules
 The public Game Library must present all visitor-facing copy in the selected locale (`id` or `en`), including each game title, description, category/access label, action, loading state, and dialog. A localized display title does not require changing the stable game slug, route, saved progress identifiers, or database identity. The Indonesian display title for the former Run Jump / Dajjal Family Jump listing is **“Lari! Kebakaran Hutan!”**; its English display title is **“Run! Forest Fire!”**. Keep both names paired to the same existing game route and data identity.
