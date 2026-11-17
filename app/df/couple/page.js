@@ -8,10 +8,12 @@ const photos = {
   veylora: "https://drive.google.com/thumbnail?id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr&sz=w1600",
   cover: "https://drive.google.com/thumbnail?id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_&sz=w1600",
   moments: [
-    "https://drive.google.com/uc?export=view&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
-    "https://drive.google.com/uc?export=view&id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl",
-    "https://drive.google.com/uc?export=view&id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u",
-    "https://drive.google.com/uc?export=view&id=1PsOBoHdLz4jAo3uUcbAbUfLGFSa85mB1",
+    "https://drive.google.com/thumbnail?id=1g4NzLY5eQDYBFp6-N4lLrgSC5ZhWl_Vq&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1PsOBoHdLz4jAo3uUcbAbUfLGFSa85mB1&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1jXKn092u_HPqQykM0h9Y7PuSm1LBNmWL&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl&sz=w1600",
   ],
   portraits: [
     "https://drive.google.com/uc?export=view&id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe",
@@ -65,12 +67,13 @@ const copy = {
     galleryIntro: "Kumpulan potret dan momen dari perjalanan visual mereka.",
     momentsLabel: "COUPLE MOMENTS",
     portraitLabel: "PORTRAIT KARAKTER",
-    momentNames: ["Romantis", "Casual", "Cinematic", "Momen pilihan"],
+    momentNames: ["Veylora capek jalan kaki", "Romantic Dance", "Naik motor hujan", "Selfi di warung", "Suasana Salju", "Di kantin sekolah"],
     portraitNames: ["Portrait Dajjal", "Portrait Veylora"],
     openPhoto: "Buka foto",
     closePhoto: "Tutup foto",
     previousPhoto: "Foto sebelumnya",
     nextPhoto: "Foto berikutnya",
+    slideLabel: "Slide",
   },
   en: {
     eyebrow: "A DAJJAL FAMILY STORY",
@@ -117,12 +120,13 @@ const copy = {
     galleryIntro: "A collection of portraits and moments from their visual journey.",
     momentsLabel: "COUPLE MOMENTS",
     portraitLabel: "CHARACTER PORTRAITS",
-    momentNames: ["Romantic", "Casual", "Cinematic", "Selected moment"],
+    momentNames: ["Veylora is Tired from Walking", "Romantic Dance", "Riding in the Rain", "Selfie at the Food Stall", "Snowy Atmosphere", "At the School Canteen"],
     portraitNames: ["Dajjal portrait", "Veylora portrait"],
     openPhoto: "Open photo",
     closePhoto: "Close photo",
     previousPhoto: "Previous photo",
     nextPhoto: "Next photo",
+    slideLabel: "Slide",
   },
 };
 
@@ -261,7 +265,7 @@ export default function CoupleProfilePage() {
           </div>
           <div className="df-couple-gallery-group">
             <h3>{t.momentsLabel}</h3>
-            <div className="df-couple-moments-carousel">
+            <div className="df-couple-moments-carousel" role="region" aria-roledescription="carousel" aria-label={t.momentsLabel}>
               <div className="df-couple-moments-controls">
                 <span className="df-couple-moments-count" aria-live="polite">
                   {String(activeMoment + 1).padStart(2, "0")} / {String(photos.moments.length).padStart(2, "0")}
@@ -292,10 +296,11 @@ export default function CoupleProfilePage() {
                 ref={momentsTrackRef}
                 onScroll={handleMomentsScroll}
                 aria-label={t.momentsLabel}
+                aria-roledescription="slide list"
                 tabIndex={0}
               >
                 {photos.moments.map((src, index) => (
-                  <button className="df-couple-gallery-item" type="button" key={src} onClick={() => openPhoto(src, t.momentNames[index])} aria-label={t.openPhoto + ": " + t.momentNames[index]}>
+                  <button className="df-couple-gallery-item" type="button" key={src} role="group" aria-roledescription="slide" aria-label={t.slideLabel + " " + (index + 1) + " of " + photos.moments.length + ": " + t.momentNames[index]} onClick={() => openPhoto(src, t.momentNames[index])}>
                     <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
                     <span>{t.momentNames[index]}</span>
                   </button>
@@ -308,7 +313,7 @@ export default function CoupleProfilePage() {
                     className="df-couple-moments-dot"
                     type="button"
                     onClick={() => scrollToMoment(index)}
-                    aria-label={t.openPhoto + ": " + t.momentNames[index]}
+                    aria-label={t.slideLabel + " " + (index + 1) + ": " + t.momentNames[index]}
                     aria-current={activeMoment === index ? "true" : undefined}
                   />
                 ))}
