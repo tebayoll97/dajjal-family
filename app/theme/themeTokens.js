@@ -36,7 +36,7 @@ const coupleTextAndStatus = {
   light: {
     "--df-text":"#19172a","--df-text-secondary":"#55536a","--df-text-muted":"#747188",
     "--df-border":"rgba(91,76,145,.18)","--df-border-strong":"rgba(91,76,145,.28)",
-    "--df-success":"#15803d","--df-warning":"#a16207","--df-danger":"#b91c1c","--df-info":"#0369a1","--df-on-primary":"#ffffff",
+    "--df-success":"#15803d","--df-warning":"#a16207","--df-danger":"#b91c1c","--df-info":"#0369a1","--df-on-primary":"#071521",
   },
 };
 
