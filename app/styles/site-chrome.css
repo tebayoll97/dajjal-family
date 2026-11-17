@@ -225,8 +225,8 @@
 .df-site-navigation-home:hover,.df-site-navigation-home[aria-current="page"]{background:transparent;color:var(--df-text)}
 .df-site-navigation-chevron{display:inline-block;min-width:1rem;text-align:center;font-size:1rem;line-height:1;transform:rotate(0deg);transition:transform 220ms ease,color 220ms ease}
 .df-site-navigation-chevron.is-expanded{transform:rotate(180deg)}
-.df-site-navigation-submenu{display:grid;grid-template-rows:0fr;gap:0;padding:0 .45rem;background:transparent;opacity:0;visibility:hidden;overflow:hidden;transition:grid-template-rows 240ms ease,opacity 180ms ease,padding 240ms ease,visibility 0s linear 240ms}
-.df-site-navigation-submenu[data-expanded="true"]{grid-template-rows:1fr;gap:2px;padding:.3rem .45rem .45rem;opacity:1;visibility:visible;transition:grid-template-rows 240ms ease,opacity 180ms ease,padding 240ms ease}
+.df-site-navigation-submenu{display:grid;gap:0;max-height:0;padding:0 .45rem;background:transparent;opacity:0;visibility:hidden;overflow:hidden;transition:max-height 240ms ease,opacity 180ms ease,padding 240ms ease,visibility 0s linear 240ms}
+.df-site-navigation-submenu[data-expanded="true"]{max-height:420px;gap:2px;padding:.3rem .45rem .45rem;opacity:1;visibility:visible;transition:max-height 240ms ease,opacity 180ms ease,padding 240ms ease}
 .df-site-navigation-submenu>a{min-height:0;overflow:hidden;border-radius:0;background:transparent;transition:color 180ms ease,padding 240ms ease}
 .df-site-navigation-submenu[data-expanded="true"]>a{min-height:42px}
 .df-site-navigation-submenu a:hover,.df-site-navigation-submenu a[aria-current="page"]{background:transparent;color:var(--df-primary)}
