@@ -256,3 +256,139 @@
 }
 :root[data-theme="light"] .df-token-page input::placeholder,
 :root[data-theme="light"] .df-token-page textarea::placeholder { color:var(--df-text-muted); }
+
+
+/* Game Library — all color-bearing values resolve through the active Global Theme Preset. */
+.df-games-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 3vw, 2rem);
+  color: var(--df-text);
+  background: var(--df-bg);
+}
+.df-games-atmosphere {
+  position: absolute;
+  z-index: -1;
+  top: -13rem;
+  left: 50%;
+  width: min(76vw, 46rem);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--df-primary) 15%, transparent), transparent 68%);
+  pointer-events: none;
+}
+.df-games-content { width: min(100%, 68rem); margin-inline: auto; }
+.df-games-intro { max-width: 46rem; margin: 0 auto clamp(2rem, 4vw, 3.25rem); text-align: center; }
+.df-games-eyebrow, .df-library-card-meta, .df-library-access, .df-library-art-chip, .df-games-dialog-eyebrow {
+  font-size: .68rem; font-weight: 850; letter-spacing: .16em; line-height: 1.45;
+}
+.df-games-eyebrow { margin: 0 0 .85rem; color: var(--df-primary); }
+.df-games-intro h1 {
+  margin: 0; color: var(--df-text); font-size: clamp(2rem, 5.4vw, 3.7rem);
+  font-weight: 950; letter-spacing: -.045em; line-height: 1.04; text-wrap: balance;
+}
+.df-games-intro h1 span {
+  color: var(--df-primary); 
+}
+.df-games-lead {
+  max-width: 39rem; margin: 1rem auto 0; color: var(--df-text-secondary);
+  font-size: clamp(.9rem, .84rem + .25vw, 1.05rem); line-height: 1.7;
+}
+.df-games-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2.2vw, 1.5rem); }
+.df-library-card {
+  display: flex; min-width: 0; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--df-border); border-radius: 1.5rem;
+  background: var(--df-surface); color: var(--df-text);
+  box-shadow: var(--df-shadow-md, 0 12px 32px color-mix(in srgb, var(--df-text) 8%, transparent));
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+.df-library-card:hover { border-color: var(--df-primary); transform: translateY(-3px); box-shadow: var(--df-shadow-lg, 0 18px 42px color-mix(in srgb, var(--df-text) 12%, transparent)); }
+.df-library-art {
+  position: relative; display: grid; min-height: clamp(12rem, 24vw, 18rem);
+  place-items: center; overflow: hidden; isolation: isolate;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--df-primary) 28%, var(--df-surface)), var(--df-surface-raised) 62%, var(--df-bg));
+}
+.df-library-art::before, .df-library-art::after {
+  position: absolute; z-index: -1; content: ""; border: 1px solid color-mix(in srgb, var(--df-primary) 35%, transparent); border-radius: 50%;
+}
+.df-library-art::before { width: 17rem; aspect-ratio: 1; }
+.df-library-art::after { width: 12rem; aspect-ratio: 1; }
+.df-library-art-orbit {
+  position: absolute; width: 9rem; aspect-ratio: 1; border-radius: 50%;
+  background: color-mix(in srgb, var(--df-primary) 17%, transparent); filter: blur(1px);
+}
+.df-library-art-symbol {
+  z-index: 1; display: grid; width: clamp(6.5rem, 12vw, 9rem); aspect-ratio: 1;
+  place-items: center; border: 1px solid color-mix(in srgb, var(--df-primary) 42%, var(--df-border));
+  border-radius: 2rem; background: color-mix(in srgb, var(--df-surface) 76%, transparent);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--df-text) 12%, transparent);
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+}
+.df-library-art-chip {
+  position: absolute; bottom: 1rem; left: 1rem; padding: .45rem .7rem;
+  border: 1px solid var(--df-border); border-radius: 999px;
+  color: var(--df-text-secondary); background: color-mix(in srgb, var(--df-surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+.df-library-card-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: clamp(1.1rem, 2.4vw, 1.8rem); }
+.df-library-card-meta { display: flex; align-items: center; gap: .65rem; color: var(--df-text-muted); font-size: .62rem; letter-spacing: .1em; }
+.df-library-index {
+  display: inline-grid; width: 1.8rem; height: 1.8rem; flex: 0 0 auto; place-items: center;
+  border-radius: .55rem; color: var(--df-on-primary); background: var(--df-primary); font-size: .7rem;
+}
+.df-library-card h2 { margin: 1rem 0 0; color: var(--df-text); font-size: clamp(1.35rem, 2.3vw, 1.85rem); font-weight: 950; letter-spacing: -.035em; line-height: 1.15; text-wrap: balance; }
+.df-library-description { margin: .8rem 0 0; color: var(--df-text-secondary); font-size: .92rem; line-height: 1.65; }
+.df-library-access { margin: 1rem 0 1.1rem; color: var(--df-text-muted); font-size: .6rem; letter-spacing: .09em; }
+.df-library-action {
+  display: flex; width: 100%; min-height: 3.15rem; margin-top: auto; align-items: center; justify-content: space-between;
+  gap: .8rem; padding: .85rem 1rem; border: 1px solid var(--df-primary); border-radius: .85rem;
+  color: var(--df-on-primary); background: var(--df-primary); font-size: .8rem; font-weight: 900; letter-spacing: .08em;
+  text-align: left; text-decoration: none; cursor: pointer; transition: background 160ms ease, transform 160ms ease;
+}
+.df-library-action:hover:not(:disabled) { background: var(--df-primary-hover); border-color: var(--df-primary-hover); }
+.df-library-action:active:not(:disabled) { transform: scale(.99); }
+.df-library-action:focus-visible, .df-games-dialog button:focus-visible { outline: 3px solid var(--df-focus); outline-offset: 3px; }
+.df-library-action:disabled { cursor: wait; opacity: .65; }
+.df-games-dialog-backdrop {
+  position: fixed; z-index: 110; inset: 0; display: grid; place-items: center; padding: 1.25rem;
+  background: color-mix(in srgb, var(--df-bg) 84%, transparent); backdrop-filter: blur(12px);
+}
+.df-games-dialog {
+  position: relative; width: min(100%, 27rem); padding: 1.75rem; border: 1px solid var(--df-border-strong);
+  border-radius: 1.5rem; color: var(--df-text); background: var(--df-surface);
+  box-shadow: var(--df-shadow-lg, 0 24px 70px color-mix(in srgb, var(--df-text) 18%, transparent)); text-align: center;
+}
+.df-games-dialog-icon {
+  display: grid; width: 3.75rem; height: 3.75rem; margin: 0 auto 1rem; place-items: center;
+  border: 1px solid var(--df-border); border-radius: 1.1rem; background: var(--df-primary-soft); font-size: 1.7rem;
+}
+.df-games-error-icon { color: var(--df-danger); }
+.df-games-dialog-eyebrow { margin: 0; color: var(--df-text-muted); font-size: .6rem; }
+.df-games-dialog h2 { margin: .5rem 0 0; color: var(--df-text); font-size: 1.25rem; font-weight: 900; }
+.df-games-dialog > p:not(.df-games-dialog-eyebrow) { margin: .85rem 0 0; color: var(--df-text-secondary); font-size: .9rem; line-height: 1.65; }
+.df-games-google-action, .df-games-action-close {
+  display: flex; width: 100%; min-height: 3rem; margin-top: 1.4rem; align-items: center; justify-content: center; gap: .7rem;
+  border: 1px solid var(--df-primary); border-radius: .8rem; color: var(--df-on-primary); background: var(--df-primary);
+  font-size: .82rem; font-weight: 900; cursor: pointer;
+}
+.df-games-google-action svg { width: 1.25rem; height: 1.25rem; }
+.df-games-google-action:disabled { opacity: .6; cursor: wait; }
+.df-games-cancel {
+  width: 100%; min-height: 2.8rem; margin-top: .65rem; border: 1px solid var(--df-border); border-radius: .8rem;
+  color: var(--df-text-secondary); background: var(--df-surface-raised); font-size: .78rem; font-weight: 800; cursor: pointer;
+}
+@media (max-width: 700px) {
+  .df-games-page { padding: 2rem 1rem 3rem; }
+  .df-games-intro { margin-bottom: 1.75rem; }
+  .df-games-grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; max-width: 34rem; margin-inline: auto; }
+  .df-library-art { min-height: 12.5rem; }
+  .df-library-card-body { padding: 1.15rem; }
+  .df-library-card h2 { font-size: clamp(1.35rem, 6vw, 1.7rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-library-card, .df-library-action { transition: none; }
+  .df-library-card:hover { transform: none; }
+}
