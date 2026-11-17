@@ -155,7 +155,9 @@ export default function CoupleProfilePage() {
           <p className="df-couple-subtitle">{t.subtitle}</p>
           <p className="df-couple-intro">{t.intro}</p>
           <button className="df-couple-featured-photo" type="button" onClick={() => openPhoto(photos.cover, t.featuredLabel)} aria-label={t.openPhoto + ": " + t.featuredLabel}>
-            <img src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
+            <img className="df-couple-featured-background" src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
+            <img className="df-couple-featured-character df-couple-featured-dajjal" src={photos.dajjal} alt="" aria-hidden="true" />
+            <img className="df-couple-featured-character df-couple-featured-veylora" src={photos.veylora} alt="" aria-hidden="true" />
             <span>{t.featuredLabel}</span>
           </button>
           <div className="df-couple-metrics" aria-label={t.eyebrow}>
