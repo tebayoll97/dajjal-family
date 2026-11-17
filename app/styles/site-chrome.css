@@ -256,3 +256,87 @@
 .df-site-navigation-submenu a:hover,.df-site-navigation-submenu a[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
 .df-navigation-profile-card{border-radius:0;background:linear-gradient(120deg,var(--df-primary-soft),var(--df-surface-raised));box-shadow:none}
 .df-site-navigation-close{border-radius:0;background:var(--df-surface-raised)}
+
+
+/* Unified navigation finish: compact drawer, rounded brand marks, and clear layered controls. */
+.df-site-brand-mark{
+  display:block;
+  width:42px;
+  height:42px;
+  object-fit:cover;
+  border:1px solid var(--df-border);
+  border-radius:12px;
+  background:var(--df-surface-raised);
+}
+.df-site-navigation-brand-group img{
+  width:34px;
+  height:34px;
+  border:1px solid var(--df-border);
+  border-radius:10px;
+  background:var(--df-surface-raised);
+  object-fit:cover;
+}
+.df-site-navigation-pane{
+  width:80vw;
+  max-width:380px;
+  border-radius:0;
+  background:var(--df-surface-overlay,var(--df-surface));
+  box-shadow:var(--df-shadow-lg);
+}
+.df-site-navigation-group{
+  border:1px solid var(--df-border);
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--df-surface);
+}
+.df-site-navigation-group-trigger{
+  min-height:45px;
+  padding:.55rem .7rem;
+  border-radius:0;
+  background:var(--df-surface-raised);
+  font-size:.82rem;
+}
+.df-site-navigation-group-trigger svg{width:19px;height:19px}
+.df-site-navigation-home{
+  min-height:45px;
+  padding:.55rem .7rem;
+  border:1px solid var(--df-border);
+  border-radius:10px;
+  background:var(--df-surface-raised);
+  font-size:.82rem;
+}
+.df-site-navigation-submenu>a{
+  min-height:40px;
+  padding:.5rem .65rem .5rem 2.45rem;
+  border-radius:8px;
+  font-size:.78rem;
+}
+.df-navigation-profile-card{
+  min-height:66px;
+  padding:.65rem;
+  border-radius:12px;
+  background:linear-gradient(120deg,var(--df-primary-soft),var(--df-surface-raised));
+}
+.df-navigation-profile-copy strong{font-size:.84rem}
+.df-navigation-profile-copy small{font-size:.68rem}
+.df-site-navigation-heading{font-size:.62rem}
+.df-site-navigation-close{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:var(--df-surface-raised);
+}
+@media(max-width:760px){
+  .df-site-navigation-pane{
+    width:80vw;
+    max-width:380px;
+    border-radius:0;
+    padding-right:.8rem;
+    padding-left:.8rem;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .df-site-navigation-pane,.df-mobile-navigation-backdrop,
+  .df-site-navigation-chevron,.df-site-navigation-submenu,
+  .df-site-navigation-submenu>a{animation:none!important;transition:none!important}
+}
