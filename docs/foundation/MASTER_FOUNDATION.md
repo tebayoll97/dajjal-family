@@ -713,3 +713,14 @@ Implement incrementally: (1) identity and account policy contract, (2) feature a
 - Do not force Google as the only provider unless a specific feature has a documented, approved provider requirement.
 - Do not introduce destructive schema changes or alter production data as part of policy adoption.
 - Database migrations, production releases, and irreversible account merges require separate review and explicit approval.
+
+
+## 2.2.2 Global shell and homepage preset adoption — implementation pass 2026-11-18
+
+The first implementation pass applies the published global preset token contract to the public Home experience and shared site chrome:
+- Homepage content surfaces, hero, category cards, actions, decorative identity accents, sidebars, and mobile drawer are scoped under `.df-home-app` and consume `--df-*` semantic tokens.
+- Shared Header, Footer, mobile navigation pane/backdrop, and standard GlobalSidebar use the same root semantic tokens; visitor Light/Dark mode remains independent from the administrator-published identity preset.
+- Legacy homepage Light Mode overrides that forced TECNO-specific values have been removed. The shared body background and theme control now consume active semantic tokens.
+- Couple, Wedding, and immersive Games remain page-owned or isolated. Wedding-specific header overrides remain intentionally scoped to the wedding header.
+
+This is a source implementation milestone, not a declaration of completed visual QA. Verify both presets in both modes, responsive breakpoints, keyboard focus, contrast, navigation states, and page isolation before marking the Design System fully adopted. Avoid adding page-local color declarations to these migrated areas; extend the registry token maps instead.
