@@ -7,7 +7,7 @@ import {
   THEME_MODE_STORAGE_KEY,
   THEME_PALETTE_STORAGE_KEY,
   isThemeMode,
-  isThemePalette,
+  isGlobalThemePalette,
   resolveThemeMode,
 } from "@/app/theme/themeRegistry";
 
@@ -38,7 +38,7 @@ export function ThemeProvider({ children }) {
     const savedMode = localStorage.getItem(THEME_MODE_STORAGE_KEY);
     const savedPalette = localStorage.getItem(THEME_PALETTE_STORAGE_KEY);
     const initialMode = isThemeMode(savedMode) ? savedMode : "system";
-    const initialPalette = isThemePalette(savedPalette) ? savedPalette : DEFAULT_PALETTE_ID;
+    const initialPalette = isGlobalThemePalette(savedPalette) ? savedPalette : DEFAULT_PALETTE_ID;
 
     setThemeModeState(initialMode);
     setPaletteState(initialPalette);
@@ -50,7 +50,7 @@ export function ThemeProvider({ children }) {
       const currentMode = localStorage.getItem(THEME_MODE_STORAGE_KEY);
       const currentPalette = localStorage.getItem(THEME_PALETTE_STORAGE_KEY);
       if (!isThemeMode(currentMode) || currentMode === "system") {
-        const activePalette = isThemePalette(currentPalette) ? currentPalette : DEFAULT_PALETTE_ID;
+        const activePalette = isGlobalThemePalette(currentPalette) ? currentPalette : DEFAULT_PALETTE_ID;
         setTheme(applyTheme("system", activePalette));
       }
     };
@@ -70,7 +70,7 @@ export function ThemeProvider({ children }) {
   };
 
   const setPalette = (nextPalette) => {
-    if (!isThemePalette(nextPalette)) return;
+    if (!isGlobalThemePalette(nextPalette)) return;
     setPaletteState(nextPalette);
     localStorage.setItem(THEME_PALETTE_STORAGE_KEY, nextPalette);
     applyTheme(themeMode, nextPalette);

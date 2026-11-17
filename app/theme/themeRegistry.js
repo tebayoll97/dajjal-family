@@ -49,6 +49,10 @@ export function isThemePalette(value) {
   return typeof value === "string" && Object.prototype.hasOwnProperty.call(THEME_REGISTRY, value);
 }
 
+export function isGlobalThemePalette(value) {
+  return isThemePalette(value) && THEME_REGISTRY[value].scope === "global";
+}
+
 export function resolveThemeMode(value) {
   if (value === "dark" || value === "light") return value;
   if (typeof window === "undefined") return "dark";

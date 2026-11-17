@@ -2,6 +2,8 @@
  * Semantic token maps for built-in global palettes.
  * Page-owned palettes (such as Couple) remain scoped in their page CSS.
  */
+import { DEFAULT_PALETTE_ID, THEME_REGISTRY } from "./themeRegistry";
+
 export const THEME_TOKEN_MAPS = Object.freeze({
   default: Object.freeze({
     dark: Object.freeze({
@@ -52,6 +54,8 @@ export const THEME_TOKEN_MAPS = Object.freeze({
 });
 
 export function getThemeTokens(palette, mode) {
-  const selected = THEME_TOKEN_MAPS[palette] || THEME_TOKEN_MAPS.default;
+  const entry = THEME_REGISTRY[palette];
+  const mapId = entry?.scope === "global" ? entry.tokenMap : THEME_REGISTRY[DEFAULT_PALETTE_ID].tokenMap;
+  const selected = THEME_TOKEN_MAPS[mapId] || THEME_TOKEN_MAPS.default;
   return selected[mode] || selected.dark;
 }
