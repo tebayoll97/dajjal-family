@@ -152,6 +152,7 @@ export default function Header() {
   ];
 
   return (
+    <>
     <header className={"df-site-header" + (isWeddingInvitation ? " df-site-header--wedding" : "")}>
       <div className="df-site-header-inner">
         <div className="df-site-brand-group">
@@ -244,7 +245,6 @@ export default function Header() {
       </div>,
       document.body
     )}
-    {!pathname.startsWith("/df/wedding-anak-dajjal") && null}
-    </header>
+    </>
   );
 }
