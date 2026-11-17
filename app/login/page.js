@@ -40,8 +40,7 @@ export default function LoginPage() {
           return;
         }
 
-        // Google sign-ins need the player bootstrap; existing password accounts
-        // already have their linked player record and must not be re-created.
+        // Ensure the universal player profile exists for this Google identity.
         if (isGoogleUser(session.user)) {
           const response = await fetch("/api/player/ensure", {
             method: "POST",
@@ -93,7 +92,9 @@ export default function LoginPage() {
       });
       if (oauthError) throw oauthError;
     } catch (err) {
-      setError(err.message || "Google login failed.");
+      setError(isID
+        ? "Tidak dapat membuka login Google. Silakan coba lagi."
+        : "Could not start Google sign-in. Please try again.");
       setBusy(false);
     }
   }
