@@ -1,6 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
+
+const photos = {
+  dajjal: "https://drive.google.com/uc?export=download&id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed",
+  veylora: "https://drive.google.com/uc?export=download&id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr",
+  cover: "https://drive.google.com/uc?export=download&id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_",
+  moments: [
+    "https://drive.google.com/uc?export=download&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
+    "https://drive.google.com/uc?export=download&id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl",
+    "https://drive.google.com/uc?export=download&id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u",
+    "https://drive.google.com/uc?export=download&id=1PsOBoHdLz4jAo3uUcbAbUfLGFSa85mB1",
+  ],
+  portraits: [
+    "https://drive.google.com/uc?export=download&id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe",
+    "https://drive.google.com/uc?export=download&id=1rL-oAVIsUkD_pfkZpn2YmnCJr6inT7Ax",
+  ],
+};
 
 const copy = {
   id: {
@@ -12,10 +29,10 @@ const copy = {
     intro: "Ruang khusus untuk mengenal identitas, dunia visual, dan cerita Dajjal bersama Veylora.",
     identityLabel: "IDENTITAS KARAKTER",
     dajjalTitle: "Dajjal",
-    dajjalRole: "THE CRIMSON PRESENCE",
-    dajjalDescription: "Identitas visual dengan nuansa merah gelap, hitam, dan atmosfer sinematik yang kuat.",
     veyloraTitle: "Veylora",
+    dajjalRole: "THE CRIMSON PRESENCE",
     veyloraRole: "THE AZURE PRESENCE",
+    dajjalDescription: "Identitas visual dengan nuansa merah gelap, hitam, dan atmosfer sinematik yang kuat.",
     veyloraDescription: "Identitas visual dengan nuansa biru terang, putih, dan atmosfer yang bercahaya.",
     storyEyebrow: "SATU CERITA BERSAMA",
     storyTitle: "Dua identitas, satu ruang untuk bercerita.",
@@ -42,6 +59,18 @@ const copy = {
     veyloraEyes: "Biru",
     veyloraOutfit: "Putih-biru dengan detail emas dan fur",
     veyloraPalette: "Azure · White",
+    featuredLabel: "POTRET UTAMA",
+    galleryEyebrow: "GALERI BERSAMA",
+    galleryTitle: "Momen Dajjal × Veylora",
+    galleryIntro: "Kumpulan potret dan momen dari perjalanan visual mereka.",
+    momentsLabel: "COUPLE MOMENTS",
+    portraitLabel: "PORTRAIT KARAKTER",
+    momentNames: ["Romantis", "Casual", "Cinematic", "Momen pilihan"],
+    portraitNames: ["Portrait Dajjal", "Portrait Veylora"],
+    openPhoto: "Buka foto",
+    closePhoto: "Tutup foto",
+    previousPhoto: "Foto sebelumnya",
+    nextPhoto: "Foto berikutnya",
   },
   en: {
     eyebrow: "A DAJJAL FAMILY STORY",
@@ -52,10 +81,10 @@ const copy = {
     intro: "A dedicated space to explore the identities, visual worlds, and shared story of Dajjal and Veylora.",
     identityLabel: "CHARACTER IDENTITIES",
     dajjalTitle: "Dajjal",
-    dajjalRole: "THE CRIMSON PRESENCE",
-    dajjalDescription: "A visual identity shaped by deep red, black, and a bold cinematic atmosphere.",
     veyloraTitle: "Veylora",
+    dajjalRole: "THE CRIMSON PRESENCE",
     veyloraRole: "THE AZURE PRESENCE",
+    dajjalDescription: "A visual identity shaped by deep red, black, and a bold cinematic atmosphere.",
     veyloraDescription: "A visual identity shaped by bright blue, white, and a luminous atmosphere.",
     storyEyebrow: "ONE SHARED STORY",
     storyTitle: "Two identities, one space to tell their story.",
@@ -82,12 +111,36 @@ const copy = {
     veyloraEyes: "Blue",
     veyloraOutfit: "White-blue with gold and fur details",
     veyloraPalette: "Azure · White",
+    featuredLabel: "FEATURED PORTRAIT",
+    galleryEyebrow: "SHARED GALLERY",
+    galleryTitle: "Dajjal × Veylora moments",
+    galleryIntro: "A collection of portraits and moments from their visual journey.",
+    momentsLabel: "COUPLE MOMENTS",
+    portraitLabel: "CHARACTER PORTRAITS",
+    momentNames: ["Romantic", "Casual", "Cinematic", "Selected moment"],
+    portraitNames: ["Dajjal portrait", "Veylora portrait"],
+    openPhoto: "Open photo",
+    closePhoto: "Close photo",
+    previousPhoto: "Previous photo",
+    nextPhoto: "Next photo",
   },
 };
 
 export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
+  const [activePhoto, setActivePhoto] = useState(null);
+
+  useEffect(() => {
+    if (!activePhoto) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setActivePhoto(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activePhoto]);
+
+  const openPhoto = (src, alt) => setActivePhoto({ src, alt });
 
   return (
     <main className="df-couple-page">
@@ -101,9 +154,10 @@ export default function CoupleProfilePage() {
           </h1>
           <p className="df-couple-subtitle">{t.subtitle}</p>
           <p className="df-couple-intro">{t.intro}</p>
-          <div className="df-couple-orbit" aria-hidden="true">
-            <span className="df-couple-orbit-core">D <i>×</i> V</span>
-          </div>
+          <button className="df-couple-featured-photo" type="button" onClick={() => openPhoto(photos.cover, t.featuredLabel)} aria-label={t.openPhoto + ": " + t.featuredLabel}>
+            <img src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
+            <span>{t.featuredLabel}</span>
+          </button>
           <div className="df-couple-metrics" aria-label={t.eyebrow}>
             <div><strong>{t.characterValue}</strong><span>{t.characters}</span></div>
             <div><strong>{t.universeValue}</strong><span>{t.universe}</span></div>
@@ -116,10 +170,11 @@ export default function CoupleProfilePage() {
             <p className="df-couple-eyebrow">{t.identityLabel}</p>
             <h2 id="df-couple-identities">{t.dajjalTitle} &amp; {t.veyloraTitle}</h2>
           </div>
-
           <div className="df-couple-character-grid">
             <article className="df-couple-character-card" data-character="dajjal">
-              <div className="df-couple-character-mark" aria-hidden="true">D</div>
+              <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.dajjal, t.dajjalTitle)} aria-label={t.openPhoto + ": " + t.dajjalTitle}>
+                <img src={photos.dajjal} alt={t.dajjalTitle + " character render"} loading="lazy" />
+              </button>
               <div className="df-couple-character-copy">
                 <p className="df-couple-character-role">{t.dajjalRole}</p>
                 <h3>{t.dajjalTitle}</h3>
@@ -127,9 +182,10 @@ export default function CoupleProfilePage() {
               </div>
               <span className="df-couple-character-index" aria-hidden="true">01</span>
             </article>
-
             <article className="df-couple-character-card" data-character="veylora">
-              <div className="df-couple-character-mark" aria-hidden="true">V</div>
+              <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.veylora, t.veyloraTitle)} aria-label={t.openPhoto + ": " + t.veyloraTitle}>
+                <img src={photos.veylora} alt={t.veyloraTitle + " character render"} loading="lazy" />
+              </button>
               <div className="df-couple-character-copy">
                 <p className="df-couple-character-role">{t.veyloraRole}</p>
                 <h3>{t.veyloraTitle}</h3>
@@ -147,10 +203,7 @@ export default function CoupleProfilePage() {
           </div>
           <div className="df-couple-detail-grid">
             <article className="df-couple-detail-card" data-character="dajjal">
-              <div className="df-couple-detail-heading">
-                <span className="df-couple-detail-index">01 / DAJJAL</span>
-                <h3>{t.dajjalTitle}</h3>
-              </div>
+              <div className="df-couple-detail-heading"><span className="df-couple-detail-index">01 / DAJJAL</span><h3>{t.dajjalTitle}</h3></div>
               <dl>
                 <div><dt>{t.hair}</dt><dd>{t.dajjalHair}</dd></div>
                 <div><dt>{t.eyes}</dt><dd>{t.dajjalEyes}</dd></div>
@@ -159,10 +212,7 @@ export default function CoupleProfilePage() {
               </dl>
             </article>
             <article className="df-couple-detail-card" data-character="veylora">
-              <div className="df-couple-detail-heading">
-                <span className="df-couple-detail-index">02 / VEYLORA</span>
-                <h3>{t.veyloraTitle}</h3>
-              </div>
+              <div className="df-couple-detail-heading"><span className="df-couple-detail-index">02 / VEYLORA</span><h3>{t.veyloraTitle}</h3></div>
               <dl>
                 <div><dt>{t.hair}</dt><dd>{t.veyloraHair}</dd></div>
                 <div><dt>{t.eyes}</dt><dd>{t.veyloraEyes}</dd></div>
@@ -170,6 +220,36 @@ export default function CoupleProfilePage() {
                 <div><dt>{t.palette}</dt><dd>{t.veyloraPalette}</dd></div>
               </dl>
             </article>
+          </div>
+        </section>
+
+        <section className="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
+          <div className="df-couple-section-heading">
+            <p className="df-couple-eyebrow">{t.galleryEyebrow}</p>
+            <h2 id="df-couple-gallery-title">{t.galleryTitle}</h2>
+            <p className="df-couple-gallery-intro">{t.galleryIntro}</p>
+          </div>
+          <div className="df-couple-gallery-group">
+            <h3>{t.momentsLabel}</h3>
+            <div className="df-couple-moments-grid">
+              {photos.moments.map((src, index) => (
+                <button className="df-couple-gallery-item" type="button" key={src} onClick={() => openPhoto(src, t.momentNames[index])} aria-label={t.openPhoto + ": " + t.momentNames[index]}>
+                  <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
+                  <span>{t.momentNames[index]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="df-couple-gallery-group">
+            <h3>{t.portraitLabel}</h3>
+            <div className="df-couple-portraits-grid">
+              {photos.portraits.map((src, index) => (
+                <button className="df-couple-portrait-item" type="button" key={src} onClick={() => openPhoto(src, t.portraitNames[index])} aria-label={t.openPhoto + ": " + t.portraitNames[index]}>
+                  <img src={src} alt={t.portraitNames[index]} loading="lazy" />
+                  <span>{t.portraitNames[index]}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -188,6 +268,16 @@ export default function CoupleProfilePage() {
           <span>DAJJAL FAMILY UNIVERSE</span>
         </footer>
       </div>
+
+      {activePhoto && (
+        <div className="df-couple-lightbox" role="presentation" onClick={() => setActivePhoto(null)}>
+          <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
+            <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto}>×</button>
+            <img src={activePhoto.src} alt={activePhoto.alt} />
+            <p>{activePhoto.alt}</p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
