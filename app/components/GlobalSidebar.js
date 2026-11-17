@@ -13,7 +13,7 @@ export default function GlobalSidebar(){
  const pathname=stripLocalePrefix(usePathname()||"/");const {language}=useLanguage();const t=getNavigationLabels(language);
  const isAdmin=useAdminAccess();const [openGroup,setOpenGroup]=useState(null);
  const groups=[...getNavigationGroups(language),...(isAdmin?[getAdminNavigationGroup(language)]:[])];
- const active=route=>route==="/"?pathname==="/":pathname===route||pathname.startsWith(route+"/");
+ const active=route=>{if(route==="/")return pathname==="/";if(pathname===route)return true;const hasMoreSpecific=groups.some(group=>group.items.some(item=>item.route!==route&&item.route.startsWith(route+"/")&&(pathname===item.route||pathname.startsWith(item.route+"/"))));return pathname.startsWith(route+"/")&&!hasMoreSpecific;};
  const activeGroupId=groups.find(group=>group.items.some(item=>active(item.route)))?.id||null;
  return <aside className="df-global-sidebar">
   <Link href={withLocalePrefix("/",language)} className="df-global-sidebar-brand"><Image className="df-global-sidebar-mark" src="/dajjalfamily_icon_192.png" alt="" width={42} height={42}/><span><strong>DAJJAL FAMILY</strong><small>ONE FAMILY. MANY POSSIBILITIES.</small></span></Link>
