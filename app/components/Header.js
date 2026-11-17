@@ -10,6 +10,23 @@ import { useLanguage } from "./LanguageProvider";
 import ThemeToggle from "./ThemeToggle";
 import NavigationProfileCard from "./NavigationProfileCard";
 
+const ADMIN_CACHE_PREFIX = "df_admin_profile_cache_v1:";
+
+function readAdminCache(userId) {
+  try {
+    const value = JSON.parse(window.localStorage.getItem(ADMIN_CACHE_PREFIX + userId) || "null");
+    return value?.userId === userId ? value : null;
+  } catch { return null; }
+}
+
+function writeAdminCache(userId) {
+  try { window.localStorage.setItem(ADMIN_CACHE_PREFIX + userId, JSON.stringify({ userId, label: "Admin", updatedAt: Date.now() })); } catch {}
+}
+
+function clearAdminCache(userId) {
+  try { if (userId) window.localStorage.removeItem(ADMIN_CACHE_PREFIX + userId); } catch {}
+}
+
 const copy = {
   en: {
     navigation: "Navigation",
@@ -99,6 +116,7 @@ export default function Header() {
   const t = copy[language] || copy.id;
   const isWeddingInvitation = pathname.startsWith("/df/wedding-anak-dajjal");
   const [isAdmin, setIsAdmin] = useState(false);
+  const adminUserIdRef = useRef(null);
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
   const navigationHistoryRef = useRef(false);
@@ -113,10 +131,16 @@ export default function Header() {
   useEffect(() => {
     let active = true;
     async function checkAdmin(session) {
-      if (!session?.access_token) {
+      const userId = session?.user?.id || null;
+      if (adminUserIdRef.current && adminUserIdRef.current !== userId) clearAdminCache(adminUserIdRef.current);
+      adminUserIdRef.current = userId;
+      if (!session?.access_token || !userId) {
+        clearAdminCache(userId);
+        clearAdminCache(userId);
         if (active) setIsAdmin(false);
         return;
       }
+      if (active && readAdminCache(userId)) setIsAdmin(true);
       try {
         const response = await fetch("/api/admin/me", {
           method: "GET",
@@ -124,7 +148,10 @@ export default function Header() {
           cache: "no-store",
         });
         const result = await response.json();
-        if (active) setIsAdmin(response.ok && result.success === true);
+        const authorized = response.ok && result.success === true;
+        if (authorized) writeAdminCache(userId);
+        else clearAdminCache(userId);
+        if (active) setIsAdmin(authorized);
       } catch (error) {
         console.error("Admin check failed:", error);
         if (active) setIsAdmin(false);
@@ -137,6 +164,8 @@ export default function Header() {
     initialize();
     const { data: { subscription } } = supabaseAdminClient.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") {
+        clearAdminCache(adminUserIdRef.current);
+        adminUserIdRef.current = null;
         setIsAdmin(false);
         return;
       }
