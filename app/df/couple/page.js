@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
 
 const photos = {
-  dajjal: "https://drive.google.com/thumbnail?id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed&sz=w1600",
-  veylora: "https://drive.google.com/thumbnail?id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr&sz=w1600",
+  dajjal: "https://drive.google.com/thumbnail?id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe&sz=w1600",
+  veylora: "https://drive.google.com/thumbnail?id=1rL-oAVIsUkD_pfkZpn2YmnCJr6inT7Ax&sz=w1600",
   cover: "https://drive.google.com/thumbnail?id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_&sz=w1600",
   moments: [
     "https://drive.google.com/thumbnail?id=1g4NzLY5eQDYBFp6-N4lLrgSC5ZhWl_Vq&sz=w1600",
@@ -16,8 +16,8 @@ const photos = {
     "https://drive.google.com/thumbnail?id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl&sz=w1600",
   ],
   portraits: [
-    "https://drive.google.com/uc?export=view&id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe",
-    "https://drive.google.com/uc?export=view&id=1rL-oAVIsUkD_pfkZpn2YmnCJr6inT7Ax",
+    "https://drive.google.com/thumbnail?id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr&sz=w1600",
   ],
 };
 
