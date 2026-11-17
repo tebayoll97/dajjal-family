@@ -50,11 +50,11 @@ export default async function RootLayout({ children }) {
   const requestedLocale = requestHeaders.get("x-df-locale");
   const initialLanguage = requestedLocale === "en" ? "en" : "id";
   const { preset: initialThemePreset } = await getActiveThemePreset();
-  const themeBootstrap = `(() => { try { const saved = localStorage.getItem("dajjal-family-theme"); const mode = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"); const preset = ${JSON.stringify(initialThemePreset)}; const maps = ${JSON.stringify({ dark: getThemeTokens(initialThemePreset, "dark"), light: getThemeTokens(initialThemePreset, "light") })}; const root = document.documentElement; root.dataset.theme = mode; root.dataset.themeMode = saved === "dark" || saved === "light" ? saved : "system"; root.dataset.themePreset = preset; root.style.colorScheme = mode; Object.entries(maps[mode]).forEach(([key, value]) => root.style.setProperty(key, value)); } catch (_) {} })();`;
+  const themeBootstrap = `(() => { try { const saved = localStorage.getItem("dajjal-family-theme"); const mode = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"); const preset = ${JSON.stringify(initialThemePreset)}; const maps = ${JSON.stringify({ dark: getThemeTokens(initialThemePreset, "dark"), light: getThemeTokens(initialThemePreset, "light") })}; const root = document.documentElement; const browserThemeColor = maps[mode]["--df-bg"]; const themeColorMeta = document.querySelector('meta[name="theme-color"]'); if (themeColorMeta && browserThemeColor) themeColorMeta.setAttribute("content", browserThemeColor); root.dataset.theme = mode; root.dataset.themeMode = saved === "dark" || saved === "light" ? saved : "system"; root.dataset.themePreset = preset; root.style.colorScheme = mode; Object.entries(maps[mode]).forEach(([key, value]) => root.style.setProperty(key, value)); } catch (_) {} })();`;
 
   return (
     <html lang={initialLanguage}>
-      <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
+      <head><meta name="theme-color" content={getThemeTokens(initialThemePreset, "dark")["--df-bg"]} /><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider initialPalette={initialThemePreset}>
           <LanguageProvider initialLanguage={initialLanguage}>
