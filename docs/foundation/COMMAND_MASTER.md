@@ -519,3 +519,17 @@ When requested, implement the account profile experience with display name, uniq
 - RSVP and Guestbook are presented as one Ucapan & Doa journey: player name, attendance (yes/maybe/no), and message/prayer. Existing endpoints and tables remain in use; no DB schema/data changes are authorized or performed.
 - The combined client flow calls RSVP and Guestbook separately and explicitly reports partial success. The RSVP API now accepts maybe; verify the live database column/check constraints before claiming all three attendance states work end-to-end.
 - Source-level only. Build, deployment, and browser QA remain pending under the Vercel quota pause.
+
+## 23. Login experience decision — 2026-11-17
+
+The owner approved a simplified Dajjal Family login experience:
+
+- The login page presents only the heading **“Masuk atau Daftar”** (English: **“Log in or Sign up”**), one **“Continue with Google”** action, and the supporting line **“Satu akun untuk semua fitur”** (English: **“One account for all features”**).
+- Google OAuth is the only sign-in method presented in the login UI. Do not display email/password, phone, username, Apple, or other alternative sign-in methods unless the owner explicitly changes this decision.
+- A visitor with an existing non-anonymous authenticated session who opens Login is redirected to their localized personal Profile route.
+- After successful Google OAuth, complete the existing Google player-provisioning flow where required, preserve the canonical Auth User ↔ Player ID relationship, then redirect to the localized personal Profile route.
+- Preserve anonymous-to-Google identity linking where an existing anonymous player session is being upgraded; do not create a second player identity or silently merge accounts.
+- Keep the page bilingual (`/id` and `/en`), compatible with the global Light/Dark theme tokens, responsive, accessible, and noindex/private.
+- Keep the global header controls for language and theme; remove the workspace sidebar and footer from the Login route so the authentication surface stays focused.
+- This decision changes the visible Login UI, not Supabase provider configuration, database schema, account identity rules, or public access policy. Any provider/configuration or database change requires separate review and authorization.
+
