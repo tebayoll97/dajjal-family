@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
 
 const photos = {
@@ -130,6 +130,35 @@ export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
+  const momentsTrackRef = useRef(null);
+  const [activeMoment, setActiveMoment] = useState(0);
+
+  const scrollToMoment = (index) => {
+    const track = momentsTrackRef.current;
+    const slide = track?.children[index];
+    if (!track || !slide) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({
+      left: slide.offsetLeft - track.offsetLeft,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  };
+
+  const handleMomentsScroll = () => {
+    const track = momentsTrackRef.current;
+    if (!track) return;
+    const trackLeft = track.getBoundingClientRect().left;
+    let closestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+    Array.from(track.children).forEach((slide, index) => {
+      const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+    setActiveMoment((current) => current === closestIndex ? current : closestIndex);
+  };
 
   useEffect(() => {
     if (!activePhoto) return undefined;
@@ -231,13 +260,58 @@ export default function CoupleProfilePage() {
           </div>
           <div className="df-couple-gallery-group">
             <h3>{t.momentsLabel}</h3>
-            <div className="df-couple-moments-grid">
-              {photos.moments.map((src, index) => (
-                <button className="df-couple-gallery-item" type="button" key={src} onClick={() => openPhoto(src, t.momentNames[index])} aria-label={t.openPhoto + ": " + t.momentNames[index]}>
-                  <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
-                  <span>{t.momentNames[index]}</span>
-                </button>
-              ))}
+            <div className="df-couple-moments-carousel">
+              <div className="df-couple-moments-controls">
+                <span className="df-couple-moments-count" aria-live="polite">
+                  {String(activeMoment + 1).padStart(2, "0")} / {String(photos.moments.length).padStart(2, "0")}
+                </span>
+                <div className="df-couple-moments-arrows">
+                  <button
+                    className="df-couple-moments-arrow"
+                    type="button"
+                    onClick={() => scrollToMoment(Math.max(0, activeMoment - 1))}
+                    disabled={activeMoment === 0}
+                    aria-label={t.previousPhoto}
+                  >
+                    <span aria-hidden="true">‹</span>
+                  </button>
+                  <button
+                    className="df-couple-moments-arrow"
+                    type="button"
+                    onClick={() => scrollToMoment(Math.min(photos.moments.length - 1, activeMoment + 1))}
+                    disabled={activeMoment === photos.moments.length - 1}
+                    aria-label={t.nextPhoto}
+                  >
+                    <span aria-hidden="true">›</span>
+                  </button>
+                </div>
+              </div>
+              <div
+                className="df-couple-moments-track"
+                ref={momentsTrackRef}
+                onScroll={handleMomentsScroll}
+                aria-label={t.momentsLabel}
+                tabIndex={0}
+              >
+                {photos.moments.map((src, index) => (
+                  <button className="df-couple-gallery-item" type="button" key={src} onClick={() => openPhoto(src, t.momentNames[index])} aria-label={t.openPhoto + ": " + t.momentNames[index]}>
+                    <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
+                    <span>{t.momentNames[index]}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="df-couple-moments-pagination" aria-label={t.momentsLabel}>
+                {photos.moments.map((src, index) => (
+                  <button
+                    key={src}
+                    className="df-couple-moments-dot"
+                    type="button"
+                    onClick={() => scrollToMoment(index)}
+                    aria-label={t.openPhoto + ": " + t.momentNames[index]}
+                    aria-current={activeMoment === index ? "true" : undefined}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <div className="df-couple-gallery-group">
