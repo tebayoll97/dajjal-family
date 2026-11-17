@@ -11,8 +11,7 @@ import {
 
 const ThemeContext = createContext(null);
 
-// Until the protected global settings API is approved and implemented,
-// visitors receive the stable TECNO preset. Their local preference controls mode only.
+// The published preset is server-resolved; visitor preference controls appearance mode only.
 const PUBLISHED_PRESET_FALLBACK = DEFAULT_PALETTE_ID;
 
 function applyTheme(mode, palette = PUBLISHED_PRESET_FALLBACK) {
