@@ -12,6 +12,8 @@ const tecno = Object.freeze({
     "--df-primary":"#7e22ce","--df-primary-hover":"#9333ea","--df-primary-soft":"rgba(168,85,247,.14)",
     "--df-secondary":"#6366f1","--df-accent":"#22d3ee","--df-focus":"#c084fc",
     "--df-success":"#22c55e","--df-warning":"#f59e0b","--df-danger":"#ef4444","--df-info":"#38bdf8","--df-on-primary":"#ffffff",
+    "--df-home-brand-gradient":"linear-gradient(115deg,#a855f7 0%,#6366f1 52%,#22d3ee 100%)",
+    "--df-home-brand-glow":"rgba(139,92,246,.18)","--df-home-orbit":"rgba(174,154,255,.3)","--df-home-orbit-accent":"#67e8f9",
   }),
   light: Object.freeze({
     "--df-bg":"#f5f6fb","--df-surface":"#ffffff","--df-surface-raised":"#f0eff8","--df-surface-overlay":"#ffffff",
@@ -20,6 +22,8 @@ const tecno = Object.freeze({
     "--df-primary":"#6b21a8","--df-primary-hover":"#581c87","--df-primary-soft":"rgba(107,33,168,.09)",
     "--df-secondary":"#4f46e5","--df-accent":"#0e7490","--df-focus":"#6d28d9",
     "--df-success":"#15803d","--df-warning":"#a16207","--df-danger":"#b91c1c","--df-info":"#0369a1","--df-on-primary":"#ffffff",
+    "--df-home-brand-gradient":"linear-gradient(115deg,#a855f7 0%,#6366f1 52%,#22d3ee 100%)",
+    "--df-home-brand-glow":"rgba(139,92,246,.12)","--df-home-orbit":"rgba(109,40,217,.24)","--df-home-orbit-accent":"#0e7490",
   }),
 });
 
@@ -49,6 +53,10 @@ function coupleMode(mode) {
     "--df-secondary": light ? "#2876a8" : "#d34a62",
     "--df-accent": light ? "#2876a8" : "#d34a62",
     "--df-focus": light ? "#176b9f" : "#ef7188",
+    "--df-home-brand-gradient": light ? "linear-gradient(115deg,#398fc5 0%,#2876a8 52%,#69bde8 100%)" : "linear-gradient(115deg,#b51f3b 0%,#d34a62 52%,#ef7188 100%)",
+    "--df-home-brand-glow": light ? "rgba(57,143,197,.16)" : "rgba(181,31,59,.18)",
+    "--df-home-orbit": light ? "rgba(57,143,197,.28)" : "rgba(211,74,98,.3)",
+    "--df-home-orbit-accent": light ? "#69bde8" : "#ef7188",
     ...coupleTextAndStatus[mode],
   });
 }
