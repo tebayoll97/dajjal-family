@@ -5,20 +5,22 @@ import { getThemeTokens } from "@/app/theme/themeTokens";
 import {
   DEFAULT_PALETTE_ID,
   THEME_MODE_STORAGE_KEY,
-  THEME_PALETTE_STORAGE_KEY,
   isThemeMode,
-  isGlobalThemePalette,
   resolveThemeMode,
 } from "@/app/theme/themeRegistry";
 
 const ThemeContext = createContext(null);
 
-function applyTheme(mode, palette) {
+// Until the protected global settings API is approved and implemented,
+// visitors receive the stable TECNO preset. Their local preference controls mode only.
+const PUBLISHED_PRESET_FALLBACK = DEFAULT_PALETTE_ID;
+
+function applyTheme(mode, palette = PUBLISHED_PRESET_FALLBACK) {
   const resolvedMode = resolveThemeMode(mode);
   const root = document.documentElement;
   root.dataset.theme = resolvedMode;
   root.dataset.themeMode = mode;
-  root.dataset.themePalette = palette;
+  root.dataset.themePreset = palette;
   root.style.colorScheme = resolvedMode;
 
   Object.entries(getThemeTokens(palette, resolvedMode)).forEach(([token, value]) => {
@@ -31,27 +33,22 @@ function applyTheme(mode, palette) {
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState("dark");
   const [themeMode, setThemeModeState] = useState("system");
-  const [palette, setPaletteState] = useState(DEFAULT_PALETTE_ID);
+  const [palette] = useState(PUBLISHED_PRESET_FALLBACK);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const savedMode = localStorage.getItem(THEME_MODE_STORAGE_KEY);
-    const savedPalette = localStorage.getItem(THEME_PALETTE_STORAGE_KEY);
     const initialMode = isThemeMode(savedMode) ? savedMode : "system";
-    const initialPalette = isGlobalThemePalette(savedPalette) ? savedPalette : DEFAULT_PALETTE_ID;
 
     setThemeModeState(initialMode);
-    setPaletteState(initialPalette);
-    setTheme(applyTheme(initialMode, initialPalette));
+    setTheme(applyTheme(initialMode));
     setReady(true);
 
     const media = window.matchMedia("(prefers-color-scheme: light)");
     const onSystemChange = () => {
       const currentMode = localStorage.getItem(THEME_MODE_STORAGE_KEY);
-      const currentPalette = localStorage.getItem(THEME_PALETTE_STORAGE_KEY);
       if (!isThemeMode(currentMode) || currentMode === "system") {
-        const activePalette = isGlobalThemePalette(currentPalette) ? currentPalette : DEFAULT_PALETTE_ID;
-        setTheme(applyTheme("system", activePalette));
+        setTheme(applyTheme("system"));
       }
     };
     media.addEventListener?.("change", onSystemChange);
@@ -59,21 +56,14 @@ export function ThemeProvider({ children }) {
   }, []);
 
   const setThemeMode = (nextMode) => {
-    if (!isThemeMode(nextMode)) return;
+    if (nextMode !== "dark" && nextMode !== "light") return;
     setThemeModeState(nextMode);
     localStorage.setItem(THEME_MODE_STORAGE_KEY, nextMode);
-    setTheme(applyTheme(nextMode, palette));
+    setTheme(applyTheme(nextMode));
   };
 
   const toggleTheme = () => {
     setThemeMode(theme === "dark" ? "light" : "dark");
-  };
-
-  const setPalette = (nextPalette) => {
-    if (!isGlobalThemePalette(nextPalette)) return;
-    setPaletteState(nextPalette);
-    localStorage.setItem(THEME_PALETTE_STORAGE_KEY, nextPalette);
-    applyTheme(themeMode, nextPalette);
   };
 
   return (
@@ -82,7 +72,6 @@ export function ThemeProvider({ children }) {
       themeMode,
       palette,
       setThemeMode,
-      setPalette,
       toggleTheme,
       ready,
     }}>
