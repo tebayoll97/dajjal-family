@@ -296,11 +296,10 @@ export default function CoupleProfilePage() {
                 ref={momentsTrackRef}
                 onScroll={handleMomentsScroll}
                 aria-label={t.momentsLabel}
-                aria-roledescription="slide list"
                 tabIndex={0}
               >
                 {photos.moments.map((src, index) => (
-                  <button className="df-couple-gallery-item" type="button" key={src} role="group" aria-roledescription="slide" aria-label={t.slideLabel + " " + (index + 1) + " of " + photos.moments.length + ": " + t.momentNames[index]} onClick={() => openPhoto(src, t.momentNames[index])}>
+                  <button className="df-couple-gallery-item" type="button" key={src} aria-label={t.openPhoto + ": " + t.momentNames[index] + " (" + (index + 1) + " of " + photos.moments.length + ")"} onClick={() => openPhoto(src, t.momentNames[index])}>
                     <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
                     <span>{t.momentNames[index]}</span>
                   </button>
