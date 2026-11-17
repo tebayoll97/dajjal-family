@@ -236,20 +236,6 @@
 }
 .df-couple-featured-photo { isolation: isolate; }
 .df-couple-featured-photo .df-couple-featured-background { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
-.df-couple-featured-photo .df-couple-featured-character {
-  position: absolute;
-  z-index: 1;
-  bottom: -2%;
-  display: block;
-  width: min(34%, 19rem);
-  height: 116%;
-  object-fit: contain;
-  object-position: center bottom;
-  pointer-events: none;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .28));
-}
-.df-couple-featured-photo .df-couple-featured-dajjal { left: 1.5%; }
-.df-couple-featured-photo .df-couple-featured-veylora { right: 1.5%; }
 .df-couple-featured-photo > span { z-index: 2; }
 .df-couple-featured-photo > span {
   position: absolute;
@@ -365,9 +351,6 @@
 }
 @media (max-width: 680px) {
   .df-couple-featured-photo { aspect-ratio: 4 / 3; border-radius: .9rem; }
-  .df-couple-featured-photo .df-couple-featured-character { width: 43%; height: 104%; bottom: -1%; }
-  .df-couple-featured-photo .df-couple-featured-dajjal { left: -2%; }
-  .df-couple-featured-photo .df-couple-featured-veylora { right: -2%; }
   .df-couple-character-card { align-items: center; }
   .df-couple-character-art { flex-basis: 6.25rem; width: 6.25rem; height: 9.5rem; }
   .df-couple-moments-grid { gap: .65rem; }

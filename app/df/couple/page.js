@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
 
 const photos = {
-  dajjal: "https://drive.google.com/uc?export=view&id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed",
-  veylora: "https://drive.google.com/uc?export=view&id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr",
+  dajjal: "https://drive.google.com/thumbnail?id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed&sz=w1600",
+  veylora: "https://drive.google.com/thumbnail?id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr&sz=w1600",
   cover: "https://drive.google.com/thumbnail?id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_&sz=w1600",
   moments: [
     "https://drive.google.com/uc?export=view&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
@@ -156,8 +156,6 @@ export default function CoupleProfilePage() {
           <p className="df-couple-intro">{t.intro}</p>
           <button className="df-couple-featured-photo" type="button" onClick={() => openPhoto(photos.cover, t.featuredLabel)} aria-label={t.openPhoto + ": " + t.featuredLabel}>
             <img className="df-couple-featured-background" src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
-            <img className="df-couple-featured-character df-couple-featured-dajjal" src={photos.dajjal} alt="" aria-hidden="true" />
-            <img className="df-couple-featured-character df-couple-featured-veylora" src={photos.veylora} alt="" aria-hidden="true" />
             <span>{t.featuredLabel}</span>
           </button>
           <div className="df-couple-metrics" aria-label={t.eyebrow}>
