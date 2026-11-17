@@ -206,9 +206,18 @@ export default function AdminDashboardPage() {
       accent: "from-emerald-500/20 via-teal-500/5",
     },
     {
+      href: "/admin/theme",
+      icon: "🎨",
+      number: "05",
+      title: language === "id" ? "Pengelola Tema" : "Theme Manager",
+      description: language === "id" ? "Pratinjau mode tampilan dan katalog palet global." : "Preview appearance modes and the global palette catalog.",
+      available: true,
+      accent: "from-purple-500/20 via-indigo-500/5",
+    },
+    {
       href: null,
       icon: "📊",
-      number: "05",
+      number: "06",
       title: t.statistics,
       description: t.statisticsDesc,
       available: false,
@@ -258,7 +267,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">05 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">06 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
