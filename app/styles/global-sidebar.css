@@ -69,3 +69,24 @@
   .df-workspace-layout{grid-template-columns:190px minmax(0,1fr)}
   .df-global-sidebar{padding-inline:14px}
 }
+
+/* Desktop navigation mirrors the mobile drawer hierarchy and shared menu data. */
+.df-global-sidebar-profile{margin:-28px 0 24px}
+.df-global-sidebar-profile .df-navigation-profile-card{min-height:58px;padding:9px 10px;border:1px solid var(--df-border);border-radius:10px;background:var(--df-surface-raised);color:var(--df-text);text-decoration:none}
+.df-global-sidebar-profile .df-navigation-profile-copy strong{font-size:11px}
+.df-global-sidebar-profile .df-navigation-profile-copy small{font-size:9px}
+.df-global-sidebar-group nav{display:grid;gap:5px}
+.df-global-sidebar-home,.df-global-sidebar-trigger{width:100%;min-height:42px;display:flex;align-items:center;gap:10px;padding:0 11px;border:0;border-radius:9px;background:transparent;color:var(--df-text-secondary);text-decoration:none;font:inherit;font-size:11.5px;font-weight:650;text-align:left;cursor:pointer}
+.df-global-sidebar-home:hover,.df-global-sidebar-home[aria-current="page"],.df-global-sidebar-trigger:hover,.df-global-sidebar-trigger[aria-expanded="true"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-global-sidebar-home svg,.df-global-sidebar-trigger svg{width:18px;height:18px;flex:0 0 auto;color:var(--df-primary)}
+.df-global-sidebar-trigger>span{flex:1;min-width:0}
+.df-global-sidebar-chevron{width:15px!important;height:15px!important;color:var(--df-text-muted)!important;transition:transform var(--df-duration-fast)}
+.df-global-sidebar-chevron path{stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.df-global-sidebar-chevron.is-expanded{transform:rotate(180deg)}
+.df-global-sidebar-nav-group{min-width:0}
+.df-global-sidebar-submenu{display:grid;gap:3px;padding:3px 0 5px 28px}
+.df-global-sidebar-submenu[data-expanded="false"]{display:none}
+.df-global-sidebar-submenu a{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 9px;border-radius:8px;color:var(--df-text-secondary);font-size:10.5px;font-weight:550;text-decoration:none}
+.df-global-sidebar-submenu a:hover,.df-global-sidebar-submenu a[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-global-sidebar-active{color:var(--df-primary);font-size:9px}
+@media(max-width:900px){.df-global-sidebar-profile{margin-top:-22px}.df-global-sidebar-home,.df-global-sidebar-trigger{gap:8px;padding-inline:8px;font-size:10.5px}.df-global-sidebar-submenu{padding-left:22px}.df-global-sidebar-submenu a{font-size:9.5px}}

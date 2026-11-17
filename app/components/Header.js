@@ -6,27 +6,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
-import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
 import ThemeToggle from "./ThemeToggle";
 import NavigationProfileCard from "./NavigationProfileCard";
-
-const ADMIN_CACHE_PREFIX = "df_admin_profile_cache_v1:";
-
-function readAdminCache(userId) {
-  try {
-    const value = JSON.parse(window.localStorage.getItem(ADMIN_CACHE_PREFIX + userId) || "null");
-    return value?.userId === userId ? value : null;
-  } catch { return null; }
-}
-
-function writeAdminCache(userId) {
-  try { window.localStorage.setItem(ADMIN_CACHE_PREFIX + userId, JSON.stringify({ userId, label: "Admin", updatedAt: Date.now() })); } catch {}
-}
-
-function clearAdminCache(userId) {
-  try { if (userId) window.localStorage.removeItem(ADMIN_CACHE_PREFIX + userId); } catch {}
-}
+import NavigationIcon from "./NavigationIcon";
+import useAdminAccess from "./useAdminAccess";
+import { getNavigationGroups, getAdminNavigationGroup } from "@/lib/navigationConfig";
 
 const copy = {
   en: {
@@ -85,39 +70,12 @@ const copy = {
   },
 };
 
-function NavigationIcon({ name }) {
-  const common = {
-    width: 20,
-    height: 20,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    "aria-hidden": true,
-    focusable: "false",
-  };
-
-  const paths = {
-    profile: <><circle cx="12" cy="8" r="3.5" /><path d="M5 20c.7-3.3 3.1-5 7-5s6.3 1.7 7 5" /></>,
-    home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9M9 20v-6h6v6" /></>,
-    games: <><path d="M6 8h12a4 4 0 0 1 3.8 5l-1 3.2a2.5 2.5 0 0 1-4.1 1.1L14 15h-4l-2.7 2.3a2.5 2.5 0 0 1-4.1-1.1l-1-3.2A4 4 0 0 1 6 8Z" /><path d="M7 11v4M5 13h4M16.5 12h.01M19 14h.01" /></>,
-    blog: <><path d="M5 3h10l4 4v14H5z" /><path d="M14 3v5h5M8 12h8M8 16h8" /></>,
-    products: <><path d="M4 8h16l-1.5 12h-13z" /><path d="M9 8a3 3 0 0 1 6 0" /><path d="M9 12v2M15 12v2" /></>,
-    universe: <><circle cx="12" cy="12" r="9" /><path d="M3.5 9h17M3.5 15h17M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" /></>,
-  };
-
-  return <svg {...common}>{paths[name]}</svg>;
-}
-
 export default function Header() {
   const pathname = stripLocalePrefix(usePathname() || "/");
   const { language, setLanguage } = useLanguage();
   const t = copy[language] || copy.id;
   const isWeddingInvitation = pathname.startsWith("/df/wedding-anak-dajjal");
-  const [isAdmin, setIsAdmin] = useState(false);
-  const adminUserIdRef = useRef(null);
+  const isAdmin = useAdminAccess();
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
   const navigationHistoryRef = useRef(false);
@@ -127,55 +85,6 @@ export default function Header() {
 
   useEffect(() => {
     setPortalReady(true);
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    async function checkAdmin(session) {
-      const userId = session?.user?.id || null;
-      if (adminUserIdRef.current && adminUserIdRef.current !== userId) clearAdminCache(adminUserIdRef.current);
-      adminUserIdRef.current = userId;
-      if (!session?.access_token || !userId) {
-        clearAdminCache(userId);
-        if (active) setIsAdmin(false);
-        return;
-      }
-      if (active && readAdminCache(userId)) setIsAdmin(true);
-      try {
-        const response = await fetch("/api/admin/me", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${session.access_token}` },
-          cache: "no-store",
-        });
-        const result = await response.json();
-        const authorized = response.ok && result.success === true;
-        if (authorized) writeAdminCache(userId);
-        else clearAdminCache(userId);
-        if (active) setIsAdmin(authorized);
-      } catch (error) {
-        console.error("Admin check failed:", error);
-        clearAdminCache(userId);
-        if (active) setIsAdmin(false);
-      }
-    }
-    async function initialize() {
-      const { data: { session } } = await supabaseAdminClient.auth.getSession();
-      await checkAdmin(session);
-    }
-    initialize();
-    const { data: { subscription } } = supabaseAdminClient.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
-        clearAdminCache(adminUserIdRef.current);
-        adminUserIdRef.current = null;
-        setIsAdmin(false);
-        return;
-      }
-      if (["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)) checkAdmin(session);
-    });
-    return () => {
-      active = false;
-      subscription.unsubscribe();
-    };
   }, []);
 
   useEffect(() => {
@@ -239,36 +148,10 @@ export default function Header() {
     return pathname === route || pathname.startsWith(`${route}/`);
   }
 
-  const navigationGroups = [
-    { id: "gaming", label: t.games, icon: "games", items: [
-      { label: t.gameLibrary, route: "/games", icon: "games" },
-      { label: t.mamahNgamuk, route: "/games/mamah-ngamuk", icon: "games" },
-      { label: t.runJump, route: "/games/run-jump", icon: "games" },
-    ]},
-    { id: "knowledge", label: t.knowledge, icon: "blog", items: [
-      { label: t.knowledge, route: "/knowledge", icon: "blog" },
-    ]},
-    { id: "blog", label: t.blog, icon: "blog", items: [
-      { label: t.blog, route: "/blog", icon: "blog" },
-    ]},
-    { id: "tools", label: t.tools, icon: "products", items: [
-      { label: t.digitalProducts, route: "/digital-products", icon: "products" },
-      { label: t.business, route: "/business", icon: "universe" },
-      { label: t.community, route: "/community", icon: "universe" },
-      { label: t.settings, route: "/settings", icon: "profile" },
-    ]},
-    { id: "universe", label: t.universe, icon: "universe", items: [
-      { label: t.universe, route: "/df", icon: "universe" },
-    ]},
-  ];
+  const navigationGroups = getNavigationGroups(language);
   const activeGroupId = navigationGroups.find((group) => group.items.some((item) => isActive(item.route)))?.id || null;
-  const adminItems = [
-    { label: t.admin, route: "/admin", icon: "profile" },
-    { label: t.adminUsers, route: "/admin/players", icon: "profile" },
-    { label: t.weddingGallery, route: "/admin/wedding-gallery", icon: "universe" },
-    { label: t.weddingEvent, route: "/admin/wedding-event", icon: "universe" },
-    { label: t.guestbook, route: "/admin/wedding-guestbook", icon: "blog" },
-  ];
+  const adminGroup = getAdminNavigationGroup(language);
+  const adminItems = adminGroup.items;
 
   return (
     <>
