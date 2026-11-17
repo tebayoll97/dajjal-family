@@ -26,6 +26,7 @@ const copy = {
     knowledge: "Knowledge",
     tools: "Tools",
     settings: "Settings",
+    eventBadge: "Event",
     business: "Business",
     community: "Community",
     digitalProducts: "Digital Products",
@@ -37,6 +38,7 @@ const copy = {
     weddingGallery: "Wedding Gallery",
     weddingEvent: "Wedding Event Time",
     guestbook: "Guestbook Messages",
+    editThemePreset: "Edit Theme Preset",
     language: "Language",
     open: "Open navigation",
     close: "Close navigation",
@@ -53,6 +55,7 @@ const copy = {
     knowledge: "Pengetahuan",
     tools: "Alat",
     settings: "Pengaturan",
+    eventBadge: "Acara",
     business: "Bisnis",
     community: "Komunitas",
     digitalProducts: "Produk Digital",
@@ -64,6 +67,7 @@ const copy = {
     weddingGallery: "Galeri Pernikahan",
     weddingEvent: "Waktu Acara Undangan",
     guestbook: "Pesan Guestbook",
+    editThemePreset: "Edit Preset Tema",
     language: "Bahasa",
     open: "Buka navigasi",
     close: "Tutup navigasi",
@@ -237,7 +241,7 @@ export default function Header() {
                     <div id={groupId} className="df-site-navigation-submenu" data-expanded={expanded} aria-hidden={!expanded} inert={!expanded}>
                       {group.items.map((item) => (
                         <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}>
-                          <span>{item.label}</span>
+                          <span className="df-site-navigation-item-copy">{item.label}{item.badge && <span className="df-nav-event-badge">{item.badge}</span>}</span>
                           {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
                         </Link>
                       ))}
@@ -251,7 +255,7 @@ export default function Header() {
                   <NavigationIcon name="profile" /><span>{t.admin}</span><svg className={`df-site-navigation-chevron${(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? " is-expanded" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>
                 </button>
                 <div id="df-navigation-group-admin" className="df-site-navigation-submenu" data-expanded={openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin"} aria-hidden={!(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")} inert={!(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")}>
-                  {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}><span>{item.label}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
+                  {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}><span className="df-site-navigation-item-copy">{item.label}{item.badge && <span className="df-nav-event-badge">{item.badge}</span>}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
                 </div>
               </section>}
             </div>
