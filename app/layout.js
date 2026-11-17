@@ -3,6 +3,8 @@ import RouteChrome from "./components/RouteChrome";
 import GlobalAudioController from "./components/GlobalAudioController";
 import { LanguageProvider } from "./components/LanguageProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { getActiveThemePreset } from "@/lib/themeSettings";
+import { getThemeTokens } from "@/app/theme/themeTokens";
 import { headers } from "next/headers";
 
 const ORIGIN = "https://dajjalfamily.com";
@@ -47,11 +49,14 @@ export default async function RootLayout({ children }) {
   const requestHeaders = await headers();
   const requestedLocale = requestHeaders.get("x-df-locale");
   const initialLanguage = requestedLocale === "en" ? "en" : "id";
+  const { preset: initialThemePreset } = await getActiveThemePreset();
+  const themeBootstrap = `(() => { try { const saved = localStorage.getItem("dajjal-family-theme"); const mode = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"); const preset = ${JSON.stringify(initialThemePreset)}; const maps = ${JSON.stringify({ dark: getThemeTokens(initialThemePreset, "dark"), light: getThemeTokens(initialThemePreset, "light") })}; const root = document.documentElement; root.dataset.theme = mode; root.dataset.themeMode = saved === "dark" || saved === "light" ? saved : "system"; root.dataset.themePreset = preset; root.style.colorScheme = mode; Object.entries(maps[mode]).forEach(([key, value]) => root.style.setProperty(key, value)); } catch (_) {} })();`;
 
   return (
     <html lang={initialLanguage}>
+      <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
       <body className="min-h-screen flex flex-col">
-        <ThemeProvider>
+        <ThemeProvider initialPalette={initialThemePreset}>
           <LanguageProvider initialLanguage={initialLanguage}>
             <GlobalAudioController />
             <RouteChrome>{children}</RouteChrome>
