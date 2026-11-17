@@ -1,6 +1,6 @@
 import { verifyAdmin } from "@/lib/adminAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { DEFAULT_PALETTE_ID, isGlobalThemePalette } from "@/app/theme/themeRegistry";
+import { isGlobalThemePalette } from "@/app/theme/themeRegistry";
 import { getActiveThemePreset } from "@/lib/themeSettings";
 
 export const dynamic = "force-dynamic";
