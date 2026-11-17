@@ -28,6 +28,20 @@ const copy = {
     characterValue: "02",
     universeValue: "01",
     languageValue: "ID · EN",
+    visualEyebrow: "CIRI VISUAL",
+    visualTitle: "Identitas yang mudah dikenali",
+    hair: "Rambut",
+    eyes: "Mata",
+    outfit: "Busana khas",
+    palette: "Palet karakter",
+    dajjalHair: "Merah gelap",
+    dajjalEyes: "Merah",
+    dajjalOutfit: "Hitam dengan aksen merah",
+    dajjalPalette: "Crimson · Black",
+    veyloraHair: "Perak-putih panjang",
+    veyloraEyes: "Biru",
+    veyloraOutfit: "Putih-biru dengan detail emas dan fur",
+    veyloraPalette: "Azure · White",
   },
   en: {
     eyebrow: "A DAJJAL FAMILY STORY",
@@ -54,6 +68,20 @@ const copy = {
     characterValue: "02",
     universeValue: "01",
     languageValue: "ID · EN",
+    visualEyebrow: "VISUAL SIGNATURE",
+    visualTitle: "Distinctive character identities",
+    hair: "Hair",
+    eyes: "Eyes",
+    outfit: "Signature outfit",
+    palette: "Character palette",
+    dajjalHair: "Dark reddish",
+    dajjalEyes: "Red",
+    dajjalOutfit: "Black with red accents",
+    dajjalPalette: "Crimson · Black",
+    veyloraHair: "Long silver-white",
+    veyloraEyes: "Blue",
+    veyloraOutfit: "White-blue with gold and fur details",
+    veyloraPalette: "Azure · White",
   },
 };
 
@@ -108,6 +136,39 @@ export default function CoupleProfilePage() {
                 <p>{t.veyloraDescription}</p>
               </div>
               <span className="df-couple-character-index" aria-hidden="true">02</span>
+            </article>
+          </div>
+        </section>
+
+        <section className="df-couple-details" aria-labelledby="df-couple-details-title">
+          <div className="df-couple-section-heading">
+            <p className="df-couple-eyebrow">{t.visualEyebrow}</p>
+            <h2 id="df-couple-details-title">{t.visualTitle}</h2>
+          </div>
+          <div className="df-couple-detail-grid">
+            <article className="df-couple-detail-card" data-character="dajjal">
+              <div className="df-couple-detail-heading">
+                <span className="df-couple-detail-index">01 / DAJJAL</span>
+                <h3>{t.dajjalTitle}</h3>
+              </div>
+              <dl>
+                <div><dt>{t.hair}</dt><dd>{t.dajjalHair}</dd></div>
+                <div><dt>{t.eyes}</dt><dd>{t.dajjalEyes}</dd></div>
+                <div><dt>{t.outfit}</dt><dd>{t.dajjalOutfit}</dd></div>
+                <div><dt>{t.palette}</dt><dd>{t.dajjalPalette}</dd></div>
+              </dl>
+            </article>
+            <article className="df-couple-detail-card" data-character="veylora">
+              <div className="df-couple-detail-heading">
+                <span className="df-couple-detail-index">02 / VEYLORA</span>
+                <h3>{t.veyloraTitle}</h3>
+              </div>
+              <dl>
+                <div><dt>{t.hair}</dt><dd>{t.veyloraHair}</dd></div>
+                <div><dt>{t.eyes}</dt><dd>{t.veyloraEyes}</dd></div>
+                <div><dt>{t.outfit}</dt><dd>{t.veyloraOutfit}</dd></div>
+                <div><dt>{t.palette}</dt><dd>{t.veyloraPalette}</dd></div>
+              </dl>
             </article>
           </div>
         </section>
