@@ -146,10 +146,6 @@
 
 /* Preset-aware homepage identity details. Keep this layer scoped to Home. */
 .df-home-app{
-  --df-home-brand-gradient:var(--df-home-brand-gradient, var(--df-gradient-brand));
-  --df-home-brand-glow:var(--df-home-brand-glow, var(--df-primary-soft));
-  --df-home-orbit:var(--df-home-orbit, var(--df-border-strong));
-  --df-home-orbit-accent:var(--df-home-orbit-accent, var(--df-accent));
   background:
     radial-gradient(ellipse at 52% -20%,var(--df-home-brand-glow),transparent 45%),
     var(--df-home-bg);
