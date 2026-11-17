@@ -146,6 +146,23 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [addressCopied, setAddressCopied] = useState(false);
   const [copiedPlayerId, setCopiedPlayerId] = useState("");
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const moreMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!moreMenuOpen) return undefined;
+    const handlePointerDown = (event) => {
+      if (!moreMenuRef.current?.contains(event.target)) setMoreMenuOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMoreMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [moreMenuOpen]);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -456,12 +473,13 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
             <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
             <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
-            <div className={"wedding-more-menu" + (moreMenuOpen ? " is-open" : "")}>
+            <div ref={moreMenuRef}
+              className={"wedding-more-menu" + (moreMenuOpen ? " is-open" : "")}>
               {moreMenuOpen && (
                 <div className="wedding-more-menu-panel" id="wedding-more-menu">
                   <a href="#story" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">♡</span>{language === "id" ? "Kisah Kami" : "Our Story"}</a>
                   <a href="#gallery" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">▧</span>{language === "id" ? "Galeri Foto" : "Photo Gallery"}</a>
-                  <button type="button" onClick={shareInvite}><span aria-hidden="true">↗</span>{language === "id" ? "Bagikan" : "Share"}</button>
+                  <a href="#share" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">↗</span>{language === "id" ? "Bagikan" : "Share"}</a>
                 </div>
               )}
               <button
