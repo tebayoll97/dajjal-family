@@ -479,3 +479,9 @@ Do not add independent Light/Dark color overrides or preset-specific hardcoded v
 # 9.3 BROWSER CHROME THEME COLOR
 
 The document publishes a `theme-color` meta value derived from the active global preset's semantic `--df-bg` token. The initial HTML provides the preset's Dark canvas as a safe fallback; the early theme bootstrap replaces it with the visitor's resolved Light/Dark canvas before normal page paint. `ThemeProvider` keeps the meta value synchronized whenever the visitor changes appearance mode or the internal first-visit system preference changes. Do not hardcode per-preset browser colors in page styles or components. Browser chrome adoption is controlled by the browser/operating system; the website can request a matching toolbar/status-bar theme but cannot guarantee that every browser UI element changes identically.
+
+
+## 9.4 GAME LIBRARY PRESET ADOPTION
+The public Game Library (`/id/games` and `/en/games`) is a standard website page and must consume the active Global Theme Preset Engine semantic tokens for its page canvas, cards, artwork surfaces, typography, borders, actions, focus states, and dialogs. Do not add independent TECNO or Dajjal × Veylora color palettes to this page. Responsive behavior must be designed and checked for mobile, tablet, and desktop. The catalog presents only playable games; items in a Coming Soon state are omitted from this visitor-facing library until they are ready to be offered.
+
+Game titles and supporting copy follow the selected locale. The former Run Jump / Dajjal Family Jump card is displayed as “Lari! Kebakaran Hutan!” in Indonesian and “Run! Forest Fire!” in English. This is a localized display-name decision only; preserve the stable `/games/run-jump` route and game data identity.
