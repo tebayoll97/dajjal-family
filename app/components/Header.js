@@ -136,7 +136,6 @@ export default function Header() {
       adminUserIdRef.current = userId;
       if (!session?.access_token || !userId) {
         clearAdminCache(userId);
-        clearAdminCache(userId);
         if (active) setIsAdmin(false);
         return;
       }
@@ -154,6 +153,7 @@ export default function Header() {
         if (active) setIsAdmin(authorized);
       } catch (error) {
         console.error("Admin check failed:", error);
+        clearAdminCache(userId);
         if (active) setIsAdmin(false);
       }
     }
@@ -184,7 +184,13 @@ export default function Header() {
     window.history.pushState({ ...(window.history.state || {}), dfNavigationOpen: true }, "");
     navigationHistoryRef.current = true;
     function handleKey(event) {
-      if (event.key === "Escape") closeNavigation();
+      if (event.key === "Escape") {
+        setNavigationOpen(false);
+        if (navigationHistoryRef.current) {
+          navigationHistoryRef.current = false;
+          window.history.back();
+        }
+      }
     }
     function handlePopState() {
       if (navigationHistoryRef.current) {
