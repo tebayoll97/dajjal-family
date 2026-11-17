@@ -68,6 +68,31 @@ Rules:
 - Kontras teks dan elemen harus tetap layak.
 - Halaman imersif seperti gameplay dapat memiliki tampilan khusus sesuai kebutuhan produknya.
 
+### 2.2.1 Global theme preset architecture — owner decision 2026-11-18
+
+Dajjal Family uses two independent global theme dimensions:
+
+1. **Global identity preset** — selected and published by an authorized administrator. It defines the semantic color identity used by standard website pages.
+2. **Visitor appearance mode** — selected by each visitor as Light or Dark. On the first visit, the internal default follows the device preference; an explicit Light/Dark choice is persisted and takes priority.
+
+The visitor-facing control exposes only **Light** and **Dark**. The internal first-visit System behavior is not a third visitor-selectable mode.
+
+The initial additive global preset registry contains:
+- `tecno`: the established Dajjal Family purple, indigo, and cyan identity, preserving its existing Light/Dark semantic values.
+- `dajjal-veylora`: blue/azure/white in Light Mode and crimson/red/black in Dark Mode, derived from the existing Couple page's source identity.
+
+Governance and scope:
+- The authorized administrator chooses a draft preset, previews both appearance modes locally, and explicitly confirms publication before the preset becomes visitor-facing.
+- The active global preset is stored in the singleton `public.df_global_settings` setting and is read/written only through server-side code. The browser must never receive or use the Supabase service-role credential.
+- Global preset identifiers are validated against the application registry. Adding a future preset is additive and requires both Light and Dark token maps.
+- The Couple page retains its own page-scoped CSS identity; its source colors may be reused by a separate global preset map but its selectors must not become global.
+- Wedding and immersive Games remain isolated experiences protected from global preset recoloring.
+- Standard website pages consume shared semantic tokens. Legacy hardcoded styles must be migrated incrementally and scoped; a preset is not considered fully adopted until relevant standard pages use the semantic token contract.
+- Admin preview is local and isolated until an explicit successful publish response is returned.
+- Initial rendering must apply the server-resolved published preset and the visitor's saved/system-resolved appearance mode before normal page paint where technically practical.
+
+This preset architecture extends the existing Dark/Light theme requirement; it does not replace it or authorize blanket redesign of legacy pages.
+
 ## 2.3 Design tokens
 
 Gunakan sistem token terpusat untuk:
