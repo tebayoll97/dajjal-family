@@ -53,6 +53,7 @@ function coupleMode(mode) {
     "--df-secondary": light ? "#2876a8" : "#d34a62",
     "--df-accent": light ? "#2876a8" : "#d34a62",
     "--df-focus": light ? "#176b9f" : "#ef7188",
+    "--df-on-primary": light ? "#071521" : "#ffffff",
     "--df-home-brand-gradient": light ? "linear-gradient(115deg,#398fc5 0%,#2876a8 52%,#69bde8 100%)" : "linear-gradient(115deg,#b51f3b 0%,#d34a62 52%,#ef7188 100%)",
     "--df-home-brand-glow": light ? "rgba(57,143,197,.16)" : "rgba(181,31,59,.18)",
     "--df-home-orbit": light ? "rgba(57,143,197,.28)" : "rgba(211,74,98,.3)",
