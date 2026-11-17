@@ -22,6 +22,11 @@ function applyTheme(mode, palette = PUBLISHED_PRESET_FALLBACK) {
   root.dataset.themePreset = palette;
   root.style.colorScheme = resolvedMode;
 
+  // Keep supported mobile browser chrome aligned with the active global canvas token.
+  const browserThemeColor = getThemeTokens(palette, resolvedMode)["--df-bg"];
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeColorMeta && browserThemeColor) themeColorMeta.setAttribute("content", browserThemeColor);
+
   Object.entries(getThemeTokens(palette, resolvedMode)).forEach(([token, value]) => {
     root.style.setProperty(token, value);
   });
