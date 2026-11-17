@@ -190,7 +190,7 @@ export default function CoupleProfilePage() {
   const openPhoto = (src, alt) => setActivePhoto({ src, alt });
 
   return (
-    <main className="df-couple-page">
+    <main className="df-couple-page" data-theme-palette="couple">
       <div className="df-couple-shell">
         <header className="df-couple-hero">
           <p className="df-couple-eyebrow">{t.eyebrow}</p>
