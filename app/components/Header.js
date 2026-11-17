@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -289,7 +290,7 @@ export default function Header() {
           )}
           {!isWeddingInvitation && (
             <Link href={withLocalePrefix("/", language)} className="df-site-brand" aria-label="Dajjal Family home">
-              <span className="df-site-brand-mark" aria-hidden="true">DF</span>
+              <Image className="df-site-brand-mark" src="/dajjalfamily_icon_192.png" alt="" width={42} height={42} priority />
               <span className="df-site-brand-copy">
                 <strong>DAJJAL FAMILY</strong>
                 <small>ONE FAMILY. MANY POSSIBILITIES.</small>
@@ -326,7 +327,7 @@ export default function Header() {
           role="dialog"
         >
           <div className="df-site-navigation-top">
-            <span className="df-site-navigation-brand">DAJJAL FAMILY</span>
+            <div className="df-site-navigation-brand-group"><Image src="/dajjalfamily_icon_192.png" alt="" width={34} height={34} /><span className="df-site-navigation-brand">DAJJAL FAMILY</span></div>
             <button type="button" className="df-site-navigation-close" aria-label={t.close} onClick={closeNavigation}>
               <span aria-hidden="true">×</span>
             </button>
@@ -348,7 +349,7 @@ export default function Header() {
                       onClick={() => setOpenGroup((current) => current === group.id ? null : group.id)}>
                       <NavigationIcon name={group.icon} />
                       <span>{group.label}</span>
-                      <span className={`df-site-navigation-chevron${expanded ? " is-expanded" : ""}`} aria-hidden="true">v</span>
+                      <svg className={`df-site-navigation-chevron${expanded ? " is-expanded" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>
                     </button>
                     <div id={groupId} className="df-site-navigation-submenu" data-expanded={expanded} aria-hidden={!expanded} inert={!expanded}>
                       {group.items.map((item) => (
@@ -364,7 +365,7 @@ export default function Header() {
               {isAdmin && <section className="df-site-navigation-group">
                 <button type="button" className="df-site-navigation-group-trigger" aria-expanded={(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")} aria-controls="df-navigation-group-admin"
                   onClick={() => setOpenGroup((current) => current === "admin" ? null : "admin")}>
-                  <NavigationIcon name="profile" /><span>{t.admin}</span><span className={`df-site-navigation-chevron${(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? " is-expanded" : ""}`} aria-hidden="true">v</span>
+                  <NavigationIcon name="profile" /><span>{t.admin}</span><svg className={`df-site-navigation-chevron${(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? " is-expanded" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>
                 </button>
                 <div id="df-navigation-group-admin" className="df-site-navigation-submenu" data-expanded={openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin"} aria-hidden={!(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")} inert={!(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")}>
                   {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}><span>{item.label}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
