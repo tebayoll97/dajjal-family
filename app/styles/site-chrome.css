@@ -340,3 +340,23 @@
   .df-site-navigation-chevron,.df-site-navigation-submenu,
   .df-site-navigation-submenu>a{animation:none!important;transition:none!important}
 }
+
+
+/* Keep bilingual navigation labels and their event badge aligned as one item. */
+.df-site-navigation-item-copy {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: .1rem;
+}
+.df-site-footer .df-site-brand-mark {
+  display: block;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+@media (max-width: 620px) {
+  .df-site-footer .df-site-brand-mark { width: 38px; height: 38px; }
+}
