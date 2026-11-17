@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -13,77 +13,62 @@ const translations = {
     eyebrow: "THE GAME LIBRARY",
     title: "CHOOSE YOUR",
     accent: "ADVENTURE",
-    description: "Discover different worlds, challenge your mind, and build your journey in one gaming universe.",
-    available: "AVAILABLE NOW",
+    description: "Discover new worlds, take on challenges, and make your mark in the Dajjal Family gaming universe.",
+    available: "PLAY NOW",
     mamah: "MAMAH NGAMUK",
-    mamahDesc: "Escape angry Mamah Veylora, dodge traffic, collect coins, and build your personal record.",
+    mamahDesc: "Escape Mamah Veylora, dodge oncoming traffic, collect coins, and beat your personal best.",
+    mamahType: "ENDLESS DODGE · ACCOUNT GAME",
+    mamahAccess: "GOOGLE ACCOUNT REQUIRED TO SAVE PROGRESS",
+    jump: "RUN! FOREST FIRE!",
+    jumpDesc: "Run as far as you can, leap over obstacles, and survive the burning forest. No sign-in required.",
+    jumpType: "ENDLESS RUNNER · PUBLIC ARCADE",
+    jumpAccess: "FREE TO PLAY · NO LOGIN REQUIRED",
     play: "PLAY NOW",
-    soon: "COMING SOON",
-    rune: "RUNE PUZZLE",
-    runeDesc: "Decode ancient symbols and uncover the secrets hidden in the runes.",
-    memory: "MEMORY CHALLENGE",
-    memoryDesc: "Train your memory, sharpen your focus, and beat your best time.",
-    logic: "LOGIC BATTLE",
-    logicDesc: "Face clever challenges and prove your strategic thinking.",
     wait: "PLEASE WAIT...",
     errorTitle: "SOMETHING WENT WRONG",
     error: "Unable to continue. Please try again.",
     close: "GOT IT",
+    accountTitle: "GOOGLE LOGIN REQUIRED",
+    accountDesc: "MAMAH NGAMUK needs a Google account to save your coins and Best Distance securely.",
+    google: "SIGN IN WITH GOOGLE",
+    openingGoogle: "OPENING GOOGLE...",
+    cancel: "CANCEL",
   },
   id: {
     eyebrow: "PERPUSTAKAAN PERMAINAN",
     title: "PILIH",
     accent: "PETUALANGANMU",
-    description: "Jelajahi dunia yang berbeda, tantang pikiranmu, dan bangun perjalananmu dalam satu universe gaming.",
-    available: "SUDAH TERSEDIA",
+    description: "Jelajahi dunia baru, hadapi tantangan, dan ukir pencapaianmu di universe gaming Dajjal Family.",
+    available: "MAIN SEKARANG",
     mamah: "MAMAH NGAMUK",
-    mamahDesc: "Kabur dari Mamah Veylora, hindari kendaraan, kumpulkan koin, dan pecahkan rekor pribadimu.",
+    mamahDesc: "Kabur dari Mamah Veylora, hindari kendaraan yang melaju, kumpulkan koin, dan pecahkan rekor pribadimu.",
+    mamahType: "HINDARI RINTANGAN · GAME AKUN",
+    mamahAccess: "AKUN GOOGLE DIPERLUKAN UNTUK MENYIMPAN PROGRES",
+    jump: "LARI! KEBAKARAN HUTAN!",
+    jumpDesc: "Berlari sejauh mungkin, lewati berbagai rintangan, dan selamat dari hutan yang terbakar. Tanpa perlu login.",
+    jumpType: "LARI TANPA AKHIR · ARCADE PUBLIK",
+    jumpAccess: "GRATIS DIMAINKAN · TANPA LOGIN",
     play: "MAIN SEKARANG",
-    soon: "SEGERA HADIR",
-    rune: "RUNE PUZZLE",
-    runeDesc: "Pecahkan simbol kuno dan temukan rahasia yang tersembunyi di dalam rune.",
-    memory: "MEMORY CHALLENGE",
-    memoryDesc: "Latih ingatan, tingkatkan fokus, dan pecahkan rekor waktumu.",
-    logic: "LOGIC BATTLE",
-    logicDesc: "Hadapi tantangan cerdas dan buktikan kemampuan strategimu.",
     wait: "MOHON TUNGGU...",
     errorTitle: "TERJADI KESALAHAN",
     error: "Tidak dapat melanjutkan. Silakan coba lagi.",
     close: "MENGERTI",
+    accountTitle: "LOGIN GOOGLE DIPERLUKAN",
+    accountDesc: "MAMAH NGAMUK membutuhkan akun Google agar koin dan Best Distance kamu tersimpan dengan aman.",
+    google: "LOGIN DENGAN GOOGLE",
+    openingGoogle: "MEMBUKA GOOGLE...",
+    cancel: "BATAL",
   },
 };
 
 export default function GamesPage() {
   const router = useRouter();
   const { language } = useLanguage();
-  const t = translations[language] || translations.en;
+  const t = translations[language] || translations.id;
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showGooglePrompt, setShowGooglePrompt] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
-  const [catalogGames, setCatalogGames] = useState([]);
-  const [catalogLoading, setCatalogLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    async function loadCatalog() {
-      const { data, error } = await supabase
-        .from("games")
-        .select("id, slug, name, description, status, sort_order")
-        .order("sort_order", { ascending: true });
-      if (error) {
-        console.error("Game catalog load error:", error);
-        if (active) setCatalogLoading(false);
-        return;
-      }
-      if (active) {
-        setCatalogGames(data || []);
-        setCatalogLoading(false);
-      }
-    }
-    loadCatalog();
-    return () => { active = false; };
-  }, []);
 
   async function handlePlayMamah() {
     if (loading) return;
@@ -97,7 +82,7 @@ export default function GamesPage() {
       }
       const context = await getPlayerContext();
       if (context.status === "ready" && context.accountType === "google") {
-        router.push("/games/mamah-ngamuk?splash=1");
+        router.push(withLocalePrefix("/games/mamah-ngamuk?splash=1", language));
         return;
       }
       setShowGooglePrompt(true);
@@ -115,7 +100,8 @@ export default function GamesPage() {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) throw sessionError;
-      const redirectTo = `${window.location.origin}/login?next=${encodeURIComponent("/games/mamah-ngamuk?splash=1")}`;
+      const nextPath = withLocalePrefix("/games/mamah-ngamuk?splash=1", language);
+      const redirectTo = `${window.location.origin}${withLocalePrefix("/login", language)}?next=${encodeURIComponent(nextPath)}`;
       const options = { redirectTo, queryParams: { access_type: "offline", prompt: "select_account" } };
       if (session?.user?.is_anonymous) {
         const { error } = await supabase.auth.linkIdentity({ provider: "google", options });
@@ -131,123 +117,86 @@ export default function GamesPage() {
     }
   }
 
-
-  const gameArtwork = {
-    "rune-puzzle": { icon: "ᚱ", image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=85", alt: "Ancient glowing runic symbols" },
-    "memory-challenge": { icon: "◈", image: "https://images.unsplash.com/photo-1606509036992-38f2048865f5?auto=format&fit=crop&w=900&q=85", alt: "Colorful puzzle pieces" },
-    "logic-battle": { icon: "✧", image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=900&q=85", alt: "Strategy board game pieces" },
-  };
-  const games = catalogGames
-    .filter((game) => !["daily-riddle", "mamah-ngamuk", "run-jump"].includes(game.slug) && game.status === "coming_soon")
-    .map((game) => ({
-      ...game,
-      name: game.slug === "rune-puzzle" ? t.rune : game.slug === "memory-challenge" ? t.memory : game.slug === "logic-battle" ? t.logic : game.name,
-      description: game.slug === "rune-puzzle" ? t.runeDesc : game.slug === "memory-challenge" ? t.memoryDesc : game.slug === "logic-battle" ? t.logicDesc : (game.description || ""),
-      ...(gameArtwork[game.slug] || { icon: "✦", image: "", alt: game.name }),
-    }));
-
   return (
-    <main className="df-token-page df-games-page relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-10 sm:py-14">
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-purple-600/10 blur-[100px]" />
-      <div className="relative z-10 mx-auto max-w-5xl">
-        <div className="mb-9 text-center">
-          <p className="mb-3 text-[10px] font-bold tracking-[0.35em] text-purple-400">{t.eyebrow}</p>
-          <h1 className="text-3xl font-black tracking-wide sm:text-5xl ui-title">
-            {t.title} <span className="text-purple-400">{t.accent}</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-gray-400">{t.description}</p>
-        </div>
+    <main className="df-games-page">
+      <div className="df-games-atmosphere" aria-hidden="true" />
+      <div className="df-games-content">
+        <header className="df-games-intro">
+          <p className="df-games-eyebrow">{t.eyebrow}</p>
+          <h1>{t.title} <span>{t.accent}</span></h1>
+          <p className="df-games-lead">{t.description}</p>
+        </header>
 
-        <section className="mb-8">
-          <div className="mb-3 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
-            <h2 className="text-[10px] font-bold tracking-[0.25em] text-emerald-300 ui-section-title">{t.available}</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-amber-400/25 bg-gradient-to-br from-[#281a25] via-[#171024] to-[#100d19] ui-card df-game-card">
-              <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-amber-950/80 via-rose-950/60 to-purple-950/80 text-7xl">
-                <span aria-hidden="true">🧹</span>
-                <span className="absolute bottom-4 left-5 rounded-full border border-amber-200/20 bg-black/40 px-3 py-1 text-[9px] font-bold tracking-[0.2em] text-amber-100">FULL SCREEN ACTION</span>
-              </div>
-              <div className="flex flex-1 flex-col items-start p-6 sm:p-7">
-                <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-amber-300">01 · ACCOUNT GAME</p>
-                <h2 className="text-2xl font-black ui-section-title">{t.mamah}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-gray-300">{t.mamahDesc}</p>
-                <p className="mt-3 text-[10px] font-bold tracking-wider text-amber-200/80">GOOGLE LOGIN REQUIRED</p>
-                <button onClick={handlePlayMamah} disabled={loading} className="mt-auto w-full rounded-xl bg-amber-600 px-7 py-4 text-sm font-black tracking-wider transition hover:bg-amber-500 disabled:opacity-50">{loading ? t.wait : t.play}</button>
-              </div>
-            </article>
-            <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-[#102536] via-[#111827] to-[#100d19] ui-card df-game-card">
-              <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-950/80 via-emerald-950/50 to-purple-950/80 text-7xl" aria-hidden="true">🦖</div>
-              <div className="flex flex-1 flex-col items-start p-6 sm:p-7">
-                <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-cyan-300">02 · ARCADE GAME</p>
-                <h2 className="text-2xl font-black ui-section-title">DAJJAL FAMILY JUMP</h2>
-                <p className="mt-3 text-sm leading-relaxed text-gray-300">{language === "id" ? "Lari sejauh mungkin, lompat melewati rintangan, dan pecahkan rekor jarakmu. Bisa dimainkan tanpa login." : "Run as far as you can, jump over obstacles, and beat your distance record. Play without signing in."}</p>
-                <p className="mt-3 text-[10px] font-bold tracking-wider text-cyan-200/80">PUBLIC ARCADE · NO LOGIN REQUIRED</p>
-                <Link href={withLocalePrefix("/games/run-jump", language)} className="mt-auto w-full rounded-xl bg-cyan-700 px-7 py-4 text-center text-sm font-black tracking-wider transition hover:bg-cyan-600">{language === "id" ? "MAIN SEKARANG" : "PLAY NOW"}</Link>
-              </div>
-            </article>
-          </div>
-        </section>
-
-
-
-        <section>
-          <div className="mb-3 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-gray-500" />
-            <h2 className="text-[10px] font-bold tracking-[0.25em] text-gray-400 ui-section-title">{t.soon}</h2>
-          </div>
-          {catalogLoading ? (
-            <div className="grid gap-3 sm:grid-cols-3" aria-label={t.wait}>
-              {[1, 2, 3].map((item) => <div key={item} className="h-56 rounded-2xl border border-purple-500/15 bg-purple-500/5 animate-pulse" />)}
+        <section className="df-games-grid" aria-label={t.eyebrow}>
+          <article className="df-library-card df-library-card-mamah">
+            <div className="df-library-art df-library-art-mamah" aria-hidden="true">
+              <span className="df-library-art-orbit" />
+              <span className="df-library-art-symbol">🧹</span>
+              <span className="df-library-art-chip">01 / SURVIVAL</span>
             </div>
-          ) : (
-          <div className="grid gap-3 sm:grid-cols-3">
-            {games.map((game, index) => (
-              <article key={game.id || game.slug} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] transition duration-300 hover:border-purple-400/30 hover:bg-purple-500/[0.06] ui-card df-game-card">
-                <div className="relative h-36 overflow-hidden">
-                  <img src={game.image} alt={game.alt} loading="lazy" className="h-full w-full object-cover opacity-75 transition duration-500 hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#100d19] via-black/10 to-transparent" />
-                  <div className="absolute bottom-3 left-4 flex h-10 w-10 items-center justify-center rounded-xl border border-purple-200/20 bg-black/45 text-2xl text-purple-100 backdrop-blur ui-card">{game.icon}</div>
-                </div>
-                <div className="p-5">
-                <p className="mb-2 text-[9px] font-bold tracking-[0.2em] text-gray-500">0{game.sort_order || index + 2} · {t.soon}</p>
-                <h3 className="text-base font-black">{game.name}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-gray-500">{game.description}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-          )}
+            <div className="df-library-card-body">
+              <div className="df-library-card-meta">
+                <span className="df-library-index">01</span>
+                <span>{t.mamahType}</span>
+              </div>
+              <h2>{t.mamah}</h2>
+              <p className="df-library-description">{t.mamahDesc}</p>
+              <p className="df-library-access">{t.mamahAccess}</p>
+              <button type="button" onClick={handlePlayMamah} disabled={loading} className="df-library-action">
+                {loading ? t.wait : t.play}
+                <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
+
+          <article className="df-library-card df-library-card-run">
+            <div className="df-library-art df-library-art-run" aria-hidden="true">
+              <span className="df-library-art-orbit" />
+              <span className="df-library-art-symbol">🏃</span>
+              <span className="df-library-art-chip">02 / ENDLESS RUN</span>
+            </div>
+            <div className="df-library-card-body">
+              <div className="df-library-card-meta">
+                <span className="df-library-index">02</span>
+                <span>{t.jumpType}</span>
+              </div>
+              <h2>{t.jump}</h2>
+              <p className="df-library-description">{t.jumpDesc}</p>
+              <p className="df-library-access">{t.jumpAccess}</p>
+              <Link href={withLocalePrefix("/games/run-jump", language)} className="df-library-action">
+                {t.play}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+          </article>
         </section>
       </div>
 
-
       {showGooglePrompt && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 p-5 backdrop-blur-md" onClick={() => setShowGooglePrompt(false)}>
-          <section role="alertdialog" aria-modal="true" aria-labelledby="mamah-google-title" className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-amber-300/30 bg-gradient-to-b from-[#261a2b] to-[#100d19] p-6 text-center shadow-[0_25px_90px_rgba(0,0,0,.75)] ui-popup ui-card df-theme-panel" onClick={(event) => event.stopPropagation()}>
-            <div className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full bg-amber-500/15 blur-3xl" />
-            <div className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-300/25 bg-amber-400/10 text-3xl">🔐</div>
-            <p className="relative text-[9px] font-black tracking-[.3em] text-amber-300">ACCOUNT REQUIRED</p>
-            <h2 id="mamah-google-title" className="relative mt-2 text-xl font-black text-white ui-section-title">{language === "id" ? "LOGIN GOOGLE DIPERLUKAN" : "GOOGLE LOGIN REQUIRED"}</h2>
-            <p className="relative mt-3 text-sm leading-relaxed text-gray-300">{language === "id" ? "MAMAH NGAMUK membutuhkan akun Google agar koin dan Best Distance kamu tersimpan dengan aman." : "MAMAH NGAMUK requires a Google account so your coins and Best Distance can be saved securely."}</p>
-            <button type="button" onClick={handleGoogleLoginFromPrompt} disabled={googleBusy} className="relative mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-white px-5 py-4 text-sm font-black text-gray-900 transition hover:bg-gray-100 disabled:opacity-60">
-              <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.06 13.22l7.98 6.19C11.93 13.72 17.45 9.5 24 9.5z" transform="translate(0 4)"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.73 6C44.43 37.95 46.98 31.75 46.98 24.55z"/><path fill="#FBBC05" d="M10.04 28.59A14.4 14.4 0 0 1 9.27 24c0-1.59.27-3.13.77-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.86.92 7.51 2.56 10.78l7.48-6.19z" transform="translate(0 4)"/><path fill="#34A853" d="M24 48c6.47 0 11.9-2.13 15.93-5.8l-7.73-6c-2.14 1.45-4.87 2.3-8.2 2.3-6.55 0-12.07-4.22-14.04-10.09l-7.98 6.19C6.51 42.62 14.62 48 24 48z" transform="translate(0 -4)"/></svg>
-              {googleBusy ? (language === "id" ? "MEMBUKA GOOGLE..." : "OPENING GOOGLE...") : (language === "id" ? "LOGIN DENGAN GOOGLE" : "SIGN IN WITH GOOGLE")}
+        <div className="df-games-dialog-backdrop" onClick={() => setShowGooglePrompt(false)}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="mamah-google-title" className="df-games-dialog" onClick={(event) => event.stopPropagation()}>
+            <div className="df-games-dialog-icon" aria-hidden="true">🔐</div>
+            <p className="df-games-dialog-eyebrow">ACCOUNT ACCESS</p>
+            <h2 id="mamah-google-title">{t.accountTitle}</h2>
+            <p>{t.accountDesc}</p>
+            <button type="button" onClick={handleGoogleLoginFromPrompt} disabled={googleBusy} className="df-games-google-action">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.06 13.22l7.98 6.19C11.93 13.72 17.45 9.5 24 9.5z" transform="translate(0 4)"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.73 6C44.43 37.95 46.98 31.75 46.98 24.55z"/><path fill="#FBBC05" d="M10.04 28.59A14.4 14.4 0 0 1 9.27 24c0-1.59.27-3.13.77-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.86.92 7.51 2.56 10.78l7.48-6.19z" transform="translate(0 4)"/><path fill="#34A853" d="M24 48c6.47 0 11.9-2.13 15.93-5.8l-7.73-6c-2.14 1.45-4.87 2.3-8.2 2.3-6.55 0-12.07-4.22-14.04-10.09l-7.98 6.19C6.51 42.62 14.62 48 24 48z" transform="translate(0 -4)"/></svg>
+              {googleBusy ? t.openingGoogle : t.google}
             </button>
-            <button type="button" onClick={() => setShowGooglePrompt(false)} disabled={googleBusy} className="relative mt-3 w-full rounded-xl border border-white/10 bg-white/5 py-3 text-xs font-bold tracking-wider text-gray-300 transition hover:bg-white/10 disabled:opacity-50">{language === "id" ? "BATAL" : "CANCEL"}</button>
+            <button type="button" onClick={() => setShowGooglePrompt(false)} disabled={googleBusy} className="df-games-cancel">{t.cancel}</button>
           </section>
         </div>
       )}
 
       {showError && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-5 backdrop-blur-sm" onClick={() => setShowError(false)}>
-          <div role="alertdialog" aria-modal="true" aria-labelledby="games-error-title" className="w-full max-w-sm rounded-2xl border border-purple-500/30 bg-[#151020] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.6)] ui-popup ui-gradient-frame ui-card df-theme-panel" onClick={(event) => event.stopPropagation()}>
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-2xl text-red-400">!</div>
-            <h2 id="games-error-title" className="text-center text-lg font-black ui-section-title">{t.errorTitle}</h2>
-            <p className="mt-3 text-center text-sm text-gray-400">{t.error}</p>
-            <button onClick={() => setShowError(false)} className="mt-6 w-full rounded-xl bg-purple-600 py-3 text-sm font-bold transition hover:bg-purple-500">{t.close}</button>
-          </div>
+        <div className="df-games-dialog-backdrop" onClick={() => setShowError(false)}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="games-error-title" className="df-games-dialog" onClick={(event) => event.stopPropagation()}>
+            <div className="df-games-dialog-icon df-games-error-icon" aria-hidden="true">!</div>
+            <p className="df-games-dialog-eyebrow">ERROR</p>
+            <h2 id="games-error-title">{t.errorTitle}</h2>
+            <p>{t.error}</p>
+            <button type="button" onClick={() => setShowError(false)} className="df-games-action-close">{t.close}</button>
+          </section>
         </div>
       )}
     </main>
