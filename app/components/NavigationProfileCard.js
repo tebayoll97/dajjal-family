@@ -7,6 +7,7 @@ import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
 
 const CACHE_PREFIX = "df_user_profile_cache_v1:";
+const LAST_USER_KEY = "df_user_profile_last_user_v1";
 
 const copy = {
   id: { checking: "Memuat profil...", guest: "Selamat datang", profile: "Profil Saya", login: "Masuk ke akun", member: "Akun pengguna" },
@@ -27,6 +28,7 @@ function readCache(userId) {
 
 function writeCache(userId, identity) {
   try {
+    window.localStorage.setItem(LAST_USER_KEY, userId);
     window.localStorage.setItem(CACHE_PREFIX + userId, JSON.stringify({
       userId,
       name: identity.name || "",
@@ -40,7 +42,10 @@ function writeCache(userId, identity) {
 
 function clearUserCache(userId) {
   try {
-    if (userId) window.localStorage.removeItem(CACHE_PREFIX + userId);
+    if (userId) {
+      window.localStorage.removeItem(CACHE_PREFIX + userId);
+      if (window.localStorage.getItem(LAST_USER_KEY) === userId) window.localStorage.removeItem(LAST_USER_KEY);
+    }
   } catch {
     // Ignore unavailable storage.
   }
@@ -51,7 +56,15 @@ export default function NavigationProfileCard({ onNavigate }) {
   const t = copy[language] || copy.id;
   const [status, setStatus] = useState("checking");
   const currentUserId = useRef(null);
-  const [identity, setIdentity] = useState({ name: "", email: "", avatar: "" });
+  const [identity, setIdentity] = useState(() => {
+    try {
+      const lastUserId = window.localStorage.getItem(LAST_USER_KEY);
+      const cached = lastUserId ? readCache(lastUserId) : null;
+      return cached ? { ...cached, email: "" } : { name: "", email: "", avatar: "" };
+    } catch {
+      return { name: "", email: "", avatar: "" };
+    }
+  });
 
   useEffect(() => {
     let active = true;
@@ -103,7 +116,7 @@ export default function NavigationProfileCard({ onNavigate }) {
   }, []);
 
   const signedIn = status === "signed-in";
-  const title = signedIn ? (identity.name || t.profile) : status === "checking" ? t.checking : t.guest;
+  const title = identity.name || (signedIn ? t.profile : status === "checking" ? t.checking : t.guest);
   const href = signedIn ? withLocalePrefix("/profile", language) : `${withLocalePrefix("/login", language)}?next=%2Fprofile`;
   const initial = (identity.name || identity.email || "U").trim().charAt(0).toUpperCase();
 
@@ -114,7 +127,7 @@ export default function NavigationProfileCard({ onNavigate }) {
       </span>
       <span className="df-navigation-profile-copy">
         <strong>{title}</strong>
-        <small>{signedIn ? (identity.email || t.member) : status === "checking" ? t.checking : t.login}</small>
+        <small>{signedIn ? (identity.email || t.member) : status === "checking" ? (identity.name ? t.member : t.checking) : t.login}</small>
       </span>
       <span className="df-navigation-profile-arrow" aria-hidden="true">→</span>
     </Link>
