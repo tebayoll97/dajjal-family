@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
 
 const photos = {
-  dajjal: "https://drive.google.com/uc?export=download&id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed",
-  veylora: "https://drive.google.com/uc?export=download&id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr",
-  cover: "https://drive.google.com/uc?export=download&id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_",
+  dajjal: "https://drive.google.com/uc?export=view&id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed",
+  veylora: "https://drive.google.com/uc?export=view&id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr",
+  cover: "https://drive.google.com/uc?export=view&id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_",
   moments: [
-    "https://drive.google.com/uc?export=download&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
-    "https://drive.google.com/uc?export=download&id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl",
-    "https://drive.google.com/uc?export=download&id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u",
-    "https://drive.google.com/uc?export=download&id=1PsOBoHdLz4jAo3uUcbAbUfLGFSa85mB1",
+    "https://drive.google.com/uc?export=view&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
+    "https://drive.google.com/uc?export=view&id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl",
+    "https://drive.google.com/uc?export=view&id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u",
+    "https://drive.google.com/uc?export=view&id=1PsOBoHdLz4jAo3uUcbAbUfLGFSa85mB1",
   ],
   portraits: [
-    "https://drive.google.com/uc?export=download&id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe",
-    "https://drive.google.com/uc?export=download&id=1rL-oAVIsUkD_pfkZpn2YmnCJr6inT7Ax",
+    "https://drive.google.com/uc?export=view&id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe",
+    "https://drive.google.com/uc?export=view&id=1rL-oAVIsUkD_pfkZpn2YmnCJr6inT7Ax",
   ],
 };
 
