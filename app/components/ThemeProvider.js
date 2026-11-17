@@ -30,10 +30,10 @@ function applyTheme(mode, palette = PUBLISHED_PRESET_FALLBACK) {
   return resolvedMode;
 }
 
-export function ThemeProvider({ children }) {
+export function ThemeProvider({ children, initialPalette = PUBLISHED_PRESET_FALLBACK }) {
   const [theme, setTheme] = useState("dark");
   const [themeMode, setThemeModeState] = useState("system");
-  const [palette] = useState(PUBLISHED_PRESET_FALLBACK);
+  const [palette] = useState(initialPalette);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -41,25 +41,25 @@ export function ThemeProvider({ children }) {
     const initialMode = isThemeMode(savedMode) ? savedMode : "system";
 
     setThemeModeState(initialMode);
-    setTheme(applyTheme(initialMode));
+    setTheme(applyTheme(initialMode, initialPalette));
     setReady(true);
 
     const media = window.matchMedia("(prefers-color-scheme: light)");
     const onSystemChange = () => {
       const currentMode = localStorage.getItem(THEME_MODE_STORAGE_KEY);
       if (!isThemeMode(currentMode) || currentMode === "system") {
-        setTheme(applyTheme("system"));
+        setTheme(applyTheme("system", initialPalette));
       }
     };
     media.addEventListener?.("change", onSystemChange);
     return () => media.removeEventListener?.("change", onSystemChange);
-  }, []);
+  }, [initialPalette]);
 
   const setThemeMode = (nextMode) => {
     if (nextMode !== "dark" && nextMode !== "light") return;
     setThemeModeState(nextMode);
     localStorage.setItem(THEME_MODE_STORAGE_KEY, nextMode);
-    setTheme(applyTheme(nextMode));
+    setTheme(applyTheme(nextMode, palette));
   };
 
   const toggleTheme = () => {
