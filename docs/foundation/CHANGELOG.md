@@ -182,3 +182,14 @@
 - The early theme bootstrap switches the browser theme color to the resolved visitor appearance mode before normal page paint.
 - ThemeProvider keeps the browser theme color synchronized on manual Light/Dark changes and first-visit system preference changes.
 - No per-preset hardcoded browser colors or page-specific CSS were introduced. Actual toolbar/status-bar rendering remains subject to browser and operating-system support.
+
+
+## 2026-11-18 — Game Library Global Theme Preset migration
+
+- Rebuilt only the public Game Library page (`app/games/page.js`) and its page-scoped visual rules in `app/styles/theme.css`.
+- Replaced hardcoded palette colors and legacy dark-only card styling with semantic `--df-*` tokens, including page background, surfaces, text, borders, actions, focus states, and dialogs. Both TECNO and Dajjal × Veylora presets therefore supply the page identity in Light and Dark modes.
+- Removed the Coming Soon section and its catalog-loading query from the visitor-facing Game Library. This does not delete or alter game records in Supabase.
+- Reconstructed the two playable game cards for MAMAH NGAMUK and Run Jump. Localized the latter's display title as “Lari! Kebakaran Hutan!” (ID) and “Run! Forest Fire!” (EN), while preserving the existing `/games/run-jump` route and underlying game identity.
+- Localized the visible page labels and dialogs; preserved MAMAH NGAMUK's Google-account gate and the public no-login launch for Run Jump.
+- Added mobile single-column and tablet/desktop two-column responsive layouts, touch-sized actions, keyboard focus, and reduced-motion handling. Styling is scoped to `.df-games-page`; other game routes and immersive gameplay styles are not changed.
+- Status: source committed on `main`; Vercel build and four-way preset/mode visual QA at mobile, tablet, and desktop remain to be verified.
