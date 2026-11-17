@@ -199,7 +199,7 @@ This document is the operating command for execution style, quality, security, p
 The Command Master is the project's command hub. Subcommands are independent operating modes and inherit this entire charter, including the global execution mandate, MASTER_FOUNDATION.md, security requirements, and deployment governance.
 
 ### 19.1 `/command-master` — development
-Load this charter and the relevant foundation/project documents; inspect current repository, branch, deployment, and task state; select and execute the next highest-value safe development work; verify and report. Use `main` as the baseline and create or continue a focused feature branch for the selected work. Do not merge to `main` or trigger production release without the required approval. This command does not authorize production release.
+Load this charter and the relevant foundation/project documents; inspect current repository, branch, deployment, and task state; select and execute the next highest-value safe development work; verify and report. Use `main` as the active work and integration branch. Do not create a feature branch by default; isolate only when requested by the owner or when material risk makes direct work on `main` unsafe. Routine application-code deployment from `main` to Production for direct website testing is covered by the owner's standing decision dated 2026-11-15, subject to release dependencies and the Vercel pause in `docs/aturan-kerja.md`. This does not authorize any separately gated operation listed in section 7.
 
 ### 19.2 `/command-master-migration` — release and migration
 Run the release-readiness and migration workflow for a specific release candidate:
@@ -209,11 +209,11 @@ Run the release-readiness and migration workflow for a specific release candidat
 4. Verify the preview deployment corresponds to the exact candidate commit; perform route-level, responsive, authentication, authorization, accessibility, and regression QA appropriate to the release.
 5. Review every database migration and schema dependency. Check ordering, existing data, constraints, RLS, grants, compatibility with the currently live app, and rollback/recovery options. Separate code merge from database migration.
 6. Prepare a release report with scope, commit range, test evidence, preview evidence, database operations, risks, recovery plan, and proposed version/changelog entry.
-7. STOP before merging to `main`, applying production database migrations, changing production configuration, or promoting/deploying production. Obtain explicit owner approval for the specific release and its material database operations.
-8. After explicit approval, execute only the approved steps in a controlled order. Verify production health and critical journeys, then record the exact release commit, deployment, migration outcome, and version.
+7. STOP before applying production database migrations, destructive data operations, secret rotation, domain/DNS changes, billing/plan changes, or security-sensitive production configuration changes. Obtain explicit owner approval for each specific operation. For routine application-code deployment from `main`, follow the standing owner authorization recorded in `docs/aturan-kerja.md` (2026-11-15); do not request duplicate approval for that already-authorized scope.
+8. Execute only authorized steps in a controlled order. Verify production health and critical journeys, then record the exact release commit, deployment, migration outcome, and version.
 9. If a critical check fails or unexpected changes appear, stop; do not force-push, overwrite production, or improvise a destructive rollback. Report the issue and safest recovery options.
 
-A general agreement to use this command or a request to inspect migration readiness is not approval to release. The command may prepare and verify a release candidate autonomously, but production actions remain gated by explicit, release-specific approval. Git merge and Supabase database migration are separate operations; neither implies the other.
+A general agreement to use this command or a request to inspect migration readiness is not approval for separately gated operations. The command may prepare and verify a release candidate autonomously. Routine application-code deployment from `main` is already covered by the owner's standing authorization dated 2026-11-15; database migrations and other separately gated operations still require explicit, operation-specific approval. Git integration and Supabase database migration are separate operations; neither implies the other.
 
 ### 19.3 `/command-master-audit` — audit
 Inspect the requested or highest-risk project areas across application code, APIs, authentication/authorization, Supabase schema/RLS/functions, performance, accessibility, SEO, and UX. Prioritize findings by severity and evidence. Distinguish confirmed vulnerabilities/defects from hypotheses. Do not make production changes; safe, reversible fixes may be proposed or implemented on the development branch when clearly within scope.
@@ -227,6 +227,19 @@ Report the verified current branch and HEAD, working changes if available, lates
 - If multiple commands are invoked, follow the explicit order requested; otherwise resolve the highest-risk prerequisite first.
 - Never infer authorization for an irreversible, financial, destructive, or production action from a command name alone.
 
+
+
+## 25. Owner-approved main and routine application deployment exception — 2026-11-15
+
+The owner explicitly decided that `main` is the active development and integration branch and authorized routine application-code deployment from `main` to the Production website for direct testing. This current, project-specific operating decision is recorded in `docs/aturan-kerja.md` and takes precedence over older generic feature-branch and preview-first wording in this charter where the scopes conflict.
+
+This exception is deliberately narrow:
+- Routine application source and documentation work may be committed directly to `main`; do not create feature branches by default.
+- Routine application-code deployment from `main` is authorized while release dependencies permit it. Respect the current Vercel pause and never poll or attempt deployment repeatedly while the limit is unavailable.
+- The exception does not authorize production database migrations/DDL, destructive data operations, secret rotation, DNS/domain changes, billing/plan changes, or security-sensitive production configuration changes. Each requires separate explicit approval.
+- The approved Master Foundation remains unchanged. This is a documented owner-approved operational exception, not a silent revision of the foundation.
+- If the owner changes this decision, update `docs/aturan-kerja.md` and reconcile this section in the same session.
+
 ## 20. Incremental release and versioning policy
 - Dajjal Family may be released in coherent, independently usable phases; the entire roadmap does not need to be complete before the first public release.
 - Each release candidate must define its scope, acceptance criteria, dependencies, known limitations, and rollback/recovery approach.
@@ -234,7 +247,8 @@ Report the verified current branch and HEAD, working changes if available, lates
 - After a release, synchronize the development branch with the released `main` baseline before continuing subsequent work. Preserve unmerged work and resolve divergence explicitly; never blindly reset or force-push.
 - Prefer additive and backward-compatible database changes. Use expand-and-contract for changes that span multiple releases: add compatible structures, deploy code that supports old and new forms, backfill/verify, then remove legacy structures only in a separately approved later release.
 - Maintain release notes and migration records. Mark each database migration as staged, applied to preview, applied to production, or rolled back; never imply that a committed migration file has been executed.
-- Production releases remain opt-in and owner-approved, even when the candidate has passed all checks.
+- Routine application-code deployment from `main` follows the owner's standing authorization dated 2026-11-15, as recorded in `docs/aturan-kerja.md`. This is a project-specific operating exception to the generic preview-first/explicit-production-approval language in the Master Foundation; it does not modify the Master Foundation itself.
+- Production database migrations, destructive data changes, secrets, DNS/domain, billing, and security-sensitive production configuration remain separately gated and require explicit, operation-specific owner approval.
 
 
 ## 21. Profile and admin user-management implementation follow-up (2026-11-14)
