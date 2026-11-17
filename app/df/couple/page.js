@@ -6,7 +6,7 @@ import { useLanguage } from "../../components/LanguageProvider";
 const photos = {
   dajjal: "https://drive.google.com/uc?export=view&id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed",
   veylora: "https://drive.google.com/uc?export=view&id=1uMesA4WgX8CPLCVnSA3s_b58CtfpW7dr",
-  cover: "https://drive.google.com/uc?export=view&id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_",
+  cover: "https://drive.google.com/thumbnail?id=1ft9M6JyMrdXsLncSVOm7yXiEEHH9LRQ_&sz=w1600",
   moments: [
     "https://drive.google.com/uc?export=view&id=1OYQRWGIC-8xFZ_ht5MAd0XEY5NFvjddf",
     "https://drive.google.com/uc?export=view&id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl",
