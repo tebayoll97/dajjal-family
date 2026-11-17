@@ -335,6 +335,10 @@ export default function Header() {
             <NavigationProfileCard onNavigate={navigateFromDrawer} />
             <p className="df-site-navigation-heading">{t.main}</p>
             <div className="df-site-navigation-groups">
+              <Link className="df-site-navigation-group-trigger df-site-navigation-home" href={withLocalePrefix("/", language)} aria-current={isActive("/") ? "page" : undefined} onClick={navigateFromDrawer}>
+                <NavigationIcon name="home" />
+                <span>{t.home}</span>
+              </Link>
               {navigationGroups.map((group) => {
                 const expanded = (openGroup === null ? activeGroupId === group.id : openGroup === group.id);
                 const groupId = `df-navigation-group-${group.id}`;
