@@ -461,3 +461,80 @@
   .df-couple-character-art { flex-basis: 5.5rem; width: 5.5rem; }
   .df-couple-character-copy > p:last-child { font-size: .8rem; line-height: 1.55; }
 }
+
+
+/* Couple soundtrack player — scoped to the Couple Profile page. */
+.df-couple-music-player { margin-top: clamp(2rem, 5vw, 3.5rem); scroll-margin-top: 2rem; }
+.df-couple-music-heading { margin-bottom: 1rem; }
+.df-couple-music-heading h2 {
+  margin: .4rem 0 0; color: var(--df-text); font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 850; letter-spacing: -.035em; line-height: 1.2;
+}
+.df-couple-music-heading > p:last-child {
+  margin: .55rem 0 0; color: var(--df-text-secondary); font-size: .9rem; line-height: 1.7;
+}
+.df-couple-music-card {
+  display: grid; grid-template-columns: minmax(10rem, .78fr) minmax(0, 1.22fr);
+  gap: clamp(1rem, 3vw, 2rem); align-items: center; min-width: 0;
+  padding: clamp(.9rem, 2.5vw, 1.5rem);
+  border: 1px solid color-mix(in srgb, var(--couple-primary) 34%, var(--df-border));
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, var(--couple-primary-soft), var(--couple-surface) 56%);
+  box-shadow: var(--df-shadow-sm);
+}
+.df-couple-music-artwork {
+  position: relative; overflow: hidden; width: 100%; aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--couple-primary) 30%, var(--df-border));
+  border-radius: 1rem; background: var(--couple-surface-raised); box-shadow: var(--df-shadow-md);
+}
+.df-couple-music-artwork img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.df-couple-music-artwork > span {
+  position: absolute; right: .65rem; bottom: .6rem; padding: .25rem .45rem;
+  border: 1px solid rgba(255,255,255,.28); border-radius: 999px;
+  background: rgba(0,0,0,.48); color: #fff; font-size: .55rem; font-weight: 850; letter-spacing: .14em;
+}
+.df-couple-music-content { min-width: 0; }
+.df-couple-music-track-meta {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: .35rem .75rem;
+  color: var(--couple-primary); font-size: .65rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase;
+}
+.df-couple-music-content h3 {
+  margin: .65rem 0 .2rem; color: var(--df-text); font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  font-weight: 900; letter-spacing: -.035em; line-height: 1.2; overflow-wrap: anywhere;
+}
+.df-couple-music-artist { margin: 0; color: var(--df-text-secondary); font-size: .88rem; }
+.df-couple-music-progress { margin-top: 1.2rem; }
+.df-couple-music-progress input, .df-couple-music-volume input {
+  display: block; width: 100%; min-width: 0; height: 1.25rem; margin: 0;
+  accent-color: var(--couple-primary); cursor: pointer;
+}
+.df-couple-music-time {
+  display: flex; justify-content: space-between; margin-top: .2rem;
+  color: var(--df-text-muted); font-size: .68rem; font-variant-numeric: tabular-nums;
+}
+.df-couple-music-controls { display: flex; align-items: center; gap: .7rem; margin-top: .75rem; }
+.df-couple-music-controls > button {
+  display: grid; flex: 0 0 2.75rem; width: 2.75rem; height: 2.75rem; place-items: center; padding: 0;
+  border: 1px solid var(--df-border); border-radius: 50%; background: var(--couple-surface-raised);
+  color: var(--df-text); font-size: 1.2rem; font-weight: 800; cursor: pointer;
+}
+.df-couple-music-controls > .df-couple-music-play {
+  flex-basis: 3.25rem; width: 3.25rem; height: 3.25rem;
+  border-color: var(--couple-primary); background: var(--couple-primary); color: #fff; font-size: 1.15rem;
+}
+.df-couple-music-controls > button:hover { border-color: var(--couple-primary); }
+.df-couple-music-controls > button:focus-visible,
+.df-couple-music-progress input:focus-visible,
+.df-couple-music-volume input:focus-visible { outline: 3px solid var(--df-focus); outline-offset: 3px; }
+.df-couple-music-volume {
+  display: flex; flex: 1 1 6rem; min-width: 4rem; align-items: center; gap: .45rem;
+  margin-left: auto; color: var(--df-text-secondary);
+}
+.df-couple-music-volume > span { font-size: 1rem; }
+.df-couple-music-message { min-height: 1.1rem; margin: .55rem 0 0; color: var(--df-text-muted); font-size: .72rem; line-height: 1.5; }
+@media (max-width: 560px) {
+  .df-couple-music-card { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .df-couple-music-artwork { width: min(100%, 18rem); margin-inline: auto; }
+  .df-couple-music-controls { gap: .55rem; }
+}
+@media (prefers-reduced-motion: reduce) { .df-couple-music-controls > button { transition: none; } }

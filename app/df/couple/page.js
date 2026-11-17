@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
+import CoupleMusicPlayer from "../../components/CoupleMusicPlayer";
 
 const photos = {
   dajjal: "https://drive.google.com/thumbnail?id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe&sz=w1600",
@@ -213,6 +214,8 @@ export default function CoupleProfilePage() {
             ))}
           </section>
         </header>
+
+        <CoupleMusicPlayer />
 
         <section className="df-couple-section" aria-labelledby="df-couple-identities">
           <div className="df-couple-section-heading">
