@@ -9,7 +9,6 @@ import GlobalSidebar from "./GlobalSidebar";
 export default function RouteChrome({ children }) {
   const pathname = stripLocalePrefix(usePathname() || "/");
   const isImmersiveGame = pathname.startsWith("/games/run-jump") || pathname.startsWith("/games/mamah-ngamuk");
-  const isHome = pathname === "/";
   const isLogin = pathname === "/login";
 
   if (isImmersiveGame) return <div className="df-immersive-route">{children}</div>;
@@ -26,14 +25,10 @@ export default function RouteChrome({ children }) {
   return (
     <div className="df-site-shell">
       <Header />
-      {isHome ? (
-        <div className="df-site-main">{children}</div>
-      ) : (
-        <div className="df-workspace-layout">
-          <GlobalSidebar />
-          <main className="df-workspace-main">{children}</main>
-        </div>
-      )}
+      <div className="df-workspace-layout">
+        <GlobalSidebar />
+        <main className="df-workspace-main">{children}</main>
+      </div>
       <Footer />
     </div>
   );
