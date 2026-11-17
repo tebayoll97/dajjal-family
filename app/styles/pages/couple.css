@@ -538,3 +538,119 @@
   .df-couple-music-controls { gap: .55rem; }
 }
 @media (prefers-reduced-motion: reduce) { .df-couple-music-controls > button { transition: none; } }
+
+
+/* Playlist and track-change motion */
+.df-couple-music-artwork img { animation: df-couple-track-fade .46s ease both; }
+.df-couple-music-title-group { animation: df-couple-track-copy-in .38s ease both; }
+.df-couple-music-playlist {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin-top: .1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--df-border);
+}
+.df-couple-music-playlist h4 {
+  margin: 0 0 .65rem;
+  color: var(--df-text-muted);
+  font-size: .65rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+}
+.df-couple-music-track {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 4.25rem;
+  align-items: center;
+  gap: .8rem;
+  padding: .7rem .75rem;
+  border: 1px solid transparent;
+  border-radius: .8rem;
+  background: transparent;
+  color: var(--df-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.df-couple-music-track + .df-couple-music-track { margin-top: .35rem; }
+.df-couple-music-track:hover { background: var(--couple-primary-soft); }
+.df-couple-music-track.is-active {
+  border-color: color-mix(in srgb, var(--couple-primary) 45%, var(--df-border));
+  background: var(--couple-primary-soft);
+}
+.df-couple-music-track:focus-visible { outline: 3px solid var(--df-focus); outline-offset: 3px; }
+.df-couple-music-track-number {
+  flex: 0 0 1.8rem;
+  color: var(--df-text-muted);
+  font-size: .72rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+.df-couple-music-track.is-active .df-couple-music-track-number { color: var(--couple-primary); }
+.df-couple-music-track-copy {
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: .2rem;
+}
+.df-couple-music-track-copy strong {
+  overflow: hidden;
+  color: var(--df-text);
+  font-size: .88rem;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.df-couple-music-track-copy small { color: var(--df-text-muted); font-size: .73rem; }
+.df-couple-music-track-state {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .45rem;
+  color: var(--df-text-muted);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.df-couple-music-track.is-active .df-couple-music-track-state { color: var(--couple-primary); }
+.df-couple-music-track-play { font-size: .85rem; }
+.df-couple-music-equalizer {
+  display: flex;
+  height: 1rem;
+  align-items: center;
+  gap: 2px;
+}
+.df-couple-music-equalizer i {
+  display: block;
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+}
+.df-couple-music-equalizer.is-playing i { animation: df-couple-equalize .7s ease-in-out infinite alternate; }
+.df-couple-music-equalizer.is-playing i:nth-child(2) { animation-delay: .2s; }
+.df-couple-music-equalizer.is-playing i:nth-child(3) { animation-delay: .38s; }
+@keyframes df-couple-track-fade {
+  from { opacity: .25; transform: scale(.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes df-couple-track-copy-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes df-couple-equalize {
+  from { height: 4px; }
+  to { height: 14px; }
+}
+@media (max-width: 560px) {
+  .df-couple-music-playlist { margin-top: .15rem; }
+  .df-couple-music-track { gap: .6rem; padding-inline: .55rem; }
+  .df-couple-music-track-state { font-size: .58rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-couple-music-artwork img,
+  .df-couple-music-title-group { animation: none; }
+  .df-couple-music-track,
+  .df-couple-music-equalizer i { transition: none; animation: none; }
+}

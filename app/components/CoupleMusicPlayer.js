@@ -8,8 +8,8 @@ const tracks = [
   { title: "Kau Yang Paling Berarti", artist: "Veylora", src: "/audio/Veylora%20-%20Teba%20yang%20paling%20berarti.mp3", cover: "https://drive.google.com/thumbnail?id=10p_O8BsPjQUT9z47JBU5XBDLSiPgvmVW&sz=w1200", theme: "veylora" },
 ];
 const words = {
-  id: { eyebrow: "SOUNDTRACK KITA", title: "Musik yang punya cerita", intro: "Dua lagu, dua sudut pandang, satu kisah Dajjal × Veylora.", play: "Putar", pause: "Jeda", prev: "Lagu sebelumnya", next: "Lagu berikutnya", seek: "Posisi lagu", volume: "Volume", blocked: "Tekan putar untuk memulai musik", error: "Audio tidak dapat diputar. Periksa koneksi lalu coba lagi.", track: "Lagu", of: "dari" },
-  en: { eyebrow: "OUR SOUNDTRACK", title: "Music with a story", intro: "Two songs, two perspectives, one Dajjal × Veylora story.", play: "Play", pause: "Pause", prev: "Previous track", next: "Next track", seek: "Track position", volume: "Volume", blocked: "Press play to start the music", error: "Audio could not be played. Check your connection and try again.", track: "Track", of: "of" },
+  id: { eyebrow: "SOUNDTRACK KITA", title: "Musik yang punya cerita", intro: "Dua lagu, dua sudut pandang, satu kisah Dajjal × Veylora.", play: "Putar", pause: "Jeda", prev: "Lagu sebelumnya", next: "Lagu berikutnya", seek: "Posisi lagu", volume: "Volume", blocked: "Tekan putar untuk memulai musik", error: "Audio tidak dapat diputar. Periksa koneksi lalu coba lagi.", track: "Lagu", of: "dari", playlist: "DAFTAR LAGU", now: "SEDANG DIPUTAR", ready: "Pilih untuk memutar", select: "Putar lagu" },
+  en: { eyebrow: "OUR SOUNDTRACK", title: "Music with a story", intro: "Two songs, two perspectives, one Dajjal × Veylora story.", play: "Play", pause: "Pause", prev: "Previous track", next: "Next track", seek: "Track position", volume: "Volume", blocked: "Press play to start the music", error: "Audio could not be played. Check your connection and try again.", track: "Track", of: "of", playlist: "PLAYLIST", now: "NOW PLAYING", ready: "Select to play", select: "Play track" },
 };
 const clock = (n) => Number.isFinite(n) && n > 0 ? Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0") : "0:00";
 
@@ -63,7 +63,13 @@ export default function CoupleMusicPlayer() {
       audio.load();
       setTime(0);
       setDuration(0);
-      if (playingRef.current) audio.play().catch(() => { playingRef.current = false; setPlaying(false); setMessage(t.error); });
+      if (playingRef.current) {
+        audio.play().then(() => { setPlaying(true); setMessage(""); }).catch(() => {
+          playingRef.current = false;
+          setPlaying(false);
+          setMessage(t.error);
+        });
+      }
     }
   }, [index]);
 
@@ -78,11 +84,14 @@ export default function CoupleMusicPlayer() {
       audio.play().then(() => { playingRef.current = true; setPlaying(true); setMessage(""); }).catch(() => setMessage(t.error));
     }
   };
-  const changeTrack = (step) => {
+  const selectTrack = (nextIndex) => {
+    if (nextIndex === index) { if (!playingRef.current) toggle(); return; }
     playingRef.current = true;
     setPlaying(true);
-    setIndex((i) => (i + step + tracks.length) % tracks.length);
+    setMessage("");
+    setIndex(nextIndex);
   };
+  const changeTrack = (step) => selectTrack((index + step + tracks.length) % tracks.length);
   const seek = (event) => {
     if (!audioRef.current || !Number.isFinite(audioRef.current.duration)) return;
     audioRef.current.currentTime = Number(event.target.value);
@@ -99,14 +108,16 @@ export default function CoupleMusicPlayer() {
         <p>{t.intro}</p>
       </div>
       <div className="df-couple-music-card" data-track-theme={track.theme}>
-        <div className="df-couple-music-artwork">
+        <div className="df-couple-music-artwork" key={"cover-" + index}>
           <img src={track.cover} alt={track.title + " — " + track.artist + " cover"} />
           <span aria-hidden="true">DF MUSIC</span>
         </div>
         <div className="df-couple-music-content">
           <div className="df-couple-music-track-meta"><span>{t.track} {String(index + 1).padStart(2, "0")} {t.of} 02</span><span>{track.artist}</span></div>
-          <h3>{track.title}</h3>
-          <p className="df-couple-music-artist">{track.artist}</p>
+          <div className="df-couple-music-title-group" key={"title-" + index}>
+            <h3>{track.title}</h3>
+            <p className="df-couple-music-artist">{track.artist}</p>
+          </div>
           <div className="df-couple-music-progress">
             <input type="range" min="0" max={duration || 0} step="0.1" value={Math.min(time, duration || 0)} onChange={seek} aria-label={t.seek} style={{ "--music-progress": progress + "%" }} />
             <div className="df-couple-music-time"><span>{clock(time)}</span><span>{clock(duration)}</span></div>
@@ -118,6 +129,31 @@ export default function CoupleMusicPlayer() {
             <label className="df-couple-music-volume"><span aria-hidden="true">♪</span><input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(Number(e.target.value))} aria-label={t.volume} /></label>
           </div>
           <p className="df-couple-music-message" role="status" aria-live="polite">{message || " "}</p>
+        </div>
+        <div className="df-couple-music-playlist" aria-label={t.playlist}>
+          <h4>{t.playlist}</h4>
+          {tracks.map((item, itemIndex) => {
+            const active = itemIndex === index;
+            return (
+              <button
+                className={"df-couple-music-track" + (active ? " is-active" : "")}
+                type="button"
+                key={item.src}
+                onClick={() => selectTrack(itemIndex)}
+                aria-current={active ? "true" : undefined}
+                aria-label={active ? item.title + " — " + t.now : t.select + ": " + item.title}
+              >
+                <span className="df-couple-music-track-number">{String(itemIndex + 1).padStart(2, "0")}</span>
+                <span className="df-couple-music-track-copy">
+                  <strong>{item.title}</strong>
+                  <small>{item.artist}</small>
+                </span>
+                <span className="df-couple-music-track-state">
+                  {active ? <><span className={"df-couple-music-equalizer" + (playing ? " is-playing" : "")} aria-hidden="true"><i /><i /><i /></span><span>{playing ? t.now : t.play}</span></> : <><span className="df-couple-music-track-play" aria-hidden="true">▶</span><span>{t.ready}</span></>}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
