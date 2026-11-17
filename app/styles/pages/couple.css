@@ -106,16 +106,16 @@
 }
 .df-couple-orbit-core i { color: var(--couple-primary); font-style: normal; font-weight: 400; }
 .df-couple-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .75rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(.25rem, 1.5vw, .75rem);
   padding-top: 1.25rem;
   border-top: 1px solid var(--df-border);
 }
-.df-couple-metrics > div { display: grid; min-width: 7rem; gap: .2rem; padding: .25rem .75rem; }
-.df-couple-metrics strong { color: var(--couple-primary); font-size: 1rem; letter-spacing: .04em; }
-.df-couple-metrics span { color: var(--df-text-muted); font-size: .68rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+.df-couple-metrics > div { display: grid; min-width: 0; gap: .2rem; padding: .25rem clamp(.1rem, .75vw, .75rem); text-align: center; }
+.df-couple-metrics strong { color: var(--couple-primary); font-size: clamp(.9rem, 2.2vw, 1.35rem); line-height: 1.2; letter-spacing: .01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.df-couple-metrics span { color: var(--df-text-muted); font-size: clamp(.52rem, .85vw, .68rem); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .df-couple-section { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
 .df-couple-section-heading { margin-bottom: 1.25rem; }
 .df-couple-section-heading h2,
@@ -190,9 +190,10 @@
 @media (max-width: 420px) {
   .df-couple-title { gap: .25rem; font-size: clamp(1.8rem, 9vw, 2.5rem); }
   .df-couple-hero { border-radius: 1rem; }
-  .df-couple-metrics { gap: .25rem; }
-  .df-couple-metrics > div { min-width: 5.5rem; padding-inline: .4rem; }
-  .df-couple-metrics span { font-size: .58rem; letter-spacing: .08em; }
+  .df-couple-metrics { gap: .2rem; }
+  .df-couple-metrics > div { padding-inline: .05rem; }
+  .df-couple-metrics strong { font-size: clamp(.82rem, 4vw, 1.05rem); }
+  .df-couple-metrics span { font-size: .52rem; letter-spacing: .04em; }
   .df-couple-character-card { align-items: flex-start; gap: .9rem; }
 }
 .df-couple-details { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
@@ -299,8 +300,8 @@
 .df-couple-gallery-item:hover img,
 .df-couple-portrait-item:hover img { transform: scale(1.035); }
 .df-couple-portraits-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; max-width: 46rem; }
-.df-couple-portrait-item { aspect-ratio: 5 / 4; }
-.df-couple-portrait-item img { object-position: center 30%; }
+.df-couple-portrait-item { aspect-ratio: 2 / 3; }
+.df-couple-portrait-item img { object-fit: contain; object-position: center; }
 .df-couple-lightbox {
   position: fixed;
   z-index: 10000;

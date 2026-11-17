@@ -41,12 +41,8 @@ const copy = {
     storyText: "Halaman ini menyatukan profil Dajjal dan Veylora dalam satu bagian dari Universe Keluarga Dajjal. Setiap karakter tetap memiliki identitas visualnya sendiri, sementara halaman ini menjadi tempat untuk menampilkan kisah dan karya mereka bersama.",
     signature: "Dibangun dari dua identitas yang berbeda.",
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
-    characters: "Karakter",
-    universe: "Universe",
-    languages: "Bahasa",
-    characterValue: "02",
-    universeValue: "01",
-    languageValue: "ID · EN",
+    anniversaryLabel: "PERJALANAN KITA BERSAMA",
+    timeUnits: ["Hari", "Jam", "Menit", "Detik"],
     visualEyebrow: "CIRI VISUAL",
     visualTitle: "Identitas yang mudah dikenali",
     hair: "Rambut",
@@ -67,7 +63,7 @@ const copy = {
     galleryIntro: "Kumpulan potret dan momen dari perjalanan visual mereka.",
     momentsLabel: "COUPLE MOMENTS",
     portraitLabel: "PORTRAIT KARAKTER",
-    momentNames: ["Veylora capek jalan kaki", "Romantic Dance", "Naik motor hujan", "Selfi di warung", "Suasana Salju", "Di kantin sekolah"],
+    momentNames: ["Veylora Capek Jalan Kaki", "Aku Gak Bisa Dansa!", "Ah Basah-Basah!", "Selfi Di Warung", "Suasana Salju", "Veylora Bolos Ke Kantin"],
     portraitNames: ["Portrait Dajjal", "Portrait Veylora"],
     openPhoto: "Buka foto",
     closePhoto: "Tutup foto",
@@ -94,12 +90,8 @@ const copy = {
     storyText: "This page brings Dajjal and Veylora together as part of the Dajjal Family Universe. Each character keeps a distinct visual identity, while this shared space brings their stories and creative work together.",
     signature: "Built around two distinct identities.",
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
-    characters: "Characters",
-    universe: "Universe",
-    languages: "Languages",
-    characterValue: "02",
-    universeValue: "01",
-    languageValue: "ID · EN",
+    anniversaryLabel: "OUR TIME TOGETHER",
+    timeUnits: ["Days", "Hours", "Minutes", "Seconds"],
     visualEyebrow: "VISUAL SIGNATURE",
     visualTitle: "Distinctive character identities",
     hair: "Hair",
@@ -120,7 +112,7 @@ const copy = {
     galleryIntro: "A collection of portraits and moments from their visual journey.",
     momentsLabel: "COUPLE MOMENTS",
     portraitLabel: "CHARACTER PORTRAITS",
-    momentNames: ["Veylora is Tired from Walking", "Romantic Dance", "Riding in the Rain", "Selfie at the Food Stall", "Snowy Atmosphere", "At the School Canteen"],
+    momentNames: ["Veylora Is Tired From Walking", "I Don’t Know How to Dance!", "Oh, We’re Soaked!", "Selfie At the Food Stall", "Snowy Atmosphere", "Veylora Skips to the Canteen"],
     portraitNames: ["Dajjal portrait", "Veylora portrait"],
     openPhoto: "Open photo",
     closePhoto: "Close photo",
@@ -130,12 +122,32 @@ const copy = {
   },
 };
 
+const relationshipStart = new Date("2026-09-09T21:33:00+07:00").getTime();
+
+function getRelationshipTime() {
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - relationshipStart) / 1000));
+  return [
+    Math.floor(elapsedSeconds / 86400),
+    Math.floor((elapsedSeconds % 86400) / 3600),
+    Math.floor((elapsedSeconds % 3600) / 60),
+    elapsedSeconds % 60,
+  ];
+}
+
 export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
   const momentsTrackRef = useRef(null);
   const [activeMoment, setActiveMoment] = useState(0);
+  const [relationshipTime, setRelationshipTime] = useState([0, 0, 0, 0]);
+
+  useEffect(() => {
+    const updateRelationshipTime = () => setRelationshipTime(getRelationshipTime());
+    updateRelationshipTime();
+    const intervalId = window.setInterval(updateRelationshipTime, 1000);
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const scrollToMoment = (index) => {
     const track = momentsTrackRef.current;
@@ -192,11 +204,14 @@ export default function CoupleProfilePage() {
             <img className="df-couple-featured-background" src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
             <span>{t.featuredLabel}</span>
           </button>
-          <div className="df-couple-metrics" aria-label={t.eyebrow}>
-            <div><strong>{t.characterValue}</strong><span>{t.characters}</span></div>
-            <div><strong>{t.universeValue}</strong><span>{t.universe}</span></div>
-            <div><strong>{t.languageValue}</strong><span>{t.languages}</span></div>
-          </div>
+          <section className="df-couple-metrics" aria-label={t.anniversaryLabel}>
+            {relationshipTime.map((value, index) => (
+              <div className="df-couple-metric" key={t.timeUnits[index]}>
+                <strong>{value.toLocaleString(language === "en" ? "en-US" : "id-ID")}</strong>
+                <span>{t.timeUnits[index]}</span>
+              </div>
+            ))}
+          </section>
         </header>
 
         <section className="df-couple-section" aria-labelledby="df-couple-identities">
