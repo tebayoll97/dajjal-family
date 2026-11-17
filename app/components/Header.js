@@ -348,27 +348,27 @@ export default function Header() {
                       onClick={() => setOpenGroup((current) => current === group.id ? null : group.id)}>
                       <NavigationIcon name={group.icon} />
                       <span>{group.label}</span>
-                      <span className="df-site-navigation-chevron" aria-hidden="true">{expanded ? "−" : "+"}</span>
+                      <span className={`df-site-navigation-chevron${expanded ? " is-expanded" : ""}`} aria-hidden="true">v</span>
                     </button>
-                    {expanded && <div id={groupId} className="df-site-navigation-submenu">
+                    <div id={groupId} className="df-site-navigation-submenu" data-expanded={expanded} aria-hidden={!expanded}>
                       {group.items.map((item) => (
                         <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}>
                           <span>{item.label}</span>
                           {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
                         </Link>
                       ))}
-                    </div>}
+                    </div>
                   </section>
                 );
               })}
               {isAdmin && <section className="df-site-navigation-group">
                 <button type="button" className="df-site-navigation-group-trigger" aria-expanded={(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")} aria-controls="df-navigation-group-admin"
                   onClick={() => setOpenGroup((current) => current === "admin" ? null : "admin")}>
-                  <NavigationIcon name="profile" /><span>{t.admin}</span><span className="df-site-navigation-chevron" aria-hidden="true">{(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? "−" : "+"}</span>
+                  <NavigationIcon name="profile" /><span>{t.admin}</span><span className={`df-site-navigation-chevron${(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") ? " is-expanded" : ""}`} aria-hidden="true">v</span>
                 </button>
-                {(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin") && <div id="df-navigation-group-admin" className="df-site-navigation-submenu">
+                <div id="df-navigation-group-admin" className="df-site-navigation-submenu" data-expanded={openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin"} aria-hidden={!(openGroup === null ? adminItems.some((item) => isActive(item.route)) : openGroup === "admin")}>
                   {adminItems.map((item) => <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={navigateFromDrawer}><span>{item.label}</span>{isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}</Link>)}
-                </div>}
+                </div>
               </section>}
             </div>
           </div>
