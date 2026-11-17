@@ -145,6 +145,7 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
   const [copied, setCopied] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
   const [copiedPlayerId, setCopiedPlayerId] = useState("");
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -334,13 +335,24 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
     }
   };
 
-  const shareInvite = () => {
-    const text = encodeURIComponent(
-      language === "id"
-        ? "Dengan hangat, kami mengundang Anda ke perayaan Anak Dajjal & Malika."
-        : "You are warmly invited to celebrate Anak Dajjal & Malika."
-    );
-    window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(window.location.href)}`, "_blank", "noopener,noreferrer");
+  const shareInvite = async () => {
+    const shareText = language === "id"
+      ? "Dengan hangat, kami mengundang Anda ke perayaan Anak Dajjal & Malika."
+      : "You are warmly invited to celebrate Anak Dajjal & Malika.";
+    const shareData = { title: language === "id" ? "Undangan Anak Dajjal & Malika" : "Anak Dajjal & Malika Invitation", text: shareText, url: window.location.href };
+    if (typeof navigator.share === "function") {
+      try { await navigator.share(shareData); setMoreMenuOpen(false); return; }
+      catch (error) { if (error?.name === "AbortError") return; }
+    }
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setMoreMenuOpen(false);
+    } catch {
+      const message = encodeURIComponent(shareText + " " + window.location.href);
+      window.open("https://wa.me/?text=" + message, "_blank", "noopener,noreferrer");
+      setMoreMenuOpen(false);
+    }
   };
 
   const openInvitation = async () => {
@@ -444,7 +456,24 @@ export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-ma
             <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
             <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
             <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
-            <a href="#share"><span aria-hidden="true">▦</span><small>{t.navMore}</small></a>
+            <div className={"wedding-more-menu" + (moreMenuOpen ? " is-open" : "")}>
+              {moreMenuOpen && (
+                <div className="wedding-more-menu-panel" id="wedding-more-menu">
+                  <a href="#story" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">♡</span>{language === "id" ? "Kisah Kami" : "Our Story"}</a>
+                  <a href="#gallery" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">▧</span>{language === "id" ? "Galeri Foto" : "Photo Gallery"}</a>
+                  <button type="button" onClick={shareInvite}><span aria-hidden="true">↗</span>{language === "id" ? "Bagikan" : "Share"}</button>
+                </div>
+              )}
+              <button
+                type="button"
+                className="wedding-more-trigger"
+                aria-expanded={moreMenuOpen}
+                aria-controls="wedding-more-menu"
+                onClick={() => setMoreMenuOpen((open) => !open)}
+              >
+                <span aria-hidden="true">⋯</span><small>{t.navMore}</small>
+              </button>
+            </div>
           </nav>
 
 
