@@ -1,29 +1,36 @@
 /**
- * Dajjal Family Theme Registry.
- *
- * Palette identity is independent from appearance mode.
- * Page-owned experiences may declare their own palette scope without
- * changing the global palette selected for the rest of the website.
+ * Global Theme Preset Registry.
+ * Global presets are independent from visitor appearance mode.
+ * Page-owned and isolated experiences remain outside global publishing.
  */
-export const DEFAULT_PALETTE_ID = "default";
+export const DEFAULT_PALETTE_ID = "tecno";
 export const THEME_MODE_STORAGE_KEY = "dajjal-family-theme";
+// Retained as a deprecated export for compatibility; visitor palette overrides are no longer read.
 export const THEME_PALETTE_STORAGE_KEY = "dajjal-family-palette";
 
 export const THEME_REGISTRY = Object.freeze({
-  default: Object.freeze({
-    id: "default",
-    label: "Default Dajjal Family",
+  tecno: Object.freeze({
+    id: "tecno",
+    label: "TECNO",
     scope: "global",
     appearanceModes: ["dark", "light"],
     status: "built-in",
-    tokenMap: "default",
+    tokenMap: "tecno",
+  }),
+  "dajjal-veylora": Object.freeze({
+    id: "dajjal-veylora",
+    label: "Dajjal × Veylora",
+    scope: "global",
+    appearanceModes: ["dark", "light"],
+    status: "built-in",
+    tokenMap: "dajjal-veylora",
   }),
   couple: Object.freeze({
     id: "couple",
     label: "Dajjal × Veylora",
     scope: "page",
     appearanceModes: ["dark", "light"],
-    status: "built-in",
+    status: "page-owned",
   }),
   wedding: Object.freeze({
     id: "wedding",
