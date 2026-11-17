@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { stripLocalePrefix, withLocalePrefix } from "@/lib/localePath";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
@@ -72,7 +73,13 @@ export default function Header() {
   const isWeddingInvitation = pathname.startsWith("/df/wedding-anak-dajjal");
   const [isAdmin, setIsAdmin] = useState(false);
   const [navigationOpen, setNavigationOpen] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
   const navigationRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -123,6 +130,7 @@ export default function Header() {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKey);
+      triggerRef.current?.focus();
     };
   }, [navigationOpen]);
 
@@ -154,6 +162,7 @@ export default function Header() {
               aria-label={t.open}
               aria-expanded={navigationOpen}
               aria-controls="df-global-navigation"
+              ref={triggerRef}
               onClick={() => setNavigationOpen(true)}
             >
               <span aria-hidden="true">☰</span>
@@ -179,70 +188,63 @@ export default function Header() {
         </div>
       </div>
 
-      {!isWeddingInvitation && navigationOpen && (
-        <div className="df-mobile-navigation-layer">
-          <div className="df-mobile-navigation-backdrop" aria-hidden="true" />
-          <nav
-            ref={navigationRef}
-            id="df-global-navigation"
-            className="df-site-navigation-pane"
-            aria-label={t.navigation}
-            aria-modal="true"
-          >
-            <div className="df-site-navigation-top">
-              <span className="df-site-navigation-brand">DAJJAL FAMILY</span>
-              <button
-                type="button"
-                className="df-site-navigation-close"
-                aria-label={t.close}
-                onClick={() => setNavigationOpen(false)}
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
+    </header>
 
+    {!isWeddingInvitation && navigationOpen && portalReady && createPortal(
+      <div className="df-mobile-navigation-layer">
+        <button
+          type="button"
+          className="df-mobile-navigation-backdrop"
+          aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"}
+          onClick={() => setNavigationOpen(false)}
+        />
+        <nav
+          ref={navigationRef}
+          id="df-global-navigation"
+          className="df-site-navigation-pane"
+          aria-label={t.navigation}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div className="df-site-navigation-top">
+            <span className="df-site-navigation-brand">DAJJAL FAMILY</span>
+            <button type="button" className="df-site-navigation-close" aria-label={t.close} onClick={() => setNavigationOpen(false)}>
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div className="df-site-navigation-content">
             <div className="df-site-navigation-profile">
-              <Link
-                href={withLocalePrefix("/profile", language)}
-                aria-current={isActive("/profile") ? "page" : undefined}
-                onClick={() => setNavigationOpen(false)}
-              >
-                <NavigationIcon name="profile" />
-                <span>{t.profile}</span>
+              <Link href={withLocalePrefix("/profile", language)} aria-current={isActive("/profile") ? "page" : undefined} onClick={() => setNavigationOpen(false)}>
+                <NavigationIcon name="profile" /><span>{t.profile}</span>
               </Link>
             </div>
-
             <p className="df-site-navigation-heading">{t.main}</p>
             <div className="df-site-navigation-links">
               {primaryLinks.map((item) => (
-                <Link
-                  key={item.route}
-                  href={withLocalePrefix(item.route, language)}
-                  aria-current={isActive(item.route) ? "page" : undefined}
-                  onClick={() => setNavigationOpen(false)}
-                >
+                <Link key={item.route} href={withLocalePrefix(item.route, language)} aria-current={isActive(item.route) ? "page" : undefined} onClick={() => setNavigationOpen(false)}>
                   <NavigationIcon name={item.icon} />
                   <span className="df-site-navigation-link-label">{item.label}</span>
                   {isActive(item.route) && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
                 </Link>
               ))}
               {isAdmin && (
-                <Link
-                  href={withLocalePrefix("/admin", language)}
-                  aria-current={isActive("/admin") ? "page" : undefined}
-                  onClick={() => setNavigationOpen(false)}
-                >
+                <Link href={withLocalePrefix("/admin", language)} aria-current={isActive("/admin") ? "page" : undefined} onClick={() => setNavigationOpen(false)}>
                   <NavigationIcon name="profile" />
                   <span className="df-site-navigation-link-label">{t.admin}</span>
                   {isActive("/admin") && <span className="df-site-navigation-active" aria-hidden="true">●</span>}
                 </Link>
               )}
             </div>
-          </nav>
-        </div>
-      )}
-
-      {!pathname.startsWith("/df/wedding-anak-dajjal") && null}
+          </div>
+          <div className="df-site-navigation-footer">
+            <span>ONE FAMILY. MANY POSSIBILITIES.</span>
+            <small>DAJJALFAMILY.COM</small>
+          </div>
+        </nav>
+      </div>,
+      document.body
+    )}
+    {!pathname.startsWith("/df/wedding-anak-dajjal") && null}
     </header>
   );
 }
