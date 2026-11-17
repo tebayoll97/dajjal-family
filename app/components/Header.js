@@ -45,7 +45,6 @@ const copy = {
     games: "Gaming",
     blog: "Blog",
     products: "Produk Digital",
-    universe: "Dajjal Family",
     profile: "Profil",
     admin: "Admin",
     knowledge: "Pengetahuan",
