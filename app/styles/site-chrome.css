@@ -139,7 +139,7 @@
 .df-mobile-navigation-layer { position:fixed; inset:0; z-index:1200; isolation:isolate; }
 .df-mobile-navigation-backdrop {
   position:absolute; inset:0; width:100%; height:100%; padding:0; border:0;
-  background:rgba(5,4,12,.72); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+  background:color-mix(in srgb,var(--df-bg) 78%,transparent); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
   animation:df-navigation-backdrop-in 200ms ease both; cursor:default;
 }
 .df-site-navigation-pane {
