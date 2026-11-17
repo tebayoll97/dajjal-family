@@ -174,3 +174,11 @@
 - Kept shared Header, Footer, and GlobalSidebar on the semantic token contract; tokenized the mobile navigation backdrop and profile-avatar foreground.
 - Preserved scoped Wedding header overrides and the Couple/Wedding/Games isolation rules.
 - Source changes committed on `main`; visual/build/browser QA and production deployment remain pending.
+
+
+## 2026-11-18 — Browser chrome follows Global Theme Preset Engine
+
+- Added the document `theme-color` metadata using the active preset's semantic `--df-bg` token.
+- The early theme bootstrap switches the browser theme color to the resolved visitor appearance mode before normal page paint.
+- ThemeProvider keeps the browser theme color synchronized on manual Light/Dark changes and first-visit system preference changes.
+- No per-preset hardcoded browser colors or page-specific CSS were introduced. Actual toolbar/status-bar rendering remains subject to browser and operating-system support.
