@@ -724,3 +724,7 @@ The first implementation pass applies the published global preset token contract
 - Couple, Wedding, and immersive Games remain page-owned or isolated. Wedding-specific header overrides remain intentionally scoped to the wedding header.
 
 This is a source implementation milestone, not a declaration of completed visual QA. Verify both presets in both modes, responsive breakpoints, keyboard focus, contrast, navigation states, and page isolation before marking the Design System fully adopted. Avoid adding page-local color declarations to these migrated areas; extend the registry token maps instead.
+
+
+### Game Library localization and display-name rules
+The public Game Library must present all visitor-facing copy in the selected locale (`id` or `en`), including each game title, description, category/access label, action, loading state, and dialog. A localized display title does not require changing the stable game slug, route, saved progress identifiers, or database identity. The Indonesian display title for the former Run Jump / Dajjal Family Jump listing is **“Lari! Kebakaran Hutan!”**; its English display title is **“Run! Forest Fire!”**. Keep both names paired to the same existing game route and data identity.
