@@ -193,3 +193,12 @@
 - Localized the visible page labels and dialogs; preserved MAMAH NGAMUK's Google-account gate and the public no-login launch for Run Jump.
 - Added mobile single-column and tablet/desktop two-column responsive layouts, touch-sized actions, keyboard focus, and reduced-motion handling. Styling is scoped to `.df-games-page`; other game routes and immersive gameplay styles are not changed.
 - Status: source committed on `main`; Vercel build and four-way preset/mode visual QA at mobile, tablet, and desktop remain to be verified.
+
+
+## 2026-11-18 — Navigation, contextual settings, and footer refinement
+- Removed the general Settings link from the Tools navigation and shared footer; the retired `/settings` route now redirects to Profile without deleting audio, theme, gameplay, account, or wedding-event settings modules.
+- Added the existing Theme Preset Manager (`/admin/theme`) to the Admin navigation with Indonesian and English labels; visibility continues to use the existing admin-access gate.
+- Added the public Anak Dajjal & Malika invitation to Family Universe using its canonical route, localized as “Pernikahan Anak Dajjal” / “Anak Dajjal's Wedding” with the “Acara” / “Event” badge.
+- Added a looping event-badge class driven by Global Theme Preset semantic color tokens and disabled its animation for reduced-motion preferences.
+- Replaced the footer's text-only DF mark with the official Dajjal Family icon and kept footer copy/navigation localized.
+- Source update only; build, responsive/browser QA, and production deployment remain to be verified.
