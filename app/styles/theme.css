@@ -392,3 +392,30 @@
   .df-library-card, .df-library-action { transition: none; }
   .df-library-card:hover { transform: none; }
 }
+
+
+/* Shared navigation event badge: color is supplied by the active Global Theme Preset. */
+.df-nav-event-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: .55rem;
+  padding: .18rem .48rem;
+  border: 1px solid color-mix(in srgb, var(--df-event-badge-bg) 70%, transparent);
+  border-radius: 999px;
+  background: var(--df-event-badge-bg);
+  color: var(--df-event-badge-text);
+  font-size: .58rem;
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: .08em;
+  vertical-align: middle;
+  animation: df-event-badge-blink 1.35s ease-in-out infinite;
+}
+@keyframes df-event-badge-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .38; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-nav-event-badge { animation: none; }
+}
