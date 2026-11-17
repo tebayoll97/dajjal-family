@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { getThemeTokens } from "@/app/theme/themeTokens";
 import {
   DEFAULT_PALETTE_ID,
   THEME_MODE_STORAGE_KEY,
@@ -14,10 +15,16 @@ const ThemeContext = createContext(null);
 
 function applyTheme(mode, palette) {
   const resolvedMode = resolveThemeMode(mode);
-  document.documentElement.dataset.theme = resolvedMode;
-  document.documentElement.dataset.themeMode = mode;
-  document.documentElement.dataset.themePalette = palette;
-  document.documentElement.style.colorScheme = resolvedMode;
+  const root = document.documentElement;
+  root.dataset.theme = resolvedMode;
+  root.dataset.themeMode = mode;
+  root.dataset.themePalette = palette;
+  root.style.colorScheme = resolvedMode;
+
+  Object.entries(getThemeTokens(palette, resolvedMode)).forEach(([token, value]) => {
+    root.style.setProperty(token, value);
+  });
+
   return resolvedMode;
 }
 

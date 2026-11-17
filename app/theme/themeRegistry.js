@@ -16,6 +16,7 @@ export const THEME_REGISTRY = Object.freeze({
     scope: "global",
     appearanceModes: ["dark", "light"],
     status: "built-in",
+    tokenMap: "default",
   }),
   couple: Object.freeze({
     id: "couple",
