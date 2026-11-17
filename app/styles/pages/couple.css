@@ -365,3 +365,6 @@
   .df-couple-gallery-item img,
   .df-couple-portrait-item img { transition: none; }
 }
+
+.df-couple-lightbox-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-out; }
+.df-couple-lightbox-panel { z-index: 1; }

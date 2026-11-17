@@ -270,7 +270,8 @@ export default function CoupleProfilePage() {
       </div>
 
       {activePhoto && (
-        <div className="df-couple-lightbox" role="presentation" onClick={() => setActivePhoto(null)}>
+        <div className="df-couple-lightbox" role="presentation">
+          <button className="df-couple-lightbox-backdrop" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto} />
           <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
             <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto}>×</button>
             <img src={activePhoto.src} alt={activePhoto.alt} />
