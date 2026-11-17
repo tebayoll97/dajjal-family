@@ -474,3 +474,8 @@ The Profile identity area groups the avatar with the page title, player nickname
 The Homepage, shared Header, standard GlobalSidebar, and shared Footer are the first migration boundary for the Global Theme Preset Engine. Their color-bearing styles must consume root semantic tokens supplied by the active registry preset. Homepage-specific layout remains scoped to `.df-home-app`, while visual values (surfaces, text, borders, actions, focus, decorative gradients/glows, and overlays) are resolved through tokens. Shared navigation and footer components use the same token contract on desktop and mobile.
 
 Do not add independent Light/Dark color overrides or preset-specific hardcoded values to these migrated areas. New identity presets must be implemented in `themeTokens.js`, not in page CSS. Wedding-only overrides, Couple page identity, and immersive Games are explicit isolation boundaries. Implementation is pending visual, keyboard, responsive, and four-way preset/mode QA.
+
+
+# 9.3 BROWSER CHROME THEME COLOR
+
+The document publishes a `theme-color` meta value derived from the active global preset's semantic `--df-bg` token. The initial HTML provides the preset's Dark canvas as a safe fallback; the early theme bootstrap replaces it with the visitor's resolved Light/Dark canvas before normal page paint. `ThemeProvider` keeps the meta value synchronized whenever the visitor changes appearance mode or the internal first-visit system preference changes. Do not hardcode per-preset browser colors in page styles or components. Browser chrome adoption is controlled by the browser/operating system; the website can request a matching toolbar/status-bar theme but cannot guarantee that every browser UI element changes identically.
