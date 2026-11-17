@@ -547,3 +547,11 @@ The owner approved a simplified Dajjal Family login experience:
 - Keep the global header controls for language and theme; remove the workspace sidebar and footer from the Login route so the authentication surface stays focused.
 - This decision changes the visible Login UI, not Supabase provider configuration, database schema, account identity rules, or public access policy. Any provider/configuration or database change requires separate review and authorization.
 
+
+
+## Navigation and contextual settings policy — 2026-11-18
+- Keep all visitor-facing navigation additions bilingual (ID/EN), including item labels and status badges.
+- Place the public Anak Dajjal invitation in Family Universe at `/df/wedding-anak-dajjal`; use the localized Acara/Event badge powered by Global Theme Preset semantic tokens.
+- Include the Theme Preset Manager at `/admin/theme` in Admin navigation, protected by the existing verified admin-access flow.
+- Do not maintain a general Settings destination; redirect legacy `/settings` to Profile while preserving feature-owned settings modules.
+- Shared footer uses the official Dajjal Family icon asset and follows the active semantic theme tokens.
