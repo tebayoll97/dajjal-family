@@ -485,3 +485,9 @@ The document publishes a `theme-color` meta value derived from the active global
 The public Game Library (`/id/games` and `/en/games`) is a standard website page and must consume the active Global Theme Preset Engine semantic tokens for its page canvas, cards, artwork surfaces, typography, borders, actions, focus states, and dialogs. Do not add independent TECNO or Dajjal × Veylora color palettes to this page. Responsive behavior must be designed and checked for mobile, tablet, and desktop. The catalog presents only playable games; items in a Coming Soon state are omitted from this visitor-facing library until they are ready to be offered.
 
 Game titles and supporting copy follow the selected locale. The former Run Jump / Dajjal Family Jump card is displayed as “Lari! Kebakaran Hutan!” in Indonesian and “Run! Forest Fire!” in English. This is a localized display-name decision only; preserve the stable `/games/run-jump` route and game data identity.
+
+
+# 9.5 CONTEXTUAL NAVIGATION AND EVENT BADGE
+All shared navigation text must be bilingual (Indonesian and English) through the central navigation label registry. The Family Universe invitation item uses the canonical route `/df/wedding-anak-dajjal` and a localized “Acara” / “Event” badge. The badge class `.df-nav-event-badge` consumes `--df-event-badge-bg` and `--df-event-badge-text` from the active Global Theme Preset token map; never hardcode a preset color in the navigation component. Its blink animation must stop under `prefers-reduced-motion: reduce`.
+
+The Admin group links to the existing Theme Preset Manager at `/admin/theme`. The general `/settings` page is retired and redirects to Profile; settings remain contextual to the feature that owns them. Footer branding uses the official Dajjal Family icon asset rather than a text-only DF substitute.
