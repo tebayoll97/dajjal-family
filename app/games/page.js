@@ -18,6 +18,10 @@ const translations = {
     mamah: "MAMAH NGAMUK",
     mamahDesc: "Escape Mamah Veylora, dodge oncoming traffic, collect coins, and beat your personal best.",
     mamahType: "ENDLESS DODGE · ACCOUNT GAME",
+    mamahArt: "01 / SURVIVAL",
+    jumpArt: "02 / ENDLESS RUN",
+    accountEyebrow: "ACCOUNT ACCESS",
+    errorEyebrow: "ERROR",
     mamahAccess: "GOOGLE ACCOUNT REQUIRED TO SAVE PROGRESS",
     jump: "RUN! FOREST FIRE!",
     jumpDesc: "Run as far as you can, leap over obstacles, and survive the burning forest. No sign-in required.",
@@ -43,6 +47,10 @@ const translations = {
     mamah: "MAMAH NGAMUK",
     mamahDesc: "Kabur dari Mamah Veylora, hindari kendaraan yang melaju, kumpulkan koin, dan pecahkan rekor pribadimu.",
     mamahType: "HINDARI RINTANGAN · GAME AKUN",
+    mamahArt: "01 / BERTAHAN HIDUP",
+    jumpArt: "02 / LARI TANPA AKHIR",
+    accountEyebrow: "AKSES AKUN",
+    errorEyebrow: "KESALAHAN",
     mamahAccess: "AKUN GOOGLE DIPERLUKAN UNTUK MENYIMPAN PROGRES",
     jump: "LARI! KEBAKARAN HUTAN!",
     jumpDesc: "Berlari sejauh mungkin, lewati berbagai rintangan, dan selamat dari hutan yang terbakar. Tanpa perlu login.",
@@ -132,7 +140,7 @@ export default function GamesPage() {
             <div className="df-library-art df-library-art-mamah" aria-hidden="true">
               <span className="df-library-art-orbit" />
               <span className="df-library-art-symbol">🧹</span>
-              <span className="df-library-art-chip">01 / SURVIVAL</span>
+              <span className="df-library-art-chip">{t.mamahArt}</span>
             </div>
             <div className="df-library-card-body">
               <div className="df-library-card-meta">
@@ -153,7 +161,7 @@ export default function GamesPage() {
             <div className="df-library-art df-library-art-run" aria-hidden="true">
               <span className="df-library-art-orbit" />
               <span className="df-library-art-symbol">🏃</span>
-              <span className="df-library-art-chip">02 / ENDLESS RUN</span>
+              <span className="df-library-art-chip">{t.jumpArt}</span>
             </div>
             <div className="df-library-card-body">
               <div className="df-library-card-meta">
@@ -176,7 +184,7 @@ export default function GamesPage() {
         <div className="df-games-dialog-backdrop" onClick={() => setShowGooglePrompt(false)}>
           <section role="alertdialog" aria-modal="true" aria-labelledby="mamah-google-title" className="df-games-dialog" onClick={(event) => event.stopPropagation()}>
             <div className="df-games-dialog-icon" aria-hidden="true">🔐</div>
-            <p className="df-games-dialog-eyebrow">ACCOUNT ACCESS</p>
+            <p className="df-games-dialog-eyebrow">{t.accountEyebrow}</p>
             <h2 id="mamah-google-title">{t.accountTitle}</h2>
             <p>{t.accountDesc}</p>
             <button type="button" onClick={handleGoogleLoginFromPrompt} disabled={googleBusy} className="df-games-google-action">
@@ -192,7 +200,7 @@ export default function GamesPage() {
         <div className="df-games-dialog-backdrop" onClick={() => setShowError(false)}>
           <section role="alertdialog" aria-modal="true" aria-labelledby="games-error-title" className="df-games-dialog" onClick={(event) => event.stopPropagation()}>
             <div className="df-games-dialog-icon df-games-error-icon" aria-hidden="true">!</div>
-            <p className="df-games-dialog-eyebrow">ERROR</p>
+            <p className="df-games-dialog-eyebrow">{t.errorEyebrow}</p>
             <h2 id="games-error-title">{t.errorTitle}</h2>
             <p>{t.error}</p>
             <button type="button" onClick={() => setShowError(false)} className="df-games-action-close">{t.close}</button>
