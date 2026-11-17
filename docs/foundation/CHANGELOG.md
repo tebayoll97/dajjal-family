@@ -164,3 +164,13 @@
 - Replaced the Digital Gift section with a Darkwar Survival Dawn Badge-styled Player ID section. The current emblem is an original CSS placeholder, not the official game badge asset; the actual player ID and official logo asset have not yet been supplied.
 - Guestbook submissions are marked approved by the server and appear in the existing approved-message list without admin moderation. No database schema, records, policies, or production settings were changed.
 - Source implementation only; deployment and live QA remain pending while Vercel release quota is paused.
+
+
+## 2026-11-18 — Global Theme Preset: first shell migration
+
+- Removed the legacy Light Mode homepage overrides that forced TECNO colors regardless of the published preset.
+- Bound the shared body canvas and shared theme control to active semantic tokens.
+- Added a preset-token enforcement layer for homepage sidebars, hero, cards, actions, feature strip, internal footer, mobile topbar, drawer, and decorative orbit.
+- Kept shared Header, Footer, and GlobalSidebar on the semantic token contract; tokenized the mobile navigation backdrop and profile-avatar foreground.
+- Preserved scoped Wedding header overrides and the Couple/Wedding/Games isolation rules.
+- Source changes committed on `main`; visual/build/browser QA and production deployment remain pending.
