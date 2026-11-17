@@ -326,6 +326,21 @@ Tables, lists, badges, alerts, and status indicators must:
 - Persist explicit user choice.
 - Check contrast and component states in both themes.
 - Avoid a flash of the wrong theme where technically practical.
+- Keep global identity preset and visitor appearance mode independent. The preset is published centrally; Light/Dark mode is a visitor preference.
+- The visitor-facing mode control exposes Light and Dark only. First visit follows the device preference internally until the visitor makes an explicit choice.
+- Global preset token maps must define both Light and Dark variants and use the shared semantic token names.
+- Admin previews must be isolated from the live visitor theme until explicit publication succeeds.
+- Page-scoped and isolated experiences must not be recolored by a global preset.
+
+# 9.1 GLOBAL PRESET ARCHITECTURE
+
+The initial global preset catalog is additive:
+- TECNO: existing purple, indigo, and cyan identity.
+- Dajjal × Veylora: azure/blue/white in Light Mode and crimson/red/black in Dark Mode, sourced from the existing Couple page identity.
+
+The Couple page remains page-scoped. Its visual source values may be reused in a distinct global token map, but its CSS selectors remain scoped to the Couple page. Wedding and immersive Games remain isolated. Standard pages adopt global presets through semantic tokens; legacy hardcoded colors are migrated incrementally rather than overridden indiscriminately.
+
+An administrator may preview a draft in both modes and publish only after explicit confirmation. Visitor palette selection is not stored locally; only the visitor's appearance mode is persisted.
 
 # 10. INTERACTION AND MOTION
 
