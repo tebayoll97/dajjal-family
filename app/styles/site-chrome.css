@@ -235,3 +235,24 @@
 @media(prefers-reduced-motion:reduce){
  .df-site-navigation-chevron,.df-site-navigation-submenu,.df-site-navigation-submenu>a{transition:none!important}
 }
+
+
+/* Brand mark and refined navigation disclosure. */
+.df-site-brand-mark{display:block;object-fit:contain;border:0;border-radius:0;background:transparent}
+.df-site-navigation-brand-group{display:flex;align-items:center;gap:.7rem;min-width:0}
+.df-site-navigation-brand-group img{display:block;width:34px;height:34px;object-fit:contain;flex:0 0 auto}
+.df-site-navigation-chevron{display:block;width:18px;height:18px;min-width:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform:rotate(0deg);transition:transform 220ms ease,color 220ms ease}
+.df-site-navigation-chevron.is-expanded{transform:rotate(180deg)}
+
+/* Restore layered navigation surfaces while retaining square geometry and accordion motion. */
+.df-site-navigation-pane{border-radius:0;background:var(--df-surface-overlay,var(--df-surface));box-shadow:var(--df-shadow-lg)}
+.df-site-navigation-group{border:1px solid var(--df-border);border-radius:0;overflow:hidden;background:var(--df-surface)}
+.df-site-navigation-group-trigger{background:var(--df-surface-raised);border-radius:0;box-shadow:none}
+.df-site-navigation-group-trigger:hover,.df-site-navigation-group-trigger[aria-expanded="true"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-site-navigation-home{background:var(--df-surface-raised);border-radius:0}
+.df-site-navigation-home:hover,.df-site-navigation-home[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-site-navigation-submenu{background:var(--df-surface)}
+.df-site-navigation-submenu>a{border-radius:0;background:transparent}
+.df-site-navigation-submenu a:hover,.df-site-navigation-submenu a[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-navigation-profile-card{border-radius:0;background:linear-gradient(120deg,var(--df-primary-soft),var(--df-surface-raised));box-shadow:none}
+.df-site-navigation-close{border-radius:0;background:var(--df-surface-raised)}
