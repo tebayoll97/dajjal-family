@@ -20,8 +20,8 @@ const copy = {
     scope:"GLOBAL PRESET", protectedTitle:"PAGE-SCOPED & ISOLATED EXPERIENCES",
     protectedNote:"Couple page styling remains page-scoped. Wedding and Games remain protected isolated experiences and are not global presets.",
     governance:"PUBLISHING STATUS",
-    governanceNote:"Publishing is intentionally unavailable in this stage. It requires a persistent server-side active-preset setting, a protected admin write API, public read contract, and separate approval before any production database change.",
-    noPublish:"No visitor-facing changes have been published.", denied:"Administrator access denied.", error:"Unable to verify administrator access.",
+    governanceNote:"Preview remains local until you explicitly publish. Publishing changes the global identity for standard website pages; Couple, Wedding, and Games retain their protected scopes.",
+    noPublish:"No visitor-facing changes have been published.", publish:"Publish selected preset", publishing:"Publishing...", confirmPublish:"Publish this preset to the entire website?", published:"Global preset published successfully.", publishError:"Unable to publish the preset.", denied:"Administrator access denied.", error:"Unable to verify administrator access.",
   },
   id: {
     checking:"MEMVERIFIKASI AKSES ADMIN...", back:"KEMBALI KE DASHBOARD", title:"PENGELOLA PRESET TEMA",
@@ -34,8 +34,8 @@ const copy = {
     scope:"PRESET GLOBAL", protectedTitle:"PENGALAMAN KHUSUS & TERISOLASI",
     protectedNote:"Styling halaman Couple tetap khusus halaman. Wedding dan Games tetap menjadi pengalaman terisolasi yang dilindungi, bukan preset global.",
     governance:"STATUS PUBLIKASI",
-    governanceNote:"Publikasi sengaja belum diaktifkan pada tahap ini. Diperlukan penyimpanan preset aktif di server, API tulis admin yang terlindungi, kontrak baca publik, serta persetujuan terpisah sebelum perubahan database produksi.",
-    noPublish:"Belum ada perubahan yang dipublikasikan ke pengunjung.", denied:"Akses administrator ditolak.", error:"Tidak dapat memverifikasi akses administrator.",
+    governanceNote:"Pratinjau tetap lokal sampai kamu menerbitkannya secara eksplisit. Publikasi mengubah identitas global halaman standar; Couple, Wedding, dan Games tetap mempertahankan cakupan khususnya.",
+    noPublish:"Belum ada perubahan yang dipublikasikan ke pengunjung.", publish:"Terbitkan preset terpilih", publishing:"Menerbitkan...", confirmPublish:"Terbitkan preset ini ke seluruh website?", published:"Preset global berhasil diterbitkan.", publishError:"Preset tidak dapat diterbitkan.", denied:"Akses administrator ditolak.", error:"Tidak dapat memverifikasi akses administrator.",
   },
 };
 
@@ -50,6 +50,10 @@ export default function AdminThemePage() {
   const [error, setError] = useState("");
   const [mode, setMode] = useState("dark");
   const [draftPreset, setDraftPreset] = useState("tecno");
+  const [activePreset, setActivePreset] = useState("tecno");
+  const [accessToken, setAccessToken] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const [publishStatus, setPublishStatus] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -73,7 +77,20 @@ export default function AdminThemePage() {
           throw new Error(result.error || t.error);
         }
         if (!result.admin) throw new Error(t.error);
-        if (active) setAdmin(result.admin);
+        if (active) {
+          setAdmin(result.admin);
+          setAccessToken(session.access_token);
+        }
+        const themeResponse = await fetch("/api/admin/theme", {
+          headers: { Authorization: "Bearer " + session.access_token },
+          cache: "no-store",
+        });
+        const themeResult = await themeResponse.json().catch(() => ({}));
+        if (!themeResponse.ok) throw new Error(themeResult.error || t.error);
+        if (active && GLOBAL_PRESETS.includes(themeResult.activeThemePreset)) {
+          setActivePreset(themeResult.activeThemePreset);
+          setDraftPreset(themeResult.activeThemePreset);
+        }
       } catch (e) {
         if (active) setError(e.message || t.error);
       } finally {
@@ -82,6 +99,31 @@ export default function AdminThemePage() {
     })();
     return () => { active = false; };
   }, [router, t.error]);
+
+  const publishPreset = async () => {
+    if (publishing || draftPreset === activePreset) return;
+    if (!window.confirm(t.confirmPublish)) return;
+    setPublishing(true);
+    setPublishStatus("");
+    try {
+      const response = await fetch("/api/admin/theme", {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ activeThemePreset: draftPreset }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || t.publishError);
+      setActivePreset(result.activeThemePreset);
+      setPublishStatus(t.published);
+    } catch (e) {
+      setPublishStatus(e.message || t.publishError);
+    } finally {
+      setPublishing(false);
+    }
+  };
 
   const tokens = useMemo(() => getThemeTokens(draftPreset, mode), [draftPreset, mode]);
   const previewStyle = {
@@ -142,7 +184,7 @@ export default function AdminThemePage() {
           <aside className="space-y-4">
             <section className="rounded-2xl border border-purple-500/20 bg-[#151020] p-4 sm:p-5">
               <p className="text-[10px] font-extrabold tracking-[.18em] text-gray-500">{t.active}</p>
-              <p className="mt-2 text-sm font-bold text-cyan-200">{t.current}</p>
+              <p className="mt-2 text-sm font-bold text-cyan-200">{THEME_REGISTRY[activePreset]?.label || activePreset}</p>
               <p className="mt-5 text-[10px] font-extrabold tracking-[.18em] text-gray-500">{t.selected}</p>
               <p className="mt-2 text-sm font-bold">{THEME_REGISTRY[draftPreset].label}</p>
             </section>
@@ -175,7 +217,13 @@ export default function AdminThemePage() {
         <section className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-500/5 p-4 sm:p-5">
           <p className="text-[10px] font-extrabold tracking-[.2em] text-amber-300">{t.governance}</p>
           <p className="mt-2 text-sm leading-relaxed text-gray-300">{t.governanceNote}</p>
-          <p className="mt-3 text-xs font-bold text-amber-200">ℹ {t.noPublish}</p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" onClick={publishPreset} disabled={publishing || draftPreset === activePreset}
+              className="min-h-11 rounded-xl bg-purple-600 px-5 py-3 text-xs font-extrabold text-white transition hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-45">
+              {publishing ? t.publishing : t.publish}
+            </button>
+            <span role="status" aria-live="polite" className="text-xs font-bold text-amber-100">{publishStatus || (draftPreset === activePreset ? t.noPublish : "")}</span>
+          </div>
         </section>
         <footer className="mt-10 border-t border-white/10 pt-5 text-center text-[10px] font-bold tracking-[.18em] text-gray-600">DAJJAL FAMILY · THEME CONTROL · {admin.email}</footer>
       </div>
