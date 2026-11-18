@@ -165,6 +165,11 @@ export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [featuredExit, setFeaturedExit] = useState(null);
+  const featuredPointerRef = useRef(null);
+  const featuredTransitionRef = useRef(null);
+  const featuredClickSuppressedRef = useRef(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const whisperAudioRef = useRef(null);
   const [whisperStatus, setWhisperStatus] = useState("idle");
@@ -178,6 +183,54 @@ export default function CoupleProfilePage() {
     const intervalId = window.setInterval(updateRelationshipTime, 1000);
     return () => window.clearInterval(intervalId);
   }, []);
+
+  const featuredSlides = [
+    { src: photos.cover, alt: "Dajjal and Veylora together", label: t.featuredLabel },
+    { src: photos.moments[4], alt: t.momentNames[4], label: t.momentNames[4] },
+    { src: photos.moments[0], alt: t.momentNames[0], label: t.momentNames[0] },
+  ];
+
+  const changeFeaturedSlide = (nextIndex, direction = "left") => {
+    if (nextIndex === featuredIndex || featuredTransitionRef.current) return;
+    featuredTransitionRef.current = true;
+    setFeaturedExit({ index: featuredIndex, direction });
+    setFeaturedIndex(nextIndex);
+    window.setTimeout(() => {
+      setFeaturedExit(null);
+      featuredTransitionRef.current = false;
+    }, 620);
+  };
+
+  const moveFeaturedSlide = (direction) => {
+    const nextIndex = (featuredIndex + (direction === "left" ? 1 : 2)) % featuredSlides.length;
+    changeFeaturedSlide(nextIndex, direction);
+  };
+
+  const handleFeaturedPointerDown = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    featuredPointerRef.current = { x: event.clientX, y: event.clientY };
+    featuredClickSuppressedRef.current = false;
+  };
+
+  const handleFeaturedPointerUp = (event) => {
+    const start = featuredPointerRef.current;
+    featuredPointerRef.current = null;
+    if (!start) return;
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.15) return;
+    featuredClickSuppressedRef.current = true;
+    moveFeaturedSlide(deltaX < 0 ? "left" : "right");
+  };
+
+  const handleFeaturedClick = () => {
+    if (featuredClickSuppressedRef.current) {
+      featuredClickSuppressedRef.current = false;
+      return;
+    }
+    const slide = featuredSlides[featuredIndex];
+    openPhoto(slide.src, slide.label);
+  };
 
   const scrollToMoment = (index) => {
     const track = momentsTrackRef.current;
@@ -321,10 +374,68 @@ export default function CoupleProfilePage() {
           </h1>
           <p className="df-couple-subtitle">{t.subtitle}</p>
           <p className="df-couple-intro">{t.intro}</p>
-          <button className="df-couple-featured-photo" type="button" onClick={() => openPhoto(photos.cover, t.featuredLabel)} aria-label={t.openPhoto + ": " + t.featuredLabel}>
-            <img className="df-couple-featured-background" src={photos.cover} alt="Dajjal and Veylora together" fetchPriority="high" />
-            <span>{t.featuredLabel}</span>
-          </button>
+          <div
+            className="df-couple-featured-photo"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label={t.featuredLabel}
+            tabIndex={0}
+            onPointerDown={handleFeaturedPointerDown}
+            onPointerUp={handleFeaturedPointerUp}
+            onPointerCancel={() => { featuredPointerRef.current = null; }}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowLeft") { event.preventDefault(); moveFeaturedSlide("right"); }
+              if (event.key === "ArrowRight") { event.preventDefault(); moveFeaturedSlide("left"); }
+              if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleFeaturedClick(); }
+            }}
+          >
+            <div className="df-couple-featured-stack" onClick={handleFeaturedClick}>
+              {featuredSlides.map((slide, index) => {
+                const depth = (index - featuredIndex + featuredSlides.length) % featuredSlides.length;
+                const isExiting = featuredExit?.index === index;
+                return (
+                  <div
+                    className={[
+                      "df-couple-featured-layer",
+                      depth === 0 ? "is-active" : "",
+                      depth === 1 ? "is-next" : "",
+                      depth === 2 ? "is-back" : "",
+                      isExiting ? "is-exiting" : "",
+                      isExiting ? "is-exiting-" + featuredExit.direction : "",
+                    ].filter(Boolean).join(" ")}
+                    key={slide.src}
+                    style={{ zIndex: isExiting ? 5 : 3 - depth }}
+                    aria-hidden={depth !== 0}
+                  >
+                    <img
+                      className="df-couple-featured-background"
+                      src={slide.src}
+                      alt={slide.alt}
+                      fetchPriority={index === 0 ? "high" : undefined}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      draggable="false"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <span className="df-couple-featured-label">{t.featuredLabel}</span>
+            <div className="df-couple-featured-pagination" aria-label={t.featuredLabel}>
+              {featuredSlides.map((slide, index) => (
+                <button
+                  className="df-couple-featured-dot"
+                  type="button"
+                  key={slide.src}
+                  aria-label={t.slideLabel + " " + (index + 1) + ": " + slide.label}
+                  aria-current={featuredIndex === index ? "true" : undefined}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    changeFeaturedSlide(index, index > featuredIndex ? "left" : "right");
+                  }}
+                />
+              ))}
+            </div>
+          </div>
           <div className="df-couple-anniversary-heading">
             <p className="df-couple-eyebrow">{t.anniversaryLabel}</p>
           </div>
