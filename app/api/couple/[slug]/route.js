@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {supabaseAdmin} from "@/lib/supabaseAdmin";
 import {resolveAuthenticatedPlayer} from "@/lib/serverPlayerAccount";
-import {COUPLE_CONTENT_KEYS,COUPLE_MEDIA_SLOTS} from "@/lib/coupleProfileDefaults";
+import {COUPLE_CONTENT_KEYS,COUPLE_CONTENT_DEFAULTS,COUPLE_MEDIA_SLOTS} from "@/lib/coupleProfileDefaults";
 export const dynamic="force-dynamic";
 const errorJson=(error,status=400)=>NextResponse.json({error},{status,headers:{"Cache-Control":"no-store"}});
 async function getParams(context){return await context.params;}
@@ -33,8 +33,18 @@ export async function PATCH(request,context){
   if(!body.content||typeof body.content!=="object"||Array.isArray(body.content))return errorJson("Content object is required.");
   const clean={};for(const key of COUPLE_CONTENT_KEYS){if(Object.prototype.hasOwnProperty.call(body.content,key)){const v=body.content[key];if(typeof v!=="string"||v.length>3000)return errorJson("Invalid content field.");clean[key]=v.trim();}}
   if(Object.keys(clean).length!==Object.keys(body.content).length)return errorJson("Unsupported content field.");
-  const {error}=await supabaseAdmin.from("df_couple_contents").upsert({couple_id:profile.id,locale:body.locale,content:clean,updated_at:new Date().toISOString()},{onConflict:"couple_id,locale"});
-  if(error)return errorJson("Unable to save Couple Profile content.",500);
+  const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
+  if(readError)return errorJson("Unable to load existing Couple Profile translations.",500);
+  const existingByLocale=Object.fromEntries((existingContents||[]).map((row)=>[row.locale,row.content||{}]));
+  const timestamp=new Date().toISOString();
+  const synchronizedRows=["id","en"].map((locale)=>({
+   couple_id:profile.id,
+   locale,
+   content:{...COUPLE_CONTENT_DEFAULTS[locale],...(existingByLocale[locale]||{}),...clean},
+   updated_at:timestamp,
+  }));
+  const {error}=await supabaseAdmin.from("df_couple_contents").upsert(synchronizedRows,{onConflict:"couple_id,locale"});
+  if(error)return errorJson("Unable to synchronize Couple Profile translations.",500);
  }
  if(body.media!==undefined){
   if(!Array.isArray(body.media)||body.media.length>COUPLE_MEDIA_SLOTS.length)return errorJson("Invalid media list.");
