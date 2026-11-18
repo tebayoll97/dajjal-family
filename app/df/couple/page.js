@@ -79,6 +79,7 @@ const copy = {
     whisperPlaying: "Veylora sedang membisikkan sesuatu…",
     whisperEnded: "Some whispers are too sweet to forget. ❤️",
     whisperPlay: "Putar bisikan",
+    whisperPause: "Jeda bisikan",
     whisperError: "Voice note belum tersedia atau gagal diputar.",
   },
   en: {
@@ -137,6 +138,7 @@ const copy = {
     whisperPlaying: "Veylora is whispering something…",
     whisperEnded: "Some whispers are too sweet to forget. ❤️",
     whisperPlay: "Play the whisper",
+    whisperPause: "Pause the whisper",
     whisperError: "The voice note is unavailable or could not be played.",
   },
 };
@@ -426,17 +428,12 @@ export default function CoupleProfilePage() {
             </div>
           </div>
           <div className="df-couple-gallery-group">
-            <h3>{t.whisperGroup}</h3>
+            <h3>{t.portraitLabel}</h3>
             <div className="df-couple-portraits-grid">
               <button className="df-couple-portrait-item" type="button" onClick={openWhisper} aria-label={t.openPhoto + ": " + t.whisperTitle}>
                 <img src="https://drive.google.com/thumbnail?id=1yn6CR6e2A6N3a3yCEgy6QboDWeeVWxgT&sz=w1200" alt={t.whisperTitle} loading="lazy" />
                 <span>{t.whisperTitle}</span>
               </button>
-            </div>
-          </div>
-          <div className="df-couple-gallery-group">
-            <h3>{t.portraitLabel}</h3>
-            <div className="df-couple-portraits-grid">
               {photos.portraits.map((src, index) => (
                 <button className="df-couple-portrait-item" type="button" key={src} onClick={() => openPhoto(src, t.portraitNames[index])} aria-label={t.openPhoto + ": " + t.portraitNames[index]}>
                   <img src={src} alt={t.portraitNames[index]} loading="lazy" />
@@ -468,20 +465,53 @@ export default function CoupleProfilePage() {
           <button className="df-couple-lightbox-backdrop" type="button" onClick={closePhoto} aria-label={t.closePhoto} />
           <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
             <button className="df-couple-lightbox-close" type="button" onClick={closePhoto} aria-label={t.closePhoto}>×</button>
-            <img src={activePhoto.src} alt={activePhoto.alt} />
-            <p>{activePhoto.alt}</p>
-            {activePhoto.isWhisper && (
-              <div className="df-couple-whisper-player" aria-live="polite" style={{ display: "grid", justifyItems: "center", gap: ".5rem", width: "100%", color: "#f8f6fb" }}>
-                <span style={{ fontSize: ".78rem", opacity: .8 }}>{t.whisperSubtitle}</span>
-                <span style={{ fontSize: ".78rem", opacity: .85 }}>
-                  {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
-                </span>
-                {(whisperStatus === "error" || whisperStatus === "ended") && (
-                  <button type="button" onClick={playWhisper} style={{ border: "1px solid rgba(255,255,255,.35)", borderRadius: "999px", padding: ".55rem 1rem", background: "rgba(255,255,255,.1)", color: "#fff", cursor: "pointer" }}>
-                    {t.whisperPlay}
+            {activePhoto.isWhisper ? (
+              <div className="df-couple-whisper-scene" data-audio-state={whisperStatus}>
+                <img src={activePhoto.src} alt={activePhoto.alt} />
+                <div className="df-couple-whisper-overlay" aria-live="polite">
+                  <svg className="df-couple-whisper-mark" viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M10 35c8-1 12-6 16-15 2-4 6-4 7 1l-2 8c7-5 13-7 18-6 4 1 5 5 2 8-6 7-13 12-24 13H16" />
+                    <path d="M42 13c4 1 7 4 8 8M48 7c7 2 11 7 13 13" />
+                    <path d="M8 45c5 3 10 4 16 4" />
+                  </svg>
+                  <h2>{t.whisperTitle}</h2>
+                  <p className="df-couple-whisper-subtitle">{t.whisperSubtitle}</p>
+                  <div className="df-couple-whisper-heart" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                      <path d="M32 53S8 39 8 22C8 10 23 5 32 18 41 5 56 10 56 22c0 17-24 31-24 31Z" />
+                      <path className="df-couple-heartbeat-line" d="M8 32h13l6-11 9 23 7-12h13" />
+                    </svg>
+                  </div>
+                  <p className="df-couple-whisper-status">
+                    {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
+                  </p>
+                  <button className="df-couple-whisper-control" type="button" onClick={() => {
+                    if (whisperStatus === "playing" && whisperAudioRef.current) {
+                      whisperAudioRef.current.pause();
+                      setWhisperStatus("paused");
+                    } else if (whisperStatus === "paused" && whisperAudioRef.current) {
+                      whisperAudioRef.current.play().then(() => setWhisperStatus("playing")).catch(() => setWhisperStatus("error"));
+                    } else {
+                      playWhisper();
+                    }
+                  }}>
+                    {whisperStatus === "playing" ? (
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM14 5h3v14h-3z" /></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
+                    )}
+                    <span>{whisperStatus === "playing" ? t.whisperPause : t.whisperPlay}</span>
                   </button>
-                )}
+                  <svg className="df-couple-whisper-wave" viewBox="0 0 120 24" aria-hidden="true">
+                    <path d="M2 12h8l4-8 6 16 7-13 6 10 6-5h7l5-9 6 17 7-12 5 8 5-4h8l5-8 6 16 6-10 5 6h8" />
+                  </svg>
+                </div>
               </div>
+            ) : (
+              <>
+                <img src={activePhoto.src} alt={activePhoto.alt} />
+                <p>{activePhoto.alt}</p>
+              </>
             )}
           </div>
         </div>
