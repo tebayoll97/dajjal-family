@@ -7,37 +7,44 @@ export const dynamic="force-dynamic";
 const errorJson=(error,status=400)=>NextResponse.json({error},{status,headers:{"Cache-Control":"no-store"}});
 async function getParams(context){return await context.params;}
 
-function decodeGoogleText(value){
- return value
-  .replace(/&#(\\d+);/g,(_,code)=>String.fromCodePoint(Number(code)))
-  .replace(/&#x([\\da-f]+);/gi,(_,code)=>String.fromCodePoint(parseInt(code,16)))
-  .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">")
-  .replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'");
-}
-
 async function translateCoupleContent(fields,sourceLocale){
  const entries=Object.entries(fields);
  const translated={};
  for(const [key,value] of entries)if(!value)translated[key]="";
  const nonEmpty=entries.filter(([,value])=>value.length>0);
  if(!nonEmpty.length)return translated;
- const apiKey=process.env.GOOGLE_TRANSLATE_API_KEY;
+ const apiKey=process.env.GEMINI_API_KEY;
  if(!apiKey)throw new Error("TRANSLATION_NOT_CONFIGURED");
  const targetLocale=sourceLocale==="id"?"en":"id";
- const endpoint=new URL("https://translation.googleapis.com/language/translate/v2");
- endpoint.searchParams.set("key",apiKey);
- const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-  q:nonEmpty.map(([,value])=>value),source:sourceLocale,target:targetLocale,format:"text"
- }),signal:AbortSignal.timeout(15000),cache:"no-store"});
+ const languageName=targetLocale==="id"?"Indonesian":"English";
+ const endpoint="https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent";
+ const response=await fetch(endpoint,{
+  method:"POST",
+  headers:{"Content-Type":"application/json","x-goog-api-key":apiKey},
+  body:JSON.stringify({
+   systemInstruction:{parts:[{text:"You are a careful professional translator for a personal couple profile. Translate every supplied value faithfully into "+languageName+". Preserve meaning, names, emojis, line breaks, punctuation, and affectionate tone. Do not add explanations, omit content, or translate object keys. Return only a JSON object whose keys exactly match the supplied field keys and whose values are translated strings."}]},
+   contents:[{role:"user",parts:[{text:JSON.stringify({sourceLanguage:sourceLocale==="id"?"Indonesian":"English",targetLanguage:languageName,fields:Object.fromEntries(nonEmpty)})}]}],
+   generationConfig:{responseMimeType:"application/json",temperature:0.1,maxOutputTokens:4096}
+  }),
+  signal:AbortSignal.timeout(20000),
+  cache:"no-store"
+ });
  let payload;
  try{payload=await response.json();}catch{throw new Error("TRANSLATION_FAILED");}
- const results=payload?.data?.translations;
- if(!response.ok||!Array.isArray(results)||results.length!==nonEmpty.length)throw new Error("TRANSLATION_FAILED");
- nonEmpty.forEach(([key],index)=>{
-  const value=results[index]?.translatedText;
-  if(typeof value!=="string")throw new Error("TRANSLATION_FAILED");
-  translated[key]=decodeGoogleText(value);
- });
+ if(!response.ok)throw new Error("TRANSLATION_FAILED");
+ const output=payload?.candidates?.[0]?.content?.parts
+  ?.map((part)=>typeof part.text==="string"?part.text:"")
+  .join("")
+  .trim();
+ if(!output)throw new Error("TRANSLATION_FAILED");
+ let result;
+ try{result=JSON.parse(output);}catch{throw new Error("TRANSLATION_FAILED");}
+ if(!result||typeof result!=="object"||Array.isArray(result))throw new Error("TRANSLATION_FAILED");
+ for(const [key] of nonEmpty){
+  if(typeof result[key]!=="string"||!result[key].trim())throw new Error("TRANSLATION_FAILED");
+  translated[key]=result[key];
+ }
+ if(Object.keys(result).length!==nonEmpty.length)throw new Error("TRANSLATION_FAILED");
  return translated;
 }
 
