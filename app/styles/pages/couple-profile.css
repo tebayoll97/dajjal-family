@@ -1010,3 +1010,106 @@
   border-color: color-mix(in srgb, var(--df-primary) 42%, var(--df-border));
   background: linear-gradient(135deg, var(--df-primary-soft), var(--couple-surface) 62%);
 }
+
+/* Inline editing controls — only the dynamic profile uses these additions. */
+.df-couple-profile-page .df-couple-editable {
+  display: inline-flex; align-items: center; justify-content: flex-start; gap: .45rem;
+  min-width: 0; max-width: 100%; vertical-align: middle;
+}
+.df-couple-profile-page .df-couple-editable-value { display: inline; min-width: 0; margin: 0; white-space: pre-wrap; }
+.df-couple-profile-page .df-couple-editable[data-editing="true"] { width: 100%; align-items: flex-start; }
+.df-couple-profile-page .df-couple-edit-form { display: grid; width: min(100%, 34rem); gap: .5rem; text-align: left; }
+.df-couple-profile-page .df-couple-edit-form input,
+.df-couple-profile-page .df-couple-edit-form textarea,
+.df-couple-profile-page .df-couple-image-editor input {
+  width: 100%; min-width: 0; padding: .7rem .8rem; border: 1px solid var(--df-border-strong);
+  border-radius: .65rem; background: var(--df-surface-raised); color: var(--df-text); font: inherit;
+}
+.df-couple-profile-page .df-couple-edit-form textarea { resize: vertical; line-height: 1.55; }
+.df-couple-profile-page .df-couple-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.df-couple-profile-page .df-couple-edit-actions button {
+  min-height: 2rem; padding: .35rem .8rem; border: 1px solid var(--df-primary);
+  border-radius: 999px; background: var(--df-primary); color: var(--df-on-primary);
+  font-size: .72rem; font-weight: 850; cursor: pointer;
+}
+.df-couple-profile-page .df-couple-edit-actions .df-couple-edit-cancel {
+  border-color: var(--df-border); background: var(--df-surface-raised); color: var(--df-text);
+}
+.df-couple-profile-page .df-couple-pencil {
+  display: inline-grid; flex: 0 0 1.9rem; width: 1.9rem; height: 1.9rem;
+  place-items: center; padding: .38rem; border: 1px solid var(--df-border-strong);
+  border-radius: 50%; background: var(--df-surface-raised); color: var(--df-primary);
+  box-shadow: var(--df-shadow-sm); cursor: pointer;
+}
+.df-couple-profile-page .df-couple-pencil svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.df-couple-profile-page .df-couple-editable-block { display: block; width: 100%; }
+.df-couple-profile-page .df-couple-editable-block > .df-couple-editable { display: flex; width: 100%; justify-content: space-between; align-items: flex-start; }
+.df-couple-profile-page .df-couple-editable-block .df-couple-editable-value { flex: 1 1 auto; }
+.df-couple-profile-page .df-couple-title .df-couple-editable { align-items: center; }
+.df-couple-profile-page .df-couple-title .df-couple-pencil { width: 1.65rem; height: 1.65rem; flex-basis: 1.65rem; }
+.df-couple-profile-page .df-couple-character-role .df-couple-editable,
+.df-couple-profile-page .df-couple-anniversary-heading .df-couple-editable,
+.df-couple-profile-page .df-couple-section-heading .df-couple-editable { display: flex; width: 100%; justify-content: space-between; }
+.df-couple-profile-page .df-couple-featured-wrap { position: relative; width: min(100%, 58rem); margin: 1.8rem auto 1.25rem; }
+.df-couple-profile-page .df-couple-featured-photo { width: 100%; margin: 0; }
+.df-couple-profile-page .df-couple-image-slot { position: relative; min-width: 0; }
+.df-couple-profile-page .df-couple-image-open { display: block; width: 100%; height: 100%; min-height: inherit; overflow: hidden; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: zoom-in; }
+.df-couple-profile-page .df-couple-image-open img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.df-couple-profile-page .df-couple-featured-photo .df-couple-image-open { position: absolute; inset: 0; }
+.df-couple-profile-page .df-couple-featured-photo .df-couple-image-open img { object-fit: cover; }
+.df-couple-profile-page .df-couple-featured-wrap .df-couple-featured-label {
+  position: absolute; z-index: 2; right: 0; bottom: 0; left: 0; padding: 2.8rem 1.1rem .95rem;
+  background: linear-gradient(transparent, rgba(0,0,0,.78)); color: #fff;
+  font-size: .68rem; font-weight: 850; letter-spacing: .16em; pointer-events: none;
+}
+.df-couple-profile-page .df-couple-featured-photo .df-couple-image-pencil { top: .65rem; right: .65rem; }
+.df-couple-profile-page .df-couple-character-art { position: relative; }
+.df-couple-profile-page .df-couple-character-art .df-couple-image-open { width: 100%; height: 100%; border-radius: 50%; }
+.df-couple-profile-page .df-couple-character-art .df-couple-image-open img { object-fit: contain; }
+.df-couple-profile-page .df-couple-character-art .df-couple-image-pencil { position: absolute; z-index: 4; top: -.2rem; right: -.2rem; }
+.df-couple-profile-page .df-couple-image-empty {
+  display: grid; width: 100%; height: 100%; min-height: 8rem; place-items: center;
+  padding: 1rem; border: 1px dashed var(--df-border-strong); border-radius: .8rem;
+  background: var(--df-surface-raised); color: var(--df-text-muted); font-size: .75rem; text-align: center;
+}
+.df-couple-profile-page .df-couple-image-editor {
+  position: absolute; z-index: 20; top: calc(100% + .4rem); right: 0;
+  width: min(22rem, 88vw); display: grid; gap: .55rem; padding: .8rem;
+  border: 1px solid var(--df-border); border-radius: .85rem;
+  background: var(--df-surface-overlay); color: var(--df-text); box-shadow: var(--df-shadow-lg); text-align: left;
+}
+.df-couple-profile-page .df-couple-image-editor label { display: grid; gap: .35rem; font-size: .72rem; font-weight: 750; }
+.df-couple-profile-page .df-couple-image-pencil { position: absolute; z-index: 5; top: .5rem; right: .5rem; }
+.df-couple-profile-page .df-couple-date-edit { display: flex; justify-content: center; margin-top: 1rem; }
+.df-couple-profile-page .df-couple-date-edit .df-couple-editable { display: flex; justify-content: center; }
+.df-couple-profile-page .df-couple-gallery-slot { position: relative; flex: 0 0 calc((100% - 1.7rem) / 3); min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; }
+.df-couple-profile-page .df-couple-gallery-slot > .df-couple-gallery-item { width: 100%; height: 100%; aspect-ratio: 4 / 5; }
+.df-couple-profile-page .df-couple-gallery-slot .df-couple-image-open { aspect-ratio: 4 / 5; }
+.df-couple-profile-page .df-couple-gallery-slot .df-couple-image-empty { height: 100%; min-height: 12rem; aspect-ratio: 4 / 5; }
+.df-couple-profile-page .df-couple-gallery-caption {
+  position: absolute; z-index: 2; right: 0; bottom: 0; left: 0; padding: 2.3rem .8rem .75rem;
+  background: linear-gradient(transparent, rgba(0,0,0,.82)); color: #fff;
+  font-size: .78rem; font-weight: 800; pointer-events: none;
+}
+.df-couple-profile-page .df-couple-gallery-slot .df-couple-image-pencil { top: .5rem; right: .5rem; }
+.df-couple-profile-page .df-couple-story-copy > .df-couple-editable-block { margin-top: .8rem; }
+.df-couple-profile-page .df-couple-story-copy > .df-couple-editable-block .df-couple-editable-value { color: var(--df-text-secondary); font-size: .92rem; line-height: 1.8; }
+.df-couple-profile-page .df-couple-story-copy > .df-couple-signature .df-couple-editable-value { color: var(--couple-primary); font-size: .72rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.df-couple-profile-page .df-couple-reset-link { border: 0; background: transparent; color: var(--df-danger); font: inherit; cursor: pointer; }
+.df-couple-editor-surface { position: relative; }
+.df-couple-save-status {
+  position: fixed; z-index: 999; top: max(.75rem, env(safe-area-inset-top)); right: .75rem;
+  max-width: min(90vw, 24rem); padding: .65rem .9rem; border: 1px solid var(--df-border);
+  border-radius: 999px; background: var(--df-surface-overlay); color: var(--df-text);
+  box-shadow: var(--df-shadow-lg); font-size: .75rem; font-weight: 800;
+}
+.df-couple-save-status.is-success { color: var(--df-success); }
+.df-couple-save-status.is-error { color: var(--df-danger); }
+@media (max-width: 900px) {
+  .df-couple-profile-page .df-couple-gallery-slot { flex-basis: calc((100% - .85rem) / 2); }
+}
+@media (max-width: 600px) {
+  .df-couple-profile-page .df-couple-gallery-slot { flex-basis: 82%; }
+  .df-couple-profile-page .df-couple-title .df-couple-pencil { width: 1.35rem; height: 1.35rem; flex-basis: 1.35rem; }
+  .df-couple-profile-page .df-couple-editable-block .df-couple-editable { align-items: flex-start; }
+}
