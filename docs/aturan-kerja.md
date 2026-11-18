@@ -71,3 +71,14 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - File ID tetap disimpan di `df_couple_media` sebagai referensi internal untuk slot cover, portrait, dan gallery. ID tidak ditampilkan atau dimasukkan oleh pengguna.
 - Penggantian slot memperbarui referensi Supabase, tetapi tidak menghapus file lama di Drive. Jika penyimpanan referensi gagal setelah upload, server mencoba menghapus file baru agar tidak meninggalkan orphan.
 - Tidak ada perubahan schema Supabase untuk alur ini.
+
+
+## Kebijakan nama file Google Drive — 2026-11-19
+
+- Semua upload ke Google Drive wajib memakai nama file yang dibuat server, bukan nama asli dari perangkat.
+- Format wajib: `<slot>-<YYYYMMDDHHmmss>-<8-hex-random>.<ext>`; timestamp UTC dan suffix acak harus dibuat secara kriptografis di server.
+- Slot memakai label stabil seperti `cover`, `male-portrait`, `female-portrait`, atau `gallery-01` sampai `gallery-06`. Ekstensi ditentukan dari MIME/signature file yang sudah diverifikasi server.
+- Nama asli tidak boleh menjadi nama akhir file atau memengaruhi path/nama Drive. Google Drive mengizinkan nama duplikat; Drive File ID tetap menjadi referensi unik.
+- Gunakan koneksi dan root folder Drive yang sudah aktif. Simpan File ID sebagai referensi internal di Supabase; pengguna tidak perlu memasukkan ID.
+- Saat mengganti file, jangan hapus file lama secara otomatis. Jika penyimpanan referensi baru gagal setelah upload, upayakan penghapusan file baru sebagai compensating cleanup.
+- Detail teknis dan checklist wajib mengikuti `docs/foundation/COMMAND_MASTER.md` dan `docs/foundation/MASTER_FOUNDATION.md`.
