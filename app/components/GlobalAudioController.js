@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import audioEngine from "@/lib/audio/AudioEngine";
 import { getAudioSettings } from "@/lib/audio/audioSettings";
 
 export default function GlobalAudioController() {
+  const pathname = usePathname() || "";
+  const isCoupleRoute = /(?:^|\/)df\/couple\/?$/.test(pathname);
+
   useEffect(() => {
     const initialSettings = getAudioSettings();
 
@@ -16,6 +20,10 @@ export default function GlobalAudioController() {
     audioEngine.setSfxVolume(
       initialSettings.sfxEnabled ? initialSettings.sfxVolume : 0
     );
+
+    // Couple Profile owns its soundtrack; prevent the global ambient layer
+    // from playing over the selected Dajjal × Veylora tracks.
+    if (isCoupleRoute) audioEngine.stopMusic();
 
     function handleAudioSettingsChange(event) {
       const settings = event.detail?.settings;
@@ -31,7 +39,9 @@ export default function GlobalAudioController() {
         settings.sfxEnabled ? settings.sfxVolume : 0
       );
 
-      if (changes?.musicEnabled === true) {
+      if (isCoupleRoute) {
+        audioEngine.stopMusic();
+      } else if (changes?.musicEnabled === true) {
         audioEngine.startMusic();
       } else if (changes?.musicEnabled === false) {
         audioEngine.stopMusic();
@@ -48,9 +58,8 @@ export default function GlobalAudioController() {
         "dajjal-audio-settings-change",
         handleAudioSettingsChange
       );
-      // Music intentionally continues across route changes.
     };
-  }, []);
+  }, [isCoupleRoute]);
 
   return null;
 }
