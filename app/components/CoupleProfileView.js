@@ -193,9 +193,9 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           <div className="df-couple-anniversary-heading">
             <p className="df-couple-eyebrow">{field("anniversary_label", "Anniversary label")}</p>
           </div>
-          <section className="df-couple-metrics" aria-label={content.anniversary_label}>
+          {profile.anniversary_date && <section className="df-couple-metrics" aria-label={content.anniversary_label}>
             {time.map((value, index) => <div className="df-couple-metric" key={timeUnits[index]}><strong>{value.toLocaleString(en ? "en-US" : "id-ID")}</strong><span>{timeUnits[index]}</span></div>)}
-          </section>
+          </section>}
           {editable && (
             <div className="df-couple-date-edit">
               <EditableText value={profile.anniversary_date || ""} label={copy.date} editable inputType="date" onSave={(value) => saveProfile("anniversaryDate", value || null)} />
