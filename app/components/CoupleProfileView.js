@@ -134,6 +134,12 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [activePhoto]);
+  useEffect(() => {
+    if (!showResetConfirm) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setShowResetConfirm(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [showResetConfirm]);
   const scrollToMoment = (index) => {
     const track = momentsTrackRef.current;
     const slide = track?.children[index];
@@ -297,7 +303,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
             <p id="df-couple-reset-description">{copy.resetMessage}</p>
             <div className="df-couple-confirm-actions">
               <button type="button" className="df-couple-confirm-primary" onClick={() => { setShowResetConfirm(false); onSave?.({ reset: true }); }}>{copy.continue}</button>
-              <button type="button" className="df-couple-confirm-secondary" onClick={() => setShowResetConfirm(false)}>{copy.cancel}</button>
+              <button type="button" className="df-couple-confirm-secondary" autoFocus onClick={() => setShowResetConfirm(false)}>{copy.cancel}</button>
             </div>
           </section>
         </div>
