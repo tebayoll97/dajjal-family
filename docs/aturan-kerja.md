@@ -38,3 +38,13 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Reset deletes the Couple Profile row and its dependent content/media references through database cascades. It does not delete the player account or original Google Drive files.
 - Migration applied to Supabase as version `20261118112952` and mirrored in `supabase/migrations/20261118112952_create_df_couple_profiles.sql`.
 - Source changes committed directly to `main`. Build/lint and interactive browser QA have not yet been run; do not mark the feature production-verified until those checks are completed.
+
+
+## Couple Profile — pembaruan implementasi 2026-11-18
+
+- Halaman referensi `/df/couple` mempertahankan CSS khusus dan identitas visualnya; tidak dipindahkan ke Global Theme Preset Engine.
+- Halaman Create Couple Profile, Editor, dan publik Couple Profile menggunakan semantic tokens dari Global Theme Preset Engine.
+- Editor menggunakan komponen tampilan yang sama dengan halaman publik, dengan inline edit per elemen.
+- Elemen editable meliputi nama, foto cover, dua potret, role, deskripsi, subtitle, intro, anniversary, cerita, dan signature.
+- Galeri mendukung maksimal enam foto Google Drive File ID dan Lightbox. Fitur Whisper/gambar ketujuh tidak digunakan.
+- Media disimpan pada slot `gallery_1` sampai `gallery_6`; file Drive asli tidak dihapus saat referensi diganti atau profil di-reset.
