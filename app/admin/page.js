@@ -21,6 +21,8 @@ const copy = {
     statisticsDesc: "Track engagement, scores, and overall game performance.",
     gallery: "Wedding Gallery",
     galleryDesc: "Upload, organize, publish, and manage wedding photos.",
+    storage: "Central Storage",
+    storageDesc: "Connect Google Drive and manage the platform storage provider.",
     open: "OPEN MODULE",
     coming: "COMING SOON",
     quick: "QUICK ACCESS",
@@ -49,6 +51,8 @@ const copy = {
     statisticsDesc: "Pantau aktivitas, perolehan poin, dan performa game.",
     gallery: "Galeri Pernikahan",
     galleryDesc: "Upload, susun, publikasikan, dan kelola foto pernikahan.",
+    storage: "Penyimpanan Terpusat",
+    storageDesc: "Hubungkan Google Drive dan kelola penyimpanan platform.",
     open: "BUKA MENU",
     coming: "SEGERA HADIR",
     quick: "AKSES CEPAT",
@@ -215,9 +219,18 @@ export default function AdminDashboardPage() {
       accent: "from-purple-500/20 via-indigo-500/5",
     },
     {
+      href: "/admin/storage",
+      icon: "☁️",
+      number: "06",
+      title: t.storage,
+      description: t.storageDesc,
+      available: true,
+      accent: "from-cyan-500/20 via-blue-500/5",
+    },
+    {
       href: null,
       icon: "📊",
-      number: "06",
+      number: "07",
       title: t.statistics,
       description: t.statisticsDesc,
       available: false,
@@ -267,7 +280,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">06 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">07 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
