@@ -82,3 +82,14 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Gunakan koneksi dan root folder Drive yang sudah aktif. Simpan File ID sebagai referensi internal di Supabase; pengguna tidak perlu memasukkan ID.
 - Saat mengganti file, jangan hapus file lama secara otomatis. Jika penyimpanan referensi baru gagal setelah upload, upayakan penghapusan file baru sebagai compensating cleanup.
 - Detail teknis dan checklist wajib mengikuti `docs/foundation/COMMAND_MASTER.md` dan `docs/foundation/MASTER_FOUNDATION.md`.
+
+
+## Google Drive — penerapan nama file otomatis — 2026-11-19
+
+- Implementasi penamaan server-side kini diterapkan secara terpusat di `lib/googleDriveStorage.js` melalui `createDriveStoredFileName()` dan `uploadDriveFile()`.
+- Semua pemanggil `uploadDriveFile()` wajib memberikan label slot/purpose yang stabil; fungsi storage membuat nama akhir sendiri dan tidak menggunakan `file.name` dari perangkat.
+- Couple Profile memetakan slot ke `cover`, `male-portrait`, `female-portrait`, dan `gallery-01` sampai `gallery-06`.
+- Admin Central Storage memakai label `image` atau `audio`; endpoint memeriksa signature file untuk tipe yang didukung sebelum upload.
+- Ekstensi ditentukan dari allowlist MIME di server. Timestamp UTC dan 4 byte random kriptografis (8 karakter hex) dibuat server-side.
+- Perubahan ini hanya mengubah metadata nama file Drive; tidak mengubah root folder, OAuth connection, File ID, skema database, atau kebijakan retensi file lama.
+- Deployment otomatis dari `main` harus mencapai READY dan build perlu diverifikasi sebelum pengujian upload langsung. Upload nyata tetap perlu diuji di Couple Profile dan halaman Admin Storage.
