@@ -102,6 +102,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   const en = locale === "en";
   const [time, setTime] = useState([0, 0, 0, 0]);
   const [activePhoto, setActivePhoto] = useState(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [activeMoment, setActiveMoment] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const momentsTrackRef = useRef(null);
@@ -114,12 +115,12 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     eyebrow: "A DAJJAL FAMILY STORY", identity: "THE COUPLE", gallery: "OUR LITTLE MOMENTS",
     openPhoto: "Open photo", closePhoto: "Close photo", previous: "Previous photo", next: "Next photo",
     slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Anniversary date",
-    empty: "Add a photo", noGallery: "No photos have been added yet.", reset: "Reset Couple Profile",
+    empty: "Add a photo", noGallery: "No photos have been added yet.", reset: "Reset Couple Profile", resetMessage: "Are you sure you want to delete all current settings? You will start again from the beginning.", continue: "Continue", cancel: "Cancel",
   } : {
     eyebrow: "CERITA DARI DAJJAL FAMILY", identity: "IDENTITAS PASANGAN", gallery: "KENANGAN KITA",
     openPhoto: "Buka foto", closePhoto: "Tutup foto", previous: "Foto sebelumnya", next: "Foto berikutnya",
     slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Tanggal anniversary",
-    empty: "Belum ada foto yang ditambahkan.", noGallery: "Belum ada foto galeri.", reset: "Reset Couple Profile",
+    empty: "Add a photo", noGallery: "Belum ada foto galeri.", reset: "Reset Couple Profile", resetMessage: "Yakin untuk menghapus semua pengaturan saat ini? Anda akan memulai dari awal lagi", continue: "Lanjutkan", cancel: "Batal",
   };
   useEffect(() => {
     const update = () => setTime(durationSince(profile.anniversary_date));
@@ -276,11 +277,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
 
         <footer className="df-couple-footer">
           <span>{copy.footer}</span><span>DAJJAL FAMILY UNIVERSE</span>
-          {editable && <button type="button" className="df-couple-reset-link" onClick={() => {
-            if (window.confirm(en ? "Reset this Couple Profile? This cannot be undone." : "Reset Couple Profile ini? Tindakan tidak dapat dibatalkan.")) {
-              onSave?.({ reset: true });
-            }
-          }}>{copy.reset}</button>}
+          {editable && <button type="button" className="df-couple-reset-link" onClick={() => setShowResetConfirm(true)}>{copy.reset}</button>}
         </footer>
       </div>
 
@@ -291,6 +288,20 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         <a className="df-couple-bottom-nav-item" href="#df-couple-gallery"><span aria-hidden="true">▧</span><span>{en ? "Gallery" : "Galeri"}</span></a>
         <a className="df-couple-bottom-nav-item" href="#df-couple-story"><span aria-hidden="true">▤</span><span>{en ? "Story" : "Kisah"}</span></a>
       </nav>
+
+      {editable && showResetConfirm && (
+        <div className="df-couple-confirm-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowResetConfirm(false); }}>
+          <section className="df-couple-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="df-couple-reset-title" aria-describedby="df-couple-reset-description">
+            <p className="df-couple-eyebrow">{en ? "CONFIRM ACTION" : "KONFIRMASI TINDAKAN"}</p>
+            <h2 id="df-couple-reset-title">{copy.reset}</h2>
+            <p id="df-couple-reset-description">{copy.resetMessage}</p>
+            <div className="df-couple-confirm-actions">
+              <button type="button" className="df-couple-confirm-primary" onClick={() => { setShowResetConfirm(false); onSave?.({ reset: true }); }}>{copy.continue}</button>
+              <button type="button" className="df-couple-confirm-secondary" onClick={() => setShowResetConfirm(false)}>{copy.cancel}</button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {activePhoto && (
         <div className="df-couple-lightbox" role="presentation" onClick={() => setActivePhoto(null)}>
