@@ -74,6 +74,9 @@ export default function CoupleMusicPlayer() {
   const shouldPlayRef = useRef(false);
   const playingRef = useRef(false);
   const playRequestRef = useRef(0);
+  const playInFlightRef = useRef(false);
+  const awaitingInteractionRef = useRef(false);
+  const interactionAttemptedRef = useRef(false);
   const resumeAfterBackgroundRef = useRef(false);
   const duckedRef = useRef(false);
   const fadeFrameRef = useRef(0);
@@ -116,53 +119,86 @@ export default function CoupleMusicPlayer() {
       setMessage(t.error);
     };
 
+    const attemptPlayback = () => {
+      // The same audio element is the single source of truth for both tracks.
+      if (!shouldPlayRef.current || !audio.paused || audio.ended || playInFlightRef.current) {
+        if (!audio.paused && !audio.ended) {
+          playingRef.current = true;
+          setPlaying(true);
+        }
+        return Promise.resolve(false);
+      }
+
+      playInFlightRef.current = true;
+      const requestId = ++playRequestRef.current;
+      return audio.play().then(() => {
+        if (requestId !== playRequestRef.current || audioRef.current !== audio) return false;
+        playingRef.current = true;
+        shouldPlayRef.current = true;
+        awaitingInteractionRef.current = false;
+        setPlaying(true);
+        setMessage("");
+        return true;
+      }).catch(() => {
+        if (requestId !== playRequestRef.current || audioRef.current !== audio) return false;
+        shouldPlayRef.current = false;
+        playingRef.current = false;
+        setPlaying(false);
+        setMessage(t.blocked);
+        return false;
+      }).finally(() => {
+        playInFlightRef.current = false;
+      });
+    };
+
+    const handleFirstInteraction = () => {
+      if (!awaitingInteractionRef.current || interactionAttemptedRef.current) return;
+      interactionAttemptedRef.current = true;
+      awaitingInteractionRef.current = false;
+      ["scroll", "touchstart", "pointerdown", "wheel"].forEach((eventName) => {
+        window.removeEventListener(eventName, handleFirstInteraction);
+      });
+      // A scroll/touch gesture may count as user activation in the browser.
+      // If it does not, the visible Play button remains the fallback.
+      shouldPlayRef.current = true;
+      attemptPlayback();
+    };
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Remember intent without stopping the audio. Android may keep it
-        // playing in the background or suspend it; resume only prior playback.
-        resumeAfterBackgroundRef.current = shouldPlayRef.current;
+        // Remember playback intent without creating another player or stopping
+        // audio that Android/browser may continue playing in the background.
+        resumeAfterBackgroundRef.current = shouldPlayRef.current && !audio.paused;
         return;
       }
 
       if (!resumeAfterBackgroundRef.current || !shouldPlayRef.current) return;
       resumeAfterBackgroundRef.current = false;
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          playingRef.current = true;
-          setPlaying(true);
-          setMessage("");
-        }).catch(() => {
-          playingRef.current = false;
-          setPlaying(false);
-          setMessage(t.blocked);
-        });
-      }
+      if (audio.paused) attemptPlayback();
     };
 
+    audio.addEventListener("play", () => {
+      playingRef.current = true;
+      setPlaying(true);
+    });
+    audio.addEventListener("pause", () => {
+      playingRef.current = false;
+      setPlaying(false);
+    });
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
     audio.addEventListener("durationchange", updateDuration);
     audio.addEventListener("ended", ended);
     audio.addEventListener("error", failed);
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Option A: attempt playback on every fresh page entry. Autoplay policy
-    // may reject this; the user can always start it with the Play control.
-    shouldPlayRef.current = true;
-    const initialRequest = ++playRequestRef.current;
-    audio.play().then(() => {
-      if (initialRequest !== playRequestRef.current || audioRef.current !== audio) return;
-      playingRef.current = true;
-      setPlaying(true);
-      setMessage("");
-    }).catch(() => {
-      if (initialRequest !== playRequestRef.current) return;
-      shouldPlayRef.current = false;
-      playingRef.current = false;
-      setPlaying(false);
-      setMessage(t.blocked);
+    ["scroll", "touchstart", "pointerdown", "wheel"].forEach((eventName) => {
+      window.addEventListener(eventName, handleFirstInteraction, { passive: true, once: false });
     });
+
+    // Try autoplay on entry. If blocked, retry only on the first real
+    // interaction; never create a second audio element or overlap playback.
+    shouldPlayRef.current = true;
+    attemptPlayback();
 
     const handleDucking = (event) => {
       const nextDucked = Boolean(event.detail?.active);
@@ -194,6 +230,9 @@ export default function CoupleMusicPlayer() {
       audio.removeEventListener("ended", ended);
       audio.removeEventListener("error", failed);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      ["scroll", "touchstart", "pointerdown", "wheel"].forEach((eventName) => {
+        window.removeEventListener(eventName, handleFirstInteraction);
+      });
       window.removeEventListener("dajjal-couple-audio-duck", handleDucking);
       if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
       audio.removeAttribute("src");
