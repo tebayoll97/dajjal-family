@@ -80,7 +80,7 @@ function EditableImage({ fileId, label, editable, onSave, className = "", openPh
           <img src={coupleDriveImage(fileId, 1200)} alt={label} loading="lazy" />
         </button>
       ) : (
-        <div className="df-couple-image-empty">{editable ? `Tambahkan ${label}` : ""}</div>
+        <div className="df-couple-image-empty">{editable ? `Tambahkan ${label}` : label}</div>
       )}
       {editable && <button type="button" className="df-couple-pencil df-couple-image-pencil" title={`Edit ${label}`} aria-label={`Edit ${label}`} onClick={() => setEditing((current) => !current)}><Pencil /></button>}
       {editing && (
@@ -109,17 +109,18 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   const mediaMap = useMemo(() => Object.fromEntries(media.map((item) => [item.slot_key, item.google_drive_file_id])), [media]);
   const gallery = COUPLE_GALLERY_SLOTS.map((slot, index) => ({ slot, index, fileId: mediaMap[slot] || "" }));
   const filledGallery = gallery.filter((item) => item.fileId);
+  const displayGallery = editable ? gallery : filledGallery;
   const timeUnits = en ? ["Days", "Hours", "Minutes", "Seconds"] : ["Hari", "Jam", "Menit", "Detik"];
   const copy = en ? {
     eyebrow: "A DAJJAL FAMILY STORY", identity: "THE COUPLE", gallery: "OUR LITTLE MOMENTS",
     openPhoto: "Open photo", closePhoto: "Close photo", previous: "Previous photo", next: "Next photo",
     slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Anniversary date",
-    empty: "Add a photo", reset: "Reset Couple Profile",
+    empty: "Add a photo", noGallery: "No photos have been added yet.", reset: "Reset Couple Profile",
   } : {
     eyebrow: "CERITA DARI DAJJAL FAMILY", identity: "IDENTITAS PASANGAN", gallery: "KENANGAN KITA",
     openPhoto: "Buka foto", closePhoto: "Tutup foto", previous: "Foto sebelumnya", next: "Foto berikutnya",
     slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Tanggal anniversary",
-    empty: "Tambah foto", reset: "Reset Couple Profile",
+    empty: "Belum ada foto yang ditambahkan.", noGallery: "Belum ada foto galeri.", reset: "Reset Couple Profile",
   };
   useEffect(() => {
     const update = () => setTime(durationSince(profile.anniversary_date));
@@ -251,14 +252,14 @@ export default function CoupleProfileView({ profile, content, media = [], locale
                 <span className="df-couple-moments-count" aria-live="polite">{String(filledGallery.length).padStart(2, "0")} / 06</span>
                 <div className="df-couple-moments-arrows">
                   <button className="df-couple-moments-arrow" type="button" onClick={() => scrollToMoment(Math.max(0, activeMoment - 1))} disabled={activeMoment === 0} aria-label={copy.previous}>‹</button>
-                  <button className="df-couple-moments-arrow" type="button" onClick={() => scrollToMoment(Math.min(gallery.length - 1, activeMoment + 1))} disabled={activeMoment >= gallery.length - 1} aria-label={copy.next}>›</button>
+                  <button className="df-couple-moments-arrow" type="button" onClick={() => scrollToMoment(Math.min(displayGallery.length - 1, activeMoment + 1))} disabled={activeMoment >= displayGallery.length - 1} aria-label={copy.next}>›</button>
                 </div>
               </div>
               <div className="df-couple-moments-track" ref={momentsTrackRef} onScroll={onMomentScroll} tabIndex={0}>
-                {gallery.map(renderGalleryItem)}
+                {displayGallery.length ? displayGallery.map(renderGalleryItem) : <p className="df-couple-gallery-empty-message">{copy.noGallery}</p>}
               </div>
               <div className="df-couple-moments-pagination" aria-label={copy.gallery}>
-                {gallery.map((item, index) => <button key={item.slot} className="df-couple-moments-dot" type="button" onClick={() => scrollToMoment(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={activeMoment === index ? "true" : undefined} />)}
+                {displayGallery.map((item, index) => <button key={item.slot} className="df-couple-moments-dot" type="button" onClick={() => scrollToMoment(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={activeMoment === index ? "true" : undefined} />)}
               </div>
             </div>
           </div>
