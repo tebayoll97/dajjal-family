@@ -21,12 +21,21 @@ const errorJson = (error, status = 400) => NextResponse.json(
 function safeFileName(value, mimeType) {
   const extension = ({ "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif" })[mimeType];
   const base = String(value || "couple-photo")
-    .replace(/[\\/\\\\\u0000-\\u001f\\u007f]/g, "-")
+    .split("/").join("-").split("\\").join("-")
+    .replace(/[\\x00-\\x1f\\x7f]/g, "-")
     .replace(/\\.[^.]*$/, "")
     .replace(/[^a-zA-Z0-9._ -]/g, "")
     .trim()
     .slice(0, 90) || "couple-photo";
   return `${base}${extension}`;
+}
+
+function hasValidImageSignature(bytes, mimeType) {
+  if (mimeType === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimeType === "image/png") return bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  if (mimeType === "image/gif") return bytes.subarray(0, 6).toString("ascii") === "GIF87a" || bytes.subarray(0, 6).toString("ascii") === "GIF89a";
+  if (mimeType === "image/webp") return bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WEBP";
+  return false;
 }
 
 export async function POST(request, context) {
@@ -78,7 +87,9 @@ export async function POST(request, context) {
       name: slug,
       parentId: coupleRoot.id,
     });
-    const uploadFile = new File([await file.arrayBuffer()], safeFileName(file.name, file.type), { type: file.type });
+    const imageBytes = Buffer.from(await file.arrayBuffer());
+    if (!hasValidImageSignature(imageBytes, file.type)) return errorJson("The selected file does not match its image type.", 415);
+    const uploadFile = new File([imageBytes], safeFileName(file.name, file.type), { type: file.type });
     uploaded = await uploadDriveFile({ accessToken, file: uploadFile, folderId: profileFolder.id });
 
     const { error: saveError } = await supabaseAdmin.from("df_couple_media").upsert({
