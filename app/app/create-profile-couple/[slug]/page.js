@@ -64,7 +64,7 @@ export default function CoupleProfileEditorPage() {
         return;
       }
       const body = { locale };
-      if (change.content) body.content = { ...content, ...change.content };
+      if (change.content) body.content = change.content;
       if (change.profile) {
         if (change.profile.maleNickname !== undefined) body.maleNickname = change.profile.maleNickname;
         if (change.profile.femaleNickname !== undefined) body.femaleNickname = change.profile.femaleNickname;
