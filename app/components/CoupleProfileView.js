@@ -1,59 +1,315 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
-import {coupleDriveImage,COUPLE_GALLERY_SLOTS} from "@/lib/coupleProfileDefaults";
-function durationSince(date){if(!date)return[0,0,0,0];const s=Math.max(0,Math.floor((Date.now()-new Date(date+"T00:00:00").getTime())/1000));return[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60];}
-function EditableValue({value,label,editable,multiline,onSave}){
- const[open,setOpen]=useState(false),[draft,setDraft]=useState(value||""),[saving,setSaving]=useState(false),[saveError,setSaveError]=useState("");
- useEffect(()=>setDraft(value||""),[value]);
- async function commit(){setSaving(true);setSaveError("");try{await onSave(draft);setOpen(false)}catch(e){setSaveError(e.message||"Save failed.")}finally{setSaving(false)}}
- return <span className="df-couple-editable">{open?<span className="df-couple-inline-editor">{multiline?<textarea aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} rows={4}/>:<input aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} maxLength={label.toLowerCase().includes("name")?40:300}/>}<span className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>{setDraft(value||"");setOpen(false)}}>×</button></span>{saveError&&<small role="alert">{saveError}</small>}</span>:<>{value|| (editable?"—":"")}{editable&&<button type="button" className="df-couple-edit-trigger" aria-label={"Edit "+label} title={"Edit "+label} onClick={()=>setOpen(true)}>✎</button>}</>}</span>;
+import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
+
+function durationSince(date) {
+  if (!date) return [0, 0, 0, 0];
+  const elapsed = Math.max(0, Math.floor((Date.now() - new Date(date + "T00:00:00").getTime()) / 1000));
+  return [Math.floor(elapsed / 86400), Math.floor((elapsed % 86400) / 3600), Math.floor((elapsed % 3600) / 60), elapsed % 60];
 }
-function EditableImage({fileId,label,editable,onSave,className=""}){
- const[open,setOpen]=useState(false),[draft,setDraft]=useState(fileId||""),[saving,setSaving]=useState(false),[saveError,setSaveError]=useState("");
- useEffect(()=>setDraft(fileId||""),[fileId]);
- async function commit(){setSaving(true);setSaveError("");try{await onSave(draft.trim());setOpen(false)}catch(e){setSaveError(e.message||"Save failed.")}finally{setSaving(false)}}
- return <div className={"df-couple-image-edit "+className}>{fileId?<img className={className.includes("featured")?"df-couple-featured-background":""} src={coupleDriveImage(fileId,1200)} alt={label} loading="lazy"/>:editable?<div className="df-couple-image-empty">{label} · Add image</div>:null}
- {editable&&<button type="button" className="df-couple-edit-trigger df-couple-image-edit-trigger" onClick={()=>setOpen(v=>!v)} aria-label={"Edit "+label}>✎</button>}
- {open&&<div className="df-couple-image-input"><label>{label} · Google Drive File ID<input value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Paste Google Drive File ID"/></label><div className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>setOpen(false)}>Cancel</button></div>{saveError&&<small role="alert">{saveError}</small>}</div>}</div>;
+
+function Pencil() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4a2.1 2.1 0 0 0-3-3L5.2 16.2 4 20Z" /></svg>;
 }
-export default function CoupleProfileView({profile,content,media=[],locale="id",editable=false,onSave}){
- const en=locale==="en",[time,setTime]=useState([0,0,0,0]),[lightbox,setLightbox]=useState(null);
- const mediaMap=useMemo(()=>Object.fromEntries(media.map(x=>[x.slot_key,x.google_drive_file_id])),[media]);
- const gallery=COUPLE_GALLERY_SLOTS.map((slot,index)=>({slot,index,fileId:mediaMap[slot]||""}));
- const filled=gallery.filter(x=>x.fileId),units=en?["Days","Hours","Minutes","Seconds"]:["Hari","Jam","Menit","Detik"];
- useEffect(()=>{const update=()=>setTime(durationSince(profile.anniversary_date));update();const id=window.setInterval(update,1000);return()=>window.clearInterval(id)},[profile.anniversary_date]);
- useEffect(()=>{if(!lightbox)return;const fn=e=>{if(e.key==="Escape")setLightbox(null)};window.addEventListener("keydown",fn);return()=>window.removeEventListener("keydown",fn)},[lightbox]);
- const saveContent=(key,value)=>onSave?.({content:{...content,[key]:value}});
- const saveProfile=(key,value)=>onSave?.({profile:{[key]:value}});
- const saveMedia=(slot,value)=>onSave?.({media:{...mediaMap,[slot]:value}});
- const field=(key,label,multiline=false)=><EditableValue value={content[key]} label={label} editable={editable} multiline={multiline} onSave={v=>saveContent(key,v)}/>;
- return <main className="df-couple-profile-page"><div className="df-couple-shell">
-  <header className="df-couple-hero" id="couple-home">
-   <p className="df-couple-eyebrow">DAJJAL FAMILY · COUPLE PROFILE</p>
-   <h1 className="df-couple-title"><EditableValue value={profile.male_nickname} label="Male name" editable={editable} onSave={v=>saveProfile("maleNickname",v)}/><span className="df-couple-connector" aria-hidden="true">×</span><EditableValue value={profile.female_nickname} label="Female name" editable={editable} onSave={v=>saveProfile("femaleNickname",v)}/></h1>
-   <p className="df-couple-subtitle">{field("subtitle","Subtitle")}</p><p className="df-couple-intro">{field("intro","Introduction",true)}</p>
-   <EditableImage fileId={mediaMap.cover} label="Cover image" editable={editable} onSave={v=>saveMedia("cover",v)} className="df-couple-featured-photo"/>
-   <div className="df-couple-anniversary-heading"><p className="df-couple-eyebrow">{field("anniversary_label","Anniversary label")}</p></div>
-   {profile.anniversary_date&&<section className="df-couple-metrics" aria-label="Anniversary">{time.map((v,i)=><div className="df-couple-metric" key={units[i]}><strong>{v.toLocaleString(en?"en-US":"id-ID")}</strong><span>{units[i]}</span></div>)}</section>}
-   {editable&&<div className="df-couple-anniversary-edit"><label>{en?"Anniversary date":"Tanggal anniversary"}<input type="date" value={profile.anniversary_date||""} onChange={e=>onSave?.({profile:{anniversaryDate:e.target.value}})}/></label></div>}
-  </header>
-  <CoupleMusicPlayer/>
-  <section className="df-couple-section" id="couple-identities"><div className="df-couple-section-heading"><p className="df-couple-eyebrow">{en?"THE COUPLE":"IDENTITAS PASANGAN"}</p><h2>{profile.male_nickname} &amp; {profile.female_nickname}</h2></div>
-   <div className="df-couple-character-grid">
-    <article className="df-couple-character-card" data-character="dajjal"><div className="df-couple-character-heading"><p className="df-couple-character-role">{field("male_role","Male role")}</p></div><div className="df-couple-character-body"><EditableImage fileId={mediaMap.male_portrait} label="Male portrait" editable={editable} onSave={v=>saveMedia("male_portrait",v)} className="df-couple-character-art"/><div className="df-couple-character-copy"><h3>{profile.male_nickname}</h3><p>{field("male_description","Male description",true)}</p></div></div></article>
-    <article className="df-couple-character-card" data-character="veylora"><div className="df-couple-character-heading"><p className="df-couple-character-role">{field("female_role","Female role")}</p></div><div className="df-couple-character-body"><EditableImage fileId={mediaMap.female_portrait} label="Female portrait" editable={editable} onSave={v=>saveMedia("female_portrait",v)} className="df-couple-character-art"/><div className="df-couple-character-copy"><h3>{profile.female_nickname}</h3><p>{field("female_description","Female description",true)}</p></div></div></article>
-   </div>
-  </section>
-  <section className="df-couple-gallery" id="couple-gallery"><div className="df-couple-section-heading"><p className="df-couple-eyebrow">{en?"MEMORIES":"KENANGAN"}</p><h2>{en?"Our Gallery":"Galeri Kita"}</h2><p className="df-couple-gallery-intro">{en?"Six moments, kept close.":"Enam momen yang ingin selalu dikenang."}</p></div>
-   <div className="df-couple-gallery-group"><div className="df-couple-moments-carousel"><div className="df-couple-moments-controls"><span className="df-couple-moments-count">{String(filled.length).padStart(2,"0")} / 06</span><span className="df-couple-moments-count">{en?"Up to 6 photos":"Maksimal 6 foto"}</span></div>
-    <div className="df-couple-moments-track">{gallery.map(({slot,index,fileId})=>fileId?<button className="df-couple-gallery-item" type="button" key={slot} onClick={()=>setLightbox({src:coupleDriveImage(fileId,1800),alt:(en?"Memory ":"Kenangan ")+(index+1)})}><img src={coupleDriveImage(fileId,600)} alt={(en?"Memory ":"Kenangan ")+(index+1)} loading="lazy"/><span>{en?"Memory ":"Kenangan "}{index+1}</span></button>:editable?<div className="df-couple-gallery-add" key={slot}><EditableImage fileId="" label={(en?"Gallery photo ":"Foto galeri ")+(index+1)} editable onSave={v=>saveMedia(slot,v)}/></div>:null)}</div>
-   </div></div>
-  </section>
-  <section className="df-couple-story" id="couple-story"><div className="df-couple-story-symbol" aria-hidden="true">♡</div><div className="df-couple-story-copy"><p className="df-couple-eyebrow">{en?"OUR STORY":"CERITA KITA"}</p><h2>{field("story_title","Story title")}</h2><p>{field("story_text","Story text",true)}</p><span className="df-couple-signature">{field("signature","Signature",true)}</span></div></section>
-  <footer className="df-couple-footer"><span>{en?"Made with love":"Dibuat dengan cinta"}</span><span>DAJJAL FAMILY UNIVERSE</span></footer>
- </div>
- <nav className="df-couple-bottom-nav" aria-label={en?"Couple navigation":"Navigasi Couple"}><a className="df-couple-bottom-nav-item" href="#couple-home"><span>⌂</span><span>{en?"Home":"Awal"}</span></a><a className="df-couple-bottom-nav-item" href="#couple-identities"><span>♡</span><span>{en?"Profile":"Profil"}</span></a><button className="df-couple-bottom-nav-music" type="button" onClick={()=>window.dispatchEvent(new CustomEvent("df-couple-music-toggle"))} aria-label={en?"Toggle music":"Putar/jeda musik"}>♫</button><a className="df-couple-bottom-nav-item" href="#couple-gallery"><span>▧</span><span>{en?"Gallery":"Galeri"}</span></a><a className="df-couple-bottom-nav-item" href="#couple-story"><span>▤</span><span>{en?"Story":"Kisah"}</span></a></nav>
- {lightbox&&<div className="df-couple-lightbox" role="presentation" onClick={()=>setLightbox(null)}><button type="button" className="df-couple-lightbox-backdrop" aria-label="Close image"/><div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" onClick={e=>e.stopPropagation()}><button className="df-couple-lightbox-close" type="button" onClick={()=>setLightbox(null)} aria-label="Close">×</button><img src={lightbox.src} alt={lightbox.alt}/><p>{lightbox.alt}</p></div></div>}
- </main>;
+
+function EditableText({ value, label, editable, onSave, multiline = false, className = "", as = "span", placeholder = "—" }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value || "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const Tag = as;
+  useEffect(() => setDraft(value || ""), [value]);
+  async function save() {
+    setSaving(true);
+    setError("");
+    try {
+      await onSave(draft);
+      setEditing(false);
+    } catch (err) {
+      setError(err.message || "Save failed.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  return (
+    <span className={`df-couple-editable ${className}`} data-editing={editing ? "true" : "false"}>
+      {editing ? (
+        <span className="df-couple-edit-form">
+          {multiline ? <textarea aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} rows={4} maxLength={3000} autoFocus /> :
+            <input aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={label.toLowerCase().includes("name") ? 40 : 220} autoFocus />}
+          <span className="df-couple-edit-actions">
+            <button type="button" onClick={save} disabled={saving}>{saving ? "…" : "Simpan"}</button>
+            <button type="button" className="df-couple-edit-cancel" onClick={() => { setDraft(value || ""); setEditing(false); }}>Batal</button>
+          </span>
+          {error && <small role="alert">{error}</small>}
+        </span>
+      ) : (
+        <>
+          <Tag className="df-couple-editable-value">{value || (editable ? placeholder : "")}</Tag>
+          {editable && <button type="button" className="df-couple-pencil" title={`Edit ${label}`} aria-label={`Edit ${label}`} onClick={() => setEditing(true)}><Pencil /></button>}
+        </>
+      )}
+    </span>
+  );
+}
+
+function EditableImage({ fileId, label, editable, onSave, className = "", openPhoto }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(fileId || "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  useEffect(() => setDraft(fileId || ""), [fileId]);
+  async function save() {
+    setSaving(true);
+    setError("");
+    try {
+      await onSave(draft.trim());
+      setEditing(false);
+    } catch (err) {
+      setError(err.message || "Save failed.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  return (
+    <div className={`df-couple-image-slot ${className}`}>
+      {fileId ? (
+        <button className="df-couple-image-open" type="button" onClick={() => openPhoto?.(coupleDriveImage(fileId, 1800), label)} aria-label={`Open ${label}`}>
+          <img src={coupleDriveImage(fileId, 1200)} alt={label} loading="lazy" />
+        </button>
+      ) : (
+        <div className="df-couple-image-empty">{editable ? `Tambahkan ${label}` : ""}</div>
+      )}
+      {editable && <button type="button" className="df-couple-pencil df-couple-image-pencil" title={`Edit ${label}`} aria-label={`Edit ${label}`} onClick={() => setEditing((current) => !current)}><Pencil /></button>}
+      {editing && (
+        <div className="df-couple-image-editor">
+          <label>{label} · Google Drive File ID
+            <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Tempel Google Drive File ID" />
+          </label>
+          <span className="df-couple-edit-actions">
+            <button type="button" onClick={save} disabled={saving}>{saving ? "…" : "Simpan"}</button>
+            <button type="button" className="df-couple-edit-cancel" onClick={() => setEditing(false)}>Batal</button>
+          </span>
+          {error && <small role="alert">{error}</small>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function CoupleProfileView({ profile, content, media = [], locale = "id", editable = false, onSave }) {
+  const en = locale === "en";
+  const [time, setTime] = useState([0, 0, 0, 0]);
+  const [activePhoto, setActivePhoto] = useState(null);
+  const [activeMoment, setActiveMoment] = useState(0);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const momentsTrackRef = useRef(null);
+  const mediaMap = useMemo(() => Object.fromEntries(media.map((item) => [item.slot_key, item.google_drive_file_id])), [media]);
+  const gallery = COUPLE_GALLERY_SLOTS.map((slot, index) => ({ slot, index, fileId: mediaMap[slot] || "" }));
+  const filledGallery = gallery.filter((item) => item.fileId);
+  const timeUnits = en ? ["Days", "Hours", "Minutes", "Seconds"] : ["Hari", "Jam", "Menit", "Detik"];
+  const copy = en ? {
+    eyebrow: "A DAJJAL FAMILY STORY", identity: "THE COUPLE", gallery: "OUR LITTLE MOMENTS",
+    openPhoto: "Open photo", closePhoto: "Close photo", previous: "Previous photo", next: "Next photo",
+    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Anniversary date",
+    empty: "Add a photo", reset: "Reset Couple Profile",
+  } : {
+    eyebrow: "CERITA DARI DAJJAL FAMILY", identity: "IDENTITAS PASANGAN", gallery: "KENANGAN KITA",
+    openPhoto: "Buka foto", closePhoto: "Tutup foto", previous: "Foto sebelumnya", next: "Foto berikutnya",
+    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Tanggal anniversary",
+    empty: "Tambah foto", reset: "Reset Couple Profile",
+  };
+  useEffect(() => {
+    const update = () => setTime(durationSince(profile.anniversary_date));
+    update();
+    const interval = window.setInterval(update, 1000);
+    return () => window.clearInterval(interval);
+  }, [profile.anniversary_date]);
+  useEffect(() => {
+    if (!activePhoto) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setActivePhoto(null); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [activePhoto]);
+  const scrollToMoment = (index) => {
+    const track = momentsTrackRef.current;
+    const slide = track?.children[index];
+    if (!track || !slide) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const left = slide.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
+    track.scrollTo({ left, behavior: reducedMotion ? "auto" : "smooth" });
+  };
+  const onMomentScroll = () => {
+    const track = momentsTrackRef.current;
+    if (!track) return;
+    const left = track.getBoundingClientRect().left;
+    let nearest = 0;
+    let distance = Infinity;
+    Array.from(track.children).forEach((slide, index) => {
+      const next = Math.abs(slide.getBoundingClientRect().left - left);
+      if (next < distance) { distance = next; nearest = index; }
+    });
+    setActiveMoment((current) => current === nearest ? current : nearest);
+  };
+  const saveContent = (key, value) => onSave?.({ content: { [key]: value } });
+  const saveProfile = (key, value) => onSave?.({ profile: { [key]: value } });
+  const saveMedia = (slot, value) => onSave?.({ media: { [slot]: value } });
+  const field = (key, label, options = {}) => (
+    <EditableText value={content[key]} label={label} editable={editable} onSave={(value) => saveContent(key, value)} {...options} />
+  );
+  const openPhoto = (src, alt) => setActivePhoto({ src, alt });
+  const renderGalleryItem = ({ slot, index, fileId }) => (
+    <div className="df-couple-gallery-slot" key={slot}>
+      {fileId ? (
+        <button className="df-couple-gallery-item" type="button" onClick={() => openPhoto(coupleDriveImage(fileId, 1800), `${en ? "Memory" : "Kenangan"} ${index + 1}`)} aria-label={`${copy.openPhoto}: ${index + 1}`}>
+          <img src={coupleDriveImage(fileId, 700)} alt={`${en ? "Memory" : "Kenangan"} ${index + 1}`} loading="lazy" />
+          <span>{`${en ? "Memory" : "Kenangan"} ${index + 1}`}</span>
+        </button>
+      ) : (
+        <div className="df-couple-gallery-empty">
+          <span>{`${copy.empty} ${index + 1}`}</span>
+          {editable && <button type="button" className="df-couple-pencil" aria-label={`Add gallery photo ${index + 1}`} onClick={() => {
+            const id = window.prompt("Google Drive File ID");
+            if (id?.trim()) saveMedia(slot, id.trim());
+          }}><Pencil /></button>}
+        </div>
+      )}
+      {editable && fileId && <button type="button" className="df-couple-pencil df-couple-gallery-pencil" aria-label={`Edit gallery photo ${index + 1}`} onClick={() => {
+        const id = window.prompt("Google Drive File ID", fileId);
+        if (id?.trim()) saveMedia(slot, id.trim());
+      }}><Pencil /></button>}
+    </div>
+  );
+
+  return (
+    <main className="df-couple-profile-page">
+      <div className="df-couple-shell">
+        <header className="df-couple-hero" id="df-couple-home">
+          <EditableText as="p" className="df-couple-eyebrow" value={copy.eyebrow} label="Page eyebrow" editable={false} />
+          <h1 className="df-couple-title">
+            <EditableText value={profile.male_nickname} label="Male name" editable={editable} onSave={(value) => saveProfile("maleNickname", value)} />
+            <span className="df-couple-connector" aria-hidden="true">×</span>
+            <EditableText value={profile.female_nickname} label="Female name" editable={editable} onSave={(value) => saveProfile("femaleNickname", value)} />
+          </h1>
+          <div className="df-couple-editable-block df-couple-subtitle">{field("subtitle", "Subtitle")}</div>
+          <div className="df-couple-editable-block df-couple-intro">{field("intro", "Introduction", { multiline: true })}</div>
+          <div className="df-couple-featured-wrap">
+            <EditableImage fileId={mediaMap.cover} label="Cover image" editable={editable} onSave={(value) => saveMedia("cover", value)} className="df-couple-featured-photo" openPhoto={openPhoto} />
+            <span className="df-couple-featured-label">{en ? "FEATURED MOMENT" : "POTRET UTAMA"}</span>
+          </div>
+          <div className="df-couple-anniversary-heading">
+            <p className="df-couple-eyebrow">{field("anniversary_label", "Anniversary label")}</p>
+          </div>
+          <section className="df-couple-metrics" aria-label={content.anniversary_label}>
+            {time.map((value, index) => <div className="df-couple-metric" key={timeUnits[index]}><strong>{value.toLocaleString(en ? "en-US" : "id-ID")}</strong><span>{timeUnits[index]}</span></div>)}
+          </section>
+          {editable && (
+            <div className="df-couple-date-edit">
+              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable onSave={(value) => saveProfile("anniversaryDate", value || null)} />
+            </div>
+          )}
+        </header>
+
+        <CoupleMusicPlayer onPlaybackStateChange={setMusicPlaying} />
+
+        <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
+          <div className="df-couple-section-heading">
+            <p className="df-couple-eyebrow">{field("identity_label", "Identity section label")}</p>
+            <h2 id="df-couple-identities">
+              {profile.male_nickname} &amp; {profile.female_nickname}
+            </h2>
+          </div>
+          <div className="df-couple-character-grid">
+            <article className="df-couple-character-card" data-character="dajjal">
+              <div className="df-couple-character-heading"><p className="df-couple-character-role">{field("male_role", "Male role")}</p></div>
+              <div className="df-couple-character-body">
+                <EditableImage fileId={mediaMap.male_portrait} label="Male portrait" editable={editable} onSave={(value) => saveMedia("male_portrait", value)} className="df-couple-character-art" openPhoto={openPhoto} />
+                <div className="df-couple-character-copy">
+                  <h3>{profile.male_nickname}</h3>
+                  <div className="df-couple-editable-block">{field("male_description", "Male description", { multiline: true })}</div>
+                </div>
+              </div>
+              <span className="df-couple-character-index" aria-hidden="true">01</span>
+            </article>
+            <article className="df-couple-character-card" data-character="veylora">
+              <div className="df-couple-character-heading"><p className="df-couple-character-role">{field("female_role", "Female role")}</p></div>
+              <div className="df-couple-character-body">
+                <EditableImage fileId={mediaMap.female_portrait} label="Female portrait" editable={editable} onSave={(value) => saveMedia("female_portrait", value)} className="df-couple-character-art" openPhoto={openPhoto} />
+                <div className="df-couple-character-copy">
+                  <h3>{profile.female_nickname}</h3>
+                  <div className="df-couple-editable-block">{field("female_description", "Female description", { multiline: true })}</div>
+                </div>
+              </div>
+              <span className="df-couple-character-index" aria-hidden="true">02</span>
+            </article>
+          </div>
+        </section>
+
+        <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
+          <div className="df-couple-section-heading">
+            <p className="df-couple-eyebrow">{field("gallery_eyebrow", "Gallery eyebrow")}</p>
+            <h2 id="df-couple-gallery-title">{field("gallery_title", "Gallery title")}</h2>
+            <div className="df-couple-editable-block df-couple-gallery-intro">{field("gallery_intro", "Gallery introduction", { multiline: true })}</div>
+          </div>
+          <div className="df-couple-gallery-group">
+            <h3>{field("gallery_label", "Gallery label")}</h3>
+            <div className="df-couple-moments-carousel" role="region" aria-roledescription="carousel" aria-label={copy.gallery}>
+              <div className="df-couple-moments-controls">
+                <span className="df-couple-moments-count" aria-live="polite">{String(filledGallery.length).padStart(2, "0")} / 06</span>
+                <div className="df-couple-moments-arrows">
+                  <button className="df-couple-moments-arrow" type="button" onClick={() => scrollToMoment(Math.max(0, activeMoment - 1))} disabled={activeMoment === 0} aria-label={copy.previous}>‹</button>
+                  <button className="df-couple-moments-arrow" type="button" onClick={() => scrollToMoment(Math.min(gallery.length - 1, activeMoment + 1))} disabled={activeMoment >= gallery.length - 1} aria-label={copy.next}>›</button>
+                </div>
+              </div>
+              <div className="df-couple-moments-track" ref={momentsTrackRef} onScroll={onMomentScroll} tabIndex={0}>
+                {gallery.map(renderGalleryItem)}
+              </div>
+              <div className="df-couple-moments-pagination" aria-label={copy.gallery}>
+                {gallery.map((item, index) => <button key={item.slot} className="df-couple-moments-dot" type="button" onClick={() => scrollToMoment(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={activeMoment === index ? "true" : undefined} />)}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="df-couple-story" id="df-couple-story" aria-labelledby="df-couple-story-title">
+          <div className="df-couple-story-symbol" aria-hidden="true">♡</div>
+          <div className="df-couple-story-copy">
+            <p className="df-couple-eyebrow">{field("story_eyebrow", "Story eyebrow")}</p>
+            <h2 id="df-couple-story-title">{field("story_title", "Story title")}</h2>
+            <div className="df-couple-editable-block">{field("story_text", "Story text", { multiline: true })}</div>
+            <div className="df-couple-editable-block df-couple-signature">{field("signature", "Signature", { multiline: true })}</div>
+          </div>
+        </section>
+
+        <footer className="df-couple-footer">
+          <span>{copy.footer}</span><span>DAJJAL FAMILY UNIVERSE</span>
+          {editable && <button type="button" className="df-couple-reset-link" onClick={() => {
+            if (window.confirm(en ? "Reset this Couple Profile? This cannot be undone." : "Reset Couple Profile ini? Tindakan tidak dapat dibatalkan.")) {
+              onSave?.({ reset: true });
+            }
+          }}>{copy.reset}</button>}
+        </footer>
+      </div>
+
+      <nav className="df-couple-bottom-nav" aria-label={en ? "Couple page navigation" : "Navigasi halaman Couple"}>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-home"><span aria-hidden="true">⌂</span><span>{en ? "Home" : "Awal"}</span></a>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-profile"><span aria-hidden="true">♡</span><span>{en ? "Profile" : "Profil"}</span></a>
+        <button className="df-couple-bottom-nav-music" type="button" onClick={() => window.dispatchEvent(new CustomEvent("df-couple-music-toggle"))} aria-label={musicPlaying ? "Pause music" : "Play music"} aria-pressed={musicPlaying}>{musicPlaying ? "Ⅱ" : "♫"}</button>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-gallery"><span aria-hidden="true">▧</span><span>{en ? "Gallery" : "Galeri"}</span></a>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-story"><span aria-hidden="true">▤</span><span>{en ? "Story" : "Kisah"}</span></a>
+      </nav>
+
+      {activePhoto && (
+        <div className="df-couple-lightbox" role="presentation" onClick={() => setActivePhoto(null)}>
+          <button className="df-couple-lightbox-backdrop" type="button" onClick={() => setActivePhoto(null)} aria-label={copy.closePhoto} />
+          <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
+            <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={copy.closePhoto}>×</button>
+            <img src={activePhoto.src} alt={activePhoto.alt} /><p>{activePhoto.alt}</p>
+          </div>
+        </div>
+      )}
+    </main>
+  );
 }
