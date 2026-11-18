@@ -77,6 +77,7 @@ export default function CoupleMusicPlayer() {
   const resumeAfterBackgroundRef = useRef(false);
   const duckedRef = useRef(false);
   const fadeFrameRef = useRef(0);
+  const volumeRef = useRef(0.75);
 
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -169,7 +170,7 @@ export default function CoupleMusicPlayer() {
       duckedRef.current = nextDucked;
       if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
       const from = audio.volume;
-      const target = volume * (nextDucked ? 0.22 : 1);
+      const target = volumeRef.current * (nextDucked ? 0.22 : 1);
       const startedAt = performance.now();
       const durationMs = 320;
       const step = (now) => {
@@ -241,6 +242,7 @@ export default function CoupleMusicPlayer() {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    volumeRef.current = volume;
     const target = volume * (duckedRef.current ? 0.22 : 1);
     if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
     audio.volume = target;
