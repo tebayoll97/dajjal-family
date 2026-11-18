@@ -384,6 +384,7 @@ export default function CoupleProfilePage() {
             onPointerUp={handleFeaturedPointerUp}
             onPointerCancel={() => { featuredPointerRef.current = null; }}
             onKeyDown={(event) => {
+              if (event.target.closest("button")) return;
               if (event.key === "ArrowLeft") { event.preventDefault(); moveFeaturedSlide("right"); }
               if (event.key === "ArrowRight") { event.preventDefault(); moveFeaturedSlide("left"); }
               if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleFeaturedClick(); }
