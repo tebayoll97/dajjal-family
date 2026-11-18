@@ -57,7 +57,7 @@ export async function PATCH(request, context) {
 
   if (body.anniversaryDate !== undefined) {
     const dateValue = body.anniversaryDate;
-    if (dateValue !== null && (typeof dateValue !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(dateValue))) return errorJson("Invalid anniversary date.");
+    if (dateValue !== null && (typeof dateValue !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateValue))) return errorJson("Invalid anniversary date.");
     const { error: dateError } = await supabaseAdmin.from("df_couple_profiles")
       .update({ anniversary_date: dateValue, updated_at: new Date().toISOString() })
       .eq("id", profile.id);
