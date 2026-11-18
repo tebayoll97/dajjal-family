@@ -19,7 +19,6 @@ function EditableText({ value, label, editable, onSave, multiline = false, input
   const [draft, setDraft] = useState(value || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const Tag = as;
   useEffect(() => setDraft(value || ""), [value]);
   async function save() {
     setSaving(true);
