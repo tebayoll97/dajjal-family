@@ -654,3 +654,86 @@
   .df-couple-music-track,
   .df-couple-music-equalizer i { transition: none; animation: none; }
 }
+
+
+/* Track identity polish — the active song controls its own visual accent. */
+.df-couple-music-card {
+  --music-accent: var(--couple-primary);
+  --music-accent-soft: var(--couple-primary-soft);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: border-color .35s ease, background .35s ease, box-shadow .35s ease;
+}
+.df-couple-music-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 8% 12%, var(--music-accent-soft), transparent 48%);
+  content: "";
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+.df-couple-music-card[data-track-theme="dajjal"] {
+  --music-accent: #d33b58;
+  --music-accent-soft: rgba(211, 59, 88, .18);
+  border-color: color-mix(in srgb, #d33b58 42%, var(--df-border));
+  background: linear-gradient(135deg, rgba(95, 14, 34, .2), var(--couple-surface) 62%);
+}
+.df-couple-music-card[data-track-theme="veylora"] {
+  --music-accent: #4b9fd2;
+  --music-accent-soft: rgba(75, 159, 210, .2);
+  border-color: color-mix(in srgb, #4b9fd2 42%, var(--df-border));
+  background: linear-gradient(135deg, rgba(75, 159, 210, .12), var(--couple-surface) 62%);
+}
+.df-couple-music-card .df-couple-music-track-meta,
+.df-couple-music-card .df-couple-music-track.is-active .df-couple-music-track-number,
+.df-couple-music-card .df-couple-music-track.is-active .df-couple-music-track-state {
+  color: var(--music-accent);
+}
+.df-couple-music-card .df-couple-music-artwork {
+  border-color: color-mix(in srgb, var(--music-accent) 48%, var(--df-border));
+  box-shadow: 0 1rem 2.8rem color-mix(in srgb, var(--music-accent) 16%, transparent);
+}
+.df-couple-music-card .df-couple-music-controls > .df-couple-music-play {
+  border-color: var(--music-accent);
+  background: var(--music-accent);
+  box-shadow: 0 .45rem 1.2rem color-mix(in srgb, var(--music-accent) 28%, transparent);
+}
+.df-couple-music-card .df-couple-music-progress input,
+.df-couple-music-card .df-couple-music-volume input {
+  accent-color: var(--music-accent);
+}
+.df-couple-music-card .df-couple-music-track.is-active {
+  border-color: color-mix(in srgb, var(--music-accent) 48%, var(--df-border));
+  background: var(--music-accent-soft);
+}
+.df-couple-music-card .df-couple-music-equalizer i { background: var(--music-accent); }
+.df-couple-music-card .df-couple-music-track:hover {
+  border-color: color-mix(in srgb, var(--music-accent) 28%, transparent);
+}
+.df-couple-music-card .df-couple-music-controls > button {
+  transition: transform .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.df-couple-music-card .df-couple-music-controls > button:hover {
+  transform: translateY(-2px);
+  border-color: var(--music-accent);
+}
+.df-couple-music-card .df-couple-music-controls > .df-couple-music-play:hover {
+  background: color-mix(in srgb, var(--music-accent) 88%, white);
+}
+@media (max-width: 560px) {
+  .df-couple-music-card { padding: .85rem; border-radius: 1rem; }
+  .df-couple-music-card .df-couple-music-artwork {
+    width: min(100%, 16rem);
+    border-radius: .85rem;
+  }
+  .df-couple-music-card .df-couple-music-content { width: 100%; }
+  .df-couple-music-card .df-couple-music-controls { justify-content: center; }
+  .df-couple-music-card .df-couple-music-volume { max-width: 7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-couple-music-card,
+  .df-couple-music-card::before,
+  .df-couple-music-card .df-couple-music-controls > button { transition: none; }
+}
