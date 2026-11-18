@@ -67,16 +67,24 @@ export async function PATCH(request, context) {
   if (body.media !== undefined) {
     if (!Array.isArray(body.media) || body.media.length > COUPLE_MEDIA_SLOTS.length) return errorJson("Invalid media list.");
     const rows = [];
+    const submittedSlots = new Set();
     for (const item of body.media) {
-      if (!COUPLE_MEDIA_SLOTS.includes(item?.slotKey) || typeof item?.googleDriveFileId !== "string" ||
+      if (!COUPLE_MEDIA_SLOTS.includes(item?.slotKey) || submittedSlots.has(item.slotKey) ||
+          typeof item?.googleDriveFileId !== "string" ||
           !/^[A-Za-z0-9_-]{10,200}$/.test(item.googleDriveFileId.trim())) return errorJson("Invalid image reference.");
+      submittedSlots.add(item.slotKey);
       rows.push({ couple_id: profile.id, slot_key: item.slotKey, google_drive_file_id: item.googleDriveFileId.trim(), updated_at: new Date().toISOString() });
     }
-    const { error: clearMediaError } = await supabaseAdmin.from("df_couple_media").delete().eq("couple_id", profile.id);
-    if (clearMediaError) return errorJson("Unable to update image references.", 500);
     if (rows.length) {
-      const { error: mediaError } = await supabaseAdmin.from("df_couple_media").insert(rows);
+      const { error: mediaError } = await supabaseAdmin.from("df_couple_media").upsert(rows, { onConflict: "couple_id,slot_key" });
       if (mediaError) return errorJson("Unable to save image references.", 500);
+    }
+    for (const slot of COUPLE_MEDIA_SLOTS) {
+      if (!submittedSlots.has(slot)) {
+        const { error: removeError } = await supabaseAdmin.from("df_couple_media").delete()
+          .eq("couple_id", profile.id).eq("slot_key", slot);
+        if (removeError) return errorJson("Unable to update image references.", 500);
+      }
     }
   }
   return NextResponse.json({ success: true }, { headers: { "Cache-Control": "no-store" } });
