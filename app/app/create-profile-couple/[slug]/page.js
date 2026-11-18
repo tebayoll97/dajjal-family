@@ -1,18 +1,109 @@
 "use client";
-import {useCallback,useEffect,useState} from "react";
-import {useParams,useRouter} from "next/navigation";
-import {supabase} from "@/lib/supabase";
-import {useLanguage} from "@/app/components/LanguageProvider";
-import {COUPLE_CONTENT_DEFAULTS,COUPLE_MEDIA_SLOTS} from "@/lib/coupleProfileDefaults";
+
+import { useCallback, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/app/components/LanguageProvider";
+import { COUPLE_CONTENT_DEFAULTS, COUPLE_MEDIA_SLOTS } from "@/lib/coupleProfileDefaults";
 import CoupleProfileView from "@/app/components/CoupleProfileView";
-export default function CoupleProfileEditorPage(){
- const{slug}=useParams(),router=useRouter(),{language}=useLanguage(),locale=language==="en"?"en":"id";
- const[profile,setProfile]=useState(null),[content,setContent]=useState(COUPLE_CONTENT_DEFAULTS[locale]),[media,setMedia]=useState([]),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[confirmReset,setConfirmReset]=useState(false);
- const load=useCallback(async()=>{const{data:{session}}=await supabase.auth.getSession();if(!session){router.replace("/login");return;}const own=await fetch("/api/couple",{headers:{Authorization:`Bearer ${session.access_token}`},cache:"no-store"}),ownData=await own.json();if(!own.ok||!ownData.profile||ownData.profile.slug!==slug){router.replace("/app/create-profile-couple");return;}const r=await fetch(`/api/couple/${slug}?locale=${locale}`,{cache:"no-store"}),v=await r.json();if(!r.ok)throw Error(v.error||"Unable to load profile.");setProfile(v.profile);setContent({...COUPLE_CONTENT_DEFAULTS[locale],...(v.content?.content||{})});setMedia(v.media||[])},[slug,locale,router]);
- useEffect(()=>{let active=true;load().catch(e=>{if(active)setError(e.message)}).finally(()=>{if(active)setLoading(false)});return()=>{active=false}},[load]);
- const save=useCallback(async(change)=>{setSaving(true);setError("");setNotice("");try{const{data:{session}}=await supabase.auth.getSession();if(!session)throw Error("Session expired.");const body={locale};if(change.content)body.content={...content,...change.content};if(change.profile){if(change.profile.maleNickname!==undefined)body.maleNickname=change.profile.maleNickname;if(change.profile.femaleNickname!==undefined)body.femaleNickname=change.profile.femaleNickname;if(change.profile.anniversaryDate!==undefined)body.anniversaryDate=change.profile.anniversaryDate||null;}if(change.media){const next={...Object.fromEntries(media.map(x=>[x.slot_key,x.google_drive_file_id])),...change.media};body.media=COUPLE_MEDIA_SLOTS.filter(slot=>next[slot]?.trim()).map(slot=>({slotKey:slot,googleDriveFileId:next[slot].trim()}));}const r=await fetch(`/api/couple/${slug}`,{method:"PATCH",headers:{"Content-Type":"application/json",Authorization:`Bearer ${session.access_token}`},body:JSON.stringify(body)}),v=await r.json();if(!r.ok)throw Error(v.error||"Save failed.");await load();setNotice(locale==="en"?"Saved successfully.":"Perubahan berhasil disimpan.")}catch(e){setError(e.message);throw e}finally{setSaving(false)}},[content,locale,load,media,slug]);
- async function reset(){setSaving(true);setError("");try{const{data:{session}}=await supabase.auth.getSession();if(!session)throw Error("Session expired.");const r=await fetch(`/api/couple/${slug}`,{method:"DELETE",headers:{Authorization:`Bearer ${session.access_token}`}}),v=await r.json();if(!r.ok)throw Error(v.error||"Reset failed.");router.replace("/app/create-profile-couple")}catch(e){setError(e.message);setSaving(false)}}
- if(loading)return <main className="df-couple-editor-page">{locale==="en"?"Loading editor...":"Memuat editor..."}</main>;
- if(!profile)return <main className="df-couple-editor-page">{error||"Profile not found."}</main>;
- return <main className="df-couple-editor-page"><div className="df-couple-editor-toolbar"><div><p className="df-couple-editor-eyebrow">DAJJAL FAMILY · COUPLE EDITOR</p><h1>{locale==="en"?"Edit your Couple Profile":"Edit Couple Profile"}</h1><p>{locale==="en"?"Tap the pencil beside any element to edit it directly.":"Tekan ikon pensil di samping elemen untuk mengeditnya langsung."}</p></div><a href={`/${locale}/couple/${slug}`} target="_blank" rel="noreferrer">{locale==="en"?"View public page ↗":"Lihat halaman publik ↗"}</a></div>{saving&&<p className="df-couple-editor-status" role="status">{locale==="en"?"Saving...":"Menyimpan..."}</p>}{notice&&<p className="df-couple-editor-notice" role="status">{notice}</p>}{error&&<p className="df-couple-editor-error" role="alert">{error}</p>}<CoupleProfileView profile={profile} content={content} media={media} locale={locale} editable onSave={save}/><section className="df-couple-reset-panel">{confirmReset?<><p>{locale==="en"?"This permanently removes your Couple Profile data and frees its URL. Your account and original Google Drive files remain untouched.":"Ini menghapus data Couple Profile dan membebaskan URL-nya. Akun DAJJAL FAMILY dan file asli Google Drive tetap aman."}</p><button className="df-couple-danger-button" disabled={saving} onClick={reset}>{locale==="en"?"Confirm reset":"Konfirmasi reset"}</button><button className="df-couple-secondary-button" onClick={()=>setConfirmReset(false)}>{locale==="en"?"Cancel":"Batal"}</button></>:<button className="df-couple-danger-button" onClick={()=>setConfirmReset(true)}>{locale==="en"?"Reset Couple Profile":"Reset Couple Profile"}</button>}</section></main>;
+
+export default function CoupleProfileEditorPage() {
+  const { slug } = useParams();
+  const router = useRouter();
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en" : "id";
+  const [profile, setProfile] = useState(null);
+  const [content, setContent] = useState(COUPLE_CONTENT_DEFAULTS[locale]);
+  const [media, setMedia] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+
+  const load = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { router.replace("/login"); return; }
+    const ownerResponse = await fetch("/api/couple", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    const ownerData = await ownerResponse.json();
+    if (!ownerResponse.ok || !ownerData.profile || ownerData.profile.slug !== slug) {
+      router.replace("/app/create-profile-couple");
+      return;
+    }
+    const response = await fetch(`/api/couple/${slug}?locale=${locale}`, { cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Unable to load Couple Profile.");
+    setProfile(data.profile);
+    setContent({ ...COUPLE_CONTENT_DEFAULTS[locale], ...(data.content?.content || {}) });
+    setMedia(data.media || []);
+  }, [slug, locale, router]);
+
+  useEffect(() => {
+    let active = true;
+    load().catch((err) => { if (active) setError(err.message); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [load]);
+
+  const save = useCallback(async (change) => {
+    setSaving(true);
+    setError("");
+    setNotice("");
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Session expired. Please log in again.");
+      if (change.reset) {
+        const response = await fetch(`/api/couple/${slug}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Unable to reset Couple Profile.");
+        router.replace("/app/create-profile-couple");
+        return;
+      }
+      const body = { locale };
+      if (change.content) body.content = change.content;
+      if (change.profile) {
+        if (change.profile.maleNickname !== undefined) body.maleNickname = change.profile.maleNickname;
+        if (change.profile.femaleNickname !== undefined) body.femaleNickname = change.profile.femaleNickname;
+        if (change.profile.anniversaryDate !== undefined) body.anniversaryDate = change.profile.anniversaryDate || null;
+      }
+      if (change.media) {
+        const current = Object.fromEntries(media.map((item) => [item.slot_key, item.google_drive_file_id]));
+        const next = { ...current, ...change.media };
+        body.media = COUPLE_MEDIA_SLOTS.filter((slot) => next[slot]?.trim()).map((slot) => ({
+          slotKey: slot, googleDriveFileId: next[slot].trim(),
+        }));
+      }
+      const response = await fetch(`/api/couple/${slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify(body),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Unable to save changes.");
+      await load();
+      setNotice(locale === "en" ? "Saved successfully." : "Berhasil disimpan.");
+      window.setTimeout(() => setNotice(""), 2500);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setSaving(false);
+    }
+  }, [load, locale, media, router, slug]);
+
+  if (loading) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{locale === "en" ? "Loading..." : "Memuat..."}</p></div></main>;
+  if (!profile) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{error || "Couple Profile not found."}</p></div></main>;
+
+  return (
+    <div className="df-couple-editor-surface">
+      {saving && <div className="df-couple-save-status" role="status">{locale === "en" ? "Saving…" : "Menyimpan…"}</div>}
+      {notice && <div className="df-couple-save-status is-success" role="status">{notice}</div>}
+      {error && <div className="df-couple-save-status is-error" role="alert">{error}</div>}
+      <CoupleProfileView profile={profile} content={content} media={media} locale={locale} editable onSave={save} />
+    </div>
+  );
 }
