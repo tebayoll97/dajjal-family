@@ -18,3 +18,45 @@
 .df-couple-danger-button{border-color:var(--df-danger);background:var(--df-danger);color:#fff}
 .df-couple-secondary-button{margin-left:.5rem;border-color:var(--df-border);background:var(--df-surface-raised);color:var(--df-text)}
 @media(max-width:600px){.df-couple-editor-page{padding:.75rem}.df-couple-editor-toolbar{align-items:flex-start}.df-couple-reset-panel{margin-inline:0}}
+
+
+/* Couple editor quick actions and foundation-aligned reset confirmation. */
+.df-couple-editor-quick-actions {
+  width: min(100% - 2rem, 76rem); margin: 1rem auto 1.25rem; padding: 1rem 1.1rem;
+  border: 1px solid var(--df-border); border-radius: var(--df-radius-lg);
+  background: var(--df-surface); color: var(--df-text); box-shadow: var(--df-shadow-sm);
+}
+.df-couple-editor-quick-buttons { display: flex; flex-wrap: wrap; gap: .65rem; }
+.df-couple-editor-quick-buttons :is(button, a) {
+  display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .5rem;
+  padding: .65rem 1rem; border: 1px solid var(--df-border); border-radius: var(--df-radius-md);
+  font: inherit; font-size: .85rem; font-weight: 800; text-decoration: none; cursor: pointer;
+}
+.df-couple-editor-action-primary { border-color: var(--df-primary) !important; background: var(--df-primary); color: var(--df-on-primary); }
+.df-couple-editor-action-secondary { background: var(--df-surface-raised); color: var(--df-text); }
+.df-couple-editor-quick-actions p { margin: .8rem 0 0; color: var(--df-text-secondary); font-size: .78rem; line-height: 1.6; }
+.df-couple-confirm-backdrop {
+  position: fixed; z-index: 1500; inset: 0; display: grid; place-items: center;
+  padding: 1rem; background: rgba(3, 7, 18, .68); backdrop-filter: blur(8px);
+}
+.df-couple-confirm-dialog {
+  width: min(100%, 28rem); padding: clamp(1.2rem, 4vw, 1.65rem);
+  border: 1px solid var(--df-border); border-radius: var(--df-radius-xl);
+  background: var(--df-surface-overlay); color: var(--df-text); box-shadow: var(--df-shadow-lg);
+}
+.df-couple-confirm-dialog h2 { margin: .45rem 0 .65rem; color: var(--df-text); font-size: 1.2rem; font-weight: 900; }
+.df-couple-confirm-dialog > p:not(.df-couple-eyebrow) { margin: 0; color: var(--df-text-secondary); line-height: 1.7; }
+.df-couple-confirm-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.35rem; }
+.df-couple-confirm-actions button {
+  min-height: 44px; padding: .65rem 1.1rem; border: 1px solid var(--df-border);
+  border-radius: var(--df-radius-md); font: inherit; font-weight: 850; cursor: pointer;
+}
+.df-couple-confirm-primary { border-color: var(--df-danger) !important; background: var(--df-danger); color: #fff; }
+.df-couple-confirm-secondary { background: var(--df-surface-raised); color: var(--df-text); }
+@media (max-width: 600px) {
+  .df-couple-editor-quick-actions { width: calc(100% - 1.5rem); padding: .85rem; }
+  .df-couple-editor-quick-buttons > * { flex: 1 1 8rem; }
+  .df-couple-confirm-actions { flex-direction: column-reverse; }
+  .df-couple-confirm-actions button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .df-couple-confirm-backdrop { backdrop-filter: none; } }
