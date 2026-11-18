@@ -14,7 +14,7 @@ function Pencil() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4a2.1 2.1 0 0 0-3-3L5.2 16.2 4 20Z" /></svg>;
 }
 
-function EditableText({ value, label, editable, onSave, multiline = false, className = "", as = "span", placeholder = "—" }) {
+function EditableText({ value, label, editable, onSave, multiline = false, inputType = "text", className = "", placeholder = "—" }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value || "");
   const [saving, setSaving] = useState(false);
@@ -38,7 +38,7 @@ function EditableText({ value, label, editable, onSave, multiline = false, class
       {editing ? (
         <span className="df-couple-edit-form">
           {multiline ? <textarea aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} rows={4} maxLength={3000} autoFocus /> :
-            <input aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={label.toLowerCase().includes("name") ? 40 : 220} autoFocus />}
+            <input type={inputType} aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={inputType === "date" ? undefined : (label.toLowerCase().includes("name") ? 40 : 220)} autoFocus />}
           <span className="df-couple-edit-actions">
             <button type="button" onClick={save} disabled={saving}>{saving ? "…" : "Simpan"}</button>
             <button type="button" className="df-couple-edit-cancel" onClick={() => { setDraft(value || ""); setEditing(false); }}>Batal</button>
@@ -47,7 +47,7 @@ function EditableText({ value, label, editable, onSave, multiline = false, class
         </span>
       ) : (
         <>
-          <Tag className="df-couple-editable-value">{value || (editable ? placeholder : "")}</Tag>
+          <span className="df-couple-editable-value">{value || (editable ? placeholder : "")}</span>
           {editable && <button type="button" className="df-couple-pencil" title={`Edit ${label}`} aria-label={`Edit ${label}`} onClick={() => setEditing(true)}><Pencil /></button>}
         </>
       )}
@@ -162,24 +162,15 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   const openPhoto = (src, alt) => setActivePhoto({ src, alt });
   const renderGalleryItem = ({ slot, index, fileId }) => (
     <div className="df-couple-gallery-slot" key={slot}>
-      {fileId ? (
-        <button className="df-couple-gallery-item" type="button" onClick={() => openPhoto(coupleDriveImage(fileId, 1800), `${en ? "Memory" : "Kenangan"} ${index + 1}`)} aria-label={`${copy.openPhoto}: ${index + 1}`}>
-          <img src={coupleDriveImage(fileId, 700)} alt={`${en ? "Memory" : "Kenangan"} ${index + 1}`} loading="lazy" />
-          <span>{`${en ? "Memory" : "Kenangan"} ${index + 1}`}</span>
-        </button>
-      ) : (
-        <div className="df-couple-gallery-empty">
-          <span>{`${copy.empty} ${index + 1}`}</span>
-          {editable && <button type="button" className="df-couple-pencil" aria-label={`Add gallery photo ${index + 1}`} onClick={() => {
-            const id = window.prompt("Google Drive File ID");
-            if (id?.trim()) saveMedia(slot, id.trim());
-          }}><Pencil /></button>}
-        </div>
-      )}
-      {editable && fileId && <button type="button" className="df-couple-pencil df-couple-gallery-pencil" aria-label={`Edit gallery photo ${index + 1}`} onClick={() => {
-        const id = window.prompt("Google Drive File ID", fileId);
-        if (id?.trim()) saveMedia(slot, id.trim());
-      }}><Pencil /></button>}
+      <EditableImage
+        fileId={fileId}
+        label={`${en ? "Memory" : "Kenangan"} ${index + 1}`}
+        editable={editable}
+        onSave={(value) => saveMedia(slot, value)}
+        className="df-couple-gallery-item"
+        openPhoto={openPhoto}
+      />
+      <span className="df-couple-gallery-caption">{`${en ? "Memory" : "Kenangan"} ${index + 1}`}</span>
     </div>
   );
 
@@ -187,7 +178,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     <main className="df-couple-profile-page">
       <div className="df-couple-shell">
         <header className="df-couple-hero" id="df-couple-home">
-          <EditableText as="p" className="df-couple-eyebrow" value={copy.eyebrow} label="Page eyebrow" editable={false} />
+          <p className="df-couple-eyebrow">{copy.eyebrow}</p>
           <h1 className="df-couple-title">
             <EditableText value={profile.male_nickname} label="Male name" editable={editable} onSave={(value) => saveProfile("maleNickname", value)} />
             <span className="df-couple-connector" aria-hidden="true">×</span>
@@ -207,7 +198,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </section>
           {editable && (
             <div className="df-couple-date-edit">
-              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable onSave={(value) => saveProfile("anniversaryDate", value || null)} />
+              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable inputType="date" onSave={(value) => saveProfile("anniversaryDate", value || null)} />
             </div>
           )}
         </header>
