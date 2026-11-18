@@ -1,49 +1,41 @@
-"use client";
-import { useEffect,useState } from "react";
-import { useParams } from "next/navigation";
-import { useLanguage } from "@/app/components/LanguageProvider";
-import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
-import { coupleDriveImage, COUPLE_CONTENT_DEFAULTS } from "@/lib/coupleProfileDefaults";
+import { headers } from "next/headers";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import CoupleProfileClient from "./CoupleProfileClient";
 
-function countdown(date) {
-  if(!date)return [0,0,0,0];
-  const start=new Date(date+"T00:00:00").getTime();
-  const seconds=Math.max(0,Math.floor((Date.now()-start)/1000));
-  return [Math.floor(seconds/86400),Math.floor(seconds%86400/3600),Math.floor(seconds%3600/60),seconds%60];
+const ORIGIN = "https://dajjalfamily.com";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-df-locale") === "en" ? "en" : "id";
+  const { data: profile } = await supabaseAdmin.from("df_couple_profiles")
+    .select("id,male_nickname,female_nickname,slug,is_published")
+    .eq("slug", slug).eq("is_published", true).maybeSingle();
+
+  if (!profile) return {
+    title: locale === "en" ? "Couple Profile not found" : "Profil Couple tidak ditemukan",
+    robots: { index: false, follow: false },
+  };
+
+  const { data: content } = await supabaseAdmin.from("df_couple_contents")
+    .select("seo_title,seo_description,content")
+    .eq("couple_id", profile.id).eq("locale", locale).maybeSingle();
+
+  const names = `${profile.male_nickname} × ${profile.female_nickname}`;
+  const title = content?.seo_title || (locale === "en" ? `${names} — Couple Profile` : `${names} — Profil Couple`);
+  const description = content?.seo_description || content?.content?.intro ||
+    (locale === "en" ? `Explore the story of ${names}.` : `Kenali cerita ${names}.`);
+  const path = `/${locale}/couple/${slug}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: ORIGIN + path, languages: { id: ORIGIN + `/id/couple/${slug}`, en: ORIGIN + `/en/couple/${slug}` } },
+    openGraph: { title: `${title} | Dajjal Family`, description, url: ORIGIN + path, siteName: "Dajjal Family", type: "website" },
+    robots: { index: true, follow: true },
+  };
 }
-export default function PublicCoupleProfilePage(){
-  const {slug}=useParams();
-  const {language}=useLanguage();
-  const locale=language==="en"?"en":"id";
-  const en=locale==="en";
-  const [data,setData]=useState(null);
-  const [time,setTime]=useState([0,0,0,0]);
-  const [error,setError]=useState("");
-  useEffect(()=>{let active=true;fetch(`/api/couple/${slug}?locale=${locale}`,{cache:"no-store"}).then(r=>r.json().then(v=>({r,v}))).then(({r,v})=>{if(!r.ok)throw new Error(v.error);if(active)setData(v)}).catch(e=>{if(active)setError(e.message)});return()=>{active=false}},[slug,locale]);
-  useEffect(()=>{if(!data?.profile?.anniversary_date)return;const update=()=>setTime(countdown(data.profile.anniversary_date));update();const id=window.setInterval(update,1000);return()=>window.clearInterval(id)},[data]);
-  if(error)return <main className="df-couple-page"><div className="df-couple-shell"><h1>{en?"Couple Profile not found":"Profil Couple tidak ditemukan"}</h1></div></main>;
-  if(!data)return <main className="df-couple-page"><div className="df-couple-shell">{en?"Loading...":"Memuat..."}</div></main>;
-  const {profile,media=[]}=data;
-  const t={...COUPLE_CONTENT_DEFAULTS[locale],...(data.content?.content||{})};
-  const images=Object.fromEntries(media.map(item=>[item.slot_key,coupleDriveImage(item.google_drive_file_id)]));
-  const units=en?["Days","Hours","Minutes","Seconds"]:["Hari","Jam","Menit","Detik"];
-  return <main className="df-couple-page" data-theme-palette="couple"><div className="df-couple-shell">
-    <header className="df-couple-hero">
-      <p className="df-couple-eyebrow">DAJJAL FAMILY · COUPLE PROFILE</p>
-      <h1 className="df-couple-title"><span>{profile.male_nickname}</span><span className="df-couple-connector" aria-hidden="true">×</span><span>{profile.female_nickname}</span></h1>
-      <p className="df-couple-subtitle">{t.subtitle}</p><p className="df-couple-intro">{t.intro}</p>
-      {images.cover&&<div className="df-couple-featured-photo"><img className="df-couple-featured-background" src={images.cover} alt={profile.male_nickname+" and "+profile.female_nickname}/></div>}
-      <p className="df-couple-eyebrow">{t.anniversary_label}</p>
-      {profile.anniversary_date&&<section className="df-couple-metrics">{time.map((v,i)=><div className="df-couple-metric" key={units[i]}><strong>{v.toLocaleString(en?"en-US":"id-ID")}</strong><span>{units[i]}</span></div>)}</section>}
-    </header>
-    <CoupleMusicPlayer/>
-    <section className="df-couple-section"><div className="df-couple-section-heading"><p className="df-couple-eyebrow">{en?"THE COUPLE":"IDENTITAS PASANGAN"}</p><h2>{profile.male_nickname} &amp; {profile.female_nickname}</h2></div>
-      <div className="df-couple-character-grid">
-        <article className="df-couple-character-card" data-character="dajjal"><div className="df-couple-character-heading"><p className="df-couple-character-role">{t.male_role}</p></div><div className="df-couple-character-body">{images.male_portrait&&<div className="df-couple-character-art"><img src={images.male_portrait} alt={profile.male_nickname}/></div>}<div className="df-couple-character-copy"><h3>{profile.male_nickname}</h3><p>{t.male_description}</p></div></div></article>
-        <article className="df-couple-character-card" data-character="veylora"><div className="df-couple-character-heading"><p className="df-couple-character-role">{t.female_role}</p></div><div className="df-couple-character-body">{images.female_portrait&&<div className="df-couple-character-art"><img src={images.female_portrait} alt={profile.female_nickname}/></div>}<div className="df-couple-character-copy"><h3>{profile.female_nickname}</h3><p>{t.female_description}</p></div></div></article>
-      </div>
-    </section>
-    <section className="df-couple-section"><div className="df-couple-section-heading"><p className="df-couple-eyebrow">OUR LITTLE STORY</p><h2>{t.story_title}</h2></div><p className="df-couple-story-text">{t.story_text}</p><p className="df-couple-signature">{t.signature}</p></section>
-    <footer className="df-couple-footer">DAJJAL FAMILY · COUPLE PROFILE</footer>
-  </div></main>;
+
+export default async function CoupleProfilePage({ params }) {
+  const { slug } = await params;
+  return <CoupleProfileClient slug={slug} />;
 }
