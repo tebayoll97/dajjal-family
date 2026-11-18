@@ -144,6 +144,31 @@ const copy = {
 
 const relationshipStart = new Date("2026-09-09T21:33:00+07:00").getTime();
 
+function fadeAudioVolume(audio, target, duration = 320, onComplete) {
+  if (!audio) return;
+  if (audio.__dfFadeFrame) cancelAnimationFrame(audio.__dfFadeFrame);
+  const startVolume = audio.volume;
+  const startedAt = performance.now();
+  const step = (now) => {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    audio.volume = startVolume + (target - startVolume) * progress;
+    if (progress < 1) {
+      audio.__dfFadeFrame = requestAnimationFrame(step);
+    } else {
+      audio.__dfFadeFrame = 0;
+      onComplete?.();
+    }
+  };
+  audio.__dfFadeFrame = requestAnimationFrame(step);
+}
+
+function setCoupleMusicDucked(active) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent("dajjal-couple-audio-duck", {
+    detail: { active },
+  }));
+}
+
 function getRelationshipTime() {
   const elapsedSeconds = Math.max(0, Math.floor((Date.now() - relationshipStart) / 1000));
   return [
@@ -201,8 +226,11 @@ export default function CoupleProfilePage() {
 
   useEffect(() => {
     return () => {
-      whisperAudioRef.current?.pause();
+      const audio = whisperAudioRef.current;
+      if (audio?.__dfFadeFrame) cancelAnimationFrame(audio.__dfFadeFrame);
+      audio?.pause();
       whisperAudioRef.current = null;
+      setCoupleMusicDucked(false);
     };
   }, []);
 
@@ -210,9 +238,7 @@ export default function CoupleProfilePage() {
     if (!activePhoto) return undefined;
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        whisperAudioRef.current?.pause();
-        whisperAudioRef.current = null;
-        setWhisperStatus("idle");
+        stopWhisper();
         setActivePhoto(null);
       }
     };
@@ -222,12 +248,37 @@ export default function CoupleProfilePage() {
 
   const stopWhisper = () => {
     const audio = whisperAudioRef.current;
+    setCoupleMusicDucked(false);
     if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-      whisperAudioRef.current = null;
+      fadeAudioVolume(audio, 0, 220, () => {
+        audio.pause();
+        audio.currentTime = 0;
+        if (whisperAudioRef.current === audio) whisperAudioRef.current = null;
+      });
     }
     setWhisperStatus("idle");
+  };
+
+  const pauseWhisper = () => {
+    const audio = whisperAudioRef.current;
+    if (!audio) return;
+    setCoupleMusicDucked(false);
+    fadeAudioVolume(audio, 0, 220, () => audio.pause());
+    setWhisperStatus("paused");
+  };
+
+  const resumeWhisper = () => {
+    const audio = whisperAudioRef.current;
+    if (!audio) return playWhisper();
+    setCoupleMusicDucked(true);
+    audio.volume = 0;
+    audio.play().then(() => {
+      fadeAudioVolume(audio, 1, 320);
+      setWhisperStatus("playing");
+    }).catch(() => {
+      setCoupleMusicDucked(false);
+      setWhisperStatus("error");
+    });
   };
 
   const closePhoto = () => {
@@ -245,15 +296,29 @@ export default function CoupleProfilePage() {
     const audio = new Audio("/audio/whispera.m4a");
     audio.preload = "auto";
     whisperAudioRef.current = audio;
+    audio.volume = 0;
     audio.addEventListener("ended", () => {
-      if (whisperAudioRef.current === audio) setWhisperStatus("ended");
+      if (whisperAudioRef.current === audio) {
+        setCoupleMusicDucked(false);
+        setWhisperStatus("ended");
+      }
     }, { once: true });
     audio.addEventListener("error", () => {
-      if (whisperAudioRef.current === audio) setWhisperStatus("error");
+      if (whisperAudioRef.current === audio) {
+        setCoupleMusicDucked(false);
+        setWhisperStatus("error");
+      }
     }, { once: true });
-    setWhisperStatus("playing");
-    audio.play().catch(() => {
-      if (whisperAudioRef.current === audio) setWhisperStatus("error");
+    setCoupleMusicDucked(true);
+    audio.play().then(() => {
+      if (whisperAudioRef.current !== audio) return;
+      fadeAudioVolume(audio, 1, 420);
+      setWhisperStatus("playing");
+    }).catch(() => {
+      if (whisperAudioRef.current === audio) {
+        setCoupleMusicDucked(false);
+        setWhisperStatus("error");
+      }
     });
   };
 
@@ -482,11 +547,10 @@ export default function CoupleProfilePage() {
                     {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
                   </p>
                   <button className="df-couple-whisper-control" type="button" aria-label={whisperStatus === "playing" ? t.whisperPause : t.whisperPlay} onClick={() => {
-                    if (whisperStatus === "playing" && whisperAudioRef.current) {
-                      whisperAudioRef.current.pause();
-                      setWhisperStatus("paused");
-                    } else if (whisperStatus === "paused" && whisperAudioRef.current) {
-                      whisperAudioRef.current.play().then(() => setWhisperStatus("playing")).catch(() => setWhisperStatus("error"));
+                    if (whisperStatus === "playing") {
+                      pauseWhisper();
+                    } else if (whisperStatus === "paused") {
+                      resumeWhisper();
                     } else {
                       playWhisper();
                     }
