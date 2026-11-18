@@ -219,10 +219,9 @@
 }
 
 
-/* Couple Gallery — stacked cinematic featured-photo slider. */
+/* Couple Gallery — simple horizontal slide with direct finger tracking. */
 .df-couple-featured-photo {
   position: relative;
-  isolation: isolate;
   display: block;
   width: min(100%, 58rem);
   aspect-ratio: 16 / 7;
@@ -238,39 +237,32 @@
 }
 .df-couple-featured-photo:active { cursor: grabbing; }
 .df-couple-featured-photo:focus-visible { outline: 3px solid var(--df-focus); outline-offset: 4px; }
-.df-couple-featured-stack { position: absolute; inset: 0; overflow: hidden; }
-.df-couple-featured-layer {
+.df-couple-featured-track { position: absolute; inset: 0; overflow: hidden; }
+.df-couple-featured-slide {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: inherit;
   background: var(--couple-surface-raised);
-  transform-origin: center center;
-  transition: transform .58s cubic-bezier(.22,.72,.18,1), filter .58s ease, opacity .58s ease;
+  transition: transform .34s cubic-bezier(.22,.72,.18,1);
   pointer-events: none;
 }
-.df-couple-featured-layer.is-active { transform: translate3d(0,0,0) scale(1); filter: brightness(1); }
-.df-couple-featured-layer.is-next { transform: translate3d(10px,8px,0) scale(.965); filter: brightness(.78); }
-.df-couple-featured-layer.is-back { transform: translate3d(20px,16px,0) scale(.93); filter: brightness(.58); }
-/* Direct manipulation: the active photo and the incoming photo track the finger. */
-.df-couple-featured-photo.is-dragging .df-couple-featured-layer { transition: none; }
-.df-couple-featured-photo.is-dragging .df-couple-featured-layer.is-active {
-  transform: translate3d(var(--featured-drag-x, 0px),0,0) scale(1);
+.df-couple-featured-slide.is-active { transform: translate3d(0,0,0); }
+.df-couple-featured-slide.is-next { transform: translate3d(100%,0,0); }
+.df-couple-featured-slide.is-previous { transform: translate3d(-100%,0,0); }
+/* While dragging, both the current and incoming image follow the finger exactly. */
+.df-couple-featured-photo.is-dragging .df-couple-featured-slide { transition: none; }
+.df-couple-featured-photo.is-dragging .df-couple-featured-slide.is-active {
+  transform: translate3d(var(--featured-drag-x, 0px),0,0);
 }
-.df-couple-featured-photo.is-dragging-left .df-couple-featured-layer.is-next {
-  transform: translate3d(calc(100% + var(--featured-drag-x, 0px)),0,0) scale(1);
-  filter: brightness(1);
+.df-couple-featured-photo.is-dragging-left .df-couple-featured-slide.is-next {
+  transform: translate3d(calc(100% + var(--featured-drag-x, 0px)),0,0);
 }
-.df-couple-featured-photo.is-dragging-right .df-couple-featured-layer.is-back {
-  transform: translate3d(calc(-100% + var(--featured-drag-x, 0px)),0,0) scale(1);
-  filter: brightness(1);
+.df-couple-featured-photo.is-dragging-right .df-couple-featured-slide.is-previous {
+  transform: translate3d(calc(-100% + var(--featured-drag-x, 0px)),0,0);
 }
 .df-couple-featured-photo.is-dragging { cursor: grabbing; }
 .df-couple-featured-photo.is-dragging .df-couple-featured-label,
 .df-couple-featured-photo.is-dragging .df-couple-featured-pagination { pointer-events: none; }
-.df-couple-featured-layer.is-exiting { z-index: 5; }
-.df-couple-featured-layer.is-exiting-left { animation: df-couple-featured-exit-left .58s cubic-bezier(.55,.05,.8,.35) both; }
-.df-couple-featured-layer.is-exiting-right { animation: df-couple-featured-exit-right .58s cubic-bezier(.55,.05,.8,.35) both; }
 .df-couple-featured-background {
   position: absolute;
   inset: 0;
@@ -325,14 +317,6 @@
   width: 1.25rem;
   background: #fff;
   transform: scale(1.05);
-}
-@keyframes df-couple-featured-exit-left {
-  from { opacity: 1; transform: translate3d(var(--featured-drag-x, 0px),0,0) rotate(0) scale(1); }
-  to { opacity: .12; transform: translate3d(-112%,0,0) rotate(-3deg) scale(.9); filter: brightness(.55); }
-}
-@keyframes df-couple-featured-exit-right {
-  from { opacity: 1; transform: translate3d(var(--featured-drag-x, 0px),0,0) rotate(0) scale(1); }
-  to { opacity: .12; transform: translate3d(112%,0,0) rotate(3deg) scale(.9); filter: brightness(.55); }
 }
 .df-couple-character-art {
   position: relative;
