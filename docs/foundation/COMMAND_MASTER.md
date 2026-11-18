@@ -1,5 +1,5 @@
 # COMMAND MASTER — DAJJAL FAMILY
-Version: 2.4
+Version: 2.5
 Status: Active operating charter
 Owner: Dajjal Family project owner
 Repository: tebayoll97/dajjal-family
@@ -555,3 +555,34 @@ The owner approved a simplified Dajjal Family login experience:
 - Include the Theme Preset Manager at `/admin/theme` in Admin navigation, protected by the existing verified admin-access flow.
 - Do not maintain a general Settings destination; redirect legacy `/settings` to Profile while preserving feature-owned settings modules.
 - Shared footer uses the official Dajjal Family icon asset and follows the active semantic theme tokens.
+
+
+## 17. Central Google Drive storage and deterministic file naming
+
+For every feature that uploads files to the connected Google Drive storage (including Couple Profile and future modules), use the centralized server-mediated upload architecture and the naming policy below. This is a mandatory project-wide rule.
+
+### File naming policy
+- Never use the device's original filename as the final Google Drive filename.
+- Generate the final filename server-side from the destination slot/purpose, a UTC timestamp, a cryptographically random unique suffix, and the extension derived from the verified file MIME type.
+- Canonical pattern: `<slot>-<YYYYMMDDHHmmss>-<8-hex-random>.<ext>`.
+- Examples: `cover-20261119102030-a81f3c92.jpg`, `male-portrait-20261119102030-b72c4d10.png`, `gallery-01-20261119102030-d42e7a61.webp`.
+- Use stable, sanitized slot labels (for example `cover`, `male-portrait`, `female-portrait`, `gallery-01` through `gallery-06`). Never put user-controlled path fragments or untrusted original names into the final name.
+- Determine the extension from the server-verified MIME/signature, not from the client-supplied filename. Reject unsupported or mismatched file types.
+- The random suffix makes accidental name collisions extraordinarily unlikely. Do not rely on Google Drive filenames being unique; Drive permits duplicate names in a folder.
+- Original filenames may be retained only as optional, safely validated metadata if a real product need arises; they must not control the stored filename and must not be exposed unnecessarily.
+
+### Upload and reference integrity
+- Browser clients select files from the device and send them to an authenticated application endpoint; users must not be asked to copy/paste Drive File IDs.
+- The server must authenticate the session, verify authorization/ownership for the exact feature resource and slot, validate file size/type/signature, and enforce applicable rate/abuse limits before upload.
+- Upload through the existing connected Drive account and existing root folder ID. Reuse/create only the intended feature subfolders; never create a second root folder or silently replace/reconnect the owner's Drive account.
+- Store the returned Drive File ID as an internal reference/metadata in the appropriate application record so the correct file can be rendered, replaced, or managed. The ID is not a user-facing input.
+- Keep binary files in Drive and application references/metadata in Supabase. Do not store OAuth access or refresh tokens in browser code or public responses; encrypted credentials remain server-side.
+- When replacing a slot, upload the new file and successfully persist its new reference before considering cleanup. By default, retain the old Drive file to prevent accidental data loss; deletion requires a separately designed and authorized retention/cleanup policy.
+- If reference persistence fails after a successful upload, attempt compensating deletion of the newly uploaded file and report the failure accurately.
+- Never claim upload success until Drive upload and reference persistence have both succeeded.
+
+### Required implementation checks
+- Review filename generation for path traversal, control characters, Unicode edge cases, extension spoofing, and collision resistance.
+- Verify the final stored name is generated only on the server and reflects the validated slot and MIME type.
+- Test duplicate original filenames, repeated uploads to the same slot, different users/profiles, replacement behavior, and failed database persistence.
+- Keep these rules in sync with `MASTER_FOUNDATION.md` and the project operating rules.
