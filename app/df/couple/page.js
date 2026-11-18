@@ -15,6 +15,7 @@ const photos = {
     "https://drive.google.com/thumbnail?id=1jXKn092u_HPqQykM0h9Y7PuSm1LBNmWL&sz=w1600",
     "https://drive.google.com/thumbnail?id=1tJUIYmBegfZMith78OdDcIbWGnsAfX_u&sz=w1600",
     "https://drive.google.com/thumbnail?id=1ghZfNeLMW7mtrcUAWrg2llYeOaLcMpCl&sz=w1600",
+    "https://drive.google.com/thumbnail?id=1yn6CR6e2A6N3a3yCEgy6QboDWeeVWxgT&sz=w1200",
   ],
   portraits: [
     "https://drive.google.com/thumbnail?id=1urhdPV8db9uBbqWG2u94UqWpUYjfPTed&sz=w1600",
@@ -65,7 +66,7 @@ const copy = {
     galleryIntro: "Dari tingkah konyol sampai momen manis, semuanya punya cerita sendiri. Inilah potongan-potongan kecil dari dunia Dajjal dan Veylora. Kadang romantis, kadang nangis, kadang garing, kadang sedikit gak waras… tapi selalu berkesan. 🤭",
     momentsLabel: "OUR CHAOTIC MOMENTS",
     portraitLabel: "THEIR ICONIC PORTRAITS",
-    momentNames: ["Veylora Capek Jalan Kaki", "Aku Gak Bisa Dansa!", "Ah Basah-Basah!", "Selfi Di Warung", "Dingin, pengen yang anget!", "Bolos Ke Kantin"],
+    momentNames: ["Veylora Capek Jalan Kaki", "Aku Gak Bisa Dansa!", "Ah Basah-Basah!", "Selfi Di Warung", "Dingin, pengen yang anget!", "Bolos Ke Kantin", "Sini aku bisikin · Come Closer, Let Me Whisper"],
     portraitNames: ["Portrait †Ðαjjαし•†", "Portrait †Veyしorα•†"],
     openPhoto: "Buka foto",
     closePhoto: "Tutup foto",
@@ -124,7 +125,7 @@ const copy = {
     galleryIntro: "From silly antics to sweet moments, every little thing has its own story. These are little glimpses into Dajjal and Veylora's world. Sometimes romantic, sometimes tearful, sometimes cheesy, and sometimes a little crazy… but always memorable. 🤭",
     momentsLabel: "OUR CHAOTIC MOMENTS",
     portraitLabel: "THEIR ICONIC PORTRAITS",
-    momentNames: ["Veylora Is Tired of Walking", "I Can't Dance!", "Oh, We're Soaked!", "Selfie at the Food Stall", "It's Cold, I Want Something Warm!", "Skipping Class to Go to the Canteen"],
+    momentNames: ["Veylora Is Tired of Walking", "I Can't Dance!", "Oh, We're Soaked!", "Selfie at the Food Stall", "It's Cold, I Want Something Warm!", "Skipping Class to Go to the Canteen", "Come Closer, Let Me Whisper · Sini aku bisikin"],
     portraitNames: ["Portrait †Ðαjjαし•†", "Portrait †Veyしorα•†"],
     openPhoto: "Open photo",
     closePhoto: "Close photo",
@@ -407,7 +408,7 @@ export default function CoupleProfilePage() {
                 tabIndex={0}
               >
                 {photos.moments.map((src, index) => (
-                  <button className="df-couple-gallery-item" type="button" key={src} aria-label={t.openPhoto + ": " + t.momentNames[index] + " (" + (index + 1) + " of " + photos.moments.length + ")"} onClick={() => openPhoto(src, t.momentNames[index])}>
+                  <button className="df-couple-gallery-item" type="button" key={src} aria-label={t.openPhoto + ": " + t.momentNames[index] + " (" + (index + 1) + " of " + photos.moments.length + ")"} onClick={() => index === photos.moments.length - 1 ? openWhisper() : openPhoto(src, t.momentNames[index])}>
                     <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
                     <span>{t.momentNames[index]}</span>
                   </button>
@@ -430,10 +431,6 @@ export default function CoupleProfilePage() {
           <div className="df-couple-gallery-group">
             <h3>{t.portraitLabel}</h3>
             <div className="df-couple-portraits-grid">
-              <button className="df-couple-portrait-item" type="button" onClick={openWhisper} aria-label={t.openPhoto + ": " + t.whisperTitle}>
-                <img src="https://drive.google.com/thumbnail?id=1yn6CR6e2A6N3a3yCEgy6QboDWeeVWxgT&sz=w1200" alt={t.whisperTitle} loading="lazy" />
-                <span>{t.whisperTitle}</span>
-              </button>
               {photos.portraits.map((src, index) => (
                 <button className="df-couple-portrait-item" type="button" key={src} onClick={() => openPhoto(src, t.portraitNames[index])} aria-label={t.openPhoto + ": " + t.portraitNames[index]}>
                   <img src={src} alt={t.portraitNames[index]} loading="lazy" />
@@ -474,8 +471,10 @@ export default function CoupleProfilePage() {
                     <path d="M42 13c4 1 7 4 8 8M48 7c7 2 11 7 13 13" />
                     <path d="M8 45c5 3 10 4 16 4" />
                   </svg>
-                  <h2>{t.whisperTitle}</h2>
-                  <p className="df-couple-whisper-subtitle">{t.whisperSubtitle}</p>
+                  <div className="df-couple-whisper-heading">
+                    <h2>Sini aku bisikin</h2>
+                    <p className="df-couple-whisper-subtitle">Come Closer, Let Me Whisper</p>
+                  </div>
                   <div className="df-couple-whisper-heart" aria-hidden="true">
                     <svg viewBox="0 0 64 64">
                       <path d="M32 53S8 39 8 22C8 10 23 5 32 18 41 5 56 10 56 22c0 17-24 31-24 31Z" />
@@ -483,9 +482,9 @@ export default function CoupleProfilePage() {
                     </svg>
                   </div>
                   <p className="df-couple-whisper-status">
-                    {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
+                    {whisperStatus === "playing" ? "Veylora sedang membisikkan sesuatu… · Veylora is whispering something…" : whisperStatus === "ended" ? "Ada bisikan yang terlalu manis untuk dilupakan. ❤️ · Some whispers are too sweet to forget. ❤️" : whisperStatus === "error" ? "Voice note tidak tersedia atau gagal diputar. · The voice note is unavailable or could not be played." : "Sebuah bisikan, khusus untukmu. · A little whisper, just for you."}
                   </p>
-                  <button className="df-couple-whisper-control" type="button" onClick={() => {
+                  <button className="df-couple-whisper-control" type="button" aria-label={whisperStatus === "playing" ? "Jeda bisikan / Pause whisper" : "Putar bisikan / Play whisper"} onClick={() => {
                     if (whisperStatus === "playing" && whisperAudioRef.current) {
                       whisperAudioRef.current.pause();
                       setWhisperStatus("paused");
@@ -500,7 +499,6 @@ export default function CoupleProfilePage() {
                     ) : (
                       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
                     )}
-                    <span>{whisperStatus === "playing" ? t.whisperPause : t.whisperPlay}</span>
                   </button>
                   <svg className="df-couple-whisper-wave" viewBox="0 0 120 24" aria-hidden="true">
                     <path d="M2 12h8l4-8 6 16 7-13 6 10 6-5h7l5-9 6 17 7-12 5 8 5-4h8l5-8 6 16 6-10 5 6h8" />
