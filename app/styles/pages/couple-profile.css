@@ -997,3 +997,16 @@
 .df-couple-profile-page .df-couple-story-text{color:var(--df-text-secondary);line-height:1.8}
 .df-couple-profile-page :is(button,input,textarea,a):focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
 @media(max-width:640px){.df-couple-profile-page .df-couple-character-grid{grid-template-columns:1fr}.df-couple-profile-page .df-couple-image-input{position:relative;top:auto;width:100%;margin-top:.5rem}}
+
+/* Dynamic Couple Profile follows the currently published global preset. */
+.df-couple-profile-page .df-couple-character-card[data-character] .df-couple-character-art {
+  background: radial-gradient(circle, var(--df-primary-soft), transparent 72%);
+}
+.df-couple-profile-page .df-couple-character-art > img { object-fit: contain; }
+.df-couple-profile-page .df-couple-music-card[data-track-theme="dajjal"],
+.df-couple-profile-page .df-couple-music-card[data-track-theme="veylora"] {
+  --music-accent: var(--df-primary);
+  --music-accent-soft: var(--df-primary-soft);
+  border-color: color-mix(in srgb, var(--df-primary) 42%, var(--df-border));
+  background: linear-gradient(135deg, var(--df-primary-soft), var(--couple-surface) 62%);
+}
