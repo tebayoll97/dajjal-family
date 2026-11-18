@@ -165,13 +165,6 @@ export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
-  const [featuredIndex, setFeaturedIndex] = useState(0);
-  const [featuredDragging, setFeaturedDragging] = useState(false);
-  const [featuredDragDirection, setFeaturedDragDirection] = useState(null);
-  const featuredPointerRef = useRef(null);
-  const featuredTransitionRef = useRef(null);
-  const featuredClickSuppressedRef = useRef(false);
-  const featuredDragResetRef = useRef(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const whisperAudioRef = useRef(null);
   const [whisperStatus, setWhisperStatus] = useState("idle");
@@ -185,123 +178,6 @@ export default function CoupleProfilePage() {
     const intervalId = window.setInterval(updateRelationshipTime, 1000);
     return () => window.clearInterval(intervalId);
   }, []);
-
-  const featuredSlides = [
-    { src: photos.cover, alt: "Dajjal and Veylora together", label: t.featuredLabel },
-    { src: photos.moments[4], alt: t.momentNames[4], label: t.momentNames[4] },
-    { src: photos.moments[0], alt: t.momentNames[0], label: t.momentNames[0] },
-  ];
-
-  const changeFeaturedSlide = (nextIndex) => {
-    if (nextIndex === featuredIndex || featuredTransitionRef.current) return;
-    featuredTransitionRef.current = true;
-    setFeaturedIndex(nextIndex);
-    window.setTimeout(() => {
-      featuredTransitionRef.current = false;
-    }, 360);
-  };
-
-  const moveFeaturedSlide = (direction) => {
-    const nextIndex = (featuredIndex + (direction === "left" ? 1 : 2)) % featuredSlides.length;
-    changeFeaturedSlide(nextIndex, direction);
-  };
-
-  const resetFeaturedDrag = (element) => {
-    if (featuredDragResetRef.current) window.clearTimeout(featuredDragResetRef.current);
-    setFeaturedDragging(false);
-    setFeaturedDragDirection(null);
-    if (element) {
-      element.style.setProperty("--featured-drag-x", "0px");
-      featuredDragResetRef.current = window.setTimeout(() => {
-        element.style.removeProperty("--featured-drag-x");
-        featuredDragResetRef.current = null;
-      }, 360);
-    }
-  };
-
-  const handleFeaturedPointerDown = (event) => {
-    if (featuredTransitionRef.current || (event.pointerType === "mouse" && event.button !== 0)) return;
-    if (event.target.closest("button")) return;
-    featuredPointerRef.current = {
-      pointerId: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      lastX: event.clientX,
-      lastTime: performance.now(),
-      velocityX: 0,
-      horizontal: false,
-    };
-    featuredClickSuppressedRef.current = false;
-    if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handleFeaturedPointerMove = (event) => {
-    const start = featuredPointerRef.current;
-    if (!start || start.pointerId !== event.pointerId) return;
-    const deltaX = event.clientX - start.x;
-    const deltaY = event.clientY - start.y;
-    if (!start.horizontal) {
-      if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > Math.abs(deltaX) * 1.15) {
-        featuredPointerRef.current = null;
-        return;
-      }
-      if (Math.abs(deltaX) < 5 || Math.abs(deltaX) < Math.abs(deltaY) * 1.15) return;
-      start.horizontal = true;
-      setFeaturedDragging(true);
-      setFeaturedDragDirection(deltaX < 0 ? "left" : "right");
-      featuredClickSuppressedRef.current = true;
-    }
-    const now = performance.now();
-    const elapsed = Math.max(1, now - start.lastTime);
-    start.velocityX = (event.clientX - start.lastX) / elapsed;
-    start.lastX = event.clientX;
-    start.lastTime = now;
-    const frame = event.currentTarget.getBoundingClientRect();
-    const resistedDelta = Math.sign(deltaX) * Math.min(Math.abs(deltaX), frame.width * 1.08);
-    event.currentTarget.style.setProperty("--featured-drag-x", `${resistedDelta}px`);
-    setFeaturedDragDirection(resistedDelta < 0 ? "left" : "right");
-  };
-
-  const finishFeaturedPointer = (event, cancelled = false) => {
-    const start = featuredPointerRef.current;
-    if (!start || start.pointerId !== event.pointerId) return;
-    featuredPointerRef.current = null;
-    if (!start.horizontal) return;
-    const element = event.currentTarget;
-    const deltaX = event.clientX - start.x;
-    const width = element.getBoundingClientRect().width || 1;
-    const shouldCommit = !cancelled && (
-      Math.abs(deltaX) >= width * 0.22 ||
-      (Math.abs(deltaX) >= 34 && Math.abs(start.velocityX) >= 0.55)
-    );
-    featuredClickSuppressedRef.current = true;
-    if (shouldCommit && !featuredTransitionRef.current) {
-      const direction = deltaX < 0 ? "left" : "right";
-      const nextIndex = (featuredIndex + (direction === "left" ? 1 : 2)) % featuredSlides.length;
-      featuredTransitionRef.current = true;
-      setFeaturedIndex(nextIndex);
-      setFeaturedDragging(false);
-      setFeaturedDragDirection(null);
-      window.setTimeout(() => {
-        element.style.removeProperty("--featured-drag-x");
-        featuredTransitionRef.current = false;
-      }, 380);
-    } else {
-      resetFeaturedDrag(element);
-    }
-  };
-
-  const handleFeaturedPointerUp = (event) => finishFeaturedPointer(event);
-  const handleFeaturedPointerCancel = (event) => finishFeaturedPointer(event, true);
-
-  const handleFeaturedClick = () => {
-    if (featuredClickSuppressedRef.current) {
-      featuredClickSuppressedRef.current = false;
-      return;
-    }
-    const slide = featuredSlides[featuredIndex];
-    openPhoto(slide.src, slide.label);
-  };
 
   const scrollToMoment = (index) => {
     const track = momentsTrackRef.current;
@@ -445,62 +321,22 @@ export default function CoupleProfilePage() {
           </h1>
           <p className="df-couple-subtitle">{t.subtitle}</p>
           <p className="df-couple-intro">{t.intro}</p>
-          <div
-            role="region"
-            aria-roledescription="carousel"
-            aria-label={t.featuredLabel}
-            tabIndex={0}
-            className={`df-couple-featured-photo${featuredDragging ? " is-dragging" : ""}${featuredDragDirection ? " is-dragging-" + featuredDragDirection : ""}`}
-            onPointerDown={handleFeaturedPointerDown}
-            onPointerMove={handleFeaturedPointerMove}
-            onPointerUp={handleFeaturedPointerUp}
-            onPointerCancel={handleFeaturedPointerCancel}
-            onKeyDown={(event) => {
-              if (event.target.closest("button")) return;
-              if (event.key === "ArrowLeft") { event.preventDefault(); moveFeaturedSlide("right"); }
-              if (event.key === "ArrowRight") { event.preventDefault(); moveFeaturedSlide("left"); }
-              if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleFeaturedClick(); }
-            }}
+          <button
+            className="df-couple-featured-photo"
+            type="button"
+            onClick={() => openPhoto(photos.cover, t.featuredLabel)}
+            aria-label={t.openPhoto + ": " + t.featuredLabel}
           >
-            <div className="df-couple-featured-track" onClick={handleFeaturedClick}>
-              {featuredSlides.map((slide, index) => {
-                const relative = (index - featuredIndex + featuredSlides.length) % featuredSlides.length;
-                const position = relative === 0 ? "active" : relative === 1 ? "next" : "previous";
-                return (
-                  <div
-                    className={"df-couple-featured-slide is-" + position}
-                    key={slide.src}
-                    aria-hidden={relative !== 0}
-                  >
-                    <img
-                      className="df-couple-featured-background"
-                      src={slide.src}
-                      alt={slide.alt}
-                      fetchPriority={index === 0 ? "high" : undefined}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      draggable="false"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            <img
+              className="df-couple-featured-background"
+              src={photos.cover}
+              alt="Dajjal and Veylora together"
+              fetchPriority="high"
+              loading="eager"
+              draggable="false"
+            />
             <span className="df-couple-featured-label">{t.featuredLabel}</span>
-            <div className="df-couple-featured-pagination" aria-label={t.featuredLabel}>
-              {featuredSlides.map((slide, index) => (
-                <button
-                  className="df-couple-featured-dot"
-                  type="button"
-                  key={slide.src}
-                  aria-label={t.slideLabel + " " + (index + 1) + ": " + slide.label}
-                  aria-current={featuredIndex === index ? "true" : undefined}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    changeFeaturedSlide(index);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
+          </button>
           <div className="df-couple-anniversary-heading">
             <p className="df-couple-eyebrow">{t.anniversaryLabel}</p>
           </div>
