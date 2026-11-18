@@ -48,3 +48,13 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Elemen editable meliputi nama, foto cover, dua potret, role, deskripsi, subtitle, intro, anniversary, cerita, dan signature.
 - Galeri mendukung maksimal enam foto Google Drive File ID dan Lightbox. Fitur Whisper/gambar ketujuh tidak digunakan.
 - Media disimpan pada slot `gallery_1` sampai `gallery_6`; file Drive asli tidak dihapus saat referensi diganti atau profil di-reset.
+
+## Couple Profile — penerjemahan otomatis bilingual — 2026-11-18
+
+- Saat owner mengedit field konten dalam locale `id` atau `en`, server menerjemahkan nilai field yang diubah ke locale pasangannya menggunakan Google Cloud Translation Basic API v2.
+- Simpan teks asli pada locale sumber dan hasil terjemahan pada locale target; field lain yang tidak diubah tetap dipertahankan.
+- Terjemahan dilakukan server-side. Secret wajib menggunakan Vercel Environment Variable `GOOGLE_TRANSLATE_API_KEY`; jangan pernah menggunakan prefix `NEXT_PUBLIC_` atau memasukkan key ke source control.
+- Jika layanan belum dikonfigurasi atau penerjemahan gagal, request konten ditolak sebelum kedua locale ditulis. Pengguna menerima pesan gagal dan dapat mencoba kembali.
+- Tidak ada perubahan schema Supabase. Dua row locale disimpan melalui satu upsert.
+- Provider memakai endpoint resmi Google Cloud Translation Basic v2, plain-text mode, bahasa sumber/target eksplisit (`id` ↔ `en`). Biaya dan kuota mengikuti Google Cloud project pemilik API key.
+
