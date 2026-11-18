@@ -152,6 +152,10 @@ export default function CoupleMusicPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Track selection from a click loads the source synchronously in the
+    // click handler, preserving the browser's user-activation permission.
+    if (audio.getAttribute("src") === tracks[index].src) return;
+
     playRequestRef.current += 1;
     const requestId = playRequestRef.current;
 
@@ -221,11 +225,38 @@ export default function CoupleMusicPlayer() {
       return;
     }
 
+    const audio = audioRef.current;
+    if (!audio) return;
+
     shouldPlayRef.current = true;
     playingRef.current = false;
     setPlaying(false);
     setMessage("");
+
+    // Set the new source and request playback during the user's click event.
+    playRequestRef.current += 1;
+    const requestId = playRequestRef.current;
+    audio.pause();
+    audio.src = tracks[nextIndex].src;
+    audio.load();
+    setTime(0);
+    setDuration(0);
     setIndex(nextIndex);
+
+    audio.play()
+      .then(() => {
+        if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
+        playingRef.current = true;
+        setPlaying(true);
+        setMessage("");
+      })
+      .catch(() => {
+        if (requestId !== playRequestRef.current) return;
+        shouldPlayRef.current = false;
+        playingRef.current = false;
+        setPlaying(false);
+        setMessage(t.error);
+      });
   };
 
   const changeTrack = (step) => {
