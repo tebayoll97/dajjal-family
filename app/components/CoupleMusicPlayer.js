@@ -80,6 +80,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
   const resumeAfterBackgroundRef = useRef(false);
   const duckedRef = useRef(false);
   const fadeFrameRef = useRef(0);
+  const fadeTokenRef = useRef(0);
   const volumeRef = useRef(0.75);
   const toggleRef = useRef(null);
 
@@ -90,12 +91,41 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
   const [volume, setVolume] = useState(0.75);
   const [message, setMessage] = useState("");
 
+  const getTargetVolume = () => volumeRef.current * (duckedRef.current ? 0.05 : 1);
+
+  const fadeVolume = (target, durationMs = 700) => new Promise((resolve) => {
+    const audio = audioRef.current;
+    if (!audio) {
+      resolve();
+      return;
+    }
+    if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
+    const token = ++fadeTokenRef.current;
+    const from = audio.volume;
+    const startedAt = performance.now();
+    const step = (now) => {
+      if (token !== fadeTokenRef.current || audioRef.current !== audio) {
+        resolve();
+        return;
+      }
+      const progress = Math.min(1, (now - startedAt) / durationMs);
+      audio.volume = from + (target - from) * progress;
+      if (progress < 1) {
+        fadeFrameRef.current = requestAnimationFrame(step);
+      } else {
+        fadeFrameRef.current = 0;
+        resolve();
+      }
+    };
+    fadeFrameRef.current = requestAnimationFrame(step);
+  });
+
   // One page-scoped audio element. Attempt autoplay on entry; browsers may
   // require a user gesture, in which case the visible Play control is fallback.
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "metadata";
-    audio.volume = 0.75;
+    audio.volume = 0;
     audio.src = tracks[0].src;
     audio.load();
     audioRef.current = audio;
@@ -142,6 +172,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
         awaitingInteractionRef.current = false;
         setPlaying(true);
         setMessage("");
+        await fadeVolume(getTargetVolume(), 900);
         return true;
       }).catch(() => {
         if (requestId !== playRequestRef.current || audioRef.current !== audio) return false;
@@ -209,17 +240,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
       const nextDucked = Boolean(event.detail?.active);
       duckedRef.current = nextDucked;
       if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
-      const from = audio.volume;
-      const target = volumeRef.current * (nextDucked ? 0.22 : 1);
-      const startedAt = performance.now();
-      const durationMs = 320;
-      const step = (now) => {
-        const progress = Math.min(1, (now - startedAt) / durationMs);
-        audio.volume = from + (target - from) * progress;
-        if (progress < 1) fadeFrameRef.current = requestAnimationFrame(step);
-        else fadeFrameRef.current = 0;
-      };
-      fadeFrameRef.current = requestAnimationFrame(step);
+      fadeVolume(getTargetVolume(), 500);
     };
 
     window.addEventListener("dajjal-couple-audio-duck", handleDucking);
@@ -241,6 +262,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
       });
       window.removeEventListener("dajjal-couple-audio-duck", handleDucking);
       if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
+      fadeTokenRef.current += 1;
       audio.removeAttribute("src");
       audio.load();
       if (audioRef.current === audio) audioRef.current = null;
@@ -273,6 +295,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
         playingRef.current = true;
         setPlaying(true);
         setMessage("");
+        await fadeVolume(getTargetVolume(), 900);
       })
       .catch(() => {
         if (requestId !== playRequestRef.current) return;
@@ -287,9 +310,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     const audio = audioRef.current;
     if (!audio) return;
     volumeRef.current = volume;
-    const target = volume * (duckedRef.current ? 0.22 : 1);
-    if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
-    audio.volume = target;
+    fadeVolume(getTargetVolume(), 350);
   }, [volume]);
 
   const toggle = async () => {
@@ -297,12 +318,15 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     if (!audio || playInFlightRef.current) return;
 
     if (playingRef.current) {
-      playRequestRef.current += 1;
+      const requestId = ++playRequestRef.current;
       shouldPlayRef.current = false;
       playingRef.current = false;
-      audio.pause();
       setPlaying(false);
       setMessage("");
+      await fadeVolume(0, 550);
+      if (requestId === playRequestRef.current && !shouldPlayRef.current && audioRef.current === audio) {
+        audio.pause();
+      }
       return;
     }
 
@@ -312,11 +336,13 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     const requestId = ++playRequestRef.current;
 
     try {
+      audio.volume = 0;
       await audio.play();
       if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
       playingRef.current = true;
       setPlaying(true);
       setMessage("");
+      await fadeVolume(getTargetVolume(), 900);
     } catch {
       if (requestId !== playRequestRef.current) return;
       shouldPlayRef.current = false;
@@ -352,6 +378,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     playRequestRef.current += 1;
     const requestId = playRequestRef.current;
     audio.pause();
+    audio.volume = 0;
     audio.src = tracks[nextIndex].src;
     audio.load();
     setTime(0);
@@ -364,6 +391,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
         playingRef.current = true;
         setPlaying(true);
         setMessage("");
+        await fadeVolume(getTargetVolume(), 900);
       })
       .catch(() => {
         if (requestId !== playRequestRef.current) return;
