@@ -166,7 +166,6 @@ export default function CoupleProfilePage() {
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
-  const [featuredExit, setFeaturedExit] = useState(null);
   const [featuredDragging, setFeaturedDragging] = useState(false);
   const [featuredDragDirection, setFeaturedDragDirection] = useState(null);
   const featuredPointerRef = useRef(null);
@@ -193,15 +192,13 @@ export default function CoupleProfilePage() {
     { src: photos.moments[0], alt: t.momentNames[0], label: t.momentNames[0] },
   ];
 
-  const changeFeaturedSlide = (nextIndex, direction = "left") => {
+  const changeFeaturedSlide = (nextIndex) => {
     if (nextIndex === featuredIndex || featuredTransitionRef.current) return;
     featuredTransitionRef.current = true;
-    setFeaturedExit({ index: featuredIndex, direction });
     setFeaturedIndex(nextIndex);
     window.setTimeout(() => {
-      setFeaturedExit(null);
       featuredTransitionRef.current = false;
-    }, 620);
+    }, 360);
   };
 
   const moveFeaturedSlide = (direction) => {
@@ -282,15 +279,13 @@ export default function CoupleProfilePage() {
       const direction = deltaX < 0 ? "left" : "right";
       const nextIndex = (featuredIndex + (direction === "left" ? 1 : 2)) % featuredSlides.length;
       featuredTransitionRef.current = true;
-      setFeaturedExit({ index: featuredIndex, direction });
+      setFeaturedIndex(nextIndex);
       setFeaturedDragging(false);
       setFeaturedDragDirection(null);
       window.setTimeout(() => {
-        setFeaturedIndex(nextIndex);
-        setFeaturedExit(null);
-        featuredTransitionRef.current = false;
         element.style.removeProperty("--featured-drag-x");
-      }, 580);
+        featuredTransitionRef.current = false;
+      }, 380);
     } else {
       resetFeaturedDrag(element);
     }
@@ -467,23 +462,15 @@ export default function CoupleProfilePage() {
               if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleFeaturedClick(); }
             }}
           >
-            <div className="df-couple-featured-stack" onClick={handleFeaturedClick}>
+            <div className="df-couple-featured-track" onClick={handleFeaturedClick}>
               {featuredSlides.map((slide, index) => {
-                const depth = (index - featuredIndex + featuredSlides.length) % featuredSlides.length;
-                const isExiting = featuredExit?.index === index;
+                const relative = (index - featuredIndex + featuredSlides.length) % featuredSlides.length;
+                const position = relative === 0 ? "active" : relative === 1 ? "next" : "previous";
                 return (
                   <div
-                    className={[
-                      "df-couple-featured-layer",
-                      depth === 0 ? "is-active" : "",
-                      depth === 1 ? "is-next" : "",
-                      depth === 2 ? "is-back" : "",
-                      isExiting ? "is-exiting" : "",
-                      isExiting ? "is-exiting-" + featuredExit.direction : "",
-                    ].filter(Boolean).join(" ")}
+                    className={"df-couple-featured-slide is-" + position}
                     key={slide.src}
-                    style={{ zIndex: isExiting ? 5 : 3 - depth }}
-                    aria-hidden={depth !== 0}
+                    aria-hidden={relative !== 0}
                   >
                     <img
                       className="df-couple-featured-background"
@@ -508,7 +495,7 @@ export default function CoupleProfilePage() {
                   aria-current={featuredIndex === index ? "true" : undefined}
                   onClick={(event) => {
                     event.stopPropagation();
-                    changeFeaturedSlide(index, index > featuredIndex ? "left" : "right");
+                    changeFeaturedSlide(index);
                   }}
                 />
               ))}
