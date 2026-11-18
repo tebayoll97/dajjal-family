@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { COUPLE_CONTENT_DEFAULTS, COUPLE_MEDIA_SLOTS } from "@/lib/coupleProfileDefaults";
+import { COUPLE_CONTENT_DEFAULTS } from "@/lib/coupleProfileDefaults";
 import CoupleProfileView from "@/app/components/CoupleProfileView";
 
 export default function CoupleProfileEditorPage() {
@@ -70,13 +70,6 @@ export default function CoupleProfileEditorPage() {
         if (change.profile.femaleNickname !== undefined) body.femaleNickname = change.profile.femaleNickname;
         if (change.profile.anniversaryDate !== undefined) body.anniversaryDate = change.profile.anniversaryDate || null;
       }
-      if (change.media) {
-        const current = Object.fromEntries(media.map((item) => [item.slot_key, item.google_drive_file_id]));
-        const next = { ...current, ...change.media };
-        body.media = COUPLE_MEDIA_SLOTS.filter((slot) => next[slot]?.trim()).map((slot) => ({
-          slotKey: slot, googleDriveFileId: next[slot].trim(),
-        }));
-      }
       const response = await fetch(`/api/couple/${slug}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
@@ -95,6 +88,33 @@ export default function CoupleProfileEditorPage() {
     }
   }, [content, load, locale, media, router, slug]);
 
+  const uploadMedia = useCallback(async (slotKey, file) => {
+    setSaving(true);
+    setError("");
+    setNotice("");
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error(locale === "en" ? "Session expired. Please log in again." : "Sesi berakhir. Silakan login kembali.");
+      const form = new FormData();
+      form.append("file", file);
+      form.append("slotKey", slotKey);
+      const response = await fetch("/api/couple/" + slug + "/media", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + session.access_token },
+        body: form,
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || (locale === "en" ? "Image upload failed." : "Upload foto gagal."));
+      setMedia((current) => [...current.filter((item) => item.slot_key !== result.media.slot_key), result.media]);
+      setNotice(locale === "en" ? "Photo uploaded successfully." : "Foto berhasil diunggah.");
+      window.setTimeout(() => setNotice(""), 3000);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setSaving(false);
+    }
+  }, [locale, slug]);
   if (loading) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{locale === "en" ? "Loading..." : "Memuat..."}</p></div></main>;
   if (!profile) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{error || "Couple Profile not found."}</p></div></main>;
 
@@ -124,10 +144,10 @@ export default function CoupleProfileEditorPage() {
           </a>
         </div>
         <p>{locale === "en"
-          ? "Note: Only Google Drive file URLs are supported at this time. Enter the file ID only when editing an image."
-          : "Catatan: Saat ini hanya menyediakan url file dari google Drive, cukup masukan id file saja ketika mau mengedit gambar."}</p>
+          ? "Choose a photo from your device. It will be uploaded securely to your Couple Profile folder in Google Drive."
+          : "Pilih foto langsung dari galeri perangkat. Foto akan otomatis diunggah ke folder Couple Profile di Google Drive."}</p>
       </section>
-      <CoupleProfileView profile={profile} content={content} media={media} locale={locale} editable onSave={save} />
+      <CoupleProfileView profile={profile} content={content} media={media} locale={locale} editable onSave={save} onUpload={uploadMedia} />
     </div>
   );
 }
