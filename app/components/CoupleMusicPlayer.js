@@ -143,6 +143,7 @@ export default function CoupleMusicPlayer() {
         if (requestId !== playRequestRef.current || audioRef.current !== audio) return false;
         shouldPlayRef.current = false;
         playingRef.current = false;
+        if (!interactionAttemptedRef.current) awaitingInteractionRef.current = true;
         setPlaying(false);
         setMessage(t.blocked);
         return false;
@@ -288,7 +289,7 @@ export default function CoupleMusicPlayer() {
 
   const toggle = async () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || playInFlightRef.current) return;
 
     if (playingRef.current) {
       playRequestRef.current += 1;
@@ -301,6 +302,8 @@ export default function CoupleMusicPlayer() {
     }
 
     shouldPlayRef.current = true;
+    awaitingInteractionRef.current = false;
+    interactionAttemptedRef.current = true;
     const requestId = ++playRequestRef.current;
 
     try {
@@ -328,6 +331,8 @@ export default function CoupleMusicPlayer() {
     if (!audio) return;
 
     shouldPlayRef.current = true;
+    awaitingInteractionRef.current = false;
+    interactionAttemptedRef.current = true;
     playingRef.current = false;
     setPlaying(false);
     setMessage("");
