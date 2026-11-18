@@ -55,6 +55,15 @@ export async function PATCH(request, context) {
   }, { onConflict: "couple_id,locale" });
   if (contentError) return errorJson("Unable to save Couple Profile content.", 500);
 
+  if (body.anniversaryDate !== undefined) {
+    const dateValue = body.anniversaryDate;
+    if (dateValue !== null && (typeof dateValue !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(dateValue))) return errorJson("Invalid anniversary date.");
+    const { error: dateError } = await supabaseAdmin.from("df_couple_profiles")
+      .update({ anniversary_date: dateValue, updated_at: new Date().toISOString() })
+      .eq("id", profile.id);
+    if (dateError) return errorJson("Unable to save anniversary date.", 500);
+  }
+
   if (body.media !== undefined) {
     if (!Array.isArray(body.media) || body.media.length > COUPLE_MEDIA_SLOTS.length) return errorJson("Invalid media list.");
     const rows = [];
@@ -63,8 +72,10 @@ export async function PATCH(request, context) {
           !/^[A-Za-z0-9_-]{10,200}$/.test(item.googleDriveFileId.trim())) return errorJson("Invalid image reference.");
       rows.push({ couple_id: profile.id, slot_key: item.slotKey, google_drive_file_id: item.googleDriveFileId.trim(), updated_at: new Date().toISOString() });
     }
+    const { error: clearMediaError } = await supabaseAdmin.from("df_couple_media").delete().eq("couple_id", profile.id);
+    if (clearMediaError) return errorJson("Unable to update image references.", 500);
     if (rows.length) {
-      const { error: mediaError } = await supabaseAdmin.from("df_couple_media").upsert(rows, { onConflict: "couple_id,slot_key" });
+      const { error: mediaError } = await supabaseAdmin.from("df_couple_media").insert(rows);
       if (mediaError) return errorJson("Unable to save image references.", 500);
     }
   }
