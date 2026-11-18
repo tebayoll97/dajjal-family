@@ -44,7 +44,6 @@ const copy = {
     signature: "Dua karakter, satu cerita, dan masih banyak halaman yang belum ditulis. ❤️",
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
     anniversaryLabel: "SUDAH SELAMA INI, DAN MASIH MAU TERUS BERSAMA ❤️",
-    anniversaryIntro: "Setiap detik punya cerita. Setiap hari punya kenangan. Dan perjalanan kita masih terus berjalan. 🥰",
     timeUnits: ["Hari", "Jam", "Menit", "Detik"],
     visualEyebrow: "THEIR SIGNATURE LOOKS",
     visualTitle: "Beda gaya, sama-sama punya pesona. ✨",
@@ -66,7 +65,7 @@ const copy = {
     galleryIntro: "Dari tingkah konyol sampai momen manis, semuanya punya cerita sendiri. Inilah potongan-potongan kecil dari dunia Dajjal dan Veylora. Kadang romantis, kadang nangis, kadang garing, kadang sedikit gak waras… tapi selalu berkesan. 🤭",
     momentsLabel: "OUR CHAOTIC MOMENTS",
     portraitLabel: "THEIR ICONIC PORTRAITS",
-    momentNames: ["Veylora Capek Jalan Kaki", "Aku Gak Bisa Dansa!", "Ah Basah-Basah!", "Selfi Di Warung", "Dingin, pengen yang anget!", "Bolos Ke Kantin", "Sini aku bisikin · Come Closer, Let Me Whisper"],
+    momentNames: ["Veylora Capek Jalan Kaki", "Aku Gak Bisa Dansa!", "Ah Basah-Basah!", "Selfi Di Warung", "Dingin, pengen yang anget!", "Bolos Ke Kantin", "Sini aku bisikin"],
     portraitNames: ["Portrait †Ðαjjαし•†", "Portrait †Veyしorα•†"],
     openPhoto: "Buka foto",
     closePhoto: "Tutup foto",
@@ -74,14 +73,14 @@ const copy = {
     nextPhoto: "Foto berikutnya",
     slideLabel: "Slide",
     whisperTitle: "Sini aku bisikin",
-    whisperSubtitle: "Come Closer, Let Me Whisper",
-    whisperGroup: "A LITTLE SECRET",
-    whisperHint: "A voice note, just for you.",
+    whisperSubtitle: "Ada sesuatu yang ingin kubisikkan khusus untukmu.",
+    whisperGroup: "RAHASIA KECIL",
+    whisperHint: "Sebuah bisikan, khusus untukmu.",
     whisperPlaying: "Veylora sedang membisikkan sesuatu…",
-    whisperEnded: "Some whispers are too sweet to forget. ❤️",
+    whisperEnded: "Ada bisikan yang terlalu manis untuk dilupakan. ❤️",
     whisperPlay: "Putar bisikan",
     whisperPause: "Jeda bisikan",
-    whisperError: "Voice note belum tersedia atau gagal diputar.",
+    whisperError: "Voice note tidak tersedia atau gagal diputar.",
   },
   en: {
     eyebrow: "A DAJJAL FAMILY STORY",
@@ -103,7 +102,6 @@ const copy = {
     signature: "Two characters, one story, and so many pages yet to be written. ❤️",
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
     anniversaryLabel: "THIS LONG TOGETHER, AND STILL CHOOSING EACH OTHER ❤️",
-    anniversaryIntro: "Every second has a story. Every day brings a memory. And our journey is still unfolding. 🥰",
     timeUnits: ["Days", "Hours", "Minutes", "Seconds"],
     visualEyebrow: "THEIR SIGNATURE LOOKS",
     visualTitle: "Different styles, equally captivating. ✨",
@@ -125,7 +123,7 @@ const copy = {
     galleryIntro: "From silly antics to sweet moments, every little thing has its own story. These are little glimpses into Dajjal and Veylora's world. Sometimes romantic, sometimes tearful, sometimes cheesy, and sometimes a little crazy… but always memorable. 🤭",
     momentsLabel: "OUR CHAOTIC MOMENTS",
     portraitLabel: "THEIR ICONIC PORTRAITS",
-    momentNames: ["Veylora Is Tired of Walking", "I Can't Dance!", "Oh, We're Soaked!", "Selfie at the Food Stall", "It's Cold, I Want Something Warm!", "Skipping Class to Go to the Canteen", "Come Closer, Let Me Whisper · Sini aku bisikin"],
+    momentNames: ["Veylora Is Tired of Walking", "I Can't Dance!", "Oh, We're Soaked!", "Selfie at the Food Stall", "It's Cold, I Want Something Warm!", "Skipping Class to Go to the Canteen", "Come Closer, Let Me Whisper"],
     portraitNames: ["Portrait †Ðαjjαし•†", "Portrait †Veyしorα•†"],
     openPhoto: "Open photo",
     closePhoto: "Close photo",
@@ -133,9 +131,9 @@ const copy = {
     nextPhoto: "Next photo",
     slideLabel: "Slide",
     whisperTitle: "Come Closer, Let Me Whisper",
-    whisperSubtitle: "Sini aku bisikin",
+    whisperSubtitle: "There's something I want to whisper just for you.",
     whisperGroup: "A LITTLE SECRET",
-    whisperHint: "A voice note, just for you.",
+    whisperHint: "A little whisper, just for you.",
     whisperPlaying: "Veylora is whispering something…",
     whisperEnded: "Some whispers are too sweet to forget. ❤️",
     whisperPlay: "Play the whisper",
@@ -286,7 +284,6 @@ export default function CoupleProfilePage() {
           </button>
           <div className="df-couple-anniversary-heading">
             <p className="df-couple-eyebrow">{t.anniversaryLabel}</p>
-            <p className="df-couple-intro">{t.anniversaryIntro}</p>
           </div>
           <section className="df-couple-metrics" aria-label={t.anniversaryLabel}>
             {relationshipTime.map((value, index) => (
@@ -472,8 +469,8 @@ export default function CoupleProfilePage() {
                     <path d="M8 45c5 3 10 4 16 4" />
                   </svg>
                   <div className="df-couple-whisper-heading">
-                    <h2>Sini aku bisikin</h2>
-                    <p className="df-couple-whisper-subtitle">Come Closer, Let Me Whisper</p>
+                    <h2>{t.whisperTitle}</h2>
+                    <p className="df-couple-whisper-subtitle">{t.whisperSubtitle}</p>
                   </div>
                   <div className="df-couple-whisper-heart" aria-hidden="true">
                     <svg viewBox="0 0 64 64">
@@ -482,9 +479,9 @@ export default function CoupleProfilePage() {
                     </svg>
                   </div>
                   <p className="df-couple-whisper-status">
-                    {whisperStatus === "playing" ? "Veylora sedang membisikkan sesuatu… · Veylora is whispering something…" : whisperStatus === "ended" ? "Ada bisikan yang terlalu manis untuk dilupakan. ❤️ · Some whispers are too sweet to forget. ❤️" : whisperStatus === "error" ? "Voice note tidak tersedia atau gagal diputar. · The voice note is unavailable or could not be played." : "Sebuah bisikan, khusus untukmu. · A little whisper, just for you."}
+                    {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
                   </p>
-                  <button className="df-couple-whisper-control" type="button" aria-label={whisperStatus === "playing" ? "Jeda bisikan / Pause whisper" : "Putar bisikan / Play whisper"} onClick={() => {
+                  <button className="df-couple-whisper-control" type="button" aria-label={whisperStatus === "playing" ? t.whisperPause : t.whisperPlay} onClick={() => {
                     if (whisperStatus === "playing" && whisperAudioRef.current) {
                       whisperAudioRef.current.pause();
                       setWhisperStatus("paused");
