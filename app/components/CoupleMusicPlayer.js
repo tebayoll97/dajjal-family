@@ -120,8 +120,7 @@ export default function CoupleMusicPlayer() {
       if (document.hidden) {
         // Remember intent without stopping the audio. Android may keep it
         // playing in the background or suspend it; resume only prior playback.
-        resumeAfterBackgroundRef.current =
-          shouldPlayRef.current && (playingRef.current || !audio.paused);
+        resumeAfterBackgroundRef.current = shouldPlayRef.current;
         return;
       }
 
