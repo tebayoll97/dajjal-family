@@ -165,7 +165,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
 
       playInFlightRef.current = true;
       const requestId = ++playRequestRef.current;
-      return audio.play().then(() => {
+      return audio.play().then(async () => {
         if (requestId !== playRequestRef.current || audioRef.current !== audio) return false;
         playingRef.current = true;
         shouldPlayRef.current = true;
@@ -290,7 +290,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     if (!shouldPlayRef.current) return;
 
     audio.play()
-      .then(() => {
+      .then(async () => {
         if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
         playingRef.current = true;
         setPlaying(true);
@@ -386,7 +386,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     setIndex(nextIndex);
 
     audio.play()
-      .then(() => {
+      .then(async () => {
         if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
         playingRef.current = true;
         setPlaying(true);
