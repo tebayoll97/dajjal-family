@@ -241,7 +241,7 @@ export default function CoupleProfilePage() {
 
   const playWhisper = () => {
     stopWhisper();
-    const audio = new Audio("/whispera.m4a");
+    const audio = new Audio("/audio/whispera.m4a");
     audio.preload = "auto";
     whisperAudioRef.current = audio;
     audio.addEventListener("ended", () => {
