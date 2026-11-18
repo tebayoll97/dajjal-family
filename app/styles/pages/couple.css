@@ -737,3 +737,169 @@
   .df-couple-music-card::before,
   .df-couple-music-card .df-couple-music-controls > button { transition: none; }
 }
+
+
+/* Whisper Easter Egg — centered cinematic overlay and animated inline SVGs. */
+.df-couple-lightbox-panel:has(.df-couple-whisper-scene) {
+  width: min(100%, 36rem);
+  max-height: 94vh;
+  padding: .5rem;
+  overflow: visible;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.df-couple-whisper-scene {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 34rem);
+  max-height: calc(94vh - 1rem);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 1.1rem;
+  background: #100d15;
+  box-shadow: 0 1.5rem 5rem rgba(0,0,0,.55);
+}
+.df-couple-whisper-scene > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: calc(94vh - 1rem);
+  object-fit: cover;
+  object-position: center;
+}
+.df-couple-whisper-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.45rem, 2vh, 1rem);
+  padding: clamp(1rem, 5vw, 2.25rem);
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse at 50% 52%, rgba(8,8,15,.82) 0%, rgba(8,8,15,.58) 42%, rgba(8,8,15,.08) 100%),
+    linear-gradient(180deg, rgba(5,5,10,.12), rgba(5,5,10,.38));
+  color: #fff;
+  text-align: center;
+}
+.df-couple-whisper-mark {
+  width: clamp(2.6rem, 10vw, 4rem);
+  height: auto;
+  fill: none;
+  stroke: #b8dcff;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 .8rem rgba(111,184,255,.65));
+  animation: df-couple-whisper-float 3.2s ease-in-out infinite;
+}
+.df-couple-whisper-overlay h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.35rem, 5.5vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -.035em;
+  text-shadow: 0 2px 18px rgba(0,0,0,.8);
+}
+.df-couple-whisper-subtitle {
+  margin: -.15rem 0 0;
+  color: rgba(235,243,255,.9);
+  font-size: clamp(.7rem, 2.5vw, .9rem);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.df-couple-whisper-heart {
+  display: grid;
+  width: clamp(3.1rem, 12vw, 4.25rem);
+  aspect-ratio: 1;
+  place-items: center;
+  margin: .15rem 0;
+  color: #ff8fa8;
+  filter: drop-shadow(0 0 .9rem rgba(255,94,135,.6));
+  animation: df-couple-heartbeat-soft 1.8s ease-in-out infinite;
+}
+.df-couple-whisper-heart svg { display: block; width: 100%; overflow: visible; fill: rgba(255,105,145,.12); stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.df-couple-whisper-heart .df-couple-heartbeat-line { fill: none; stroke: #fff; stroke-width: 2.4; stroke-dasharray: 90; stroke-dashoffset: 90; animation: df-couple-heart-line 1.8s linear infinite; }
+.df-couple-whisper-scene[data-audio-state="playing"] .df-couple-whisper-heart { animation: df-couple-heartbeat-live .72s ease-in-out infinite; }
+.df-couple-whisper-scene[data-audio-state="playing"] .df-couple-heartbeat-line { animation-duration: .72s; }
+.df-couple-whisper-status {
+  min-height: 1.2em;
+  margin: 0;
+  color: rgba(255,255,255,.9);
+  font-size: clamp(.72rem, 2.5vw, .86rem);
+  line-height: 1.45;
+  text-shadow: 0 1px 10px rgba(0,0,0,.9);
+}
+.df-couple-whisper-control {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  padding: .72rem 1.25rem;
+  border: 1px solid rgba(255,255,255,.62);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(116,171,225,.95), rgba(113,101,178,.95));
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 850;
+  box-shadow: 0 .6rem 1.8rem rgba(20,17,46,.45), inset 0 1px rgba(255,255,255,.28);
+  cursor: pointer;
+  transition: transform .2s ease, filter .2s ease;
+}
+.df-couple-whisper-control:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.df-couple-whisper-control svg { width: 1.05rem; height: 1.05rem; fill: currentColor; }
+.df-couple-whisper-wave {
+  width: clamp(5rem, 24vw, 8rem);
+  height: 1.5rem;
+  fill: none;
+  stroke: #b8dcff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .8;
+}
+.df-couple-whisper-wave path { stroke-dasharray: 5 4; }
+.df-couple-whisper-scene[data-audio-state="playing"] .df-couple-whisper-wave path { animation: df-couple-wave-flow .7s linear infinite; }
+@keyframes df-couple-heartbeat-soft {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.08); }
+  24% { transform: scale(1); }
+  36% { transform: scale(1.04); }
+  52% { transform: scale(1); }
+}
+@keyframes df-couple-heartbeat-live {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.2); }
+  30% { transform: scale(.98); }
+  45% { transform: scale(1.13); }
+  65% { transform: scale(1); }
+}
+@keyframes df-couple-heart-line {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes df-couple-whisper-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes df-couple-wave-flow {
+  to { stroke-dashoffset: -18; }
+}
+@media (max-width: 680px) {
+  .df-couple-lightbox-panel:has(.df-couple-whisper-scene) { width: min(100%, 32rem); padding: .35rem; }
+  .df-couple-whisper-scene { width: 100%; max-height: calc(92vh - .7rem); }
+  .df-couple-whisper-scene > img { max-height: calc(92vh - .7rem); }
+  .df-couple-whisper-overlay { gap: clamp(.35rem, 1.5vh, .75rem); padding: 1rem; }
+  .df-couple-whisper-control { min-height: 2.7rem; padding: .65rem 1.05rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-couple-whisper-mark,
+  .df-couple-whisper-heart,
+  .df-couple-whisper-heart .df-couple-heartbeat-line,
+  .df-couple-whisper-wave path { animation: none !important; }
+  .df-couple-whisper-control { transition: none; }
+}
