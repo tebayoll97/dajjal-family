@@ -22,9 +22,9 @@ const tracks = [
 
 const words = {
   id: {
-    eyebrow: "SOUNDTRACK KITA",
-    title: "Musik yang punya cerita",
-    intro: "Dua lagu, dua sudut pandang, satu kisah Dajjal × Veylora.",
+    eyebrow: "OUR LOVE, OUR SOUNDTRACK",
+    title: "Kalau kisah kita punya lagu… 🎶",
+    intro: "Satu lagu mewakili sisi gelap yang penuh misteri, satu lagi membawa kehangatan yang sulit dijelaskan. Dua karakter, dua suasana, dan playlist kecil yang selalu punya alasan untuk diputar. ❤️",
     play: "Putar",
     pause: "Jeda",
     prev: "Lagu sebelumnya",
@@ -41,9 +41,9 @@ const words = {
     select: "Putar lagu",
   },
   en: {
-    eyebrow: "OUR SOUNDTRACK",
-    title: "Music with a story",
-    intro: "Two songs, two perspectives, one Dajjal × Veylora story.",
+    eyebrow: "OUR LOVE, OUR SOUNDTRACK",
+    title: "If Our Story Had a Song… 🎶",
+    intro: "One song represents a dark and mysterious side, while the other brings a warmth that's hard to explain. Two characters, two moods, and a little playlist that always has a reason to be played. ❤️",
     play: "Play",
     pause: "Pause",
     prev: "Previous track",
