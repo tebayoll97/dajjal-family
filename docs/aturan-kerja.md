@@ -26,3 +26,15 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Feature branch hanya digunakan jika diminta pemilik atau jika risiko perubahan secara material membutuhkan isolasi; setelah diverifikasi, gabungkan kembali ke `main`.
 - Persetujuan ini tidak mencakup migrasi/perubahan database produksi, operasi data destruktif, rotasi secret, perubahan domain/DNS, billing/plan, atau konfigurasi keamanan produksi. Tindakan tersebut tetap membutuhkan persetujuan eksplisit tersendiri.
 - Jika Vercel atau dependensi rilis memblokir deployment, jangan menyatakan website sudah diperbarui. Catat blocker secara tepat dan lanjutkan pekerjaan sumber yang aman di `main`.
+
+## Couple Profile foundation — 2026-11-18
+
+- Owner authorized implementation directly on `main` and CRUD/schema work in Supabase.
+- Added `df_couple_profiles`, `df_couple_contents`, and `df_couple_media`. Each player may own one Couple Profile; profile slugs are globally unique; content is stored per locale (ID/EN).
+- All Couple tables have RLS enabled, no browser-facing policies, and no privileges for `anon` or `authenticated`; trusted server routes use the service role after resolving the authenticated account to `players.id`.
+- Couple media stores Google Drive File IDs for the cover and two portrait slots only. The new template deliberately excludes interactive gallery, photo lightbox/open-photo behavior, and Voice Note. Default Couple music player remains available.
+- Added creation, owner lookup, public read, content/media update, and reset endpoints; added localized create/editor/public routes and a Profile entry point.
+- Couple pages remain page-scoped and isolated from Global Theme Preset Engine presets. Editor routes are marked noindex; public slug routes generate localized metadata.
+- Reset deletes the Couple Profile row and its dependent content/media references through database cascades. It does not delete the player account or original Google Drive files.
+- Migration applied to Supabase as version `20261118112952` and mirrored in `supabase/migrations/20261118112952_create_df_couple_profiles.sql`.
+- Source changes committed directly to `main`. Build/lint and interactive browser QA have not yet been run; do not mark the feature production-verified until those checks are completed.
