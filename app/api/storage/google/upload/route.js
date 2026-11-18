@@ -6,6 +6,20 @@ import { getGoogleDriveAccessToken, uploadDriveFile } from "@/lib/googleDriveSto
 export const dynamic = "force-dynamic";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+function hasValidUploadedFileSignature(bytes, mimeType) {
+  if (mimeType === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimeType === "image/png") return bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  if (mimeType === "image/gif") return ["GIF87a", "GIF89a"].includes(bytes.subarray(0, 6).toString("ascii"));
+  if (mimeType === "image/webp") return bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WEBP";
+  if (mimeType === "audio/wav") return bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WAVE";
+  if (mimeType === "audio/ogg") return bytes.subarray(0, 4).toString("ascii") === "OggS";
+  if (mimeType === "audio/mp4") return bytes.length >= 12 && bytes.subarray(4, 8).toString("ascii") === "ftyp";
+  if (mimeType === "audio/aac") return bytes.length >= 2 && bytes[0] === 0xff && (bytes[1] & 0xf6) === 0xf0;
+  if (mimeType === "audio/mpeg") return bytes.subarray(0, 3).toString("ascii") === "ID3" || (bytes.length >= 2 && bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0);
+  return false;
+}
+
 const ALLOWED_TYPES = new Set([
   "image/jpeg", "image/png", "image/webp", "image/gif",
   "audio/mpeg", "audio/mp4", "audio/aac", "audio/ogg", "audio/wav",
@@ -36,10 +50,16 @@ export async function POST(request) {
     }
 
     const accessToken = await getGoogleDriveAccessToken();
+    const fileBytes = Buffer.from(await file.arrayBuffer());
+    if (!hasValidUploadedFileSignature(fileBytes, file.type)) {
+      return NextResponse.json({ error: "The selected file does not match its declared file type." }, { status: 415 });
+    }
+    const storedSlot = file.type.startsWith("image/") ? "image" : "audio";
     const uploaded = await uploadDriveFile({
       accessToken,
-      file,
+      file: new File([fileBytes], "upload", { type: file.type }),
       folderId: connection.drive_root_folder_id,
+      slot: storedSlot,
     });
     return NextResponse.json({
       success: true,
