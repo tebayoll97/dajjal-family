@@ -165,6 +165,7 @@ export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
+  const [musicPlaying, setMusicPlaying] = useState(false);
   const whisperAudioRef = useRef(null);
   const [whisperStatus, setWhisperStatus] = useState("idle");
   const momentsTrackRef = useRef(null);
@@ -311,7 +312,7 @@ export default function CoupleProfilePage() {
   return (
     <main className="df-couple-page" data-theme-palette="couple">
       <div className="df-couple-shell">
-        <header className="df-couple-hero">
+        <header className="df-couple-hero" id="df-couple-home">
           <p className="df-couple-eyebrow">{t.eyebrow}</p>
           <h1 className="df-couple-title">
             <span>{t.title}</span>
@@ -337,9 +338,9 @@ export default function CoupleProfilePage() {
           </section>
         </header>
 
-        <CoupleMusicPlayer />
+        <CoupleMusicPlayer onPlaybackStateChange={setMusicPlaying} />
 
-        <section className="df-couple-section" aria-labelledby="df-couple-identities">
+        <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{t.identityLabel}</p>
             <h2 id="df-couple-identities">{t.dajjalTitle} &amp; {t.veyloraTitle}</h2>
@@ -405,7 +406,7 @@ export default function CoupleProfilePage() {
           </div>
         </section>
 
-        <section className="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
+        <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{t.galleryEyebrow}</p>
             <h2 id="df-couple-gallery-title">{t.galleryTitle}</h2>
@@ -480,7 +481,7 @@ export default function CoupleProfilePage() {
           </div>
         </section>
 
-        <section className="df-couple-story" aria-labelledby="df-couple-story-title">
+        <section className="df-couple-story" id="df-couple-story" aria-labelledby="df-couple-story-title">
           <div className="df-couple-story-symbol" aria-hidden="true">D <span>×</span> V</div>
           <div className="df-couple-story-copy">
             <p className="df-couple-eyebrow">{t.storyEyebrow}</p>
@@ -496,6 +497,27 @@ export default function CoupleProfilePage() {
         </footer>
       </div>
 
+      <nav className="df-couple-bottom-nav" aria-label={language === "en" ? "Couple page navigation" : "Navigasi halaman Couple"}>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" /></svg>
+          <span>{language === "en" ? "Home" : "Awal"}</span>
+        </a>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 5.5a3 3 0 0 1 0 5.8M17 14a5.5 5.5 0 0 1 4.5 5.5" /></svg>
+          <span>{language === "en" ? "Profile" : "Profil"}</span>
+        </a>
+        <button className="df-couple-bottom-nav-music" type="button" onClick={() => window.dispatchEvent(new CustomEvent("df-couple-music-toggle"))} aria-label={musicPlaying ? (language === "en" ? "Pause music" : "Jeda musik") : (language === "en" ? "Play music" : "Putar musik")} aria-pressed={musicPlaying}>
+          {musicPlaying ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z" /></svg> : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 4 13 8-13 8z" /></svg>}
+        </button>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-gallery">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></svg>
+          <span>{language === "en" ? "Gallery" : "Galeri"}</span>
+        </a>
+        <a className="df-couple-bottom-nav-item" href="#df-couple-story">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21zM4 4.5v16.5M8 6h8M8 10h8" /></svg>
+          <span>{language === "en" ? "Story" : "Kisah"}</span>
+        </a>
+      </nav>
       {activePhoto && (
         <div className="df-couple-lightbox" role="presentation">
           <button className="df-couple-lightbox-backdrop" type="button" onClick={closePhoto} aria-label={t.closePhoto} />
