@@ -54,24 +54,29 @@ function EditableText({ value, label, editable, onSave, multiline = false, input
   );
 }
 
-function EditableImage({ fileId, label, editable, onSave, className = "", openPhoto }) {
+function EditableImage({ fileId, label, editable, onUpload, className = "", openPhoto, locale = "id" }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(fileId || "");
-  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-  useEffect(() => setDraft(fileId || ""), [fileId]);
-  async function save() {
-    setSaving(true);
+  const inputRef = useRef(null);
+  const en = locale === "en";
+
+  async function upload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
     setError("");
     try {
-      await onSave(draft.trim());
+      await onUpload(file);
       setEditing(false);
     } catch (err) {
-      setError(err.message || "Save failed.");
+      setError(err.message || (en ? "Upload failed." : "Upload gagal."));
     } finally {
-      setSaving(false);
+      setUploading(false);
+      event.target.value = "";
     }
   }
+
   return (
     <div className={`df-couple-image-slot ${className}`}>
       {fileId ? (
@@ -79,18 +84,28 @@ function EditableImage({ fileId, label, editable, onSave, className = "", openPh
           <img src={coupleDriveImage(fileId, 1200)} alt={label} loading="lazy" />
         </button>
       ) : (
-        <div className="df-couple-image-empty">{editable ? `Tambahkan ${label}` : label}</div>
+        <div className="df-couple-image-empty">{editable ? (en ? `Add ${label}` : `Tambahkan ${label}`) : label}</div>
       )}
-      {editable && <button type="button" className="df-couple-pencil df-couple-image-pencil" title={`Edit ${label}`} aria-label={`Edit ${label}`} onClick={() => setEditing((current) => !current)}><Pencil /></button>}
+      {editable && <button type="button" className="df-couple-pencil df-couple-image-pencil" title={en ? `Change ${label}` : `Ubah ${label}`} aria-label={en ? `Change ${label}` : `Ubah ${label}`} onClick={() => setEditing((current) => !current)}><Pencil /></button>}
       {editing && (
         <div className="df-couple-image-editor">
-          <label>{label} · Google Drive File ID
-            <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Tempel Google Drive File ID" />
+          <label>
+            {en ? `Choose image · ${label}` : `Pilih foto · ${label}`}
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={upload}
+              disabled={uploading}
+            />
           </label>
           <span className="df-couple-edit-actions">
-            <button type="button" onClick={save} disabled={saving}>{saving ? "…" : "Simpan"}</button>
-            <button type="button" className="df-couple-edit-cancel" onClick={() => setEditing(false)}>Batal</button>
+            <button type="button" onClick={() => inputRef.current?.click()} disabled={uploading}>
+              {uploading ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Choose from gallery" : "Pilih dari galeri")}
+            </button>
+            <button type="button" className="df-couple-edit-cancel" onClick={() => setEditing(false)} disabled={uploading}>{en ? "Cancel" : "Batal"}</button>
           </span>
+          <small>{en ? "JPG, PNG, WEBP or GIF · up to 12 MB" : "JPG, PNG, WEBP atau GIF · maksimal 12 MB"}</small>
           {error && <small role="alert">{error}</small>}
         </div>
       )}
@@ -98,7 +113,7 @@ function EditableImage({ fileId, label, editable, onSave, className = "", openPh
   );
 }
 
-export default function CoupleProfileView({ profile, content, media = [], locale = "id", editable = false, onSave }) {
+export default function CoupleProfileView({ profile, content, media = [], locale = "id", editable = false, onSave, onUpload }) {
   const en = locale === "en";
   const [time, setTime] = useState([0, 0, 0, 0]);
   const [activePhoto, setActivePhoto] = useState(null);
@@ -162,7 +177,6 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   };
   const saveContent = (key, value) => onSave?.({ content: { [key]: value } });
   const saveProfile = (key, value) => onSave?.({ profile: { [key]: value } });
-  const saveMedia = (slot, value) => onSave?.({ media: { [slot]: value } });
   const field = (key, label, options = {}) => (
     <EditableText value={content[key]} label={label} editable={editable} onSave={(value) => saveContent(key, value)} {...options} />
   );
@@ -173,7 +187,8 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         fileId={fileId}
         label={`${en ? "Memory" : "Kenangan"} ${index + 1}`}
         editable={editable}
-        onSave={(value) => saveMedia(slot, value)}
+        locale={locale}
+        onUpload={(file) => onUpload?.(slot, file)}
         className="df-couple-gallery-item"
         openPhoto={openPhoto}
       />
@@ -194,7 +209,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           <div className="df-couple-editable-block df-couple-subtitle">{field("subtitle", "Subtitle")}</div>
           <div className="df-couple-editable-block df-couple-intro">{field("intro", "Introduction", { multiline: true })}</div>
           <div className="df-couple-featured-wrap">
-            <EditableImage fileId={mediaMap.cover} label="Cover image" editable={editable} onSave={(value) => saveMedia("cover", value)} className="df-couple-featured-photo" openPhoto={openPhoto} />
+            <EditableImage fileId={mediaMap.cover} label="Cover image" editable={editable} locale={locale} onUpload={(file) => onUpload?.("cover", file)} className="df-couple-featured-photo" openPhoto={openPhoto} />
             <span className="df-couple-featured-label">{en ? "FEATURED MOMENT" : "POTRET UTAMA"}</span>
           </div>
           <div className="df-couple-anniversary-heading">
@@ -223,7 +238,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
             <article className="df-couple-character-card" data-character="dajjal">
               <div className="df-couple-character-heading"><p className="df-couple-character-role">{field("male_role", "Male role")}</p></div>
               <div className="df-couple-character-body">
-                <EditableImage fileId={mediaMap.male_portrait} label="Male portrait" editable={editable} onSave={(value) => saveMedia("male_portrait", value)} className="df-couple-character-art" openPhoto={openPhoto} />
+                <EditableImage fileId={mediaMap.male_portrait} label="Male portrait" editable={editable} locale={locale} onUpload={(file) => onUpload?.("male_portrait", file)} className="df-couple-character-art" openPhoto={openPhoto} />
                 <div className="df-couple-character-copy">
                   <h3>{profile.male_nickname}</h3>
                   <div className="df-couple-editable-block">{field("male_description", "Male description", { multiline: true })}</div>
@@ -234,7 +249,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
             <article className="df-couple-character-card" data-character="veylora">
               <div className="df-couple-character-heading"><p className="df-couple-character-role">{field("female_role", "Female role")}</p></div>
               <div className="df-couple-character-body">
-                <EditableImage fileId={mediaMap.female_portrait} label="Female portrait" editable={editable} onSave={(value) => saveMedia("female_portrait", value)} className="df-couple-character-art" openPhoto={openPhoto} />
+                <EditableImage fileId={mediaMap.female_portrait} label="Female portrait" editable={editable} locale={locale} onUpload={(file) => onUpload?.("female_portrait", file)} className="df-couple-character-art" openPhoto={openPhoto} />
                 <div className="df-couple-character-copy">
                   <h3>{profile.female_nickname}</h3>
                   <div className="df-couple-editable-block">{field("female_description", "Female description", { multiline: true })}</div>
