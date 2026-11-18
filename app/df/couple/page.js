@@ -167,9 +167,12 @@ export default function CoupleProfilePage() {
   const [activePhoto, setActivePhoto] = useState(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [featuredExit, setFeaturedExit] = useState(null);
+  const [featuredDragging, setFeaturedDragging] = useState(false);
+  const [featuredDragDirection, setFeaturedDragDirection] = useState(null);
   const featuredPointerRef = useRef(null);
   const featuredTransitionRef = useRef(null);
   const featuredClickSuppressedRef = useRef(false);
+  const featuredDragResetRef = useRef(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const whisperAudioRef = useRef(null);
   const [whisperStatus, setWhisperStatus] = useState("idle");
@@ -206,22 +209,95 @@ export default function CoupleProfilePage() {
     changeFeaturedSlide(nextIndex, direction);
   };
 
-  const handleFeaturedPointerDown = (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    featuredPointerRef.current = { x: event.clientX, y: event.clientY };
-    featuredClickSuppressedRef.current = false;
+  const resetFeaturedDrag = (element) => {
+    if (featuredDragResetRef.current) window.clearTimeout(featuredDragResetRef.current);
+    setFeaturedDragging(false);
+    setFeaturedDragDirection(null);
+    if (element) {
+      element.style.setProperty("--featured-drag-x", "0px");
+      featuredDragResetRef.current = window.setTimeout(() => {
+        element.style.removeProperty("--featured-drag-x");
+        featuredDragResetRef.current = null;
+      }, 360);
+    }
   };
 
-  const handleFeaturedPointerUp = (event) => {
+  const handleFeaturedPointerDown = (event) => {
+    if (featuredTransitionRef.current || (event.pointerType === "mouse" && event.button !== 0)) return;
+    if (event.target.closest("button")) return;
+    featuredPointerRef.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      lastX: event.clientX,
+      lastTime: performance.now(),
+      velocityX: 0,
+      horizontal: false,
+    };
+    featuredClickSuppressedRef.current = false;
+    if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleFeaturedPointerMove = (event) => {
     const start = featuredPointerRef.current;
-    featuredPointerRef.current = null;
-    if (!start) return;
+    if (!start || start.pointerId !== event.pointerId) return;
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.15) return;
-    featuredClickSuppressedRef.current = true;
-    moveFeaturedSlide(deltaX < 0 ? "left" : "right");
+    if (!start.horizontal) {
+      if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > Math.abs(deltaX) * 1.15) {
+        featuredPointerRef.current = null;
+        return;
+      }
+      if (Math.abs(deltaX) < 5 || Math.abs(deltaX) < Math.abs(deltaY) * 1.15) return;
+      start.horizontal = true;
+      setFeaturedDragging(true);
+      setFeaturedDragDirection(deltaX < 0 ? "left" : "right");
+      featuredClickSuppressedRef.current = true;
+    }
+    const now = performance.now();
+    const elapsed = Math.max(1, now - start.lastTime);
+    start.velocityX = (event.clientX - start.lastX) / elapsed;
+    start.lastX = event.clientX;
+    start.lastTime = now;
+    const frame = event.currentTarget.getBoundingClientRect();
+    const resistedDelta = Math.sign(deltaX) * Math.min(Math.abs(deltaX), frame.width * 1.08);
+    event.currentTarget.style.setProperty("--featured-drag-x", `${resistedDelta}px`);
+    setFeaturedDragDirection(resistedDelta < 0 ? "left" : "right");
   };
+
+  const finishFeaturedPointer = (event, cancelled = false) => {
+    const start = featuredPointerRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+    featuredPointerRef.current = null;
+    if (!start.horizontal) return;
+    const element = event.currentTarget;
+    const deltaX = event.clientX - start.x;
+    const width = element.getBoundingClientRect().width || 1;
+    const shouldCommit = !cancelled && (
+      Math.abs(deltaX) >= width * 0.22 ||
+      (Math.abs(deltaX) >= 34 && Math.abs(start.velocityX) >= 0.55)
+    );
+    featuredClickSuppressedRef.current = true;
+    if (shouldCommit && !featuredTransitionRef.current) {
+      const direction = deltaX < 0 ? "left" : "right";
+      const nextIndex = (featuredIndex + (direction === "left" ? 1 : 2)) % featuredSlides.length;
+      featuredTransitionRef.current = true;
+      setFeaturedExit({ index: featuredIndex, direction });
+      setFeaturedDragging(false);
+      setFeaturedDragDirection(null);
+      window.setTimeout(() => {
+        setFeaturedIndex(nextIndex);
+        setFeaturedExit(null);
+        featuredTransitionRef.current = false;
+        element.style.removeProperty("--featured-drag-x");
+      }, 580);
+    } else {
+      resetFeaturedDrag(element);
+    }
+  };
+
+  const handleFeaturedPointerUp = (event) => finishFeaturedPointer(event);
+  const handleFeaturedPointerCancel = (event) => finishFeaturedPointer(event, true);
 
   const handleFeaturedClick = () => {
     if (featuredClickSuppressedRef.current) {
@@ -375,14 +451,15 @@ export default function CoupleProfilePage() {
           <p className="df-couple-subtitle">{t.subtitle}</p>
           <p className="df-couple-intro">{t.intro}</p>
           <div
-            className="df-couple-featured-photo"
             role="region"
             aria-roledescription="carousel"
             aria-label={t.featuredLabel}
             tabIndex={0}
+            className={`df-couple-featured-photo${featuredDragging ? " is-dragging" : ""}${featuredDragDirection ? " is-dragging-" + featuredDragDirection : ""}`}
             onPointerDown={handleFeaturedPointerDown}
+            onPointerMove={handleFeaturedPointerMove}
             onPointerUp={handleFeaturedPointerUp}
-            onPointerCancel={() => { featuredPointerRef.current = null; }}
+            onPointerCancel={handleFeaturedPointerCancel}
             onKeyDown={(event) => {
               if (event.target.closest("button")) return;
               if (event.key === "ArrowLeft") { event.preventDefault(); moveFeaturedSlide("right"); }
