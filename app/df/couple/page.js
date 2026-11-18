@@ -208,7 +208,12 @@ export default function CoupleProfilePage() {
   useEffect(() => {
     if (!activePhoto) return undefined;
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") setActivePhoto(null);
+      if (event.key === "Escape") {
+        whisperAudioRef.current?.pause();
+        whisperAudioRef.current = null;
+        setWhisperStatus("idle");
+        setActivePhoto(null);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -462,7 +467,7 @@ export default function CoupleProfilePage() {
         <div className="df-couple-lightbox" role="presentation">
           <button className="df-couple-lightbox-backdrop" type="button" onClick={closePhoto} aria-label={t.closePhoto} />
           <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
-            <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto}>×</button>
+            <button className="df-couple-lightbox-close" type="button" onClick={closePhoto} aria-label={t.closePhoto}>×</button>
             <img src={activePhoto.src} alt={activePhoto.alt} />
             <p>{activePhoto.alt}</p>
             {activePhoto.isWhisper && (
