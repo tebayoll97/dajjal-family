@@ -60,3 +60,14 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Tidak ada perubahan schema Supabase. Dua row locale disimpan melalui satu upsert.
 - Provider memakai Gemini Developer API `generateContent` dengan model `gemini-3.1-flash-lite`, JSON output, bahasa sumber/target eksplisit (`id` ↔ `en`), timeout 20 detik, dan tanpa grounding/tools.
 - Free Tier tidak menjamin kapasitas atau ketersediaan tanpa batas. Penggunaan mengikuti rate limits, kuota, dan kebijakan data Google yang berlaku. Jangan menyatakan data Free Tier bersifat privat dari penggunaan peningkatan produk.
+
+
+## Couple Profile — direct upload Google Drive — 2026-11-19
+
+- Editor Couple Profile menggunakan pemilih foto perangkat; pengguna tidak memasukkan Google Drive File ID secara manual.
+- Upload diproses melalui endpoint server khusus yang memverifikasi sesi Supabase dan kepemilikan slug Couple Profile sebelum menerima file.
+- File gambar yang diizinkan: JPEG, PNG, WEBP, GIF; ukuran maksimal 12 MB; signature file diperiksa server-side.
+- Server mengunggah ke folder Drive yang sudah terhubung, di bawah `Couple Profile/[profile-slug]`. Folder dibuat hanya jika belum ada; jangan membuat ulang folder root atau mengubah koneksi Drive yang sudah aktif.
+- File ID tetap disimpan di `df_couple_media` sebagai referensi internal untuk slot cover, portrait, dan gallery. ID tidak ditampilkan atau dimasukkan oleh pengguna.
+- Penggantian slot memperbarui referensi Supabase, tetapi tidak menghapus file lama di Drive. Jika penyimpanan referensi gagal setelah upload, server mencoba menghapus file baru agar tidak meninggalkan orphan.
+- Tidak ada perubahan schema Supabase untuk alur ini.
