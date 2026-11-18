@@ -4,18 +4,18 @@ import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import {coupleDriveImage,COUPLE_GALLERY_SLOTS} from "@/lib/coupleProfileDefaults";
 function durationSince(date){if(!date)return[0,0,0,0];const s=Math.max(0,Math.floor((Date.now()-new Date(date+"T00:00:00").getTime())/1000));return[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60];}
 function EditableValue({value,label,editable,multiline,onSave}){
- const[open,setOpen]=useState(false),[draft,setDraft]=useState(value||""),[saving,setSaving]=useState(false);
+ const[open,setOpen]=useState(false),[draft,setDraft]=useState(value||""),[saving,setSaving]=useState(false),[saveError,setSaveError]=useState("");
  useEffect(()=>setDraft(value||""),[value]);
- async function commit(){setSaving(true);try{await onSave(draft);setOpen(false)}finally{setSaving(false)}}
- return <span className="df-couple-editable">{open?<span className="df-couple-inline-editor">{multiline?<textarea aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} rows={4}/>:<input aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} maxLength={label.toLowerCase().includes("name")?40:300}/>}<span className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>{setDraft(value||"");setOpen(false)}}>×</button></span></span>:<>{value|| (editable?"—":"")}{editable&&<button type="button" className="df-couple-edit-trigger" aria-label={"Edit "+label} title={"Edit "+label} onClick={()=>setOpen(true)}>✎</button>}</>}</span>;
+ async function commit(){setSaving(true);setSaveError("");try{await onSave(draft);setOpen(false)}catch(e){setSaveError(e.message||"Save failed.")}finally{setSaving(false)}}
+ return <span className="df-couple-editable">{open?<span className="df-couple-inline-editor">{multiline?<textarea aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} rows={4}/>:<input aria-label={label} value={draft} onChange={e=>setDraft(e.target.value)} maxLength={label.toLowerCase().includes("name")?40:300}/>}<span className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>{setDraft(value||"");setOpen(false)}}>×</button></span>{saveError&&<small role="alert">{saveError}</small>}</span>:<>{value|| (editable?"—":"")}{editable&&<button type="button" className="df-couple-edit-trigger" aria-label={"Edit "+label} title={"Edit "+label} onClick={()=>setOpen(true)}>✎</button>}</>}</span>;
 }
 function EditableImage({fileId,label,editable,onSave,className=""}){
- const[open,setOpen]=useState(false),[draft,setDraft]=useState(fileId||""),[saving,setSaving]=useState(false);
+ const[open,setOpen]=useState(false),[draft,setDraft]=useState(fileId||""),[saving,setSaving]=useState(false),[saveError,setSaveError]=useState("");
  useEffect(()=>setDraft(fileId||""),[fileId]);
- async function commit(){setSaving(true);try{await onSave(draft.trim());setOpen(false)}finally{setSaving(false)}}
- return <div className={"df-couple-image-edit "+className}>{fileId?<img src={coupleDriveImage(fileId,1200)} alt={label} loading="lazy"/>:editable?<div className="df-couple-image-empty">{label} · Add image</div>:null}
+ async function commit(){setSaving(true);setSaveError("");try{await onSave(draft.trim());setOpen(false)}catch(e){setSaveError(e.message||"Save failed.")}finally{setSaving(false)}}
+ return <div className={"df-couple-image-edit "+className}>{fileId?<img className={className.includes("featured")?"df-couple-featured-background":""} src={coupleDriveImage(fileId,1200)} alt={label} loading="lazy"/>:editable?<div className="df-couple-image-empty">{label} · Add image</div>:null}
  {editable&&<button type="button" className="df-couple-edit-trigger df-couple-image-edit-trigger" onClick={()=>setOpen(v=>!v)} aria-label={"Edit "+label}>✎</button>}
- {open&&<div className="df-couple-image-input"><label>{label} · Google Drive File ID<input value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Paste Google Drive File ID"/></label><div className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>setOpen(false)}>Cancel</button></div></div>}</div>;
+ {open&&<div className="df-couple-image-input"><label>{label} · Google Drive File ID<input value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Paste Google Drive File ID"/></label><div className="df-couple-inline-actions"><button type="button" onClick={commit} disabled={saving}>{saving?"…":"Save"}</button><button type="button" className="df-couple-edit-cancel" onClick={()=>setOpen(false)}>Cancel</button></div>{saveError&&<small role="alert">{saveError}</small>}</div>}</div>;
 }
 export default function CoupleProfileView({profile,content,media=[],locale="id",editable=false,onSave}){
  const en=locale==="en",[time,setTime]=useState([0,0,0,0]),[lightbox,setLightbox]=useState(null);
