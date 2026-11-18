@@ -51,10 +51,12 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 
 ## Couple Profile — penerjemahan otomatis bilingual — 2026-11-18
 
-- Saat owner mengedit field konten dalam locale `id` atau `en`, server menerjemahkan nilai field yang diubah ke locale pasangannya menggunakan Google Cloud Translation Basic API v2.
-- Simpan teks asli pada locale sumber dan hasil terjemahan pada locale target; field lain yang tidak diubah tetap dipertahankan.
-- Terjemahan dilakukan server-side. Secret wajib menggunakan Vercel Environment Variable `GOOGLE_TRANSLATE_API_KEY`; jangan pernah menggunakan prefix `NEXT_PUBLIC_` atau memasukkan key ke source control.
-- Jika layanan belum dikonfigurasi atau penerjemahan gagal, request konten ditolak sebelum kedua locale ditulis. Pengguna menerima pesan gagal dan dapat mencoba kembali.
+- Saat owner mengedit field konten dalam locale `id` atau `en`, server menerjemahkan nilai field yang dikirim ke locale pasangannya menggunakan Gemini Developer API model `gemini-3.1-flash-lite`.
+- Model dipilih karena halaman harga resmi Gemini mencantumkannya sebagai model yang dioptimalkan untuk tugas termasuk translation dan menyediakan free tier untuk input/output teks; free tier memiliki batas penggunaan dan konten dapat digunakan Google untuk meningkatkan produk.
+- Pemilik secara eksplisit menyetujui penggunaan Gemini API Free Tier untuk teks Couple Profile dan memahami ketentuan penggunaan datanya pada 2026-11-18.
+- Simpan teks asli pada locale sumber dan hasil terjemahan pada locale target; field lain yang tidak dikirim tetap dipertahankan.
+- Terjemahan dilakukan server-side. Secret wajib menggunakan Vercel Environment Variable `GEMINI_API_KEY`; jangan pernah menggunakan prefix `NEXT_PUBLIC_` atau memasukkan key ke source control.
+- Jika layanan belum dikonfigurasi, respons model gagal, atau hasil tidak valid/tidak lengkap, request konten ditolak sebelum kedua locale ditulis. Pengguna menerima pesan gagal dan dapat mencoba kembali.
 - Tidak ada perubahan schema Supabase. Dua row locale disimpan melalui satu upsert.
-- Provider memakai endpoint resmi Google Cloud Translation Basic v2, plain-text mode, bahasa sumber/target eksplisit (`id` ↔ `en`). Biaya dan kuota mengikuti Google Cloud project pemilik API key.
-
+- Provider memakai Gemini Developer API `generateContent` dengan model `gemini-3.1-flash-lite`, JSON output, bahasa sumber/target eksplisit (`id` ↔ `en`), timeout 20 detik, dan tanpa grounding/tools.
+- Free Tier tidak menjamin kapasitas atau ketersediaan tanpa batas. Penggunaan mengikuti rate limits, kuota, dan kebijakan data Google yang berlaku. Jangan menyatakan data Free Tier bersifat privat dari penggunaan peningkatan produk.
