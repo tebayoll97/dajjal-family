@@ -285,6 +285,15 @@ export default function ProfilePage() {
           </div>
         </section>
 
+        <section className="mt-6 rounded-2xl border border-sky-400/20 bg-gradient-to-br from-sky-950/30 to-rose-950/20 p-5 ui-card">
+          <p className="text-xs tracking-[0.2em] text-sky-300 font-bold">DAJJAL FAMILY · COUPLE</p>
+          <h2 className="mt-2 text-lg font-black text-white">{language === "id" ? "Profil Couple" : "Couple Profile"}</h2>
+          <p className="mt-1 text-sm text-gray-300">{language === "id" ? "Buat dan kelola halaman cerita pasanganmu." : "Create and manage your couple story page."}</p>
+          <Link href="/app/create-profile-couple" className="inline-flex mt-4 min-h-11 items-center rounded-xl bg-gradient-to-r from-sky-700 to-rose-700 px-5 py-2.5 text-sm font-bold text-white">
+            {language === "id" ? "BUKA COUPLE PROFILE" : "OPEN COUPLE PROFILE"}
+          </Link>
+        </section>
+
         {/* UNIVERSAL GAME STATISTICS */}
         <section className="df-profile-data-card mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
           <p className="text-purple-400 text-xs tracking-[0.25em]">{t.stats}</p>
