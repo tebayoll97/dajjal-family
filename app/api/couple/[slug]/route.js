@@ -14,7 +14,7 @@ export async function GET(request,context){
   supabaseAdmin.from("df_couple_media").select("slot_key,google_drive_file_id").eq("couple_id",profile.id).order("slot_key")
  ]);
  if(ce||me)return errorJson("Unable to load Couple Profile details.",500);
- return NextResponse.json({profile,content:content||null,media:media||[]},{headers:{"Cache-Control":"public, s-maxage=60, stale-while-revalidate=300"}});
+ return NextResponse.json({profile,content:content||null,media:media||[]},{headers:{"Cache-Control":"no-store"}});
 }
 export async function PATCH(request,context){
  const auth=await resolveAuthenticatedPlayer(request);if(!auth.ok)return errorJson(auth.error,auth.status);
