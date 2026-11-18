@@ -72,6 +72,14 @@ const copy = {
     previousPhoto: "Foto sebelumnya",
     nextPhoto: "Foto berikutnya",
     slideLabel: "Slide",
+    whisperTitle: "Sini aku bisikin",
+    whisperSubtitle: "Come Closer, Let Me Whisper",
+    whisperGroup: "A LITTLE SECRET",
+    whisperHint: "A voice note, just for you.",
+    whisperPlaying: "Veylora sedang membisikkan sesuatu…",
+    whisperEnded: "Some whispers are too sweet to forget. ❤️",
+    whisperPlay: "Putar bisikan",
+    whisperError: "Voice note belum tersedia atau gagal diputar.",
   },
   en: {
     eyebrow: "A DAJJAL FAMILY STORY",
@@ -122,6 +130,14 @@ const copy = {
     previousPhoto: "Previous photo",
     nextPhoto: "Next photo",
     slideLabel: "Slide",
+    whisperTitle: "Come Closer, Let Me Whisper",
+    whisperSubtitle: "Sini aku bisikin",
+    whisperGroup: "A LITTLE SECRET",
+    whisperHint: "A voice note, just for you.",
+    whisperPlaying: "Veylora is whispering something…",
+    whisperEnded: "Some whispers are too sweet to forget. ❤️",
+    whisperPlay: "Play the whisper",
+    whisperError: "The voice note is unavailable or could not be played.",
   },
 };
 
@@ -141,6 +157,8 @@ export default function CoupleProfilePage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [activePhoto, setActivePhoto] = useState(null);
+  const whisperAudioRef = useRef(null);
+  const [whisperStatus, setWhisperStatus] = useState("idle");
   const momentsTrackRef = useRef(null);
   const [activeMoment, setActiveMoment] = useState(0);
   const [relationshipTime, setRelationshipTime] = useState([0, 0, 0, 0]);
@@ -181,15 +199,71 @@ export default function CoupleProfilePage() {
   };
 
   useEffect(() => {
+    return () => {
+      whisperAudioRef.current?.pause();
+      whisperAudioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!activePhoto) return undefined;
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") setActivePhoto(null);
+      if (event.key === "Escape") {
+        whisperAudioRef.current?.pause();
+        whisperAudioRef.current = null;
+        setWhisperStatus("idle");
+        setActivePhoto(null);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activePhoto]);
 
-  const openPhoto = (src, alt) => setActivePhoto({ src, alt });
+  const stopWhisper = () => {
+    const audio = whisperAudioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+      whisperAudioRef.current = null;
+    }
+    setWhisperStatus("idle");
+  };
+
+  const closePhoto = () => {
+    stopWhisper();
+    setActivePhoto(null);
+  };
+
+  const openPhoto = (src, alt) => {
+    stopWhisper();
+    setActivePhoto({ src, alt });
+  };
+
+  const playWhisper = () => {
+    stopWhisper();
+    const audio = new Audio("/audio/whispera.m4a");
+    audio.preload = "auto";
+    whisperAudioRef.current = audio;
+    audio.addEventListener("ended", () => {
+      if (whisperAudioRef.current === audio) setWhisperStatus("ended");
+    }, { once: true });
+    audio.addEventListener("error", () => {
+      if (whisperAudioRef.current === audio) setWhisperStatus("error");
+    }, { once: true });
+    setWhisperStatus("playing");
+    audio.play().catch(() => {
+      if (whisperAudioRef.current === audio) setWhisperStatus("error");
+    });
+  };
+
+  const openWhisper = () => {
+    setActivePhoto({
+      src: "https://drive.google.com/thumbnail?id=1yn6CR6e2A6N3a3yCEgy6QboDWeeVWxgT&sz=w1200",
+      alt: t.whisperTitle,
+      isWhisper: true,
+    });
+    playWhisper();
+  };
 
   return (
     <main className="df-couple-page" data-theme-palette="couple">
@@ -352,6 +426,15 @@ export default function CoupleProfilePage() {
             </div>
           </div>
           <div className="df-couple-gallery-group">
+            <h3>{t.whisperGroup}</h3>
+            <div className="df-couple-portraits-grid">
+              <button className="df-couple-portrait-item" type="button" onClick={openWhisper} aria-label={t.openPhoto + ": " + t.whisperTitle}>
+                <img src="https://drive.google.com/thumbnail?id=1yn6CR6e2A6N3a3yCEgy6QboDWeeVWxgT&sz=w1200" alt={t.whisperTitle} loading="lazy" />
+                <span>{t.whisperTitle}</span>
+              </button>
+            </div>
+          </div>
+          <div className="df-couple-gallery-group">
             <h3>{t.portraitLabel}</h3>
             <div className="df-couple-portraits-grid">
               {photos.portraits.map((src, index) => (
@@ -382,11 +465,24 @@ export default function CoupleProfilePage() {
 
       {activePhoto && (
         <div className="df-couple-lightbox" role="presentation">
-          <button className="df-couple-lightbox-backdrop" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto} />
+          <button className="df-couple-lightbox-backdrop" type="button" onClick={closePhoto} aria-label={t.closePhoto} />
           <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
-            <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={t.closePhoto}>×</button>
+            <button className="df-couple-lightbox-close" type="button" onClick={closePhoto} aria-label={t.closePhoto}>×</button>
             <img src={activePhoto.src} alt={activePhoto.alt} />
             <p>{activePhoto.alt}</p>
+            {activePhoto.isWhisper && (
+              <div className="df-couple-whisper-player" aria-live="polite" style={{ display: "grid", justifyItems: "center", gap: ".5rem", width: "100%", color: "#f8f6fb" }}>
+                <span style={{ fontSize: ".78rem", opacity: .8 }}>{t.whisperSubtitle}</span>
+                <span style={{ fontSize: ".78rem", opacity: .85 }}>
+                  {whisperStatus === "playing" ? t.whisperPlaying : whisperStatus === "ended" ? t.whisperEnded : whisperStatus === "error" ? t.whisperError : t.whisperHint}
+                </span>
+                {(whisperStatus === "error" || whisperStatus === "ended") && (
+                  <button type="button" onClick={playWhisper} style={{ border: "1px solid rgba(255,255,255,.35)", borderRadius: "999px", padding: ".55rem 1rem", background: "rgba(255,255,255,.1)", color: "#fff", cursor: "pointer" }}>
+                    {t.whisperPlay}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
