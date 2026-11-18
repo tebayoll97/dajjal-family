@@ -93,7 +93,7 @@ export default function CoupleProfileEditorPage() {
     } finally {
       setSaving(false);
     }
-  }, [load, locale, media, router, slug]);
+  }, [content, load, locale, media, router, slug]);
 
   if (loading) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{locale === "en" ? "Loading..." : "Memuat..."}</p></div></main>;
   if (!profile) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{error || "Couple Profile not found."}</p></div></main>;
