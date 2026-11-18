@@ -66,7 +66,7 @@ const clock = (value) =>
     ? Math.floor(value / 60) + ":" + String(Math.floor(value % 60)).padStart(2, "0")
     : "0:00";
 
-export default function CoupleMusicPlayer() {
+export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
   const { language } = useLanguage();
   const t = words[language] || words.id;
 
@@ -81,6 +81,7 @@ export default function CoupleMusicPlayer() {
   const duckedRef = useRef(false);
   const fadeFrameRef = useRef(0);
   const volumeRef = useRef(0.75);
+  const toggleRef = useRef(null);
 
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -98,6 +99,9 @@ export default function CoupleMusicPlayer() {
     audio.src = tracks[0].src;
     audio.load();
     audioRef.current = audio;
+
+    const handleExternalToggle = () => toggleRef.current?.();
+    window.addEventListener("df-couple-music-toggle", handleExternalToggle);
 
     const updateTime = () => setTime(audio.currentTime || 0);
     const updateDuration = () => {
@@ -231,6 +235,7 @@ export default function CoupleMusicPlayer() {
       audio.removeEventListener("ended", ended);
       audio.removeEventListener("error", failed);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("df-couple-music-toggle", handleExternalToggle);
       ["scroll", "touchstart", "pointerdown", "wheel"].forEach((eventName) => {
         window.removeEventListener(eventName, handleFirstInteraction);
       });
@@ -320,6 +325,12 @@ export default function CoupleMusicPlayer() {
       setMessage(t.error);
     }
   };
+
+  toggleRef.current = toggle;
+
+  useEffect(() => {
+    onPlaybackStateChange?.(playing);
+  }, [playing, onPlaybackStateChange]);
 
   const selectTrack = (nextIndex) => {
     if (nextIndex === index) {
