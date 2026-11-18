@@ -18,18 +18,6 @@ const errorJson = (error, status = 400) => NextResponse.json(
   { status, headers: { "Cache-Control": "no-store" } },
 );
 
-function safeFileName(value, mimeType) {
-  const extension = ({ "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif" })[mimeType];
-  const base = String(value || "couple-photo")
-    .split("/").join("-").split("\\").join("-")
-    .replace(/[\\x00-\\x1f\\x7f]/g, "-")
-    .replace(/\\.[^.]*$/, "")
-    .replace(/[^a-zA-Z0-9._ -]/g, "")
-    .trim()
-    .slice(0, 90) || "couple-photo";
-  return `${base}${extension}`;
-}
-
 function hasValidImageSignature(bytes, mimeType) {
   if (mimeType === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
   if (mimeType === "image/png") return bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
@@ -89,8 +77,24 @@ export async function POST(request, context) {
     });
     const imageBytes = Buffer.from(await file.arrayBuffer());
     if (!hasValidImageSignature(imageBytes, file.type)) return errorJson("The selected file does not match its image type.", 415);
-    const uploadFile = new File([imageBytes], safeFileName(file.name, file.type), { type: file.type });
-    uploaded = await uploadDriveFile({ accessToken, file: uploadFile, folderId: profileFolder.id });
+    const slotLabels = {
+      cover: "cover",
+      male_portrait: "male-portrait",
+      female_portrait: "female-portrait",
+      gallery_1: "gallery-01",
+      gallery_2: "gallery-02",
+      gallery_3: "gallery-03",
+      gallery_4: "gallery-04",
+      gallery_5: "gallery-05",
+      gallery_6: "gallery-06",
+    };
+    const uploadFile = new File([imageBytes], "upload", { type: file.type });
+    uploaded = await uploadDriveFile({
+      accessToken,
+      file: uploadFile,
+      folderId: profileFolder.id,
+      slot: slotLabels[slotKey],
+    });
 
     const { error: saveError } = await supabaseAdmin.from("df_couple_media").upsert({
       couple_id: profile.id,
