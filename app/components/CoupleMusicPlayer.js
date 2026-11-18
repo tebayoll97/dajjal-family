@@ -74,6 +74,9 @@ export default function CoupleMusicPlayer() {
   const shouldPlayRef = useRef(false);
   const playingRef = useRef(false);
   const playRequestRef = useRef(0);
+  const resumeAfterBackgroundRef = useRef(false);
+  const duckedRef = useRef(false);
+  const fadeFrameRef = useRef(0);
 
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -82,11 +85,14 @@ export default function CoupleMusicPlayer() {
   const [volume, setVolume] = useState(0.75);
   const [message, setMessage] = useState("");
 
-  // Create one audio element for this page only. Never autoplay on mount.
+  // One page-scoped audio element. Attempt autoplay on entry; browsers may
+  // require a user gesture, in which case the visible Play control is fallback.
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "metadata";
     audio.volume = 0.75;
+    audio.src = tracks[0].src;
+    audio.load();
     audioRef.current = audio;
 
     const updateTime = () => setTime(audio.currentTime || 0);
@@ -109,16 +115,29 @@ export default function CoupleMusicPlayer() {
       setMessage(t.error);
     };
 
-    const stopForNavigation = () => {
-      playRequestRef.current += 1;
-      shouldPlayRef.current = false;
-      playingRef.current = false;
-      audio.pause();
-      setPlaying(false);
-    };
-
     const handleVisibilityChange = () => {
-      if (document.hidden) stopForNavigation();
+      if (document.hidden) {
+        // Remember intent without stopping the audio. Android may keep it
+        // playing in the background or suspend it; resume only prior playback.
+        resumeAfterBackgroundRef.current =
+          shouldPlayRef.current && (playingRef.current || !audio.paused);
+        return;
+      }
+
+      if (!resumeAfterBackgroundRef.current || !shouldPlayRef.current) return;
+      resumeAfterBackgroundRef.current = false;
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          playingRef.current = true;
+          setPlaying(true);
+          setMessage("");
+        }).catch(() => {
+          playingRef.current = false;
+          setPlaying(false);
+          setMessage(t.blocked);
+        });
+      }
     };
 
     audio.addEventListener("timeupdate", updateTime);
@@ -126,8 +145,43 @@ export default function CoupleMusicPlayer() {
     audio.addEventListener("durationchange", updateDuration);
     audio.addEventListener("ended", ended);
     audio.addEventListener("error", failed);
-    window.addEventListener("pagehide", stopForNavigation);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Option A: attempt playback on every fresh page entry. Autoplay policy
+    // may reject this; the user can always start it with the Play control.
+    shouldPlayRef.current = true;
+    const initialRequest = ++playRequestRef.current;
+    audio.play().then(() => {
+      if (initialRequest !== playRequestRef.current || audioRef.current !== audio) return;
+      playingRef.current = true;
+      setPlaying(true);
+      setMessage("");
+    }).catch(() => {
+      if (initialRequest !== playRequestRef.current) return;
+      shouldPlayRef.current = false;
+      playingRef.current = false;
+      setPlaying(false);
+      setMessage(t.blocked);
+    });
+
+    const handleDucking = (event) => {
+      const nextDucked = Boolean(event.detail?.active);
+      duckedRef.current = nextDucked;
+      if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
+      const from = audio.volume;
+      const target = volume * (nextDucked ? 0.22 : 1);
+      const startedAt = performance.now();
+      const durationMs = 320;
+      const step = (now) => {
+        const progress = Math.min(1, (now - startedAt) / durationMs);
+        audio.volume = from + (target - from) * progress;
+        if (progress < 1) fadeFrameRef.current = requestAnimationFrame(step);
+        else fadeFrameRef.current = 0;
+      };
+      fadeFrameRef.current = requestAnimationFrame(step);
+    };
+
+    window.addEventListener("dajjal-couple-audio-duck", handleDucking);
 
     return () => {
       playRequestRef.current += 1;
@@ -139,8 +193,9 @@ export default function CoupleMusicPlayer() {
       audio.removeEventListener("durationchange", updateDuration);
       audio.removeEventListener("ended", ended);
       audio.removeEventListener("error", failed);
-      window.removeEventListener("pagehide", stopForNavigation);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("dajjal-couple-audio-duck", handleDucking);
+      if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
       audio.removeAttribute("src");
       audio.load();
       if (audioRef.current === audio) audioRef.current = null;
@@ -184,7 +239,11 @@ export default function CoupleMusicPlayer() {
   }, [index]);
 
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
+    const audio = audioRef.current;
+    if (!audio) return;
+    const target = volume * (duckedRef.current ? 0.22 : 1);
+    if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
+    audio.volume = target;
   }, [volume]);
 
   const toggle = async () => {
