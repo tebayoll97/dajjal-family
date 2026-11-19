@@ -1171,10 +1171,31 @@
 .df-couple-upload-close:disabled { opacity: .5; cursor: not-allowed; }
 .df-couple-upload-dialog :is(button, input):focus-visible { outline: 3px solid var(--df-focus); outline-offset: 3px; }
 @media (max-width: 480px) {
-  .df-couple-upload-backdrop { place-items: end center; padding: .65rem .65rem max(.65rem, env(safe-area-inset-bottom)); }
-  .df-couple-upload-dialog { width: 100%; max-height: 88dvh; border-radius: 1.1rem; padding: 1rem; }
+  .df-couple-upload-backdrop {
+    place-items: center;
+    padding: max(.65rem, env(safe-area-inset-top)) .65rem max(.65rem, env(safe-area-inset-bottom));
+  }
+  .df-couple-upload-dialog {
+    width: 100%;
+    max-height: calc(100dvh - max(1.3rem, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+    border-radius: 1.1rem;
+    padding: 1rem;
+  }
   .df-couple-upload-actions { display: grid; grid-template-columns: 1fr 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   .df-couple-upload-backdrop { backdrop-filter: none; }
+}
+
+/* Editable per-photo gallery titles remain legible above the image gradient. */
+.df-couple-profile-page .df-couple-gallery-caption .df-couple-editable {
+  display: flex; align-items: center; justify-content: center; gap: .35rem; min-width: 0;
+}
+.df-couple-profile-page .df-couple-gallery-caption .df-couple-editable-value {
+  color: #fff; font-size: inherit; font-weight: inherit; line-height: 1.35;
+  overflow-wrap: anywhere; text-align: center;
+}
+.df-couple-profile-page .df-couple-gallery-caption .df-couple-pencil {
+  flex: 0 0 1.25rem; width: 1.25rem; height: 1.25rem;
+  border-color: rgba(255,255,255,.5); background: rgba(0,0,0,.55); color: #fff;
 }
