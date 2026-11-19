@@ -119,3 +119,8 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Each of the six gallery slots has its own editable title stored in the bilingual Couple content JSON as `gallery_1_title` through `gallery_6_title`.
 - Gallery titles use the existing `EditableText` interaction and existing server-side Gemini translation flow. Editing in Indonesian updates English; editing in English updates Indonesian. Do not create a separate table or migration for these fields.
 - Public and editor gallery captions display the title matching the active locale. Empty/legacy values fall back to the localized “Kenangan N” / “Memory N” label.
+
+## Couple Profile — gallery title pencil interaction fix — 2026-11-19
+
+- Gallery caption overlay remains click-through so it does not block image interactions; the nested editable title explicitly restores pointer events so its pencil button and inline editor remain interactive.
+- Gallery title pencil controls inherit the same shared `.df-couple-pencil` visual treatment as other edit pencils. Do not add a separate gallery-only color treatment.
