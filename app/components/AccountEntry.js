@@ -4,6 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
+import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
 export default function AccountEntry() {
   const { language } = useLanguage();
@@ -13,30 +14,58 @@ export default function AccountEntry() {
 
   useEffect(() => {
     let active = true;
+    let currentUserId = null;
     async function syncAccount(session) {
       if (!session?.user) {
-        if (active) { setPlayer(null); setStatus("signed-out"); }
+        if (active) {
+          clearUserProfileCache(currentUserId);
+          currentUserId = null;
+          setPlayer(null);
+          setStatus("signed-out");
+        }
         return;
       }
-      if (active) setStatus("loading");
+      const user = session.user;
+      currentUserId = user.id;
+      const cached = readUserProfileCache(user.id);
+      if (active && cached) {
+        setPlayer({ nickname: cached.name, avatar_url: cached.avatar });
+        setStatus("signed-in");
+      } else if (active) {
+        setStatus("loading");
+      }
       try {
         const { data, error } = await supabase.from("players")
           .select("nickname, avatar_url")
-          .eq("auth_user_id", session.user.id).maybeSingle();
+          .eq("auth_user_id", user.id).maybeSingle();
         if (error) throw error;
-        if (active) { setPlayer(data || null); setStatus("signed-in"); }
+        if (active) {
+          const next = data || null;
+          setPlayer(next);
+          writeUserProfileCache(user.id, { name: next?.nickname || "", avatar: next?.avatar_url || "" });
+          setStatus("signed-in");
+        }
       } catch (error) {
         console.error("Account menu profile lookup failed:", error);
-        if (active) { setPlayer(null); setStatus("signed-in"); }
+        if (active) setStatus("signed-in");
       }
     }
     supabase.auth.getSession().then(({ data, error }) => {
-      if (error) { console.error("Account session check failed:", error); if (active) setStatus("signed-out"); return; }
+      if (error) {
+        console.error("Account session check failed:", error);
+        if (active) setStatus("signed-out");
+        return;
+      }
       syncAccount(data.session);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") {
-        if (active) { setPlayer(null); setStatus("signed-out"); }
+        if (active) {
+          clearUserProfileCache(currentUserId);
+          currentUserId = null;
+          setPlayer(null);
+          setStatus("signed-out");
+        }
         return;
       }
       if (["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)) {
