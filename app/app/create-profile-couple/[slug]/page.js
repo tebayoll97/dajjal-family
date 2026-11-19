@@ -65,17 +65,18 @@ export default function CoupleProfileEditorPage() {
   const load = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { router.replace("/login"); return; }
-    const ownerResponse = await fetch("/api/couple", {
-      headers: { Authorization: `Bearer ${session.access_token}` },
-      cache: "no-store",
-    });
-    const ownerData = await ownerResponse.json();
+    const [ownerResponse, response] = await Promise.all([
+      fetch("/api/couple", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        cache: "no-store",
+      }),
+      fetch(`/api/couple/${slug}?locale=${locale}`, { cache: "no-store" }),
+    ]);
+    const [ownerData, data] = await Promise.all([ownerResponse.json(), response.json()]);
     if (!ownerResponse.ok || !ownerData.profile || ownerData.profile.slug !== slug) {
       router.replace("/app/create-profile-couple");
       return;
     }
-    const response = await fetch(`/api/couple/${slug}?locale=${locale}`, { cache: "no-store" });
-    const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Unable to load Couple Profile.");
     setProfile(data.profile);
     setContent({ ...COUPLE_CONTENT_DEFAULTS[locale], ...(data.content?.content || {}) });
