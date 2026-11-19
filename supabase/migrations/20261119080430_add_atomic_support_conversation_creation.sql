@@ -73,7 +73,9 @@ begin
     'waiting_for_admin',
     pg_catalog.now()
   )
-  returning id, created_at, last_message_at, status
+  returning id, public.df_support_conversations.created_at,
+            public.df_support_conversations.last_message_at,
+            public.df_support_conversations.status
        into v_conversation_id, v_created_at, v_last_message_at, v_status;
 
   insert into public.df_support_messages (
