@@ -91,7 +91,7 @@ export default function ContactCenterMember() {
       setConversations(list.conversations || []);
       setNotifications(inbox.notifications || []);
       setUnreadCount(inbox.unreadCount || 0);
-    } catch (err) { if (err.message !== "AUTH_REQUIRED") setError(err.message || t.error); }
+    } catch (err) { if (err.message !== "AUTH_REQUIRED") setError(localizedError(err.message, t)); }
     finally { setLoading(false); }
   }, [request, session, t.error]);
 
@@ -102,7 +102,7 @@ export default function ContactCenterMember() {
     try {
       const result = await request(`/api/contact-center/conversations/${id}/messages?limit=100`);
       setDetail(result.conversation); setMessages(result.messages || []);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }, [request, t.error]);
 
   async function submitCreate(event) {
@@ -115,7 +115,7 @@ export default function ContactCenterMember() {
       setSubject(""); setDraft(""); setShowCreate(false);
       await loadInbox();
       if (result.conversation?.id) await loadDetail(result.conversation.id);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
     finally { setSending(false); }
   }
 
@@ -128,7 +128,7 @@ export default function ContactCenterMember() {
       setDraft("");
       await loadDetail(selectedId);
       await loadInbox();
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
     finally { setSending(false); }
   }
 
@@ -138,7 +138,7 @@ export default function ContactCenterMember() {
       setNotifications((items) => items.map((item) => item.id === notification.id ? { ...item, read_at: new Date().toISOString() } : item));
       setUnreadCount((count) => Math.max(0, count - (notification.read_at ? 0 : 1)));
       if (notification.conversation_id) await loadDetail(notification.conversation_id);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }
 
   async function markAllRead() {
@@ -146,7 +146,7 @@ export default function ContactCenterMember() {
       await request("/api/notifications", { method: "PATCH", body: JSON.stringify({ markAll: true }) });
       setNotifications((items) => items.map((item) => ({ ...item, read_at: item.read_at || new Date().toISOString() })));
       setUnreadCount(0);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }
 
   const selected = useMemo(() => conversations.find((item) => item.id === selectedId) || detail, [conversations, selectedId, detail]);

@@ -61,7 +61,7 @@ export default function ContactCenterAdmin() {
     if (!ready) return;
     if (!session) { router.replace("/admin/login"); return; }
     let active = true;
-    Promise.all([loadQueue(), loadInbox()]).catch((err) => { if (active) setError(err.message || t.error); });
+    Promise.all([loadQueue(), loadInbox()]).catch((err) => { if (active) setError(localizedError(err.message, t)); });
     return () => { active = false; };
   }, [ready, session, filter, loadQueue, loadInbox, router, t.error]);
 
@@ -70,7 +70,7 @@ export default function ContactCenterAdmin() {
     try {
       const result = await request(`/api/admin/contact-center/conversations?id=${id}&limit=100`);
       setConversation(result.conversation); setMessages(result.messages || []);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }, [request, t.error]);
 
   async function sendReply(event) {
@@ -81,7 +81,7 @@ export default function ContactCenterAdmin() {
       await request("/api/admin/contact-center/conversations", { method: "POST", body: JSON.stringify({ conversationId: selectedId, message: draft }) });
       setDraft("");
       await Promise.all([loadDetail(selectedId), loadQueue(), loadInbox()]);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
     finally { setBusy(false); }
   }
 
@@ -91,14 +91,14 @@ export default function ContactCenterAdmin() {
       setNotifications((items) => items.map((n) => n.id === item.id ? { ...n, read_at: new Date().toISOString() } : n));
       setUnread((value) => Math.max(0, value - (item.read_at ? 0 : 1)));
       if (item.conversation_id) await loadDetail(item.conversation_id);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }
   async function markAll() {
     try {
       await request("/api/notifications", { method: "PATCH", body: JSON.stringify({ markAll: true }) });
       setNotifications((items) => items.map((n) => ({ ...n, read_at: n.read_at || new Date().toISOString() })));
       setUnread(0);
-    } catch (err) { setError(err.message || t.error); }
+    } catch (err) { setError(localizedError(err.message, t)); }
   }
 
   if (!ready || !session) return <main className="df-support-page"><p className="df-support-muted">{t.loading}</p></main>;

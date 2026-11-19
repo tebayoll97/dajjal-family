@@ -1,6 +1,6 @@
 # Contact Center API
 
-Status: Phase 2E UI and notification inbox implementation
+Status: Phase 2E UI and notification inbox implementation; RPC ambiguity fix applied
 Access: authenticated registered members and verified administrators
 Data access: server-mediated through `supabaseAdmin`; browser roles have no table privileges
 All responses: `Cache-Control: no-store`
@@ -27,6 +27,7 @@ All responses: `Cache-Control: no-store`
 - `GET /api/notifications?limit=20`: returns up to 50 newest notifications belonging only to the verified Auth user, plus an unread count.
 - `PATCH /api/notifications`: accepts either `{ "notificationId": "uuid" }` or `{ "markAll": true }`. Updates only unread rows whose `recipient_user_id` matches the verified Auth user. A client-supplied recipient/user ID is never used.
 - Both member and admin Contact Center interfaces use this same inbox API. Notification rows are persisted in `df_notifications`; no Realtime subscription is enabled.
+- Contact Center UI copy, API error presentation, notification headings, status labels, category names, sender roles, and date formatting must use the active `LanguageProvider` locale (`id`/`en`). Persisted notification titles remain backward-compatible English strings; clients localize their presentation by notification type and recipient context.
 
 ## Transaction and notification semantics
 - Reply insert, conversation status/timestamps, and notification insert share one PostgreSQL transaction.
