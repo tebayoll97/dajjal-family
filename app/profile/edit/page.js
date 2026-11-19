@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import GameCharacter from "@/lib/GameCharacter";
 import { writeUserProfileCache } from "@/lib/clientUserProfileCache";
@@ -58,19 +57,7 @@ export default function EditProfilePage() {
         return;
       }
 
-      const { data: playerRef, error: playerRefError } = await supabase
-        .from("players")
-        .select("id")
-        .eq("auth_user_id", user.id)
-        .maybeSingle();
-
-      if (!isActive()) return;
-      if (playerRefError) throw playerRefError;
-      if (!playerRef) {
-        throw new Error(isID ? "Profil pemain tidak ditemukan." : "Player profile not found.");
-      }
-
-      const response = await fetch(`/api/player/${playerRef.id}`, {
+      const response = await fetch("/api/player/me", {
         headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
         cache: "no-store",
       });
