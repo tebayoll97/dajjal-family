@@ -9,17 +9,26 @@ export async function GET(request, { params }) {
     const { data: authData, error: authError } = await supabaseAdmin.auth.getUser(token);
     const user = authData?.user;
     if (authError || !user) return Response.json({ error: "Invalid session" }, { status: 401 });
+    let playerId = id;
+    if (id === "me") {
+      const { data: ownPlayer, error: ownPlayerError } = await supabaseAdmin
+        .from("players").select("id").eq("auth_user_id", user.id).maybeSingle();
+      if (ownPlayerError) throw ownPlayerError;
+      if (!ownPlayer) return Response.json({ error: "Player not found." }, { status: 404 });
+      playerId = ownPlayer.id;
+    }
+
     const uuidPattern =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-    if (!id || !uuidPattern.test(id)) {
+    if (!playerId || !uuidPattern.test(playerId)) {
       return Response.json({ error: "Invalid player ID." }, { status: 400 });
     }
 
     const basePlayerQuery = () => supabaseAdmin
       .from("players")
       .select("id, auth_user_id, nickname, server_number, created_at, avatar_url, avatar_path")
-      .eq("id", id)
+      .eq("id", playerId)
       .maybeSingle();
 
     // Detect migration readiness from the actual schema. Before migration,
@@ -27,7 +36,7 @@ export async function GET(request, { params }) {
     let { data: player, error: playerError } = await supabaseAdmin
       .from("players")
       .select("id, auth_user_id, nickname, server_number, created_at, avatar_url, avatar_path, username, gender, phone_number, birth_date")
-      .eq("id", id)
+      .eq("id", playerId)
       .maybeSingle();
 
     let profileIdentityEnabled = true;
