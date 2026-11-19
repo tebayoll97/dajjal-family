@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
+import ContactCenterMessage from "./ContactCenterMessage";
+import ContactCenterSkeleton from "./ContactCenterSkeleton";
 
 const copy = {
   id: { title: "Contact Center", lead: "Kelola percakapan dan balas pesan anggota.", loading: "Memuat antrean…", active: "Aktif", closed: "Ditutup", all: "Semua aktif", waiting: "Menunggu admin", member: "Menunggu anggota", open: "Terbuka", subject: "Subjek", reply: "Balasan", send: "Kirim balasan", sending: "Mengirim…", empty: "Belum ada percakapan pada filter ini.", select: "Pilih percakapan dari antrean.", inbox: "Notifikasi", markAll: "Tandai semua dibaca", error: "Tidak dapat memuat Contact Center.", back: "Dashboard Admin", noReply: "Percakapan ditutup dan tidak dapat dibalas." },
@@ -28,6 +30,8 @@ export default function ContactCenterAdmin() {
   const [unread, setUnread] = useState(0);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const [queueLoading, setQueueLoading] = useState(true);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -53,8 +57,9 @@ export default function ContactCenterAdmin() {
   }, [request]);
 
   const loadQueue = useCallback(async () => {
-    const result = await request(`/api/admin/contact-center/conversations?status=${filter}&limit=100`);
-    setQueue(result.conversations || []);
+    setQueueLoading(true);
+    try { const result = await request(`/api/admin/contact-center/conversations?status=${filter}&limit=100`); setQueue(result.conversations || []); }
+    finally { setQueueLoading(false); }
   }, [filter, request]);
 
   useEffect(() => {
@@ -66,22 +71,27 @@ export default function ContactCenterAdmin() {
   }, [ready, session, filter, loadQueue, loadInbox, router, t]);
 
   const loadDetail = useCallback(async (id) => {
-    setSelectedId(id); setError("");
+    setSelectedId(id); setError(""); setDetailLoading(true);
     try {
       const result = await request(`/api/admin/contact-center/conversations?id=${id}&limit=100`);
       setConversation(result.conversation); setMessages(result.messages || []);
     } catch (err) { setError(localizedError(err.message, t)); }
+    finally { setDetailLoading(false); }
   }, [request, t]);
 
   async function sendReply(event) {
     event.preventDefault();
     if (busy || !selectedId || !draft.trim()) return;
+    const messageText = draft.trim();
+    const pendingId = `pending-${Date.now()}`;
+    setMessages((items) => [...items, { id: pendingId, sender_role: "admin", body: messageText, created_at: new Date().toISOString(), pending: true }]);
     setBusy(true); setError("");
     try {
-      await request("/api/admin/contact-center/conversations", { method: "POST", body: JSON.stringify({ conversationId: selectedId, message: draft }) });
+      await request("/api/admin/contact-center/conversations", { method: "POST", body: JSON.stringify({ conversationId: selectedId, message: messageText }) });
+      setMessages((items) => items.filter((item) => item.id !== pendingId));
       setDraft("");
       await Promise.all([loadDetail(selectedId), loadQueue(), loadInbox()]);
-    } catch (err) { setError(localizedError(err.message, t)); }
+    } catch (err) { setMessages((items) => items.filter((item) => item.id !== pendingId)); setError(localizedError(err.message, t)); }
     finally { setBusy(false); }
   }
 
@@ -101,7 +111,7 @@ export default function ContactCenterAdmin() {
     } catch (err) { setError(localizedError(err.message, t)); }
   }
 
-  if (!ready || !session) return <main className="df-support-page"><p className="df-support-muted">{t.loading}</p></main>;
+  if (!ready || !session) return <main className="df-support-page"><ContactCenterSkeleton mode="page" /></main>;
 
   return (
     <main className="df-support-page df-support-admin">
@@ -121,13 +131,13 @@ export default function ContactCenterAdmin() {
             <button type="button" aria-pressed={filter === "waiting_for_member"} onClick={() => setFilter("waiting_for_member")}>{t.member}</button>
             <button type="button" aria-pressed={filter === "closed"} onClick={() => setFilter("closed")}>{t.closed}</button>
           </div>
-          {queue.length ? queue.map((item) => <button type="button" key={item.id} className={`df-support-conversation ${selectedId === item.id ? "is-selected" : ""}`} onClick={() => loadDetail(item.id)}><strong>{item.subject}</strong><span>{statusText(item.status, t)}</span><small>{dateLabel(item.last_message_at)}</small></button>) : <p className="df-support-muted">{t.empty}</p>}
+          {queueLoading ? <ContactCenterSkeleton mode="list" /> : queue.length ? queue.map((item) => <button type="button" key={item.id} className={`df-support-conversation ${selectedId === item.id ? "is-selected" : ""}`} onClick={() => loadDetail(item.id)}><strong>{item.subject}</strong><span>{statusText(item.status, t)}</span><small>{dateLabel(item.last_message_at)}</small></button>) : <p className="df-support-muted">{t.empty}</p>}
         </section>
         <section className="df-support-panel df-support-thread">
           {conversation ? <>
             <div className="df-support-section-head"><div><span className="df-support-kicker">{statusText(conversation.status, t)}</span><h2>{conversation.subject}</h2><p className="df-support-muted">{conversation.category} · {conversation.owner_user_id}</p></div></div>
-            <div className="df-support-messages">{messages.map((item) => <article key={item.id} className={`df-support-message ${item.sender_role === "admin" ? "is-member" : "is-admin"}`}><span>{item.sender_role === "admin" ? "Admin" : "Member"}</span><p>{item.body}</p><time>{dateLabel(item.created_at)}</time></article>)}</div>
-            {conversation.status === "closed" ? <p className="df-support-muted">{t.noReply}</p> : <form className="df-support-form df-support-reply" onSubmit={sendReply}><label>{t.reply}<textarea rows={3} maxLength={5000} value={draft} onChange={(e) => setDraft(e.target.value)} required /></label><button className="df-support-primary" disabled={busy || !draft.trim()}>{busy ? t.sending : t.send}</button></form>}
+            {detailLoading ? <ContactCenterSkeleton mode="messages" /> : <div className="df-support-messages">{messages.map((item) => <ContactCenterMessage key={item.id} name={item.sender_role === "admin" ? (language === "en" ? "Support team" : "Tim dukungan") : (item.sender_name || "Member")} avatar={item.sender_role === "member" ? item.sender_avatar_url : ""} body={item.body} date={dateLabel(item.created_at)} pending={item.pending} sendingLabel={t.sending} />)}</div>}
+            {conversation.status === "closed" ? <p className="df-support-muted">{t.noReply}</p> : <form className="df-support-form df-support-reply" onSubmit={sendReply}><label>{t.reply}<textarea rows={3} maxLength={5000} value={draft} onChange={(e) => setDraft(e.target.value)} required /></label><button className="df-support-primary" disabled={busy || !draft.trim()}>{busy ? t.sending : t.send}</button>{busy && <p className="df-support-send-state" role="status"><span className="df-support-send-spinner" aria-hidden="true" />{t.sending}</p>}</form>}
           </> : <div className="df-support-placeholder"><span>✉</span><p>{t.select}</p></div>}
         </section>
       </div>

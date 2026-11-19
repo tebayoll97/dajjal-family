@@ -5,6 +5,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
+import ContactCenterMessage from "./ContactCenterMessage";
+import ContactCenterSkeleton from "./ContactCenterSkeleton";
 
 const copy = {
   id: {
@@ -53,7 +55,9 @@ export default function ContactCenterMember() {
   const [category, setCategory] = useState("general");
   const [draft, setDraft] = useState("");
   const [showCreate, setShowCreate] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [profile, setProfile] = useState({ name: "", avatar: "" });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,6 +71,14 @@ export default function ContactCenterMember() {
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, []);
+
+  useEffect(() => {
+    if (!session?.user?.id) { setProfile({ name: "", avatar: "" }); return; }
+    let active = true;
+    supabase.from("players").select("nickname,avatar_url").eq("auth_user_id", session.user.id).maybeSingle()
+      .then(({ data }) => { if (active) setProfile({ name: data?.nickname || session.user.user_metadata?.full_name || session.user.email || "You", avatar: data?.avatar_url || session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || "" }); });
+    return () => { active = false; };
+  }, [session]);
 
   const request = useCallback(async (path, options = {}) => {
     if (!session?.access_token) throw new Error("AUTH_REQUIRED");
@@ -98,11 +110,12 @@ export default function ContactCenterMember() {
   useEffect(() => { loadInbox(); }, [loadInbox]);
 
   const loadDetail = useCallback(async (id) => {
-    setSelectedId(id); setError("");
+    setSelectedId(id); setError(""); setDetailLoading(true);
     try {
       const result = await request(`/api/contact-center/conversations/${id}/messages?limit=100`);
       setDetail(result.conversation); setMessages(result.messages || []);
     } catch (err) { setError(localizedError(err.message, t)); }
+    finally { setDetailLoading(false); }
   }, [request, t]);
 
   async function submitCreate(event) {
@@ -122,13 +135,17 @@ export default function ContactCenterMember() {
   async function submitReply(event) {
     event.preventDefault();
     if (sending || !selectedId || !draft.trim()) return;
+    const messageText = draft.trim();
+    const pendingId = `pending-${Date.now()}`;
+    setMessages((items) => [...items, { id: pendingId, sender_role: "member", body: messageText, created_at: new Date().toISOString(), pending: true }]);
     setSending(true); setError("");
     try {
-      await request(`/api/contact-center/conversations/${selectedId}/messages`, { method: "POST", body: JSON.stringify({ message: draft }) });
+      await request(`/api/contact-center/conversations/${selectedId}/messages`, { method: "POST", body: JSON.stringify({ message: messageText }) });
+      setMessages((items) => items.filter((item) => item.id !== pendingId));
       setDraft("");
       await loadDetail(selectedId);
       await loadInbox();
-    } catch (err) { setError(localizedError(err.message, t)); }
+    } catch (err) { setMessages((items) => items.filter((item) => item.id !== pendingId)); setError(localizedError(err.message, t)); }
     finally { setSending(false); }
   }
 
@@ -152,7 +169,7 @@ export default function ContactCenterMember() {
   const selected = useMemo(() => conversations.find((item) => item.id === selectedId) || detail, [conversations, selectedId, detail]);
   const loginHref = `${withLocalePrefix("/login", locale)}?next=%2Fcontact-center`;
 
-  if (!authReady) return <main className="df-support-page"><p className="df-support-muted">{t.loading}</p></main>;
+  if (!authReady) return <main className="df-support-page"><ContactCenterSkeleton mode="page" /></main>;
   if (!session) return (
     <main className="df-support-page">
       <header className="df-support-hero"><span>{t.eyebrow}</span><h1>{t.title}</h1><p>{t.signIn}</p></header>
@@ -180,7 +197,7 @@ export default function ContactCenterMember() {
           <div className="df-support-section-head"><div><span className="df-support-kicker">{t.conversations}</span><h2>{t.conversations}</h2></div>
             <button className="df-support-primary df-support-compact" type="button" onClick={() => { setShowCreate((v) => !v); setSelectedId(""); setDetail(null); }}>{t.new} +</button>
           </div>
-          {loading ? <p className="df-support-muted">{t.loading}</p> : conversations.length ? conversations.map((item) => (
+          {loading ? <ContactCenterSkeleton mode="list" /> : conversations.length ? conversations.map((item) => (
             <button type="button" key={item.id} className={`df-support-conversation ${selectedId === item.id ? "is-selected" : ""}`} onClick={() => { setShowCreate(false); loadDetail(item.id); }}>
               <strong>{item.subject}</strong><span>{statusKey(item.status, t)}</span><small>{dateLabel(item.last_message_at, locale)}</small>
             </button>
@@ -194,12 +211,12 @@ export default function ContactCenterMember() {
               <label>{t.subject}<input maxLength={120} value={subject} onChange={(e) => setSubject(e.target.value)} required /></label>
               <label>{t.category}<select value={category} onChange={(e) => setCategory(e.target.value)}>{categories.map((value) => <option key={value} value={value}>{t[value]}</option>)}</select></label>
               <label>{t.message}<textarea rows={6} maxLength={5000} value={draft} onChange={(e) => setDraft(e.target.value)} required /></label>
-              <button className="df-support-primary" disabled={sending}>{sending ? t.sending : t.create}</button>
+              <button className="df-support-primary" disabled={sending}>{sending ? t.sending : t.create}</button>{sending && <p className="df-support-send-state" role="status"><span className="df-support-send-spinner" aria-hidden="true" />{t.sending}</p>}
             </form>
           </> : selected ? <>
             <div className="df-support-section-head"><div><span className="df-support-kicker">{t.status}</span><h2>{selected.subject}</h2><p className="df-support-muted">{statusKey(selected.status, t)}</p></div></div>
-            <div className="df-support-messages">{messages.map((item) => <article key={item.id} className={`df-support-message ${item.sender_role === "member" ? "is-member" : "is-admin"}`}><span>{item.sender_role === "member" ? t.you : t.support}</span><p>{item.body}</p><time>{dateLabel(item.created_at, locale)}</time></article>)}</div>
-            {selected.status === "closed" ? <p className="df-support-muted">{t.closed}</p> : <form className="df-support-form df-support-reply" onSubmit={submitReply}><label>{t.reply}<textarea rows={3} maxLength={5000} value={draft} onChange={(e) => setDraft(e.target.value)} required /></label><button className="df-support-primary" disabled={sending || !draft.trim()}>{sending ? t.sending : t.send}</button></form>}
+            {detailLoading ? <ContactCenterSkeleton mode="messages" /> : <div className="df-support-messages">{messages.map((item) => <ContactCenterMessage key={item.id} name={item.sender_role === "member" ? (profile.name || t.you) : t.support} avatar={item.sender_role === "member" ? profile.avatar : ""} body={item.body} date={dateLabel(item.created_at, locale)} pending={item.pending} sendingLabel={t.sending} />)}</div>}
+            {selected.status === "closed" ? <p className="df-support-muted">{t.closed}</p> : <form className="df-support-form df-support-reply" onSubmit={submitReply}><label>{t.reply}<textarea rows={3} maxLength={5000} value={draft} onChange={(e) => setDraft(e.target.value)} required /></label><button className="df-support-primary" disabled={sending || !draft.trim()}>{sending ? t.sending : t.send}</button>{sending && <p className="df-support-send-state" role="status"><span className="df-support-send-spinner" aria-hidden="true" />{t.sending}</p>}</form>}
           </> : <div className="df-support-placeholder"><span aria-hidden="true">✉</span><p>{t.select}</p></div>}
         </section>
       </div>

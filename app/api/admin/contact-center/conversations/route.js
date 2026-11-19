@@ -29,8 +29,20 @@ export async function GET(request) {
         .select("id,sender_user_id,sender_role,body,created_at", { count: "exact" }).eq("conversation_id", id)
         .order("created_at", { ascending: true }).order("id", { ascending: true }).range(from, from + limit - 1);
       if (error) { console.error("Admin support messages lookup failed:", error); return supportError("Unable to load messages.", 500); }
+      const senderIds = [...new Set((messages || []).filter((message) => message.sender_role === "member" && message.sender_user_id).map((message) => message.sender_user_id))];
+      let profiles = [];
+      if (senderIds.length) {
+        const { data: profileRows, error: profileError } = await supabaseAdmin.from("players").select("auth_user_id,nickname,avatar_url").in("auth_user_id", senderIds);
+        if (profileError) console.error("Admin support sender profile lookup failed:", profileError);
+        profiles = profileRows || [];
+      }
+      const profileByUser = new Map(profiles.map((profile) => [profile.auth_user_id, profile]));
+      const enrichedMessages = (messages || []).map((message) => {
+        const profile = profileByUser.get(message.sender_user_id);
+        return { ...message, sender_name: profile?.nickname || "Member", sender_avatar_url: profile?.avatar_url || "" };
+      });
       const total = count || 0;
-      return supportJson({ conversation, messages: messages || [], pagination: { page, limit, total, totalPages: Math.ceil(total / limit), hasMore: total > page * limit } });
+      return supportJson({ conversation, messages: enrichedMessages, pagination: { page, limit, total, totalPages: Math.ceil(total / limit), hasMore: total > page * limit } });
     }
 
     const status = url.searchParams.get("status") || "active";

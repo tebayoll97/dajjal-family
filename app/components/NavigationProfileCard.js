@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
+import ContactCenterNavIndicator from "./ContactCenterNavIndicator";
 
 const CACHE_PREFIX = "df_user_profile_cache_v1:";
 const LAST_USER_KEY = "df_user_profile_last_user_v1";
@@ -129,6 +130,7 @@ export default function NavigationProfileCard({ onNavigate }) {
         <strong>{title}</strong>
         <small>{signedIn ? (identity.email || t.member) : status === "checking" ? (identity.name ? t.member : t.checking) : t.login}</small>
       </span>
+      <ContactCenterNavIndicator mode="member" />
       <span className="df-navigation-profile-arrow" aria-hidden="true">→</span>
     </Link>
   );
