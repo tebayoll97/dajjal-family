@@ -59,7 +59,7 @@ export async function GET(request, { params }) {
       .select(
         "game_id, total_points, games_played, wins, best_score, current_streak, longest_streak, last_played_at, games(id, slug, name, status)"
       )
-      .eq("player_id", id)
+      .eq("player_id", playerId)
       .order("total_points", { ascending: false });
 
     if (statsError) throw statsError;
@@ -81,7 +81,7 @@ export async function GET(request, { params }) {
     const { data: activityRows, error: activityError } = await supabaseAdmin
       .from("game_result_events")
       .select("id, score, won, created_at, games(name, slug)")
-      .eq("player_id", id)
+      .eq("player_id", playerId)
       .order("created_at", { ascending: false })
       .limit(15);
 
