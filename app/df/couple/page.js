@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../components/LanguageProvider";
 import CoupleMusicPlayer from "../../components/CoupleMusicPlayer";
+import CoupleImage from "../../components/CoupleImage";
 
 const photos = {
   dajjal: "https://drive.google.com/thumbnail?id=1G1loww4fM-pU5lU-BR1psW6P9LNMzyVe&sz=w1600",
@@ -327,13 +328,16 @@ export default function CoupleProfilePage() {
             onClick={() => openPhoto(photos.cover, t.featuredLabel)}
             aria-label={t.openPhoto + ": " + t.featuredLabel}
           >
-            <img
+            <CoupleImage
               className="df-couple-featured-background"
               src={photos.cover}
               alt="Dajjal and Veylora together"
+              width={1800}
+              height={900}
               fetchPriority="high"
               loading="eager"
-              draggable="false"
+              sizes="(max-width: 680px) 100vw, 928px"
+              draggable={false}
             />
             <span className="df-couple-featured-label">{t.featuredLabel}</span>
           </button>
@@ -364,7 +368,7 @@ export default function CoupleProfilePage() {
               </div>
               <div className="df-couple-character-body">
                 <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.dajjal, t.dajjalTitle)} aria-label={t.openPhoto + ": " + t.dajjalTitle}>
-                  <img src={photos.dajjal} alt={t.dajjalTitle + " character render"} loading="lazy" />
+                  <CoupleImage src={photos.dajjal} alt={t.dajjalTitle + " character render"} width={1200} height={1200} loading="lazy" sizes="(max-width: 680px) 45vw, 320px" />
                 </button>
                 <div className="df-couple-character-copy">
                   <h3>{t.dajjalTitle}</h3>
@@ -379,7 +383,7 @@ export default function CoupleProfilePage() {
               </div>
               <div className="df-couple-character-body">
                 <button className="df-couple-character-art" type="button" onClick={() => openPhoto(photos.veylora, t.veyloraTitle)} aria-label={t.openPhoto + ": " + t.veyloraTitle}>
-                  <img src={photos.veylora} alt={t.veyloraTitle + " character render"} loading="lazy" />
+                  <CoupleImage src={photos.veylora} alt={t.veyloraTitle + " character render"} width={1200} height={1200} loading="lazy" sizes="(max-width: 680px) 45vw, 320px" />
                 </button>
                 <div className="df-couple-character-copy">
                   <h3>{t.veyloraTitle}</h3>
@@ -461,7 +465,7 @@ export default function CoupleProfilePage() {
               >
                 {photos.moments.map((src, index) => (
                   <button className="df-couple-gallery-item" type="button" key={src} aria-label={t.openPhoto + ": " + t.momentNames[index] + " (" + (index + 1) + " of " + photos.moments.length + ")"} onClick={() => index === photos.moments.length - 1 ? openWhisper() : openPhoto(src, t.momentNames[index])}>
-                    <img src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} loading="lazy" />
+                    <CoupleImage src={src} alt={t.momentNames[index] + " — Dajjal and Veylora"} width={1200} height={1600} loading="lazy" sizes="(max-width: 680px) 76vw, 360px" />
                     <span>{t.momentNames[index]}</span>
                   </button>
                 ))}
@@ -485,7 +489,7 @@ export default function CoupleProfilePage() {
             <div className="df-couple-portraits-grid">
               {photos.portraits.map((src, index) => (
                 <button className="df-couple-portrait-item" type="button" key={src} onClick={() => openPhoto(src, t.portraitNames[index])} aria-label={t.openPhoto + ": " + t.portraitNames[index]}>
-                  <img src={src} alt={t.portraitNames[index]} loading="lazy" />
+                  <CoupleImage src={src} alt={t.portraitNames[index]} width={1200} height={1800} loading="lazy" sizes="(max-width: 680px) 48vw, 360px" />
                   <span>{t.portraitNames[index]}</span>
                 </button>
               ))}
@@ -537,7 +541,7 @@ export default function CoupleProfilePage() {
             <button className="df-couple-lightbox-close" type="button" onClick={closePhoto} aria-label={t.closePhoto}>×</button>
             {activePhoto.isWhisper ? (
               <div className="df-couple-whisper-scene" data-audio-state={whisperStatus}>
-                <img src={activePhoto.src} alt={activePhoto.alt} />
+                <CoupleImage src={activePhoto.src} alt={activePhoto.alt} width={1800} height={2400} loading="eager" sizes="(max-width: 768px) 96vw, 80vw" />
                 <div className="df-couple-whisper-overlay" aria-live="polite">
                   <svg className="df-couple-whisper-mark" viewBox="0 0 64 64" aria-hidden="true">
                     <path d="M10 35c8-1 12-6 16-15 2-4 6-4 7 1l-2 8c7-5 13-7 18-6 4 1 5 5 2 8-6 7-13 12-24 13H16" />
@@ -579,7 +583,7 @@ export default function CoupleProfilePage() {
               </div>
             ) : (
               <>
-                <img src={activePhoto.src} alt={activePhoto.alt} />
+                <CoupleImage src={activePhoto.src} alt={activePhoto.alt} width={1800} height={2400} loading="eager" sizes="(max-width: 768px) 96vw, 80vw" />
                 <p>{activePhoto.alt}</p>
               </>
             )}
