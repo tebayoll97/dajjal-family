@@ -22,6 +22,7 @@ function EditableText({ value, label, editable, onSave, multiline = false, input
   const [error, setError] = useState("");
   useEffect(() => setDraft(value || ""), [value]);
   async function save() {
+    if (saving) return;
     setSaving(true);
     setError("");
     try {
@@ -33,15 +34,21 @@ function EditableText({ value, label, editable, onSave, multiline = false, input
       setSaving(false);
     }
   }
+  function cancel() {
+    if (saving) return;
+    setDraft(value || "");
+    setError("");
+    setEditing(false);
+  }
   return (
     <span className={`df-couple-editable ${className}`} data-editing={editing ? "true" : "false"}>
       {editing ? (
         <span className="df-couple-edit-form">
-          {multiline ? <textarea aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} rows={4} maxLength={3000} autoFocus /> :
-            <input type={inputType} aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={inputType === "date" ? undefined : (label.toLowerCase().includes("name") ? 40 : 220)} autoFocus />}
+          {multiline ? <textarea aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} rows={4} maxLength={3000} autoFocus disabled={saving} /> :
+            <input type={inputType} aria-label={label} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={inputType === "date" ? undefined : (label.toLowerCase().includes("name") ? 40 : 220)} autoFocus disabled={saving} />}
           <span className="df-couple-edit-actions">
-            <button type="button" onClick={save} disabled={saving}>{saving ? "…" : "Simpan"}</button>
-            <button type="button" className="df-couple-edit-cancel" onClick={() => { setDraft(value || ""); setEditing(false); }}>Batal</button>
+            <button type="button" onClick={save} disabled={saving}>{saving ? "Menyimpan…" : "Simpan"}</button>
+            <button type="button" className="df-couple-edit-cancel" onClick={cancel} disabled={saving}>Batal</button>
           </span>
           {error && <small role="alert">{error}</small>}
         </span>
