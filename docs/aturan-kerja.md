@@ -137,12 +137,13 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 
 ## Couple Profile — shared image optimization and CDN cache — 2026-11-19
 
-- All persisted Couple images on the shared Edit Couple Profile, Public Couple Profile, and /df/couple experiences must use the shared app/components/CoupleImage.js renderer backed by Next.js Image Optimization and Vercel Image CDN.
-- The sole approved remote image source is the public Google Drive thumbnail endpoint https://drive.google.com/thumbnail; keep images.remotePatterns restricted to HTTPS, host drive.google.com, and path /thumbnail in next.config.mjs.
-- Optimized image cache minimum TTL is 7 days (604800 seconds). WebP is the configured delivery format. Do not describe the CDN cache as permanent or as durable application storage; Vercel may evict cached transformations and source images remain in Google Drive.
+- All persisted Couple images on the shared Edit Couple Profile, Public Couple Profile, and /df/couple experiences use the shared app/components/CoupleImage.js renderer.
+- Initial Next.js Image Optimization via Vercel Image CDN caused Google Drive thumbnail images not to load on the Edit and Public Couple Profile routes. The immediate production recovery sets unoptimized on the shared Next Image component so it emits direct Google Drive image URLs again. This bypasses Next/Vercel image optimization and its image CDN cache.
+- Keep images.remotePatterns restricted to HTTPS, host drive.google.com, and path /thumbnail in next.config.mjs while the shared component uses next/image. The approved source remains the public Google Drive thumbnail endpoint https://drive.google.com/thumbnail.
+- The configured minimumCacheTTL (604800 seconds) and WebP format are currently inactive for Couple images while unoptimized is enabled. Do not claim that Couple images are served from Vercel Image CDN until a tested proxy/loader implementation is deployed.
 - Couple image replacement uploads create a new Google Drive File ID. Keep the File ID in the image URL/cache key so a replacement naturally receives a new optimized-image cache entry. Do not overwrite the binary behind an existing File ID as the normal replacement workflow.
 - Preserve lazy loading for below-the-fold images and eager/high-priority loading only for the primary hero. Keep explicit sizes, intrinsic dimensions, alt text, and existing CSS object-fit behavior.
 - Local object-URL previews selected in the editor must remain direct local img previews and must never pass through the optimizer. Profile JSON/API responses remain no-store; do not cache private or mutable profile data as part of image optimization.
 - Keep lightbox images optimized as well. Do not add an independent image proxy, Supabase binary storage, custom cache table, or second CDN layer without a separate architecture review.
-- After implementation, verify optimized image responses, cache headers/HIT behavior where observable, all three Couple routes, upload-and-replace cache busting, and the mobile/desktop layout. A successful build alone is not proof that the upstream Google Drive image fetch works.
+- After implementation, verify direct image loading on the Edit and Public Couple Profile routes first, then /df/couple, upload-and-replace cache busting, and mobile/desktop layout. Any future CDN/proxy implementation must be tested against actual Google Drive redirects and image responses before enabling optimization again. A successful build alone is not proof that upstream image fetch works.
 
