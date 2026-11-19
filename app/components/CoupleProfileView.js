@@ -271,21 +271,34 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     <EditableText value={content[key]} label={label} editable={editable} onSave={(value) => saveContent(key, value)} {...options} />
   );
   const openPhoto = (src, alt) => setActivePhoto({ src, alt });
-  const renderGalleryItem = ({ slot, index, fileId }) => (
-    <div className="df-couple-gallery-slot" key={slot}>
-      <EditableImage
-        fileId={fileId}
-        label={`${en ? "Memory" : "Kenangan"} ${index + 1}`}
-        editable={editable}
-        locale={locale}
-        onUpload={(file) => onUpload?.(slot, file)}
-        recommendation="3:4"
-        className="df-couple-gallery-item"
-        openPhoto={openPhoto}
-      />
-      <span className="df-couple-gallery-caption">{`${en ? "Memory" : "Kenangan"} ${index + 1}`}</span>
-    </div>
-  );
+  const renderGalleryItem = ({ slot, index, fileId }) => {
+    const titleKey = "gallery_" + (index + 1) + "_title";
+    const galleryTitle = content[titleKey] || (en ? "Memory " : "Kenangan ") + (index + 1);
+    return (
+      <div className="df-couple-gallery-slot" key={slot}>
+        <EditableImage
+          fileId={fileId}
+          label={galleryTitle}
+          editable={editable}
+          locale={locale}
+          onUpload={(file) => onUpload?.(slot, file)}
+          recommendation="3:4"
+          className="df-couple-gallery-item"
+          openPhoto={openPhoto}
+        />
+        <div className="df-couple-gallery-caption">
+          <EditableText
+            value={galleryTitle}
+            label={(en ? "Photo " : "Foto ") + (index + 1) + (en ? " title" : " — judul")}
+            editable={editable}
+            onSave={(value) => saveContent(titleKey, value)}
+            className="df-couple-gallery-title-edit"
+            placeholder={en ? "Add photo title" : "Tambahkan judul foto"}
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <main className="df-couple-profile-page">
