@@ -124,3 +124,13 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 
 - Gallery caption overlay remains click-through so it does not block image interactions; the nested editable title explicitly restores pointer events so its pencil button and inline editor remain interactive.
 - Gallery title pencil controls inherit the same shared `.df-couple-pencil` visual treatment as other edit pencils. Do not add a separate gallery-only color treatment.
+
+## Couple Profile Editor — catatan koreksi UX berikutnya — 2026-11-19
+
+Status: **dicatat untuk diskusi; belum diimplementasikan**.
+
+1. Saat penyimpanan inline untuk field teks berlangsung, tombol **Simpan** dan **Batal** harus sama-sama nonaktif sampai request benar-benar selesai. Setelah berhasil, editor menutup seperti perilaku saat ini; jika gagal, editor tetap terbuka, draft tetap tersedia, pesan error tampil, dan kedua tombol kembali aktif agar pengguna dapat mencoba lagi atau membatalkan.
+2. Saat pertama kali membuka halaman editor dan data/otorisasi sedang diperiksa atau dimuat, ganti tampilan teks sederhana `Memuat...` / `Loading...` dengan loading skeleton yang lebih rapi dan mencerminkan struktur halaman Couple Profile. Tetap sediakan status loading yang aksesibel dan hormati `prefers-reduced-motion`.
+3. Evaluasi penggunaan shared `Skeleton` dari `app/components/ui/Skeleton.js` dan CSS `.ui-skeleton` yang memakai semantic theme tokens. Halaman Couple tetap terisolasi dari preset global; gunakan komponen/token bersama tanpa memaksakan identitas warna preset global.
+
+Belum ada perubahan kode untuk dua koreksi UX ini. Implementasi menunggu diskusi/konfirmasi desain lanjutan.
