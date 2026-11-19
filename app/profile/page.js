@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
 import AccountLogout from "../components/AccountLogout";
 import GameCharacter from "@/lib/GameCharacter";
@@ -106,20 +105,7 @@ export default function ProfilePage() {
           lastSignInAt: session.user.last_sign_in_at || null,
         });
 
-        const { data, error: playerError } = await supabase
-          .from("players")
-          .select("id")
-          .eq("auth_user_id", session.user.id)
-          .maybeSingle();
-
-        if (playerError) throw playerError;
-
-        if (!data) {
-          router.replace("/login");
-          return;
-        }
-
-        const profileResponse = await fetch(`/api/player/${data.id}`, {
+        const profileResponse = await fetch("/api/player/me", {
           headers: { Authorization: `Bearer ${session.access_token}` },
           cache: "no-store",
         });
