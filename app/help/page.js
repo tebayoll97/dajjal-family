@@ -1,11 +1,7 @@
-"use client";
-
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useLanguage } from "@/app/components/LanguageProvider";
-import { withLocalePrefix } from "@/lib/localePath";
+import { headers } from "next/headers";
 
-const content = {
+const copy = {
   id: {
     eyebrow: "DAJJAL FAMILY / PUSAT BANTUAN",
     title: "Ada yang bisa kami bantu?",
@@ -74,19 +70,60 @@ const content = {
   },
 };
 
-export default function HelpCenterPage() {
-  const { language } = useLanguage();
-  const locale = language === "en" ? "en" : "id";
-  const t = content[locale];
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("all");
-  const normalizedQuery = query.trim().toLocaleLowerCase(locale);
-  const filtered = useMemo(() => t.faqs.filter((item) => {
+export async function generateMetadata() {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-df-locale") === "en" ? "en" : "id";
+  const isEnglish = locale === "en";
+  const title = isEnglish ? "Help Center & FAQ" : "Pusat Bantuan & FAQ";
+  const description = isEnglish
+    ? "Find answers and practical guidance for using DAJJAL FAMILY."
+    : "Temukan jawaban dan panduan praktis untuk menggunakan DAJJAL FAMILY.";
+
+  return {
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: {
+      canonical: `https://dajjalfamily.com/${locale}/help`,
+      languages: {
+        id: "https://dajjalfamily.com/id/help",
+        en: "https://dajjalfamily.com/en/help",
+        "x-default": "https://dajjalfamily.com/id/help",
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://dajjalfamily.com/${locale}/help`,
+      siteName: "DAJJAL FAMILY",
+      type: "website",
+      locale: isEnglish ? "en_US" : "id_ID",
+    },
+  };
+}
+
+export default async function HelpCenterPage({ searchParams }) {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-df-locale") === "en" ? "en" : "id";
+  const t = copy[locale];
+  const params = await searchParams;
+  const query = typeof params?.q === "string" ? params.q.trim().slice(0, 100) : "";
+  const requestedCategory = typeof params?.category === "string" ? params.category : "all";
+  const category = t.categories.some((item) => item.id === requestedCategory) ? requestedCategory : "all";
+  const normalizedQuery = query.toLocaleLowerCase(locale);
+  const filtered = t.faqs.filter((item) => {
     const matchesCategory = category === "all" || item.category === category;
     const haystack = `${item.question} ${item.answer} ${item.keywords}`.toLocaleLowerCase(locale);
     return matchesCategory && (!normalizedQuery || haystack.includes(normalizedQuery));
-  }), [t, category, normalizedQuery, locale]);
-  const href = (path) => withLocalePrefix(path, locale);
+  });
+  const localizedPath = `/${locale}/help`;
+  const href = (nextCategory, nextQuery = query) => {
+    const search = new URLSearchParams();
+    if (nextCategory !== "all") search.set("category", nextCategory);
+    if (nextQuery) search.set("q", nextQuery);
+    const suffix = search.toString();
+    return suffix ? `${localizedPath}?${suffix}` : localizedPath;
+  };
 
   return (
     <main className="df-public-info">
@@ -94,35 +131,46 @@ export default function HelpCenterPage() {
         <span className="df-public-eyebrow">{t.eyebrow}</span>
         <h1>{t.title}</h1>
         <p className="df-public-lead">{t.lead}</p>
-        <div className="df-help-search-wrap">
-          <label className="df-help-search-label" htmlFor="df-help-search">{t.searchLabel}</label>
-          <input id="df-help-search" className="df-help-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchPlaceholder} autoComplete="off" />
-          {query && <button className="df-help-clear" type="button" onClick={() => setQuery("")}>{t.clear}</button>}
-        </div>
+        <form action={localizedPath} method="get" style={{ display: "grid", gap: ".55rem", maxWidth: "680px", marginTop: "1.75rem" }}>
+          {category !== "all" && <input type="hidden" name="category" value={category} />}
+          <label htmlFor="df-help-search" style={{ color: "var(--df-text-secondary)", fontSize: ".85rem", fontWeight: 750 }}>{t.searchLabel}</label>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: ".6rem" }}>
+            <input id="df-help-search" name="q" type="search" defaultValue={query} maxLength={100} placeholder={t.searchPlaceholder}
+              style={{ flex: "1 1 250px", minWidth: 0, minHeight: "48px", padding: ".75rem 1rem", border: "1px solid var(--df-border-strong)", borderRadius: "var(--df-radius-md)", background: "var(--df-surface)", color: "var(--df-text)", font: "inherit" }} />
+            <button type="submit" className="df-public-button df-public-button-primary">{t.searchLabel}</button>
+          </div>
+          {query && <Link href={href(category, "")} style={{ color: "var(--df-primary)", fontSize: ".82rem", width: "fit-content" }}>{t.clear}</Link>}
+        </form>
       </header>
 
-      <section className="df-public-section df-help-content" aria-label={t.searchLabel}>
-        <div className="df-help-categories" aria-label={t.all}>
-          <button type="button" className={category === "all" ? "is-active" : ""} aria-pressed={category === "all"} onClick={() => setCategory("all")}>{t.all}</button>
-          {t.categories.map((item) => <button type="button" key={item.id} className={category === item.id ? "is-active" : ""} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}>{item.label}</button>)}
-        </div>
-        <p className="df-help-result-count" aria-live="polite">{t.resultCount(filtered.length)}</p>
-        <div className="df-help-faq-list">
+      <section className="df-public-section" aria-label={t.searchLabel}>
+        <nav aria-label={t.all} style={{ display: "flex", flexWrap: "wrap", gap: ".55rem" }}>
+          <Link href={href("all")} className={`df-public-button ${category === "all" ? "df-public-button-primary" : "df-public-button-secondary"}`}>{t.all}</Link>
+          {t.categories.map((item) => (
+            <Link key={item.id} href={href(item.id)} aria-current={category === item.id ? "page" : undefined}
+              className={`df-public-button ${category === item.id ? "df-public-button-primary" : "df-public-button-secondary"}`}>{item.label}</Link>
+          ))}
+        </nav>
+
+        <p style={{ margin: "1.25rem 0 .85rem", color: "var(--df-text-muted)", fontSize: ".8rem" }} aria-live="polite">{t.resultCount(filtered.length)}</p>
+        <div style={{ display: "grid", gap: ".75rem" }}>
           {filtered.map((item) => (
-            <details className="df-help-faq" key={item.id}>
-              <summary>{item.question}<span aria-hidden="true">+</span></summary>
-              <div className="df-help-answer"><p>{item.answer}</p></div>
+            <details key={item.id} style={{ padding: "1.1rem 1.2rem", border: "1px solid var(--df-border)", borderRadius: "var(--df-radius-lg)", background: "var(--df-surface)" }}>
+              <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", color: "var(--df-text)", fontWeight: 800, lineHeight: 1.5, cursor: "pointer" }}>
+                {item.question}<span aria-hidden="true" style={{ color: "var(--df-primary)", fontSize: "1.25rem" }}>+</span>
+              </summary>
+              <p style={{ margin: ".85rem 0 0", paddingTop: ".85rem", borderTop: "1px solid var(--df-border)", color: "var(--df-text-secondary)", lineHeight: 1.8 }}>{item.answer}</p>
             </details>
           ))}
         </div>
         {!filtered.length && <div className="df-contact-note"><h2>{t.noResults}</h2><p>{t.noResultsHint}</p></div>}
       </section>
 
-      <section className="df-about-cta df-help-cta">
+      <section className="df-about-cta">
         <div><span className="df-public-kicker">DAJJAL FAMILY / SUPPORT</span><h2>{t.noResultsHint}</h2></div>
         <div className="df-public-actions">
-          <Link className="df-public-button df-public-button-primary" href={href("/contact-center")}>{t.contact}<span aria-hidden="true">↗</span></Link>
-          <Link className="df-public-button df-public-button-secondary" href={href("/contact")}>{t.contactUs}</Link>
+          <Link className="df-public-button df-public-button-primary" href={`/${locale}/contact-center`}>{t.contact}<span aria-hidden="true">↗</span></Link>
+          <Link className="df-public-button df-public-button-secondary" href={`/${locale}/contact`}>{t.contactUs}</Link>
         </div>
       </section>
     </main>
