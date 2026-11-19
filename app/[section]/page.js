@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import SectionExperience from "../components/SectionExperience";
+import AboutContactExperience from "../components/AboutContactExperience";
 
 const sections = ["knowledge", "blog", "digital-products", "business", "community", "about", "contact"];
 
@@ -10,8 +11,8 @@ const titles = {
   "digital-products": { en: "Digital Products", id: "Produk Digital" },
   business: { en: "Business", id: "Bisnis" },
   community: { en: "Community", id: "Komunitas" },
-  about: { en: "About Dajjal Family", id: "Tentang Dajjal Family" },
-  contact: { en: "Contact", id: "Kontak" },
+  about: { en: "About DAJJAL FAMILY", id: "Tentang DAJJAL FAMILY" },
+  contact: { en: "Contact DAJJAL FAMILY", id: "Kontak DAJJAL FAMILY" },
 };
 
 const descriptions = {
@@ -36,12 +37,12 @@ const descriptions = {
     id: "Terhubung, berbagi pengalaman, dan berkembang berdasarkan minat bersama.",
   },
   about: {
-    en: "Learn about Dajjal Family, a growing digital ecosystem.",
-    id: "Kenali Dajjal Family, ekosistem digital yang terus berkembang.",
+    en: "Discover DAJJAL FAMILY: an independent digital universe built around gaming, knowledge, creativity, and connection.",
+    id: "Kenali DAJJAL FAMILY: semesta digital mandiri yang dibangun melalui gaming, pengetahuan, kreativitas, dan koneksi.",
   },
   contact: {
-    en: "Contact Dajjal Family for questions, ideas, and collaborations.",
-    id: "Hubungi Dajjal Family untuk pertanyaan, gagasan, dan kolaborasi.",
+    en: "Find out how to connect with DAJJAL FAMILY and learn about the status of our official contact channels.",
+    id: "Temukan informasi untuk terhubung dengan DAJJAL FAMILY dan status kanal kontak resmi kami.",
   },
 };
 
@@ -69,7 +70,7 @@ export async function generateMetadata({ params }) {
       title: titles[section][locale],
       description: descriptions[section][locale],
       url: `https://dajjalfamily.com${canonicalPath}`,
-      siteName: "Dajjal Family",
+      siteName: "DAJJAL FAMILY",
       type: "website",
       locale: locale === "id" ? "id_ID" : "en_US",
     },
@@ -79,5 +80,8 @@ export async function generateMetadata({ params }) {
 export default async function SectionPage({ params }) {
   const { section } = await params;
   if (!sections.includes(section)) notFound();
+  if (section === "about" || section === "contact") {
+    return <AboutContactExperience section={section} />;
+  }
   return <SectionExperience section={section} />;
 }
