@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import GameCharacter from "@/lib/GameCharacter";
 import { writeUserProfileCache } from "@/lib/clientUserProfileCache";
