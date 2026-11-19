@@ -8,12 +8,12 @@ import { withLocalePrefix } from "@/lib/localePath";
 const copy = {
   en: {
     tagline: "One Account. One Profile. Multiple Experiences. One Universe.",
-    universe: "Family Universe", games: "Games", profile: "Profile", helpCenter: "Help Center", rights: "All rights reserved.",
+    universe: "Family Universe", games: "Games", profile: "Profile", helpCenter: "Help Center", guidelines: "Community Guidelines", rights: "All rights reserved.",
     statement: "A DIGITAL UNIVERSE BUILT TO GROW.",
   },
   id: {
     tagline: "Satu Akun. Satu Profil. Banyak Pengalaman. Satu Universe.",
-    universe: "Universe Keluarga", games: "Game", profile: "Profil", helpCenter: "Pusat Bantuan", rights: "Hak cipta dilindungi.",
+    universe: "Universe Keluarga", games: "Game", profile: "Profil", helpCenter: "Pusat Bantuan", guidelines: "Pedoman Komunitas", rights: "Hak cipta dilindungi.",
     statement: "SEMESTA DIGITAL YANG TERUS BERKEMBANG.",
   },
 };
@@ -25,6 +25,7 @@ export default function Footer() {
     [t.universe, "/df"],
     [t.games, "/games"],
     [t.helpCenter, "/help"],
+    [t.guidelines, "/community-guidelines"],
     [t.profile, "/profile"],
   ];
 
