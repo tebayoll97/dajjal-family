@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import GameCharacter from "@/lib/GameCharacter";
+import { writeUserProfileCache } from "@/lib/clientUserProfileCache";
 
 
 export default function EditProfilePage() {
@@ -322,6 +323,7 @@ export default function EditProfilePage() {
         username: cleanUsername.toLowerCase(),
         serverNumber: serverNumber.trim() ? String(cleanServer) : "",
       };
+      writeUserProfileCache(user.id, { name: cleanNickname, avatar: newAvatarUrl || "" });
 
       if (newPassword) {
         const { error: passwordError } = await supabase.auth.updateUser({ password: newPassword });
