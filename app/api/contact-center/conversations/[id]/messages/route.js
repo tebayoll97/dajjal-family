@@ -70,3 +70,38 @@ export async function GET(request, context) {
     return supportError("Unable to load messages.", 500);
   }
 }
+
+export async function POST(request, context) {
+  try {
+    const auth = await resolveSupportMember(request);
+    if (!auth.ok) return supportError(auth.error, auth.status);
+    const { id } = await context.params;
+    if (!UUID.test(id || "")) return supportError("Invalid conversation ID.", 400);
+
+    let rawBody;
+    try { rawBody = await request.text(); } catch { return supportError("Invalid request body."); }
+    if (rawBody.length > 16000) return supportError("Request is too large.", 413);
+
+    let body;
+    try { body = JSON.parse(rawBody); } catch { return supportError("Invalid JSON body."); }
+    const message = typeof body?.message === "string" ? body.message.trim() : "";
+    if (message.length < 1 || message.length > 5000) return supportError("Message must contain 1–5000 characters.");
+
+    const { data, error } = await supabaseAdmin.rpc("member_reply_df_support_conversation", {
+      p_owner_user_id: auth.userId, p_conversation_id: id, p_body: message,
+    });
+    if (error) {
+      if (error.message?.includes("SUPPORT_REPLY_RATE_LIMITED")) return supportError("You have reached the reply limit. Please try again later.", 429);
+      if (error.message?.includes("CONVERSATION_NOT_FOUND")) return supportError("Conversation not found.", 404);
+      if (error.message?.includes("CONVERSATION_CLOSED")) return supportError("This conversation is closed.", 409);
+      console.error("Contact Center member reply failed:", error);
+      return supportError("Unable to send your reply.", 500);
+    }
+    const created = Array.isArray(data) ? data[0] : data;
+    if (!created?.message_id) return supportError("Unable to confirm your reply.", 500);
+    return supportJson({ message: { id: created.message_id, conversation_id: created.conversation_id, sender_role: "member", body: message, created_at: created.created_at }, status: created.status }, 201);
+  } catch (error) {
+    console.error("Contact Center member reply error:", error);
+    return supportError("Unable to send your reply.", 500);
+  }
+}
