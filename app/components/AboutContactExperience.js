@@ -123,7 +123,7 @@ export default function AboutContactExperience({ section }) {
       ? "Halo DAJJAL FAMILY, saya ingin menghubungi tim."
       : "Hello DAJJAL FAMILY, I would like to contact your team.";
     const whatsappHref = `https://wa.me/6285141320943?text=${encodeURIComponent(whatsappMessage)}`;
-    const telegramHref = "https://t.me/+6285141320943";
+    const telegramHref = "https://t.me/dajjalf4mily";
 
     return (
       <main className="df-public-info df-contact-page">
@@ -159,7 +159,7 @@ export default function AboutContactExperience({ section }) {
               <span className="df-contact-channel-copy">
                 <strong>WhatsApp Business</strong>
                 <span>{locale === "id" ? "Chat langsung dengan tim kami" : "Start a direct chat with our team"}</span>
-                <small>+62 851-4132-0943</small>
+                <small>@dajjalf4mily</small>
               </span>
               <span className="df-contact-channel-arrow" aria-hidden="true">↗</span>
             </a>
@@ -176,7 +176,7 @@ export default function AboutContactExperience({ section }) {
               <span className="df-contact-channel-arrow" aria-hidden="true">↗</span>
             </a>
           </div>
-          <p className="df-contact-channel-hint">{locale === "id" ? "Kedua kanal menggunakan nomor yang sama. Ketersediaan akun Telegram melalui nomor telepon mengikuti pengaturan privasi Telegram." : "Both channels use the same number. Telegram phone-number discovery depends on the account's Telegram privacy settings."}</p>
+          <p className="df-contact-channel-hint">{locale === "id" ? "WhatsApp dan Telegram memiliki jalur kontak masing-masing. Pilih kanal yang paling nyaman untukmu." : "WhatsApp and Telegram have their own contact links. Choose whichever channel works best for you."}</p>
         </section>
 
         <section className="df-contact-note">
