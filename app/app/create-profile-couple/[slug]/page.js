@@ -6,6 +6,48 @@ import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { COUPLE_CONTENT_DEFAULTS } from "@/lib/coupleProfileDefaults";
 import CoupleProfileView from "@/app/components/CoupleProfileView";
+import { Skeleton } from "@/app/components/ui/Skeleton";
+
+function CoupleEditorLoading({ locale }) {
+  const en = locale === "en";
+  return (
+    <main className="df-couple-profile-page df-couple-editor-loading" aria-busy="true">
+      <div className="df-couple-shell">
+        <p className="df-couple-loading-status" role="status">{en ? "Preparing your Couple Profile editor…" : "Menyiapkan editor Couple Profile…"}</p>
+        <section className="df-couple-loading-hero">
+          <Skeleton width="9rem" height="0.75rem" />
+          <Skeleton width="min(78%, 32rem)" height="3.4rem" className="df-couple-loading-center" />
+          <Skeleton width="min(58%, 24rem)" height="1.1rem" className="df-couple-loading-center" />
+          <Skeleton width="min(72%, 30rem)" height="3.2rem" className="df-couple-loading-center" />
+          <Skeleton variant="rect" width="100%" height="clamp(10rem, 28vw, 20rem)" />
+        </section>
+        <section className="df-couple-loading-section">
+          <Skeleton width="12rem" height="1.2rem" />
+          <div className="df-couple-loading-two-cards">
+            {[1, 2].map((item) => (
+              <div className="df-couple-loading-card" key={item}>
+                <Skeleton width="45%" height="0.8rem" />
+                <div className="df-couple-loading-card-row">
+                  <Skeleton variant="circle" width="5.5rem" height="5.5rem" />
+                  <div className="df-couple-loading-lines">
+                    <Skeleton width="72%" height="1rem" />
+                    <Skeleton count={3} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="df-couple-loading-section">
+          <Skeleton width="10rem" height="1.2rem" />
+          <div className="df-couple-loading-gallery">
+            {[1, 2, 3].map((item) => <Skeleton variant="rect" height="10rem" key={item} />)}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
 
 export default function CoupleProfileEditorPage() {
   const { slug } = useParams();
@@ -115,7 +157,7 @@ export default function CoupleProfileEditorPage() {
       setSaving(false);
     }
   }, [locale, slug]);
-  if (loading) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{locale === "en" ? "Loading..." : "Memuat..."}</p></div></main>;
+  if (loading) return <CoupleEditorLoading locale={locale} />;
   if (!profile) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{error || "Couple Profile not found."}</p></div></main>;
 
   const publicUrl = typeof window !== "undefined" ? `${window.location.origin}/${locale}/couple/${slug}` : `/${locale}/couple/${slug}`;
