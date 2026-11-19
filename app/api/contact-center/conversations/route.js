@@ -59,12 +59,17 @@ export async function POST(request) {
     const auth = await resolveSupportMember(request);
     if (!auth.ok) return supportError(auth.error, auth.status);
 
-    const contentLength = Number(request.headers.get("content-length") || 0);
-    if (contentLength > 16000) return supportError("Request is too large.", 413);
+    let rawBody;
+    try {
+      rawBody = await request.text();
+    } catch {
+      return supportError("Invalid request body.");
+    }
+    if (rawBody.length > 16000) return supportError("Request is too large.", 413);
 
     let body;
     try {
-      body = await request.json();
+      body = JSON.parse(rawBody);
     } catch {
       return supportError("Invalid JSON body.");
     }
