@@ -93,3 +93,13 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Ekstensi ditentukan dari allowlist MIME di server. Timestamp UTC dan 4 byte random kriptografis (8 karakter hex) dibuat server-side.
 - Perubahan ini hanya mengubah metadata nama file Drive; tidak mengubah root folder, OAuth connection, File ID, skema database, atau kebijakan retensi file lama.
 - Deployment otomatis dari `main` harus mencapai READY dan build perlu diverifikasi sebelum pengujian upload langsung. Upload nyata tetap perlu diuji di Couple Profile dan halaman Admin Storage.
+
+
+## Couple Profile — staged photo upload and editor guidance — 2026-11-19
+
+- Image selection in the Couple Profile editor only stages a local file; it must not upload automatically.
+- The owner explicitly presses Upload to start the request. Disable Upload, file selection, and editor dismissal while the request is in progress; guard the upload handler against repeated invocation. Re-enable controls after either success or failure. Keep the selected file available after failure so the owner can retry.
+- Show a local preview and selected filename before upload. Revoke temporary object URLs when the selection changes or the editor unmounts.
+- Show recommended source-image ratios: cover/hero 3:4, each gallery image 3:4, and the two character portraits below the music player 1:1. These are recommendations, not server-side crop enforcement.
+- The editor's cover image uses `object-position: center top`, matching the public Dajjal × Veylora page.
+- The editor guidance explains the explicit Upload step and displays the current public Couple URL while retaining Copy Link and Preview actions.
