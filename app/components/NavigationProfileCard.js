@@ -6,73 +6,26 @@ import { supabase } from "@/lib/supabase";
 import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
 import ContactCenterNavIndicator from "./ContactCenterNavIndicator";
-
-const CACHE_PREFIX = "df_user_profile_cache_v1:";
-const LAST_USER_KEY = "df_user_profile_last_user_v1";
+import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
 const copy = {
   id: { checking: "Memuat profil...", guest: "Selamat datang", profile: "Profil Saya", login: "Masuk ke akun", member: "Akun pengguna" },
   en: { checking: "Loading profile...", guest: "Welcome", profile: "My Profile", login: "Sign in to your account", member: "User account" },
 };
 
-function readCache(userId) {
-  try {
-    const raw = window.localStorage.getItem(CACHE_PREFIX + userId);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed || parsed.userId !== userId || typeof parsed.name !== "string") return null;
-    return { name: parsed.name, avatar: typeof parsed.avatar === "string" ? parsed.avatar : "" };
-  } catch {
-    return null;
-  }
-}
-
-function writeCache(userId, identity) {
-  try {
-    window.localStorage.setItem(LAST_USER_KEY, userId);
-    window.localStorage.setItem(CACHE_PREFIX + userId, JSON.stringify({
-      userId,
-      name: identity.name || "",
-      avatar: identity.avatar || "",
-      updatedAt: Date.now(),
-    }));
-  } catch {
-    // Storage may be unavailable; the live session remains authoritative.
-  }
-}
-
-function clearUserCache(userId) {
-  try {
-    if (userId) {
-      window.localStorage.removeItem(CACHE_PREFIX + userId);
-      if (window.localStorage.getItem(LAST_USER_KEY) === userId) window.localStorage.removeItem(LAST_USER_KEY);
-    }
-  } catch {
-    // Ignore unavailable storage.
-  }
-}
-
 export default function NavigationProfileCard({ onNavigate }) {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const [status, setStatus] = useState("checking");
   const currentUserId = useRef(null);
-  const [identity, setIdentity] = useState(() => {
-    try {
-      const lastUserId = window.localStorage.getItem(LAST_USER_KEY);
-      const cached = lastUserId ? readCache(lastUserId) : null;
-      return cached ? { ...cached, email: "" } : { name: "", email: "", avatar: "" };
-    } catch {
-      return { name: "", email: "", avatar: "" };
-    }
-  });
+  const [identity, setIdentity] = useState({ name: "", email: "", avatar: "" });
 
   useEffect(() => {
     let active = true;
     async function sync(session) {
       if (!session?.user) {
         if (active) {
-          clearUserCache(currentUserId.current);
+          clearUserProfileCache(currentUserId.current);
           currentUserId.current = null;
           setIdentity({ name: "", email: "", avatar: "" });
           setStatus("signed-out");
@@ -82,15 +35,16 @@ export default function NavigationProfileCard({ onNavigate }) {
       const user = session.user;
       const metadata = user.user_metadata || {};
       currentUserId.current = user.id;
-      const cached = readCache(user.id);
+      const cached = readUserProfileCache(user.id);
       if (active && cached) {
-        setIdentity({ ...cached, email: user.email || "" });
+        setIdentity({ name: cached.name, avatar: cached.avatar, email: user.email || "" });
         setStatus("signed-in");
       }
       let player = null;
       try {
-        const { data } = await supabase.from("players").select("nickname, avatar_url")
+        const { data, error } = await supabase.from("players").select("nickname, avatar_url")
           .eq("auth_user_id", user.id).maybeSingle();
+        if (error) throw error;
         player = data || null;
       } catch (error) {
         console.error("Navigation profile lookup failed:", error);
@@ -101,17 +55,32 @@ export default function NavigationProfileCard({ onNavigate }) {
         email: user.email || "",
         avatar: player?.avatar_url || metadata.avatar_url || metadata.picture || "",
       };
-      writeCache(user.id, freshIdentity);
+      writeUserProfileCache(user.id, { name: freshIdentity.name, avatar: freshIdentity.avatar });
       setIdentity(freshIdentity);
       setStatus("signed-in");
     }
+
     supabase.auth.getSession().then(({ data, error }) => {
-      if (error) { console.error("Navigation session check failed:", error); if (active) setStatus("signed-out"); return; }
+      if (error) {
+        console.error("Navigation session check failed:", error);
+        if (active) setStatus("signed-out");
+        return;
+      }
       sync(data.session);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") { if (active) { clearUserCache(currentUserId.current); currentUserId.current = null; setIdentity({ name: "", email: "", avatar: "" }); setStatus("signed-out"); } return; }
-      if (["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)) Promise.resolve().then(() => sync(session));
+      if (event === "SIGNED_OUT") {
+        if (active) {
+          clearUserProfileCache(currentUserId.current);
+          currentUserId.current = null;
+          setIdentity({ name: "", email: "", avatar: "" });
+          setStatus("signed-out");
+        }
+        return;
+      }
+      if (["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)) {
+        Promise.resolve().then(() => sync(session));
+      }
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, []);
@@ -128,7 +97,7 @@ export default function NavigationProfileCard({ onNavigate }) {
       </span>
       <span className="df-navigation-profile-copy">
         <strong>{title}</strong>
-        <small>{signedIn ? (identity.email || t.member) : status === "checking" ? (identity.name ? t.member : t.checking) : t.login}</small>
+        <small>{signedIn ? (identity.email || t.member) : status === "checking" ? t.checking : t.login}</small>
       </span>
       <ContactCenterNavIndicator mode="member" />
       <span className="df-navigation-profile-arrow" aria-hidden="true">→</span>
