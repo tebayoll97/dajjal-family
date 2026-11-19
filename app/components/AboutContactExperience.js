@@ -48,8 +48,9 @@ const content = {
       lead: "Questions, ideas, feedback, or a potential collaboration? We welcome thoughtful conversations.",
       introTitle: "Contact DAJJAL FAMILY",
       intro: "We are building clear and reliable ways for people to reach the right part of our digital universe. This page is the public starting point for contact information.",
-      statusTitle: "Our contact center is being prepared",
-      status: "Direct messaging through a DAJJAL FAMILY account is not available yet. We will publish the official contact channels here when they are ready. We do not want to offer a form that cannot yet deliver your message to our team.",
+      statusTitle: "Contact Center is available",
+      status: "Sign in to your DAJJAL FAMILY account to start a private support conversation, follow replies, and receive notifications.",
+      contactCenterAction: "Open Contact Center",
       noteTitle: "For now",
       note: "Please follow the official DAJJAL FAMILY website for updates. Avoid sharing passwords, verification codes, or sensitive personal information through unofficial channels.",
       homeAction: "Back to home",
@@ -99,8 +100,9 @@ const content = {
       lead: "Punya pertanyaan, gagasan, masukan, atau peluang kolaborasi? Kami terbuka untuk percakapan yang bermakna.",
       introTitle: "Kontak DAJJAL FAMILY",
       intro: "Kami sedang membangun jalur komunikasi yang jelas dan tepercaya agar setiap orang dapat menghubungi bagian yang tepat dari semesta digital kami. Halaman ini menjadi titik awal informasi kontak publik.",
-      statusTitle: "Contact Center sedang disiapkan",
-      status: "Pengiriman pesan langsung melalui akun DAJJAL FAMILY belum tersedia. Kanal kontak resmi akan kami publikasikan di halaman ini setelah siap. Kami tidak ingin menyediakan formulir yang belum dapat mengantarkan pesan kepada tim kami.",
+      statusTitle: "Contact Center sudah tersedia",
+      status: "Masuk ke akun DAJJAL FAMILY untuk memulai percakapan dukungan secara privat, mengikuti balasan, dan menerima notifikasi.",
+      contactCenterAction: "Buka Contact Center",
       noteTitle: "Untuk saat ini",
       note: "Ikuti situs resmi DAJJAL FAMILY untuk mendapatkan pembaruan. Hindari membagikan kata sandi, kode verifikasi, atau informasi pribadi sensitif melalui kanal tidak resmi.",
       homeAction: "Kembali ke beranda",
@@ -134,6 +136,7 @@ export default function AboutContactExperience({ section }) {
             <span className="df-contact-status-icon" aria-hidden="true">✉</span>
             <h2>{t.statusTitle}</h2>
             <p>{t.status}</p>
+            <div className="df-public-actions"><Link className="df-public-button df-public-button-primary" href={href("/contact-center")}>{t.contactCenterAction}<span aria-hidden="true">↗</span></Link></div>
           </div>
         </section>
         <section className="df-contact-note">

@@ -1,14 +1,14 @@
 # Contact Center API
 
-Status: Phase 2D server API implementation
+Status: Phase 2E UI and notification inbox implementation
 Access: authenticated registered members and verified administrators
 Data access: server-mediated through `supabaseAdmin`; browser roles have no table privileges
 All responses: `Cache-Control: no-store`
 
 ## Authentication and authorization
-- Member endpoints require `Authorization: Bearer <Supabase access token>`; the canonical owner is the verified Auth user ID.
+- Member endpoints require `Authorization: Bearer <Supabase access token>`; the canonical owner/recipient is the verified Auth user ID.
 - Admin endpoints require the same bearer token and a server-side match in `public.admin_users` through `verifyAdmin()`.
-- Owner IDs, sender roles, and admin IDs are never accepted as trusted client input.
+- Owner IDs, recipient IDs, sender roles, and admin IDs are never accepted as trusted client input.
 - Anonymous/guest Auth sessions cannot use member endpoints.
 - Database tables remain inaccessible to browser roles; only trusted server routes use service role after verifying identity and scope.
 
@@ -23,6 +23,11 @@ All responses: `Cache-Control: no-store`
 - `GET /api/admin/contact-center/conversations?id={uuid}&page=1&limit=50`: returns conversation and paginated history; admin-only.
 - `POST /api/admin/contact-center/conversations`: admin reply. Body: `{ "conversationId": "uuid", "message": "..." }`. Transaction verifies admin membership, locks conversation, inserts reply, sets `waiting_for_member`, and notifies the conversation owner.
 
+## Notification inbox and read state
+- `GET /api/notifications?limit=20`: returns up to 50 newest notifications belonging only to the verified Auth user, plus an unread count.
+- `PATCH /api/notifications`: accepts either `{ "notificationId": "uuid" }` or `{ "markAll": true }`. Updates only unread rows whose `recipient_user_id` matches the verified Auth user. A client-supplied recipient/user ID is never used.
+- Both member and admin Contact Center interfaces use this same inbox API. Notification rows are persisted in `df_notifications`; no Realtime subscription is enabled.
+
 ## Transaction and notification semantics
 - Reply insert, conversation status/timestamps, and notification insert share one PostgreSQL transaction.
 - Closed conversations reject replies with HTTP 409.
@@ -31,5 +36,5 @@ All responses: `Cache-Control: no-store`
 - RPCs are `SECURITY INVOKER`, use empty `search_path`, and EXECUTE is granted only to `service_role`.
 - Request body max 16000 chars; message max 5000 chars. All responses are non-cacheable.
 
-## Not included yet
-Member/admin UI, notification inbox/read-state APIs, close/reopen controls, attachments, Realtime, and retention/export workflows.
+## Not included
+Close/reopen controls, attachments, Realtime, email/push delivery, and retention/export workflows.

@@ -17,6 +17,8 @@ const copy = {
     management: "MANAGEMENT",
     players: "User Management",
     playersDesc: "Manage login accounts, player profiles, access, and activity.",
+    contactCenter: "Contact Center",
+    contactCenterDesc: "Review member conversations, reply to requests, and manage support notifications.",
     statistics: "Game Statistics",
     statisticsDesc: "Track engagement, scores, and overall game performance.",
     gallery: "Wedding Gallery",
@@ -47,6 +49,8 @@ const copy = {
     management: "PENGELOLAAN",
     players: "Manajemen Pengguna",
     playersDesc: "Kelola akun login, profil pemain, akses, dan aktivitas.",
+    contactCenter: "Contact Center",
+    contactCenterDesc: "Tinjau percakapan anggota, balas permintaan, dan kelola notifikasi dukungan.",
     statistics: "Statistik Permainan",
     statisticsDesc: "Pantau aktivitas, perolehan poin, dan performa game.",
     gallery: "Galeri Pernikahan",
@@ -173,6 +177,7 @@ export default function AdminDashboardPage() {
   if (!admin) return null;
 
   const modules = [
+    { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true, accent: "from-violet-500/20 via-fuchsia-500/5" },
     {
       href: "/admin/players",
       icon: "👥",
@@ -280,7 +285,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">07 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">08 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
