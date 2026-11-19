@@ -134,3 +134,15 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 3. Halaman pembuatan Couple Profile menampilkan skeleton selama pemeriksaan sesi akun dan kepemilikan Couple Profile sebelum form nickname ditampilkan. Status pemeriksaan tersedia dalam Bahasa Indonesia dan Inggris.
 4. Menggunakan shared `Skeleton` dari `app/components/ui/Skeleton.js` dan semantic theme tokens. Identitas visual Couple tetap page-scoped; tidak ada perubahan pada Global Theme Preset Engine.
 5. Tidak ada perubahan API, database, schema, atau alur penyimpanan data.
+
+## Couple Profile — shared image optimization and CDN cache — 2026-11-19
+
+- All persisted Couple images on the shared Edit Couple Profile, Public Couple Profile, and /df/couple experiences must use the shared app/components/CoupleImage.js renderer backed by Next.js Image Optimization and Vercel Image CDN.
+- The sole approved remote image source is the public Google Drive thumbnail endpoint https://drive.google.com/thumbnail; keep images.remotePatterns restricted to HTTPS, host drive.google.com, and path /thumbnail in next.config.mjs.
+- Optimized image cache minimum TTL is 7 days (604800 seconds). WebP is the configured delivery format. Do not describe the CDN cache as permanent or as durable application storage; Vercel may evict cached transformations and source images remain in Google Drive.
+- Couple image replacement uploads create a new Google Drive File ID. Keep the File ID in the image URL/cache key so a replacement naturally receives a new optimized-image cache entry. Do not overwrite the binary behind an existing File ID as the normal replacement workflow.
+- Preserve lazy loading for below-the-fold images and eager/high-priority loading only for the primary hero. Keep explicit sizes, intrinsic dimensions, alt text, and existing CSS object-fit behavior.
+- Local object-URL previews selected in the editor must remain direct local img previews and must never pass through the optimizer. Profile JSON/API responses remain no-store; do not cache private or mutable profile data as part of image optimization.
+- Keep lightbox images optimized as well. Do not add an independent image proxy, Supabase binary storage, custom cache table, or second CDN layer without a separate architecture review.
+- After implementation, verify optimized image responses, cache headers/HIT behavior where observable, all three Couple routes, upload-and-replace cache busting, and the mobile/desktop layout. A successful build alone is not proof that the upstream Google Drive image fetch works.
+
