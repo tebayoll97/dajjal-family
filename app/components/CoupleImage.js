@@ -35,6 +35,7 @@ export default function CoupleImage({
       style={style}
       draggable={draggable}
       quality={quality}
+      unoptimized
     />
   );
 }
