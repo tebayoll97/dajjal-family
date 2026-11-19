@@ -1190,12 +1190,10 @@
 /* Editable per-photo gallery titles remain legible above the image gradient. */
 .df-couple-profile-page .df-couple-gallery-caption .df-couple-editable {
   display: flex; align-items: center; justify-content: center; gap: .35rem; min-width: 0;
+  pointer-events: auto;
 }
 .df-couple-profile-page .df-couple-gallery-caption .df-couple-editable-value {
   color: #fff; font-size: inherit; font-weight: inherit; line-height: 1.35;
   overflow-wrap: anywhere; text-align: center;
 }
-.df-couple-profile-page .df-couple-gallery-caption .df-couple-pencil {
-  flex: 0 0 1.25rem; width: 1.25rem; height: 1.25rem;
-  border-color: rgba(255,255,255,.5); background: rgba(0,0,0,.55); color: #fff;
-}
+/* Gallery title edit button inherits the same visual treatment as other pencil controls. */
