@@ -125,12 +125,12 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Gallery caption overlay remains click-through so it does not block image interactions; the nested editable title explicitly restores pointer events so its pencil button and inline editor remain interactive.
 - Gallery title pencil controls inherit the same shared `.df-couple-pencil` visual treatment as other edit pencils. Do not add a separate gallery-only color treatment.
 
-## Couple Profile Editor — catatan koreksi UX berikutnya — 2026-11-19
+## Couple Profile Editor — koreksi UX — 2026-11-19
 
-Status: **dicatat untuk diskusi; belum diimplementasikan**.
+Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifikasi live**.
 
-1. Saat penyimpanan inline untuk field teks berlangsung, tombol **Simpan** dan **Batal** harus sama-sama nonaktif sampai request benar-benar selesai. Setelah berhasil, editor menutup seperti perilaku saat ini; jika gagal, editor tetap terbuka, draft tetap tersedia, pesan error tampil, dan kedua tombol kembali aktif agar pengguna dapat mencoba lagi atau membatalkan.
-2. Saat pertama kali membuka halaman editor dan data/otorisasi sedang diperiksa atau dimuat, ganti tampilan teks sederhana `Memuat...` / `Loading...` dengan loading skeleton yang lebih rapi dan mencerminkan struktur halaman Couple Profile. Tetap sediakan status loading yang aksesibel dan hormati `prefers-reduced-motion`.
-3. Evaluasi penggunaan shared `Skeleton` dari `app/components/ui/Skeleton.js` dan CSS `.ui-skeleton` yang memakai semantic theme tokens. Halaman Couple tetap terisolasi dari preset global; gunakan komponen/token bersama tanpa memaksakan identitas warna preset global.
-
-Belum ada perubahan kode untuk dua koreksi UX ini. Implementasi menunggu diskusi/konfirmasi desain lanjutan.
+1. Saat penyimpanan inline untuk field teks berlangsung, tombol **Simpan** dan **Batal** sama-sama nonaktif sampai request selesai. Input juga dikunci agar draft tidak berubah selama request berjalan. Setelah berhasil, editor menutup seperti perilaku sebelumnya; jika gagal, editor tetap terbuka, draft dipertahankan, pesan error tampil, dan kedua tombol aktif kembali untuk retry atau batal.
+2. Saat pertama kali membuka halaman Edit Couple Profile, teks sederhana `Memuat...` / `Loading...` diganti dengan skeleton yang mengikuti struktur hero, identitas pasangan, dan galeri. Status loading tetap diumumkan melalui `role="status"`; animasi shimmer menghormati `prefers-reduced-motion`. Skeleton tidak ditampilkan saat pemuatan ulang data setelah penyimpanan berhasil.
+3. Halaman pembuatan Couple Profile menampilkan skeleton selama pemeriksaan sesi akun dan kepemilikan Couple Profile sebelum form nickname ditampilkan. Status pemeriksaan tersedia dalam Bahasa Indonesia dan Inggris.
+4. Menggunakan shared `Skeleton` dari `app/components/ui/Skeleton.js` dan semantic theme tokens. Identitas visual Couple tetap page-scoped; tidak ada perubahan pada Global Theme Preset Engine.
+5. Tidak ada perubahan API, database, schema, atau alur penyimpanan data.
