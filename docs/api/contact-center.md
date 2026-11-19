@@ -1,45 +1,35 @@
-# Contact Center Member API
+# Contact Center API
 
-Status: Phase 2C implementation  
-Access: authenticated, non-anonymous member sessions only  
-Data access: server-mediated through `supabaseAdmin`; browser roles have no table privileges  
+Status: Phase 2D server API implementation
+Access: authenticated registered members and verified administrators
+Data access: server-mediated through `supabaseAdmin`; browser roles have no table privileges
 All responses: `Cache-Control: no-store`
 
-## Authentication
+## Authentication and authorization
+- Member endpoints require `Authorization: Bearer <Supabase access token>`; the canonical owner is the verified Auth user ID.
+- Admin endpoints require the same bearer token and a server-side match in `public.admin_users` through `verifyAdmin()`.
+- Owner IDs, sender roles, and admin IDs are never accepted as trusted client input.
+- Anonymous/guest Auth sessions cannot use member endpoints.
+- Database tables remain inaccessible to browser roles; only trusted server routes use service role after verifying identity and scope.
 
-Every endpoint requires an `Authorization: Bearer <Supabase access token>` header. The server validates the token with Supabase Auth through `resolveAuthenticatedPlayer()`. The canonical conversation owner is the verified `auth.user.id`; request-body owner IDs and sender roles are never accepted.
+## Member endpoints
+- `GET /api/contact-center/conversations?page=1&limit=25`: returns only the verified member's conversations, newest activity first; limit capped at 50.
+- `POST /api/contact-center/conversations`: creates conversation and first message atomically. Body: `{ "subject": "...", "category": "general", "message": "..." }`. Categories: `general`, `account`, `technical`, `report`, `partnership`. Subject 1–120 chars, message 1–5000 chars; creation capped at three per account per ten minutes.
+- `GET /api/contact-center/conversations/{id}/messages?page=1&limit=50`: owner-checked history; page size capped at 100.
+- `POST /api/contact-center/conversations/{id}/messages`: member follow-up. Atomic transaction verifies ownership/open status, inserts message, sets `waiting_for_admin`, and notifies every current admin. Member reply rate capped at 20 per conversation per ten minutes.
 
-Anonymous/guest Auth sessions are not eligible to create or read private support conversations.
+## Admin endpoints
+- `GET /api/admin/contact-center/conversations?status=active&page=1&limit=25`: verified-admin queue. `active` includes `open`, `waiting_for_admin`, `waiting_for_member`; individual status filters and `closed` are supported. Limit capped at 100.
+- `GET /api/admin/contact-center/conversations?id={uuid}&page=1&limit=50`: returns conversation and paginated history; admin-only.
+- `POST /api/admin/contact-center/conversations`: admin reply. Body: `{ "conversationId": "uuid", "message": "..." }`. Transaction verifies admin membership, locks conversation, inserts reply, sets `waiting_for_member`, and notifies the conversation owner.
 
-## Endpoints
+## Transaction and notification semantics
+- Reply insert, conversation status/timestamps, and notification insert share one PostgreSQL transaction.
+- Closed conversations reject replies with HTTP 409.
+- Member replies notify only current rows in `admin_users`; if no admin exists, transaction rolls back.
+- Both directions use the existing `support_message_received` notification type.
+- RPCs are `SECURITY INVOKER`, use empty `search_path`, and EXECUTE is granted only to `service_role`.
+- Request body max 16000 chars; message max 5000 chars. All responses are non-cacheable.
 
-### `GET /api/contact-center/conversations?page=1&limit=25`
-
-Returns only conversations whose `owner_user_id` equals the verified Auth user ID. Results are ordered by most recently active first. Page size is capped at 50.
-
-### `POST /api/contact-center/conversations`
-
-JSON body:
-
-```json
-{
-  "subject": "Account access",
-  "category": "account",
-  "message": "I need help accessing my account."
-}
-```
-
-Allowed categories: `general`, `account`, `technical`, `report`, `partnership`. Subject length: 1–120 characters. Message length: 1–5000 characters.
-
-The database function `public.create_df_support_conversation` creates the conversation and first member message in one transaction. It uses a transaction-scoped advisory lock and limits each account to three new conversations per ten minutes. A limit response is HTTP 429.
-
-### `GET /api/contact-center/conversations/{id}/messages?page=1&limit=50`
-
-Returns the conversation metadata and its messages only after verifying that the conversation belongs to the authenticated member. Messages are ordered oldest first; page size is capped at 100.
-
-## Deliberate exclusions in Phase 2C
-
-- Admin replies and admin conversation management (Phase 2D).
-- Notifications and unread state (later member/admin notification integration).
-- Attachments, Realtime, and browser-direct Supabase table access.
-- Conversation close/reopen or member editing/deletion operations.
+## Not included yet
+Member/admin UI, notification inbox/read-state APIs, close/reopen controls, attachments, Realtime, and retention/export workflows.
