@@ -60,3 +60,10 @@
   .df-couple-confirm-actions button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .df-couple-confirm-backdrop { backdrop-filter: none; } }
+
+
+.df-couple-create-checking .df-couple-create-card { gap: 1rem; }
+.df-couple-checking-status { margin: 0; color: var(--df-text-secondary); font-size: .88rem; font-weight: 700; }
+.df-couple-checking-fields { display: grid; gap: .55rem; }
+.df-couple-checking-fields .ui-skeleton:nth-child(3) { margin-top: .4rem; }
+@media(prefers-reduced-motion:reduce) { .df-couple-create-checking .ui-skeleton { animation: none; } }
