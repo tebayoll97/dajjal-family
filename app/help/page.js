@@ -13,6 +13,7 @@ const copy = {
     noResultsHint: "Coba kata kunci lain atau hubungi tim dukungan kami.",
     contact: "Hubungi tim dukungan",
     contactUs: "Informasi kontak",
+    guidelines: "Pedoman Komunitas",
     clear: "Hapus pencarian",
     resultCount: (n) => `${n} jawaban ditemukan`,
     categories: [
@@ -46,6 +47,7 @@ const copy = {
     noResultsHint: "Try another keyword or contact our support team.",
     contact: "Contact support",
     contactUs: "Contact information",
+    guidelines: "Community Guidelines",
     clear: "Clear search",
     resultCount: (n) => `${n} answers found`,
     categories: [
@@ -171,6 +173,7 @@ export default async function HelpCenterPage({ searchParams }) {
         <div className="df-public-actions">
           <Link className="df-public-button df-public-button-primary" href={`/${locale}/contact-center`}>{t.contact}<span aria-hidden="true">↗</span></Link>
           <Link className="df-public-button df-public-button-secondary" href={`/${locale}/contact`}>{t.contactUs}</Link>
+          <Link className="df-public-button df-public-button-secondary" href={`/${locale}/community-guidelines`}>{t.guidelines}</Link>
         </div>
       </section>
     </main>
