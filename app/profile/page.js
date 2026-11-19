@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
 import AccountLogout from "../components/AccountLogout";
 import GameCharacter from "@/lib/GameCharacter";
