@@ -143,9 +143,6 @@ export default function CoupleProfileEditorPage() {
             <span aria-hidden="true">↗</span> {locale === "en" ? "Preview" : "Pratinjau"}
           </a>
         </div>
-        <p>{locale === "en"
-          ? "Choose a photo from your device, then press Upload. The photo will be uploaded to your Couple Profile folder in Google Drive."
-          : "Pilih foto langsung dari galeri perangkat, lalu tekan Upload. Foto akan diunggah ke folder Couple Profile di Google Drive."}</p>
         <p>{locale === "en" ? "Edit content directly on this page. Public address: " : "Edit konten langsung di halaman ini. Alamat publik: "}
           <a href={publicUrl} target="_blank" rel="noopener noreferrer">{publicUrl}</a>
         </p>
