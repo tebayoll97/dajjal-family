@@ -98,6 +98,7 @@ export default function ContactCenterAdmin() {
   async function markRead(item) {
     try {
       await request("/api/notifications", { method: "PATCH", body: JSON.stringify({ notificationId: item.id }) });
+      window.dispatchEvent(new Event("df:notifications-updated"));
       setNotifications((items) => items.map((n) => n.id === item.id ? { ...n, read_at: new Date().toISOString() } : n));
       setUnread((value) => Math.max(0, value - (item.read_at ? 0 : 1)));
       if (item.conversation_id) await loadDetail(item.conversation_id);
@@ -106,6 +107,7 @@ export default function ContactCenterAdmin() {
   async function markAll() {
     try {
       await request("/api/notifications", { method: "PATCH", body: JSON.stringify({ markAll: true }) });
+      window.dispatchEvent(new Event("df:notifications-updated"));
       setNotifications((items) => items.map((n) => ({ ...n, read_at: n.read_at || new Date().toISOString() })));
       setUnread(0);
     } catch (err) { setError(localizedError(err.message, t)); }

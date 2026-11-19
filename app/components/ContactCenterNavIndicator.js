@@ -23,8 +23,10 @@ export default function ContactCenterNavIndicator({ mode = "member" }) {
     const sync = async (session) => { currentSession = session; if (active) await refresh(session); };
     client.auth.getSession().then(({ data }) => { if (active) sync(data?.session || null); });
     const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => { if (active) sync(session || null); });
+    const onNotificationsUpdated = () => { if (active) refresh(currentSession); };
+    window.addEventListener("df:notifications-updated", onNotificationsUpdated);
     const interval = setInterval(() => { if (active) refresh(currentSession); }, 30000);
-    return () => { active = false; clearInterval(interval); subscription.unsubscribe(); };
+    return () => { active = false; clearInterval(interval); window.removeEventListener("df:notifications-updated", onNotificationsUpdated); subscription.unsubscribe(); };
   }, [client, refresh]);
   if (!count) return null;
   const label = count > 99 ? "99+" : String(count);

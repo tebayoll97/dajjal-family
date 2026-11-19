@@ -39,3 +39,10 @@ All responses: `Cache-Control: no-store`
 
 ## Not included
 Close/reopen controls, attachments, Realtime, email/push delivery, and retention/export workflows.
+
+
+## Message sender presentation — 2026-11-19
+
+- The admin conversation detail response may enrich each message with `sender_name` and `sender_avatar_url` resolved from the sender's linked `players` profile (`auth_user_id`). These are presentation fields only; the authoritative sender identity and role remain `sender_user_id` and `sender_role` from the server-side message row.
+- If a sender has no linked player profile, clients use a localized or generic avatar/name fallback. Never accept sender identity, display name, or avatar URL from message submission input.
+- The Contact Center navigation indicator reads the authenticated recipient's unread notification count through the existing `/api/notifications` endpoint. The browser refreshes periodically and reacts to the `df:notifications-updated` event after marking notifications read.
