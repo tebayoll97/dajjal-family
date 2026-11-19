@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
 
@@ -61,6 +62,8 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
   const [previewUrl, setPreviewUrl] = useState("");
   const [error, setError] = useState("");
   const inputRef = useRef(null);
+  const triggerRef = useRef(null);
+  const dialogRef = useRef(null);
   const uploadingRef = useRef(false);
   const en = locale === "en";
 
@@ -73,6 +76,41 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [selectedFile]);
+
+  useEffect(() => {
+    if (!editing) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 0);
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (!uploadingRef.current) cancelEditing();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll('button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])');
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      triggerRef.current?.focus();
+    };
+  }, [editing]);
 
   function chooseFile(event) {
     const file = event.target.files?.[0] || null;
@@ -106,6 +144,51 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
     setEditing(false);
   }
 
+  const uploadDialog = editing && typeof document !== "undefined" ? createPortal(
+    <div className="df-couple-upload-backdrop" onMouseDown={(event) => {
+      if (event.target === event.currentTarget && !uploadingRef.current) cancelEditing();
+    }}>
+      <section
+        ref={dialogRef}
+        className="df-couple-upload-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="df-couple-upload-title"
+        aria-describedby="df-couple-upload-ratio"
+      >
+        <div className="df-couple-upload-dialog-heading">
+          <h2 id="df-couple-upload-title">{en ? `Upload · ${label}` : `Upload · ${label}`}</h2>
+          <button type="button" className="df-couple-upload-close" onClick={cancelEditing} disabled={uploading} aria-label={en ? "Close upload window" : "Tutup jendela upload"}>×</button>
+        </div>
+        <label className="df-couple-upload-picker">
+          <span>{en ? "Choose a photo from your device" : "Pilih foto dari perangkat"}</span>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={chooseFile}
+            disabled={uploading}
+          />
+        </label>
+        <small id="df-couple-upload-ratio">{en ? `Recommended ratio ${recommendation} · JPG, PNG, WEBP or GIF · up to 12 MB` : `Rekomendasi ${recommendation} · JPG, PNG, WEBP atau GIF · maksimal 12 MB`}</small>
+        {selectedFile && (
+          <div className="df-couple-image-selected">
+            {previewUrl && <img src={previewUrl} alt={en ? "Selected photo preview" : "Pratinjau foto yang dipilih"} />}
+            <span>{selectedFile.name}</span>
+          </div>
+        )}
+        {error && <p className="df-couple-upload-error" role="alert">{error}</p>}
+        <div className="df-couple-upload-actions">
+          <button type="button" className="df-couple-upload-cancel" onClick={cancelEditing} disabled={uploading}>{en ? "Cancel" : "Batal"}</button>
+          <button type="button" className="df-couple-upload-submit" onClick={uploadSelected} disabled={!selectedFile || uploading}>
+            {uploading ? (en ? "Uploading…" : "Mengunggah…") : "Upload"}
+          </button>
+        </div>
+      </section>
+    </div>,
+    document.body
+  ) : null;
+
   return (
     <div className={`df-couple-image-slot ${className}`}>
       {fileId ? (
@@ -115,42 +198,11 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
       ) : (
         <div className="df-couple-image-empty">{editable ? (en ? `Add ${label}` : `Tambahkan ${label}`) : label}</div>
       )}
-      {editable && <button type="button" className="df-couple-pencil df-couple-image-pencil" title={en ? `Change ${label}` : `Ubah ${label}`} aria-label={en ? `Change ${label}` : `Ubah ${label}`} onClick={() => setEditing((current) => !current)} disabled={uploading}><Pencil /></button>}
-      {editing && (
-        <div className="df-couple-image-editor">
-          <label>
-            {en ? `Choose image · ${label}` : `Pilih foto · ${label}`}
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={chooseFile}
-              disabled={uploading}
-            />
-          </label>
-          <small>{en ? `Recommended ratio ${recommendation} · JPG, PNG, WEBP or GIF · up to 12 MB` : `Rekomendasi ${recommendation} · JPG, PNG, WEBP atau GIF · maksimal 12 MB`}</small>
-          {selectedFile && (
-            <div className="df-couple-image-selected">
-              {previewUrl && <img src={previewUrl} alt={en ? "Selected photo preview" : "Pratinjau foto yang dipilih"} />}
-              <span>{selectedFile.name}</span>
-            </div>
-          )}
-          <span className="df-couple-edit-actions">
-            <button type="button" onClick={() => inputRef.current?.click()} disabled={uploading}>
-              {en ? "Choose from gallery" : "Pilih dari galeri"}
-            </button>
-            <button type="button" onClick={uploadSelected} disabled={!selectedFile || uploading}>
-              {uploading ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Upload" : "Upload")}
-            </button>
-            <button type="button" className="df-couple-edit-cancel" onClick={cancelEditing} disabled={uploading}>{en ? "Cancel" : "Batal"}</button>
-          </span>
-          {error && <small role="alert">{error}</small>}
-        </div>
-      )}
+      {editable && <button ref={triggerRef} type="button" className="df-couple-pencil df-couple-image-pencil" title={en ? `Change ${label}` : `Ubah ${label}`} aria-label={en ? `Change ${label}` : `Ubah ${label}`} onClick={() => setEditing(true)} disabled={uploading}><Pencil /></button>}
+      {uploadDialog}
     </div>
   );
 }
-
 export default function CoupleProfileView({ profile, content, media = [], locale = "id", editable = false, onSave, onUpload }) {
   const en = locale === "en";
   const [time, setTime] = useState([0, 0, 0, 0]);
