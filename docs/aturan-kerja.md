@@ -103,3 +103,11 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Show recommended source-image ratios: cover/hero 3:4, each gallery image 3:4, and the two character portraits below the music player 1:1. These are recommendations, not server-side crop enforcement.
 - The editor's cover image uses `object-position: center top`, matching the public Dajjal × Veylora page.
 - The editor guidance explains the explicit Upload step and displays the current public Couple URL while retaining Copy Link and Preview actions.
+
+
+## Couple Profile — modal photo uploader and editor copy — 2026-11-19
+
+- All Couple Profile image editing opens one shared responsive modal rendered at the document root, not an absolutely positioned panel inside the portrait/card layout.
+- The modal provides a focused backdrop, accessible dialog semantics, keyboard focus containment, Escape handling, focus restoration, and body scroll locking. Closing is disabled during upload.
+- Image selection remains staged locally with preview; upload starts only on explicit Upload action. Prevent repeated submissions. Keep the modal and selected file open on failure; close after success.
+- Remove the introductory photo-upload instruction paragraph in both Indonesian and English from the editor. Retain the following paragraph with the dynamic public Couple URL, as well as Copy Link and Preview actions.
