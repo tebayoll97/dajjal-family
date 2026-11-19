@@ -9,6 +9,7 @@ const publicRoutes = [
   "/digital-products",
   "/business",
   "/community",
+  "/community-guidelines",
   "/about",
   "/contact",
   "/help",
