@@ -63,7 +63,7 @@ export default function ContactCenterAdmin() {
     let active = true;
     Promise.all([loadQueue(), loadInbox()]).catch((err) => { if (active) setError(localizedError(err.message, t)); });
     return () => { active = false; };
-  }, [ready, session, filter, loadQueue, loadInbox, router, t.error]);
+  }, [ready, session, filter, loadQueue, loadInbox, router, t]);
 
   const loadDetail = useCallback(async (id) => {
     setSelectedId(id); setError("");
@@ -71,7 +71,7 @@ export default function ContactCenterAdmin() {
       const result = await request(`/api/admin/contact-center/conversations?id=${id}&limit=100`);
       setConversation(result.conversation); setMessages(result.messages || []);
     } catch (err) { setError(localizedError(err.message, t)); }
-  }, [request, t.error]);
+  }, [request, t]);
 
   async function sendReply(event) {
     event.preventDefault();

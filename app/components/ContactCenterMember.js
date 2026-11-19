@@ -93,7 +93,7 @@ export default function ContactCenterMember() {
       setUnreadCount(inbox.unreadCount || 0);
     } catch (err) { if (err.message !== "AUTH_REQUIRED") setError(localizedError(err.message, t)); }
     finally { setLoading(false); }
-  }, [request, session, t.error]);
+  }, [request, session, t]);
 
   useEffect(() => { loadInbox(); }, [loadInbox]);
 
@@ -103,7 +103,7 @@ export default function ContactCenterMember() {
       const result = await request(`/api/contact-center/conversations/${id}/messages?limit=100`);
       setDetail(result.conversation); setMessages(result.messages || []);
     } catch (err) { setError(localizedError(err.message, t)); }
-  }, [request, t.error]);
+  }, [request, t]);
 
   async function submitCreate(event) {
     event.preventDefault();
