@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
+import CoupleImage from "@/app/components/CoupleImage";
 
 function durationSince(date) {
   if (!date) return [0, 0, 0, 0];
@@ -200,7 +201,7 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
     <div className={`df-couple-image-slot ${className}`}>
       {fileId ? (
         <button className="df-couple-image-open" type="button" onClick={() => openPhoto?.(coupleDriveImage(fileId, 1800), label)} aria-label={`Open ${label}`}>
-          <img src={coupleDriveImage(fileId, 1200)} alt={label} loading="lazy" />
+          <CoupleImage src={coupleDriveImage(fileId, 1200)} alt={label} width={1200} height={1600} loading="lazy" sizes="(max-width: 680px) 80vw, 360px" />
         </button>
       ) : (
         <div className="df-couple-image-empty">{editable ? (en ? `Add ${label}` : `Tambahkan ${label}`) : label}</div>
@@ -440,7 +441,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           <button className="df-couple-lightbox-backdrop" type="button" onClick={() => setActivePhoto(null)} aria-label={copy.closePhoto} />
           <div className="df-couple-lightbox-panel" role="dialog" aria-modal="true" aria-label={activePhoto.alt} onClick={(event) => event.stopPropagation()}>
             <button className="df-couple-lightbox-close" type="button" onClick={() => setActivePhoto(null)} aria-label={copy.closePhoto}>×</button>
-            <img src={activePhoto.src} alt={activePhoto.alt} /><p>{activePhoto.alt}</p>
+            <CoupleImage src={activePhoto.src} alt={activePhoto.alt} width={1800} height={2400} loading="eager" sizes="(max-width: 768px) 96vw, 80vw" /><p>{activePhoto.alt}</p>
           </div>
         </div>
       )}
