@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "./LanguageProvider";
 
@@ -105,7 +106,7 @@ export default function ContactCenterAdmin() {
   return (
     <main className="df-support-page df-support-admin">
       <header className="df-support-hero"><span>DAJJAL FAMILY / ADMIN</span><h1>{t.title}</h1><p>{t.lead}</p></header>
-      <div className="df-support-admin-actions"><a href="/admin" className="df-support-link-button">← {t.back}</a><span>{unread} {t.inbox.toLowerCase()}</span></div>
+      <div className="df-support-admin-actions"><Link href="/admin" className="df-support-link-button">← {t.back}</Link><span>{unread} {t.inbox.toLowerCase()}</span></div>
       {error && <p className="df-support-alert" role="alert">{error}</p>}
       <section className="df-support-panel df-support-notifications">
         <div className="df-support-section-head"><div><span className="df-support-kicker">{t.inbox}</span><h2>{t.inbox} {unread > 0 && <span className="df-support-count">{unread}</span>}</h2></div>{unread > 0 && <button type="button" className="df-support-link-button" onClick={markAll}>{t.markAll}</button>}</div>
