@@ -111,3 +111,11 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - The modal provides a focused backdrop, accessible dialog semantics, keyboard focus containment, Escape handling, focus restoration, and body scroll locking. Closing is disabled during upload.
 - Image selection remains staged locally with preview; upload starts only on explicit Upload action. Prevent repeated submissions. Keep the modal and selected file open on failure; close after success.
 - Remove the introductory photo-upload instruction paragraph in both Indonesian and English from the editor. Retain the following paragraph with the dynamic public Couple URL, as well as Copy Link and Preview actions.
+
+
+## Couple Profile — mobile modal alignment and editable gallery titles — 2026-11-19
+
+- The shared image-upload modal is centered both vertically and horizontally on mobile and desktop. Mobile must not use bottom-sheet alignment. Keep the dialog within the viewport safe area; allow the dialog content itself to scroll when needed.
+- Each of the six gallery slots has its own editable title stored in the bilingual Couple content JSON as `gallery_1_title` through `gallery_6_title`.
+- Gallery titles use the existing `EditableText` interaction and existing server-side Gemini translation flow. Editing in Indonesian updates English; editing in English updates Indonesian. Do not create a separate table or migration for these fields.
+- Public and editor gallery captions display the title matching the active locale. Empty/legacy values fall back to the localized “Kenangan N” / “Memory N” label.
