@@ -1197,3 +1197,21 @@
   overflow-wrap: anywhere; text-align: center;
 }
 /* Gallery title edit button inherits the same visual treatment as other pencil controls. */
+
+
+.df-couple-editor-loading .df-couple-loading-status { margin: 0 0 1rem; color: var(--df-text-secondary); font-size: .85rem; font-weight: 700; text-align: center; }
+.df-couple-loading-hero { display: grid; justify-items: center; gap: 1rem; padding: clamp(1.5rem, 5vw, 3.5rem); border: 1px solid color-mix(in srgb, var(--couple-primary) 30%, var(--df-border)); border-radius: 1.5rem; background: linear-gradient(145deg, var(--couple-surface-raised), var(--couple-surface)); box-shadow: var(--df-shadow-lg); }
+.df-couple-loading-center { justify-self: center; }
+.df-couple-loading-section { display: grid; gap: 1rem; margin-top: clamp(2rem, 5vw, 3.5rem); }
+.df-couple-loading-two-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.df-couple-loading-card { display: grid; gap: 1rem; min-width: 0; padding: 1.1rem; border: 1px solid var(--df-border); border-radius: 1rem; background: var(--couple-surface); }
+.df-couple-loading-card-row { display: flex; align-items: center; gap: 1rem; }
+.df-couple-loading-lines { display: grid; flex: 1; gap: .55rem; min-width: 0; }
+.df-couple-loading-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; }
+.df-couple-loading-gallery .ui-skeleton { aspect-ratio: 3 / 4; height: auto !important; }
+@media(max-width:680px) {
+ .df-couple-loading-two-cards { grid-template-columns: minmax(0, 1fr); }
+ .df-couple-loading-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .df-couple-loading-hero { border-radius: 1rem; padding: 1.25rem .9rem; }
+}
+@media(prefers-reduced-motion:reduce) { .df-couple-editor-loading .ui-skeleton { animation: none; } }
