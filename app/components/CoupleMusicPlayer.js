@@ -465,6 +465,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
           <div className="df-couple-music-title-group" key={"title-" + index}>
             <h3>{track.title}</h3>
             <p className="df-couple-music-artist">{track.artist}</p>
+            {(track.genre || track.mood) && <p className="df-couple-music-characteristics">{[track.genre, track.mood].filter(Boolean).join(" · ")}</p> }
           </div>
 
           <div className="df-couple-music-progress">
