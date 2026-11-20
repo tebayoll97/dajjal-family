@@ -173,3 +173,9 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Preserve approved isolated Couple, Wedding, and immersive Games scopes.
 - Implement incrementally; no blanket redesign or broad CSS override. Validate both presets, Light/Dark, ID/EN, mobile/tablet/desktop, long labels, zoom, keyboard/focus, contrast, and accessibility.
 - Canonical specification: Akashic Record dajjal-family/core/global_typography.md. Keep synchronized with docs/foundation/MASTER_FOUNDATION.md, docs/foundation/COMMAND_MASTER.md, and Akashic operating rules.
+
+
+## Typography migration checkpoint — 2026-11-20
+- First focused migration is committed to main at `603fa92e0b39c962283a65410a8fa9dcf23907ac`: semantic typography/weight tokens, reusable utilities, Global Navigation Drawer roles, and desktop workspace sidebar roles.
+- Do not treat all legacy/page-specific font sizes as migrated; audit and convert incrementally.
+- Vercel deployment for this commit was blocked by HTTP 402 `api-deployments-free-per-day`. Build, production release, and live visual QA are unverified until a matching deployment is READY and inspected.
