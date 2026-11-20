@@ -371,3 +371,80 @@
 @media (max-width: 620px) {
   .df-site-footer .df-site-brand-mark { width: 38px; height: 38px; }
 }
+
+
+/* Mobile Compact UI — density overrides for the global navigation drawer.
+   Desktop workspace sidebar remains unchanged. */
+@media (max-width:760px) {
+  .df-site-navigation-pane {
+    width:min(84vw,340px);
+    max-width:340px;
+    padding-top:max(.65rem,env(safe-area-inset-top));
+    padding-right:.65rem;
+    padding-bottom:max(.55rem,env(safe-area-inset-bottom));
+    padding-left:.65rem;
+  }
+  .df-site-navigation-top {
+    min-height:40px;
+    padding-bottom:.45rem;
+    gap:.5rem;
+  }
+  .df-site-navigation-brand-group { gap:.5rem; }
+  .df-site-navigation-brand-group img {
+    width:29px;
+    height:29px;
+    border-radius:8px;
+  }
+  .df-site-navigation-close {
+    width:36px;
+    height:36px;
+    border-radius:8px;
+    font-size:1.35rem;
+  }
+  .df-site-navigation-content { padding:.5rem 0 .55rem; }
+  .df-navigation-profile-card {
+    min-height:54px;
+    margin-bottom:.55rem;
+    padding:.45rem .55rem;
+    gap:.55rem;
+    border-radius:9px;
+  }
+  .df-navigation-profile-avatar {
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+  }
+  .df-navigation-profile-copy { gap:2px; }
+  .df-site-navigation-heading {
+    margin:.15rem .45rem .35rem;
+    letter-spacing:.12em;
+  }
+  .df-site-navigation-groups { gap:.25rem; }
+  .df-site-navigation-group { border-radius:8px; }
+  .df-site-navigation-group-trigger,
+  .df-site-navigation-home {
+    min-height:38px;
+    gap:.55rem;
+    padding:.4rem .55rem;
+  }
+  .df-site-navigation-group-trigger svg { width:17px; height:17px; }
+  .df-site-navigation-chevron { width:15px; height:15px; min-width:15px; flex-basis:15px; }
+  .df-site-navigation-submenu[data-expanded="true"] {
+    gap:0;
+    padding:.12rem .3rem .25rem;
+  }
+  .df-site-navigation-submenu[data-expanded="true"]>a {
+    min-height:34px;
+    padding:.32rem .5rem .32rem 2.05rem;
+  }
+  .df-site-navigation-footer {
+    gap:.18rem;
+    padding-top:.45rem;
+  }
+}
+@media (max-width:360px) {
+  .df-site-navigation-pane { width:88vw; }
+  .df-site-navigation-group-trigger,
+  .df-site-navigation-home { min-height:36px; }
+  .df-site-navigation-submenu[data-expanded="true"]>a { min-height:32px; }
+}
