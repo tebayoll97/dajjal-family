@@ -49,7 +49,10 @@ export async function PATCH(request, { params }) {
       if (!Number.isInteger(Number(body.durationSeconds)) || Number(body.durationSeconds) < 1 || Number(body.durationSeconds) > 900) return fail("Audio duration must be 1–900 seconds.");
       Object.assign(update, { audio_drive_file_id: body.audio.id, audio_original_name: String(body.audio.originalName || "").slice(0,255), audio_mime_type: body.audio.mimeType, audio_size_bytes: Number(body.audio.size), audio_duration_seconds: Number(body.durationSeconds), status: "draft", published_at: null, rights_confirmed_at: null, rights_confirmed_by: null });
     }
-    if (body.cover?.id) Object.assign(update, { cover_drive_file_id: body.cover.id, cover_mime_type: body.cover.mimeType, cover_size_bytes: Number(body.cover.size) });
+    if (body.cover?.id) {
+      if (!["image/jpeg","image/png","image/webp"].includes(body.cover.mimeType) || Number(body.cover.size) > 5242880) return fail("Cover must be JPG, PNG, or WebP and at most 5 MB.");
+      Object.assign(update, { cover_drive_file_id: body.cover.id, cover_mime_type: body.cover.mimeType, cover_size_bytes: Number(body.cover.size) });
+    }
     if (body.removeCover === true) Object.assign(update, { cover_drive_file_id: null, cover_mime_type: null, cover_size_bytes: null });
   } else return fail("Unknown action.");
   const { data, error } = await supabaseAdmin.from("df_music_library").update(update).eq("id", id).select(SAFE_FIELDS).single();
