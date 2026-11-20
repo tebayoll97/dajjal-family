@@ -630,3 +630,10 @@ The approved Global Typography System is the shared source of font families, sem
 - QA both global presets, Light/Dark, ID/EN, mobile/tablet/desktop, long labels, zoom/text scaling, keyboard/focus, contrast, and accessibility. Report implementation, build, browser QA, and deployment as separate statuses.
 
 Canonical specification: Akashic Record dajjal-family/core/global_typography.md. Keep synchronized with Master Foundation, docs/aturan-kerja.md, and the Akashic operating rules.
+
+
+### 23.1 First migration checkpoint — 2026-11-20
+- First implementation slice committed on main: `603fa92e0b39c962283a65410a8fa9dcf23907ac`.
+- Scope: semantic typography/weight tokens, reusable semantic utility roles, Global Navigation Drawer typography, and desktop workspace sidebar typography.
+- Legacy/page-specific font declarations are not yet fully migrated; continue with consumer audits and incremental conversion.
+- Vercel deployment for this commit returned HTTP 402 `api-deployments-free-per-day`. Build, deployment, and live visual QA remain unverified. Do not claim production release until a matching deployment is READY and inspected.
