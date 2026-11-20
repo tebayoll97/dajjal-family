@@ -418,13 +418,12 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
 
   return (
     <section className="df-couple-music-player" id="df-couple-music-player" aria-labelledby="df-couple-music-title">
-      <div className="df-couple-music-heading">
-        <p className="df-couple-eyebrow">{t.eyebrow}</p>
-        <h2 id="df-couple-music-title">{t.title}</h2>
-        <p>{t.intro}</p>
-      </div>
-
       <div className="df-couple-music-card" data-track-theme={track.theme}>
+        <div className="df-couple-music-heading">
+          <p className="df-couple-eyebrow">{t.eyebrow}</p>
+          <h2 id="df-couple-music-title">{t.title}</h2>
+          <p>{t.intro}</p>
+        </div>
         <div className="df-couple-music-artwork" key={"cover-" + index}>
           <img src={track.cover} alt={track.title + " — " + track.artist + " cover"} />
           <span aria-hidden="true">DF MUSIC</span>
