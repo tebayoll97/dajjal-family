@@ -148,3 +148,16 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Keep lightbox images optimized as well. Do not add an independent image proxy, Supabase binary storage, custom cache table, or second CDN layer without a separate architecture review.
 - After implementation, verify direct image loading on the Edit and Public Couple Profile routes first, then /df/couple, upload-and-replace cache busting, and mobile/desktop layout. Any future CDN/proxy implementation must be tested against actual Google Drive redirects and image responses before enabling optimization again. A successful build alone is not proof that upstream image fetch works.
 
+
+
+## Global responsive presentation — Mobile Compact UI (2026-11-20)
+
+- Owner-approved direction: use **Mobile Compact UI** as the default mobile presentation/density standard for future Dajjal Family website work and incremental refinements of existing pages.
+- Mobile Compact UI is a responsive layout layer, not a replacement for Master Foundation, Design System, or Global Theme Preset Engine. The active global preset and semantic design tokens remain the source of global visual identity.
+- Do not introduce a parallel theme, page-local brand palette, or hardcoded identity colors. Preserve approved isolated scopes for Couple, Wedding, and immersive Games; apply compact principles only where compatible with their approved experience.
+- On mobile, reduce unnecessary whitespace, oversized padding/cards, and excessive vertical stacking. Keep typography readable, controls clearly labeled, touch targets accessible, and all existing functionality available.
+- Prefer compact wrapping chips for short filters and progressive disclosure (collapsible groups/filter surfaces) for secondary controls. Prevent unintended horizontal overflow.
+- Preserve desktop layouts; use established responsive breakpoints and migrate incrementally. This rule does not authorize a whole-site redesign or automatic modification of every existing page.
+- Validate applicable Global Theme Presets, Light/Dark, ID/EN, small Android/mobile widths, tablet/desktop, keyboard/focus, contrast, reduced motion, long translations, and loading/empty/error states.
+- Detailed standard is maintained in Akashic Record at `dajjal-family/core/mobile_compact_ui.md`. Keep this rule synchronized with `docs/foundation/COMMAND_MASTER.md` and `docs/foundation/MASTER_FOUNDATION.md`.
+- This is a design-system decision; it does not itself claim that any page has been implemented or visually QA-verified.
