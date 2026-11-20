@@ -1215,3 +1215,31 @@
  .df-couple-loading-hero { border-radius: 1rem; padding: 1.25rem .9rem; }
 }
 @media(prefers-reduced-motion:reduce) { .df-couple-editor-loading .ui-skeleton { animation: none; } }
+
+
+/* Music panel batch editor and selected-catalog preview */
+.df-couple-music-section { position: relative; min-width: 0; }
+.df-couple-music-section > .df-couple-music-player { margin-top: clamp(2rem, 5vw, 3.5rem); }
+.df-couple-batch-fields select {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--df-border);
+  border-radius: .65rem;
+  background: var(--couple-surface-raised);
+  color: var(--df-text);
+  font: inherit;
+  font-weight: 500;
+}
+.df-couple-batch-music-preview {
+  display: grid;
+  gap: .2rem;
+  padding: .75rem .85rem;
+  border: 1px solid color-mix(in srgb, var(--couple-primary) 28%, var(--df-border));
+  border-radius: .7rem;
+  background: var(--couple-primary-soft);
+  color: var(--df-text);
+}
+.df-couple-batch-music-preview strong { font-size: .9rem; }
+.df-couple-batch-music-preview span { color: var(--df-text-secondary); font-size: .8rem; }
+.df-couple-batch-music-preview small { text-align: left; }
