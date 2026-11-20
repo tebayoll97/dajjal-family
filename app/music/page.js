@@ -202,7 +202,7 @@ export default function PublicMusicPage() {
                 <div className="music-public-title-group">
                   <div className="music-public-title-row">
                     <div className={"music-public-title-marquee" + ((activeTrack?.title || t.title).length > 24 ? " is-long" : "")}>
-                      <h2 key={activeTrack?.id || "empty"}>{activeTrack?.title || t.title}</h2>
+                      <h2 key={activeTrack?.id || "empty"}><span>{activeTrack?.title || t.title}</span><span aria-hidden="true">{activeTrack?.title || t.title}</span></h2>
                     </div>
                     <button className={"music-public-favorite" + (activeTrack && favoriteIds.includes(activeTrack.id) ? " is-favorite" : "")} type="button" onClick={toggleFavorite} disabled={!activeTrack} aria-label="Toggle favorite">
                       {activeTrack && favoriteIds.includes(activeTrack.id) ? "♥" : "♡"}
