@@ -45,7 +45,8 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Halaman referensi `/df/couple` mempertahankan CSS khusus dan identitas visualnya; tidak dipindahkan ke Global Theme Preset Engine.
 - Halaman Create Couple Profile, Editor, dan publik Couple Profile menggunakan semantic tokens dari Global Theme Preset Engine.
 - Editor menggunakan komponen tampilan yang sama dengan halaman publik, dengan inline edit per elemen.
-- Elemen editable meliputi nama, foto cover, dua potret, role, deskripsi, subtitle, intro, anniversary, cerita, dan signature.
+- Elemen editable meliputi nama, foto cover, dua potret, role, deskripsi, subtitle, intro, Hari Jadi, cerita, dan signature.
+- Hari Jadi memakai input tanggal kalender lalu input jam terpisah; keduanya disimpan sebagai satu timestamp UTC `relationship_start_at`. Stopwatch menghitung durasi berlalu sejak timestamp tersebut. Field lama hanya dibaca untuk kompatibilitas data, sedangkan penyimpanan baru memakai field Hari Jadi. Halaman referensi statis `/df/couple` tidak termasuk perubahan ini.
 - Galeri mendukung maksimal enam foto Google Drive File ID dan Lightbox. Fitur Whisper/gambar ketujuh tidak digunakan.
 - Media disimpan pada slot `gallery_1` sampai `gallery_6`; file Drive asli tidak dihapus saat referensi diganti atau profil di-reset.
 
