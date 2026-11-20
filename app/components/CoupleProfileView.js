@@ -211,12 +211,55 @@ function EditableImage({ fileId, label, editable, onUpload, className = "", open
     </div>
   );
 }
+
+const BATCH_PANEL_FIELDS = {
+  hero: [
+    { key: "maleNickname", source: "profile", label: "Nama pasangan 1", max: 40 },
+    { key: "femaleNickname", source: "profile", label: "Nama pasangan 2", max: 40 },
+    { key: "subtitle", label: "Subtitle", max: 220 }, { key: "intro", label: "Intro", multiline: true },
+    { key: "anniversary_label", label: "Label anniversary", max: 220 },
+    { key: "anniversaryDate", source: "profile", label: "Tanggal anniversary", type: "date" },
+  ],
+  identity: [
+    { key: "identity_label", label: "Label panel", max: 220 }, { key: "male_role", label: "Role pasangan 1", max: 220 },
+    { key: "male_description", label: "Deskripsi pasangan 1", multiline: true }, { key: "female_role", label: "Role pasangan 2", max: 220 },
+    { key: "female_description", label: "Deskripsi pasangan 2", multiline: true },
+  ],
+  gallery: [
+    { key: "gallery_eyebrow", label: "Eyebrow", max: 220 }, { key: "gallery_title", label: "Judul panel", max: 220 },
+    { key: "gallery_intro", label: "Intro galeri", multiline: true }, { key: "gallery_label", label: "Label galeri", max: 220 },
+    ...Array.from({ length: 6 }, (_, index) => ({ key: `gallery_${index + 1}_title`, label: `Judul foto ${index + 1}`, max: 220 })),
+  ],
+  story: [
+    { key: "story_eyebrow", label: "Eyebrow", max: 220 }, { key: "story_title", label: "Judul cerita", max: 220 },
+    { key: "story_text", label: "Isi cerita", multiline: true }, { key: "signature", label: "Signature", multiline: true },
+  ],
+};
+function BatchPanelEdit({ panel, locale, draft, setDraft, onSave, onClose, saving, error }) {
+  const en = locale === "en";
+  const title = ({ hero: en ? "Main profile" : "Profil utama", identity: en ? "Couple identity" : "Identitas pasangan", gallery: en ? "Memories" : "Kenangan", story: en ? "Our story" : "Kisah kita" })[panel];
+  return <div className="df-couple-batch-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
+    <section className="df-couple-batch-dialog" role="dialog" aria-modal="true" aria-labelledby="df-couple-batch-title">
+      <div className="df-couple-batch-heading"><div><p className="df-couple-eyebrow">{en ? "PANEL EDITOR" : "EDITOR PANEL"}</p><h2 id="df-couple-batch-title">{title}</h2><p>{en ? "Edit fields, then save this panel once." : "Ubah kolom, lalu simpan panel ini sekali."}</p></div><button type="button" onClick={onClose} disabled={saving} aria-label={en ? "Close" : "Tutup"}>×</button></div>
+      <div className="df-couple-batch-fields">{(BATCH_PANEL_FIELDS[panel] || []).map((field) => { const value = draft[field.key] ?? ""; return <label key={field.key}>{en ? field.label : field.label}
+        {field.multiline ? <textarea rows={4} maxLength={3000} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} /> : <input type={field.type || "text"} maxLength={field.max} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} />}
+        {field.max && <small>{value.length}/{field.max}</small>}</label>; })}</div>
+      {error && <p className="df-couple-gamer-error" role="alert">{error}</p>}
+      <div className="df-couple-gamer-actions"><button type="button" onClick={onClose} disabled={saving}>{en ? "Cancel" : "Batal"}</button><button type="button" onClick={onSave} disabled={saving}>{saving ? (en ? "Saving…" : "Menyimpan…") : (en ? "Save panel" : "Simpan panel")}</button></div>
+    </section>
+  </div>;
+}
+
 export default function CoupleProfileView({ profile, content, media = [], locale = "id", editable = false, onSave, onUpload }) {
   const en = locale === "en";
   const [time, setTime] = useState([0, 0, 0, 0]);
   const [activePhoto, setActivePhoto] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [gamerEditorOpen, setGamerEditorOpen] = useState(false);
+  const [batchPanel, setBatchPanel] = useState("");
+  const [batchDraft, setBatchDraft] = useState({});
+  const [batchSaving, setBatchSaving] = useState(false);
+  const [batchError, setBatchError] = useState("");
   const [gamerDraft, setGamerDraft] = useState({});
   const [gamerSaving, setGamerSaving] = useState(false);
   const [gamerError, setGamerError] = useState("");
@@ -277,10 +320,30 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     });
     setActiveMoment((current) => current === nearest ? current : nearest);
   };
+  const openBatchPanel = (panel) => {
+    const draft = {};
+    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : item.key === "femaleNickname" ? profile.female_nickname : profile.anniversary_date || "") : (content[item.key] || "");
+    setBatchDraft(draft); setBatchError(""); setBatchPanel(panel);
+  };
+  const saveBatchPanel = async () => {
+    if (batchSaving || !batchPanel) return;
+    setBatchSaving(true); setBatchError("");
+    try {
+      const change = { content: {}, profile: {} };
+      for (const item of BATCH_PANEL_FIELDS[batchPanel] || []) {
+        if (item.source === "profile") change.profile[item.key] = batchDraft[item.key] || (item.key === "anniversaryDate" ? null : "");
+        else change.content[item.key] = batchDraft[item.key] || "";
+      }
+      if (!Object.keys(change.content).length) delete change.content;
+      if (!Object.keys(change.profile).length) delete change.profile;
+      await onSave?.(change); setBatchPanel("");
+    } catch (error) { setBatchError(error.message || (en ? "Unable to save this panel." : "Panel gagal disimpan.")); }
+    finally { setBatchSaving(false); }
+  };
   const saveContent = (key, value) => onSave?.({ content: { [key]: value } });
   const saveProfile = (key, value) => onSave?.({ profile: { [key]: value } });
   const field = (key, label, options = {}) => (
-    <EditableText value={content[key]} label={label} editable={editable} onSave={(value) => saveContent(key, value)} {...options} />
+    <EditableText value={content[key]} label={label} editable={editable && !batchPanel} onSave={(value) => saveContent(key, value)} {...options} />
   );
   const openPhoto = (src, alt) => setActivePhoto({ src, alt });
   const renderGalleryItem = ({ slot, index, fileId }) => {
@@ -302,7 +365,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           <EditableText
             value={galleryTitle}
             label={(en ? "Photo " : "Foto ") + (index + 1) + (en ? " title" : " — judul")}
-            editable={editable}
+            editable={editable && !batchPanel}
             onSave={(value) => saveContent(titleKey, value)}
             className="df-couple-gallery-title-edit"
             placeholder={en ? "Add photo title" : "Tambahkan judul foto"}
@@ -316,11 +379,12 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     <main className="df-couple-profile-page">
       <div className="df-couple-shell">
         <header className="df-couple-hero" id="df-couple-home">
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("hero")} aria-label={en ? "Edit main profile panel" : "Edit panel profil utama"}><Pencil /></button>}
           <p className="df-couple-eyebrow">{copy.eyebrow}</p>
           <h1 className="df-couple-title">
-            <EditableText value={profile.male_nickname} label="Male name" editable={editable} onSave={(value) => saveProfile("maleNickname", value)} />
+            <EditableText value={profile.male_nickname} label="Male name" editable={editable && !batchPanel} onSave={(value) => saveProfile("maleNickname", value)} />
             <span className="df-couple-connector" aria-hidden="true">×</span>
-            <EditableText value={profile.female_nickname} label="Female name" editable={editable} onSave={(value) => saveProfile("femaleNickname", value)} />
+            <EditableText value={profile.female_nickname} label="Female name" editable={editable && !batchPanel} onSave={(value) => saveProfile("femaleNickname", value)} />
           </h1>
           <div className="df-couple-editable-block df-couple-subtitle">{field("subtitle", "Subtitle")}</div>
           <div className="df-couple-editable-block df-couple-intro">{field("intro", "Introduction", { multiline: true })}</div>
@@ -336,7 +400,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </section>}
           {editable && (
             <div className="df-couple-date-edit">
-              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable inputType="date" onSave={(value) => saveProfile("anniversaryDate", value || null)} />
+              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable={editable && !batchPanel} inputType="date" onSave={(value) => saveProfile("anniversaryDate", value || null)} />
             </div>
           )}
         </header>
@@ -345,6 +409,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
 
         <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
           <div className="df-couple-content-panel">
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("identity")} aria-label={en ? "Edit couple identity panel" : "Edit panel identitas pasangan"}><Pencil /></button>
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("identity_label", "Identity section label")}</p>
             <h2 id="df-couple-identities">
@@ -429,6 +494,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         )}
         <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
           <div className="df-couple-content-panel">
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("gallery")} aria-label={en ? "Edit memories panel" : "Edit panel kenangan"}><Pencil /></button>
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("gallery_eyebrow", "Gallery eyebrow")}</p>
             <h2 id="df-couple-gallery-title">{field("gallery_title", "Gallery title")}</h2>
@@ -456,6 +522,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         </section>
 
         <section className="df-couple-story" id="df-couple-story" aria-labelledby="df-couple-story-title">
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("story")} aria-label={en ? "Edit story panel" : "Edit panel cerita"}><Pencil /></button>}
           <div className="df-couple-story-symbol" aria-hidden="true">♡</div>
           <div className="df-couple-story-copy">
             <p className="df-couple-eyebrow">{field("story_eyebrow", "Story eyebrow")}</p>
@@ -492,6 +559,8 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </section>
         </div>
       )}
+
+      {editable && batchPanel && <BatchPanelEdit panel={batchPanel} locale={locale} draft={batchDraft} setDraft={setBatchDraft} onSave={saveBatchPanel} onClose={() => { if (!batchSaving) setBatchPanel(""); }} saving={batchSaving} error={batchError} />}
 
       {activePhoto && (
         <div className="df-couple-lightbox" role="presentation" onClick={() => setActivePhoto(null)}>
