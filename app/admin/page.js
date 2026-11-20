@@ -25,6 +25,8 @@ const copy = {
     galleryDesc: "Upload, organize, publish, and manage wedding photos.",
     storage: "Central Storage",
     storageDesc: "Connect Google Drive and manage the platform storage provider.",
+    music: "Music Library",
+    musicDesc: "Upload, organize, preview, and publish the music catalog.",
     open: "OPEN MODULE",
     coming: "COMING SOON",
     quick: "QUICK ACCESS",
@@ -57,6 +59,8 @@ const copy = {
     galleryDesc: "Upload, susun, publikasikan, dan kelola foto pernikahan.",
     storage: "Penyimpanan Terpusat",
     storageDesc: "Hubungkan Google Drive dan kelola penyimpanan platform.",
+    music: "Music Library",
+    musicDesc: "Upload, susun, preview, dan kelola katalog musik.",
     open: "BUKA MENU",
     coming: "SEGERA HADIR",
     quick: "AKSES CEPAT",
@@ -178,6 +182,7 @@ export default function AdminDashboardPage() {
 
   const modules = [
     { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true, accent: "from-violet-500/20 via-fuchsia-500/5" },
+    { href: "/admin/music", icon: "♫", number: "06", title: t.music, description: t.musicDesc, available: true, accent: "from-purple-500/20 via-cyan-500/5" },
     {
       href: "/admin/players",
       icon: "👥",
@@ -285,7 +290,7 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">08 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">09 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
