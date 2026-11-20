@@ -42,7 +42,11 @@ const getPublishedCoupleProfile = cache(async (slug, locale) => {
     throw new Error("Unable to load Couple Profile details.");
   }
 
-  return { profile, content, media: media || [] };
+  const storedContent = content?.content || {};
+  const compatibleContent = { ...storedContent };
+  if (!Object.prototype.hasOwnProperty.call(compatibleContent, "relationship_start_at")) compatibleContent.relationship_start_at = storedContent.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00:00.000Z" : "");
+  if (!Object.prototype.hasOwnProperty.call(compatibleContent, "relationship_label")) compatibleContent.relationship_label = storedContent.anniversary_label || COUPLE_CONTENT_DEFAULTS[locale].relationship_label;
+  return { profile, content: content ? { ...content, content: compatibleContent } : null, media: media || [] };
 });
 
 async function getRequestLocale() {
