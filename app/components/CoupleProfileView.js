@@ -6,6 +6,20 @@ import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
 import CoupleImage from "@/app/components/CoupleImage";
 
+function toLocalDateTimeInput(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (number) => String(number).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function fromLocalDateTimeInput(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+}
+
 function durationSince(date) {
   if (!date) return [0, 0, 0, 0];
   const elapsed = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
@@ -333,7 +347,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   };
   const openBatchPanel = (panel) => {
     const draft = {};
-    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : profile.female_nickname) : (item.key === "anniversary_datetime" ? (content.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "")) : (content[item.key] || ""));
+    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : profile.female_nickname) : (item.key === "anniversary_datetime" ? (content.anniversary_datetime ? toLocalDateTimeInput(content.anniversary_datetime) : (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "")) : (content[item.key] || ""));
     setBatchDraft(draft); setBatchError(""); setBatchPanel(panel);
   };
   const saveBatchPanel = async () => {
@@ -348,7 +362,10 @@ export default function CoupleProfileView({ profile, content, media = [], locale
       if (!Object.keys(change.content).length) delete change.content;
       if (batchPanel === "hero" && Object.prototype.hasOwnProperty.call(batchDraft, "anniversary_datetime")) {
         const dateTime = batchDraft.anniversary_datetime || "";
-        change.profile.anniversaryDate = dateTime ? dateTime.slice(0, 10) : null;
+        const anniversaryTimestamp = fromLocalDateTimeInput(dateTime);
+        if (dateTime && !anniversaryTimestamp) throw new Error(en ? "Please enter a valid anniversary date and time." : "Masukkan tanggal dan jam anniversary yang valid.");
+        change.content.anniversary_datetime = anniversaryTimestamp;
+        change.profile.anniversaryDate = anniversaryTimestamp ? anniversaryTimestamp.slice(0, 10) : null;
       }
       if (!Object.keys(change.profile).length) delete change.profile;
       await onSave?.(change); setBatchPanel("");
