@@ -90,3 +90,16 @@
 .df-global-sidebar-submenu a:hover,.df-global-sidebar-submenu a[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
 .df-global-sidebar-active{color:var(--df-primary);font-size:9px}
 @media(max-width:900px){.df-global-sidebar-profile{margin-top:-22px}.df-global-sidebar-home,.df-global-sidebar-trigger{gap:8px;padding-inline:8px;font-size:10.5px}.df-global-sidebar-submenu{padding-left:22px}.df-global-sidebar-submenu a{font-size:9.5px}}
+
+/* Global Typography System — desktop workspace navigation role variants. */
+.df-global-sidebar-brand strong{font-size:var(--df-type-nav-brand-size)}
+.df-global-sidebar-brand small,
+.df-global-sidebar-heading{font-size:var(--df-type-sidebar-meta-size)}
+.df-global-sidebar-home,
+.df-global-sidebar-trigger,
+.df-global-sidebar-group nav a{font-size:var(--df-type-sidebar-label-size)}
+.df-global-sidebar-submenu a{font-size:var(--df-type-sidebar-submenu-size)}
+.df-global-sidebar-profile .df-navigation-profile-copy strong{font-size:var(--df-type-sidebar-label-size)}
+.df-global-sidebar-profile .df-navigation-profile-copy small{font-size:var(--df-type-sidebar-meta-size)}
+.df-global-sidebar-card>span,
+.df-global-sidebar-bottom>small{font-size:var(--df-type-sidebar-meta-size)}
