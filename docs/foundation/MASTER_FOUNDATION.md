@@ -868,3 +868,7 @@ Mobile Compact UI is the responsive density/layout layer, not a second typograph
 - Record source implementation, build, browser QA, and deployment separately. This standard establishes architecture and does not imply code has been changed or verified.
 
 Canonical detailed specification: Akashic Record, dajjal-family/core/global_typography.md.
+
+
+## 23.6 First implementation checkpoint — 2026-11-20
+The first focused source migration is committed on application main at `603fa92e0b39c962283a65410a8fa9dcf23907ac`. It adds centralized semantic typography/weight roles, reusable semantic type utilities, and applies token roles to the Global Navigation Drawer and desktop workspace sidebar. Existing legacy/page-specific literal typography remains for incremental migration after audits. This checkpoint does not claim production release: Vercel deployment creation was blocked by HTTP 402 `api-deployments-free-per-day`; build and live visual QA remain unverified.
