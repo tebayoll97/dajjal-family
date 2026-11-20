@@ -830,3 +830,41 @@ For catalog-style interfaces, the reference direction includes search near the t
 Validate applicable global presets, Light/Dark, Indonesian/English (including long translations), small Android/mobile widths, larger phones, tablet, desktop, keyboard navigation, visible focus, contrast, reduced motion, screen-reader labels, WCAG 2.2 AA touch-target expectations, and loading/empty/error/large-data states.
 
 Detailed implementation guidance is maintained in Akashic Record at `dajjal-family/core/mobile_compact_ui.md`. This decision establishes the standard; it does not claim that any page has already been changed, tested, or deployed.
+
+
+# 23. GLOBAL TYPOGRAPHY SYSTEM
+
+**Status: Owner-approved architecture and design standard — 2026-11-20.**
+
+Dajjal Family establishes a centralized **Global Typography System** as a shared design-token layer, independent from the Global Theme Preset Engine's identity color maps.
+
+## 23.1 Architecture position
+- Master Foundation remains the governing foundation for the website.
+- Global Theme Preset Engine owns global identity colors and semantic color values. The current TECNO and Dajjal × Veylora presets remain color-identity presets.
+- Global Typography System owns shared font families, semantic type roles, font sizes, font weights, and line heights.
+- Responsive presentation, including Mobile Compact UI, determines how shared typography tokens are applied at mobile, tablet, and desktop sizes/density.
+- Shared components consume the typography contract rather than inventing independent type scales.
+
+## 23.2 Preset independence
+- Both global identity presets share the same typography contract by default.
+- Switching TECNO and Dajjal × Veylora must not unexpectedly change font size, weight, or reading rhythm.
+- Do not duplicate global typography scales or mobile density settings inside THEME_TOKEN_MAPS or per-preset color maps.
+- Any future deliberate brand-specific typography variation requires a separate owner-approved product decision and architecture review.
+- Existing isolated Couple, Wedding, and immersive Games scopes remain protected where their approved design boundaries require it.
+
+## 23.3 Token contract
+The existing typography primitives in app/styles/tokens.css are the starting point, including --df-font-sans, --df-font-mono, --df-text-*, and --df-leading-*. Extend and normalize them incrementally into semantic roles for body/reading text, page and section headings, navigation labels/submenus, form labels/controls, captions/metadata, and numeric/code content where appropriate.
+
+Use centralized semantic tokens for font family, size, weight, and line height. Shared Global Navigation and other shared components must not hardcode independent font-size scales. Preserve existing token compatibility during migration; inspect consumers and CSS cascade before changing or renaming tokens.
+
+## 23.4 Mobile Compact UI relationship
+Mobile Compact UI is the responsive density/layout layer, not a second typography system. It applies shared typography tokens responsively to achieve compact but readable mobile presentation. It must preserve hierarchy, localization fit, browser zoom/text scaling, accessible touch targets, and desktop behavior.
+
+## 23.5 Migration and validation
+- Implement incrementally; do not initiate a blanket redesign or broad CSS override.
+- Audit token consumers and shared shell styles before implementation.
+- Migrate shared components first, then standard pages as they are next revised.
+- Validate TECNO and Dajjal × Veylora, Light/Dark, Indonesian/English, mobile/tablet/desktop, long labels/translations, browser zoom/text scaling, keyboard/focus, contrast, and accessibility.
+- Record source implementation, build, browser QA, and deployment separately. This standard establishes architecture and does not imply code has been changed or verified.
+
+Canonical detailed specification: Akashic Record, dajjal-family/core/global_typography.md.
