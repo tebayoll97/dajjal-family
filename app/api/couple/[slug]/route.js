@@ -82,6 +82,10 @@ export async function PATCH(request,context){
    }
   }
   if(Object.keys(clean).length!==Object.keys(body.content).length)return errorJson("Unsupported content field.");
+  if(Object.prototype.hasOwnProperty.call(clean,"anniversary_datetime")&&clean.anniversary_datetime){
+   const value=clean.anniversary_datetime;
+   if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)||Number.isNaN(Date.parse(value)))return errorJson("Invalid anniversary date and time.");
+  }
   const gamerLimits={gamer_profile_title:40,gamer_profile_subtitle:100,gamer_male_nickname:32,gamer_male_alliance:20,gamer_male_gender:16,gamer_male_server:12,gamer_female_nickname:32,gamer_female_alliance:20,gamer_female_gender:16,gamer_female_server:12};
   for(const [key,limit] of Object.entries(gamerLimits)){
    if(Object.prototype.hasOwnProperty.call(clean,key)){
@@ -121,7 +125,7 @@ export async function PATCH(request,context){
   }
  }
  if(body.anniversaryDate!==undefined){
-  if(body.anniversaryDate!==null&&(typeof body.anniversaryDate!=="string"||!/^\\d{4}-\\d{2}-\\d{2}$/.test(body.anniversaryDate)))return errorJson("Invalid anniversary date.");
+  if(body.anniversaryDate!==null&&(typeof body.anniversaryDate!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(body.anniversaryDate)||Number.isNaN(Date.parse(body.anniversaryDate+"T00:00:00Z"))))return errorJson("Invalid anniversary date.");
   update.anniversary_date=body.anniversaryDate;
  }
  if(Object.keys(update).length>1){
