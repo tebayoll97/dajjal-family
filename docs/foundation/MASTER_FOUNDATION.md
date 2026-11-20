@@ -790,3 +790,43 @@ For every new or modified Drive upload flow, verify:
 - Existing Drive root/account connection is reused and no duplicate root is created.
 
 These rules are mandatory across all Dajjal Family modules and must remain aligned with `COMMAND_MASTER.md` and `docs/aturan-kerja.md`.
+
+
+# 22. GLOBAL MOBILE PRESENTATION — MOBILE COMPACT UI
+
+**Status: Owner-approved global responsive design standard — 2026-11-20.**
+
+Dajjal Family adopts **Mobile Compact UI** as its default mobile layout-density direction. The owner-provided reference demonstrates a compact catalog surface with a search field, compact status/category chips, and secondary filters grouped to reduce unnecessary vertical scrolling while keeping the information hierarchy clear.
+
+## 22.1 Position in the design architecture
+- Master Foundation remains the governing product and architecture foundation.
+- Global Theme Preset Engine remains the source of global visual identity, active preset, and semantic color tokens for pages within its scope.
+- Design System remains the shared standard for typography, components, accessibility, and interactions.
+- Mobile Compact UI is the responsive layout/density layer that determines how those existing foundations are presented on narrow screens.
+- This standard does not authorize a new theme engine, local palette, hardcoded brand colors, or replacement of the active global preset.
+- Couple, Wedding, and immersive Games retain their approved isolated/page-scoped visual identities. Apply compact principles only when compatible; do not force global theme inheritance onto them.
+
+## 22.2 Mobile layout principles
+1. Use screen space efficiently: reduce decorative whitespace, excessive vertical gaps, oversized card padding, and unnecessary repeated panels.
+2. Preserve hierarchy: headings, content, metadata, labels, and actions remain distinguishable and readable.
+3. Prefer compact controls: inputs, buttons, chips, badges, and list rows should use proportionate dimensions without sacrificing accessibility.
+4. Use wrapping chips for short filter choices and progressive disclosure (collapsible groups, filter drawers, or compact expandable sections) for secondary controls.
+5. Keep primary actions discoverable; group secondary actions contextually.
+6. Prevent unintended horizontal page overflow and handle long text/IDs/tags with wrapping, accessible truncation, or deliberately bounded component scrolling.
+7. Retain complete loading, empty, error, success, disabled, selected, and keyboard-focus states.
+8. Compact does not mean cramped: do not make text illegible, remove necessary labels/status, or undersize touch targets.
+9. Select a layout appropriate to each page's task; do not force a universal card/list template.
+
+## 22.3 Reference application
+For catalog-style interfaces, the reference direction includes search near the top, status chips, wrapping genre/category chips, and secondary filters grouped to avoid a long unstructured control stack. This is a layout reference only, not live data or a mandatory filter schema for every feature. Its dark appearance does not override the active Global Theme Preset or Light/Dark mode.
+
+## 22.4 Responsive behavior
+- Apply compact density primarily on mobile. Preserve the existing responsive desktop grid, multi-column layout, and navigation patterns where appropriate.
+- Reuse established project breakpoints and responsive utilities; do not invent new breakpoint values without inspecting the current implementation and documenting the need.
+- Account for safe areas, viewport sizing, on-screen keyboard behavior, and browser text scaling.
+- Roll out incrementally as new pages are built or existing pages are meaningfully revised. This is not an instruction to redesign the entire site in one pass.
+
+## 22.5 Validation requirements
+Validate applicable global presets, Light/Dark, Indonesian/English (including long translations), small Android/mobile widths, larger phones, tablet, desktop, keyboard navigation, visible focus, contrast, reduced motion, screen-reader labels, WCAG 2.2 AA touch-target expectations, and loading/empty/error/large-data states.
+
+Detailed implementation guidance is maintained in Akashic Record at `dajjal-family/core/mobile_compact_ui.md`. This decision establishes the standard; it does not claim that any page has already been changed, tested, or deployed.
