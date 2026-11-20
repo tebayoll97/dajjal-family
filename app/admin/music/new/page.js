@@ -20,10 +20,11 @@ export default function AddMusicPage(){
    const res=await fetch("/api/admin/music/upload/chunk",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/octet-stream","Content-Range":"bytes "+offset+"-"+(end-1)+"/"+file.size,"X-Music-Upload-Token":init.token,"X-File-Mime":file.type},body:chunk,signal:controller.signal});
    const data=await res.json();if(!res.ok)throw new Error(data.error||"Upload failed.");offset=end;setProgress(Math.round(offset/file.size*100));if(data.complete)last=data.file;
   }
-  if(!last)throw new Error("Upload completion was not confirmed.");
+  if(!last)throw new Error("Upload completion was not confirmed.");setUploadToken("");setUploadController(null);
   return {id:last.id,mimeType:last.mimeType||file.type,size:Number(last.size)||file.size,originalName:file.name};
  }
- async function cancelUpload(){if(uploadController)uploadController.abort();if(uploadToken){await fetch("/api/admin/music/upload/cancel",{method:"POST",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({token:uploadToken})}).catch(()=>{});setUploadToken("");}}\n async function submit(e){
+ async function cancelUpload(){if(uploadController)uploadController.abort();if(uploadToken){await fetch("/api/admin/music/upload/cancel",{method:"POST",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({token:uploadToken})}).catch(()=>{});setUploadToken("");}}
+ async function submit(e){
   e.preventDefault();setNotice("");setCoverWarning(false);
   if(!audio||!duration||duration>900||audio.size>52428800){setNotice("Pilih audio valid. Durasi maksimal 15 menit dan ukuran maksimal 50 MB.");return;}
   if(!title.trim()||!genre.trim()){setNotice("Title dan Genre wajib diisi.");return;}
