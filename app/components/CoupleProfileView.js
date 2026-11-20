@@ -216,6 +216,10 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   const [time, setTime] = useState([0, 0, 0, 0]);
   const [activePhoto, setActivePhoto] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [gamerEditorOpen, setGamerEditorOpen] = useState(false);
+  const [gamerDraft, setGamerDraft] = useState({});
+  const [gamerSaving, setGamerSaving] = useState(false);
+  const [gamerError, setGamerError] = useState("");
   const [activeMoment, setActiveMoment] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const momentsTrackRef = useRef(null);
@@ -372,6 +376,55 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </div>
         </section>
 
+        <section className="df-couple-gamer-profile" aria-labelledby="df-couple-gamer-title">
+          <div className="df-couple-gamer-heading">
+            <div>
+              <p className="df-couple-eyebrow">{en ? "PLAYER IDENTITIES" : "IDENTITAS PEMAIN"}</p>
+              <h2 id="df-couple-gamer-title">{content.gamer_profile_title}</h2>
+              <p>{content.gamer_profile_subtitle}</p>
+            </div>
+            {editable && <button type="button" className="df-couple-pencil df-couple-gamer-pencil" aria-label={en ? "Edit gamer profile panel" : "Edit panel profil gamer"} title={en ? "Edit gamer profile panel" : "Edit panel profil gamer"} onClick={() => { setGamerDraft(Object.fromEntries(["gamer_profile_title","gamer_profile_subtitle","gamer_male_nickname","gamer_male_alliance","gamer_male_gender","gamer_male_server","gamer_female_nickname","gamer_female_alliance","gamer_female_gender","gamer_female_server"].map((key)=>[key,content[key]||""]))); setGamerError(""); setGamerEditorOpen(true); }}><Pencil /></button>}
+          </div>
+          <div className="df-couple-gamer-grid">
+            {["male","female"].map((person,index)=>(
+              <article className="df-couple-gamer-card" key={person}>
+                <span className="df-couple-gamer-index">{index===0?"01":"02"}</span>
+                <h3>{content["gamer_"+person+"_nickname"]}</h3>
+                <dl>
+                  <div><dt>{en?"Alliance":"Aliansi"}</dt><dd>{content["gamer_"+person+"_alliance"]}</dd></div>
+                  <div><dt>{en?"Gender":"Jenis Kelamin"}</dt><dd>{content["gamer_"+person+"_gender"]==="Male"?(en?"Male":"Laki-laki"):content["gamer_"+person+"_gender"]==="Female"?(en?"Female":"Perempuan"):content["gamer_"+person+"_gender"]}</dd></div>
+                  <div><dt>{en?"Server":"Server"}</dt><dd>{content["gamer_"+person+"_server"]}</dd></div>
+                </dl>
+              </article>
+            ))}
+          </div>
+        </section>
+        {editable && gamerEditorOpen && (
+          <div className="df-couple-gamer-backdrop" role="presentation" onMouseDown={(event)=>{if(event.target===event.currentTarget&&!gamerSaving)setGamerEditorOpen(false);}}>
+            <section className="df-couple-gamer-dialog" role="dialog" aria-modal="true" aria-labelledby="df-couple-gamer-dialog-title">
+              <div className="df-couple-gamer-dialog-heading"><div><p className="df-couple-eyebrow">{en?"BATCH EDIT":"EDIT SEKALIGUS"}</p><h2 id="df-couple-gamer-dialog-title">{en?"Gamer Profile":"Profil Gamer"}</h2></div><button type="button" onClick={()=>setGamerEditorOpen(false)} disabled={gamerSaving} aria-label={en?"Close":"Tutup"}>×</button></div>
+              <label>{en?"Panel title":"Judul panel"}<input maxLength={40} value={gamerDraft.gamer_profile_title||""} onChange={(event)=>setGamerDraft((old)=>({...old,gamer_profile_title:event.target.value}))} disabled={gamerSaving}/><small>{(gamerDraft.gamer_profile_title||"").length}/40</small></label>
+              <label>{en?"Subtitle":"Subjudul"}<input maxLength={100} value={gamerDraft.gamer_profile_subtitle||""} onChange={(event)=>setGamerDraft((old)=>({...old,gamer_profile_subtitle:event.target.value}))} disabled={gamerSaving}/><small>{(gamerDraft.gamer_profile_subtitle||"").length}/100</small></label>
+              {["male","female"].map((person)=>(
+                <fieldset key={person}>
+                  <legend>{person==="male"?(en?"Dajjal":"Dajjal"):"Veylora"}</legend>
+                  {[[ "nickname",en?"Nickname":"Nickname",32 ],["alliance",en?"Alliance":"Aliansi",20],["gender",en?"Gender":"Jenis kelamin",16],["server","Server",12]].map(([field,label,max])=>(
+                    <label key={field}>{label}
+                      {field==="gender"?<select value={gamerDraft["gamer_"+person+"_gender"]||""} onChange={(event)=>setGamerDraft((old)=>({...old,["gamer_"+person+"_gender"]:event.target.value}))} disabled={gamerSaving}><option value="Male">Male</option><option value="Female">Female</option></select>:
+                      <input maxLength={max} value={gamerDraft["gamer_"+person+"_"+field]||""} onChange={(event)=>setGamerDraft((old)=>({...old,["gamer_"+person+"_"+field]:event.target.value}))} disabled={gamerSaving}/>}
+                      {field!=="gender"&&<small>{(gamerDraft["gamer_"+person+"_"+field]||"").length}/{max}</small>}
+                    </label>
+                  ))}
+                </fieldset>
+              ))}
+              {gamerError&&<p role="alert" className="df-couple-gamer-error">{gamerError}</p>}
+              <div className="df-couple-gamer-actions">
+                <button type="button" onClick={()=>setGamerEditorOpen(false)} disabled={gamerSaving}>{en?"Cancel":"Batal"}</button>
+                <button type="button" disabled={gamerSaving} onClick={async()=>{setGamerSaving(true);setGamerError("");try{await onSave?.({content:gamerDraft});setGamerEditorOpen(false);}catch(error){setGamerError(error.message||(en?"Unable to save changes.":"Gagal menyimpan perubahan."));}finally{setGamerSaving(false);}}}>{gamerSaving?(en?"Saving…":"Menyimpan…"):(en?"Save all":"Simpan semua")}</button>
+              </div>
+            </section>
+          </div>
+        )}
         <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("gallery_eyebrow", "Gallery eyebrow")}</p>
