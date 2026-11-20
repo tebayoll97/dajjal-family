@@ -342,6 +342,17 @@
 }
 
 
+/* Global Typography + Mobile Compact UI — authoritative shared drawer type roles. */
+.df-site-navigation-brand{font-size:var(--df-type-nav-brand-size);line-height:var(--df-type-nav-brand-leading)}
+.df-site-navigation-heading{font-size:var(--df-type-nav-section-size);line-height:1.35}
+.df-site-navigation-group-trigger,
+.df-site-navigation-home{font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
+.df-site-navigation-submenu>a{font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-submenu-leading)}
+.df-navigation-profile-copy strong{font-size:var(--df-type-nav-profile-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
+.df-navigation-profile-copy small{font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-nav-meta-leading)}
+.df-site-navigation-footer span{font-size:var(--df-type-nav-footer-size);line-height:1.4}
+.df-site-navigation-footer small{font-size:var(--df-type-nav-meta-size);line-height:var(--df-type-nav-meta-leading)}
+
 /* Keep bilingual navigation labels and their event badge aligned as one item. */
 .df-site-navigation-item-copy {
   display: inline-flex;
