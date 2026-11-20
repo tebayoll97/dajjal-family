@@ -93,14 +93,15 @@ export async function PATCH(request,context){
   const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
   if(readError)return errorJson("Unable to load existing Couple Profile translations.",500);
   const sharedGamerKeys=COUPLE_CONTENT_KEYS.filter((key)=>key.startsWith("gamer_")&&!["gamer_profile_title","gamer_profile_subtitle"].includes(key));
-  const translationFields=Object.fromEntries(Object.entries(clean).filter(([key])=>!sharedGamerKeys.includes(key)));
+  const sharedExactKeys=[...sharedGamerKeys,"anniversary_datetime"];
+  const translationFields=Object.fromEntries(Object.entries(clean).filter(([key])=>!sharedExactKeys.includes(key)));
   let translated;
   try{translated=await translateCoupleContent(translationFields,body.locale);}
   catch(error){
    if(error.message==="TRANSLATION_NOT_CONFIGURED")return errorJson("Automatic translation is not configured yet. Please contact the administrator.",503);
    return errorJson("Automatic translation failed. Nothing was saved; please try again.",502);
   }
-  const sharedGamerValues=Object.fromEntries(sharedGamerKeys.filter((key)=>Object.prototype.hasOwnProperty.call(clean,key)).map((key)=>[key,clean[key]]));
+  const sharedGamerValues=Object.fromEntries(sharedExactKeys.filter((key)=>Object.prototype.hasOwnProperty.call(clean,key)).map((key)=>[key,clean[key]]));
   const existingByLocale=Object.fromEntries((existingContents||[]).map((row)=>[row.locale,row.content||{}]));
   const sourceLocale=body.locale,targetLocale=sourceLocale==="id"?"en":"id";
   const timestamp=new Date().toISOString();
