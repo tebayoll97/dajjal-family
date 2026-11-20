@@ -91,6 +91,12 @@ export async function PATCH(request,context){
    if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)||Number.isNaN(Date.parse(value))||new Date(value).toISOString()!==value)return errorJson("Invalid Hari Jadi start date and time.");
    if(Date.parse(value)>Date.now())return errorJson("Hari Jadi start time cannot be in the future.");
   }
+  if(Object.prototype.hasOwnProperty.call(clean,"music_track_id")&&clean.music_track_id){
+   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(clean.music_track_id))return errorJson("Invalid music selection.");
+   const {data:track,error:trackError}=await supabaseAdmin.from("df_music_library").select("id").eq("id",clean.music_track_id).eq("status","published").maybeSingle();
+   if(trackError)return errorJson("Unable to verify the selected song.",500);
+   if(!track)return errorJson("The selected song is no longer published.");
+  }
   const gamerLimits={gamer_profile_title:40,gamer_profile_subtitle:100,gamer_male_nickname:32,gamer_male_alliance:20,gamer_male_gender:16,gamer_male_server:12,gamer_female_nickname:32,gamer_female_alliance:20,gamer_female_gender:16,gamer_female_server:12};
   for(const [key,limit] of Object.entries(gamerLimits)){
    if(Object.prototype.hasOwnProperty.call(clean,key)){
