@@ -1138,3 +1138,9 @@
   .df-couple-batch-fields label:has(textarea) { grid-column: auto; }
   .df-couple-batch-dialog { max-height: 94vh; }
 }
+
+/* Gamer metadata iconography: compact line icons aligned with Couple visual language. */
+.df-couple-gamer-name { display:flex; align-items:center; gap:.55rem; }
+.df-couple-gamer-field-icon { width:1.05rem; height:1.05rem; flex:0 0 1.05rem; color:var(--couple-accent, var(--df-primary)); opacity:.95; }
+.df-couple-gamer-card dt { display:inline-flex; align-items:center; gap:.5rem; }
+.df-couple-gamer-card dt .df-couple-gamer-field-icon { width:1rem; height:1rem; flex-basis:1rem; }
