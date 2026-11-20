@@ -13,7 +13,7 @@ export async function PUT(request) {
     const bytes = Buffer.from(await request.arrayBuffer());
     if (bytes.length > 4 * 1024 * 1024 || bytes.length !== end - start + 1) return Response.json({ error: "Invalid chunk size." }, { status: 413 });
     if (start === 0 && !validateMusicFileSignature(bytes, request.headers.get("x-file-mime") || "")) return Response.json({ error: "File signature does not match its declared type." }, { status: 415 });
-    const result = await sendMusicDriveChunk({ token, bytes, start, end });
+    const result = await sendMusicDriveChunk({ token, bytes, start, end, total: Number(match[3]) });
     return Response.json({ success: true, ...result }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return Response.json({ error: error.message || "Upload chunk failed." }, { status: 400, headers: { "Cache-Control": "no-store" } });
