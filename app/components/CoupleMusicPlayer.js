@@ -148,6 +148,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
   // One page-scoped audio element. Attempt autoplay on entry; browsers may
   // require a user gesture, in which case the visible Play control is fallback.
   useEffect(() => {
+    if (!playerTracks.length) return undefined;
     const audio = new Audio();
     audio.preload = "metadata";
     audio.volume = 0;
@@ -438,9 +439,9 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     setTime(audio.currentTime);
   };
 
-  const track = playerTracks[index];
+  const track = playerTracks[index] || playerTracks[0];
   const progress = duration ? Math.min(100, (time / duration) * 100) : 0;
-  if (!playerTracks.length) return content.music_track_id && catalogStatus === "loading" ? <section className="df-couple-music-player" aria-live="polite"><div className="df-couple-music-card"><p>{t.eyebrow}</p><p>{language === "en" ? "Loading selected soundtrack…" : "Memuat lagu pilihan…"}</p></div></section> : null;
+  if (!playerTracks.length) return content.music_track_id ? <section className="df-couple-music-player" aria-live="polite"><div className="df-couple-music-card"><p className="df-couple-eyebrow">{t.eyebrow}</p><p>{catalogStatus === "loading" ? (language === "en" ? "Loading selected soundtrack…" : "Memuat lagu pilihan…") : (language === "en" ? "This selected song is no longer available." : "Lagu pilihan sudah tidak tersedia.")}</p></div></section> : null;
 
   return (
     <section className="df-couple-music-player" id="df-couple-music-player" aria-labelledby="df-couple-music-title">
