@@ -448,3 +448,82 @@
   .df-site-navigation-home { min-height:36px; }
   .df-site-navigation-submenu[data-expanded="true"]>a { min-height:32px; }
 }
+
+
+/* Mobile Compact UI v2 — stronger density for narrow phone viewports. */
+@media (max-width:760px) {
+  .df-site-navigation-pane {
+    width:min(78vw,310px) !important;
+    max-width:310px !important;
+    padding: max(.5rem,env(safe-area-inset-top)) .5rem max(.45rem,env(safe-area-inset-bottom)) !important;
+  }
+  .df-site-navigation-top {
+    min-height:34px !important;
+    padding-bottom:.35rem !important;
+  }
+  .df-site-navigation-brand-group img {
+    width:26px !important;
+    height:26px !important;
+  }
+  .df-site-navigation-brand {
+    letter-spacing:.09em !important;
+  }
+  .df-site-navigation-close {
+    width:32px !important;
+    height:32px !important;
+    font-size:1.2rem !important;
+  }
+  .df-site-navigation-content {
+    padding:.35rem 0 .4rem !important;
+  }
+  .df-navigation-profile-card {
+    min-height:46px !important;
+    margin-bottom:.4rem !important;
+    padding:.35rem .45rem !important;
+    gap:.45rem !important;
+  }
+  .df-navigation-profile-avatar {
+    width:30px !important;
+    height:30px !important;
+    flex-basis:30px !important;
+  }
+  .df-navigation-profile-copy { gap:1px !important; }
+  .df-site-navigation-heading {
+    margin:.1rem .35rem .25rem !important;
+  }
+  .df-site-navigation-groups { gap:.18rem !important; }
+  .df-site-navigation-group { border-radius:7px !important; }
+  .df-site-navigation-group-trigger,
+  .df-site-navigation-home {
+    min-height:33px !important;
+    padding:.28rem .45rem !important;
+    gap:.45rem !important;
+  }
+  .df-site-navigation-group-trigger svg {
+    width:15px !important;
+    height:15px !important;
+  }
+  .df-site-navigation-chevron {
+    width:13px !important;
+    height:13px !important;
+    min-width:13px !important;
+    flex-basis:13px !important;
+  }
+  .df-site-navigation-submenu[data-expanded="true"] {
+    padding:.08rem .2rem .15rem !important;
+  }
+  .df-site-navigation-submenu[data-expanded="true"]>a {
+    min-height:28px !important;
+    padding:.22rem .4rem .22rem 1.75rem !important;
+  }
+  .df-site-navigation-footer {
+    gap:.12rem !important;
+    padding-top:.35rem !important;
+  }
+}
+@media (max-width:360px) {
+  .df-site-navigation-pane { width:min(82vw,300px) !important; }
+  .df-site-navigation-group-trigger,
+  .df-site-navigation-home { min-height:31px !important; }
+  .df-site-navigation-submenu[data-expanded="true"]>a { min-height:26px !important; }
+}
