@@ -1061,3 +1061,80 @@
 .df-couple-music-heading { grid-column: 1 / -1; margin: 0; text-align: center; }
 .df-couple-music-heading h2 { margin: .35rem 0; color: var(--df-text); font-size: clamp(1.35rem, 3vw, 1.9rem); font-weight: 900; line-height: 1.2; }
 .df-couple-music-heading > p:last-child { max-width: 48rem; margin: .35rem auto 0; color: var(--df-text-secondary); font-size: .88rem; line-height: 1.65; }
+
+
+/* Batch text-panel editor — isolated to Couple Profile editor controls. */
+.df-couple-batch-pencil {
+  position: absolute;
+  z-index: 3;
+  top: .8rem;
+  right: .8rem;
+}
+.df-couple-hero { position: relative; }
+.df-couple-content-panel { position: relative; }
+.df-couple-story { position: relative; }
+.df-couple-batch-backdrop {
+  position: fixed;
+  z-index: 10020;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  background: rgba(5, 5, 9, .78);
+  backdrop-filter: blur(10px);
+}
+.df-couple-batch-dialog {
+  width: min(100%, 42rem);
+  max-height: min(92vh, 58rem);
+  overflow: auto;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 1px solid color-mix(in srgb, var(--couple-primary) 35%, var(--df-border));
+  border-radius: 1.1rem;
+  background: var(--couple-surface);
+  color: var(--df-text);
+  box-shadow: var(--df-shadow-lg);
+}
+.df-couple-batch-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.df-couple-batch-heading h2 { margin: .3rem 0; font-size: 1.35rem; }
+.df-couple-batch-heading p:last-child { margin: .25rem 0 0; color: var(--df-text-secondary); font-size: .85rem; }
+.df-couple-batch-heading > button {
+  flex: 0 0 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--df-border);
+  border-radius: 50%;
+  background: var(--couple-surface-raised);
+  color: var(--df-text);
+  font-size: 1.4rem;
+}
+.df-couple-batch-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem 1rem; }
+.df-couple-batch-fields label { display: grid; min-width: 0; gap: .35rem; color: var(--df-text-secondary); font-size: .82rem; font-weight: 750; }
+.df-couple-batch-fields label:has(textarea) { grid-column: 1 / -1; }
+.df-couple-batch-fields input,
+.df-couple-batch-fields textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--df-border);
+  border-radius: .65rem;
+  background: var(--couple-surface-raised);
+  color: var(--df-text);
+  font: inherit;
+  font-weight: 500;
+}
+.df-couple-batch-fields textarea { min-height: 6rem; resize: vertical; }
+.df-couple-batch-fields small { color: var(--df-text-muted); font-size: .7rem; text-align: right; }
+.df-couple-batch-dialog button:disabled,
+.df-couple-batch-fields :disabled { opacity: .55; cursor: not-allowed; }
+@media (max-width: 600px) {
+  .df-couple-batch-fields { grid-template-columns: minmax(0, 1fr); }
+  .df-couple-batch-fields label:has(textarea) { grid-column: auto; }
+  .df-couple-batch-dialog { max-height: 94vh; }
+}
