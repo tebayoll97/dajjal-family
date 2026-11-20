@@ -111,7 +111,6 @@ export default function CoupleProfileEditorPage() {
       if (change.profile) {
         if (change.profile.maleNickname !== undefined) body.maleNickname = change.profile.maleNickname;
         if (change.profile.femaleNickname !== undefined) body.femaleNickname = change.profile.femaleNickname;
-        if (change.profile.anniversaryDate !== undefined) body.anniversaryDate = change.profile.anniversaryDate || null;
       }
       const response = await fetch(`/api/couple/${slug}`, {
         method: "PATCH",
