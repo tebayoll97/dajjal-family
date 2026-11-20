@@ -82,19 +82,29 @@ export async function PATCH(request,context){
    }
   }
   if(Object.keys(clean).length!==Object.keys(body.content).length)return errorJson("Unsupported content field.");
+  const gamerLimits={gamer_profile_title:40,gamer_profile_subtitle:100,gamer_male_nickname:32,gamer_male_alliance:20,gamer_male_gender:16,gamer_male_server:12,gamer_female_nickname:32,gamer_female_alliance:20,gamer_female_gender:16,gamer_female_server:12};
+  for(const [key,limit] of Object.entries(gamerLimits)){
+   if(Object.prototype.hasOwnProperty.call(clean,key)){
+    const value=clean[key];
+    if(!value||value.length>limit||/[\\u0000-\\u001F\\u007F]/.test(value))return errorJson("Invalid gamer profile field: "+key+".");
+   }
+  }
   const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
   if(readError)return errorJson("Unable to load existing Couple Profile translations.",500);
+  const sharedGamerKeys=COUPLE_CONTENT_KEYS.filter((key)=>key.startsWith("gamer_")&&!["gamer_profile_title","gamer_profile_subtitle"].includes(key));
+  const translationFields=Object.fromEntries(Object.entries(clean).filter(([key])=>!sharedGamerKeys.includes(key)));
   let translated;
-  try{translated=await translateCoupleContent(clean,body.locale);}
+  try{translated=await translateCoupleContent(translationFields,body.locale);}
   catch(error){
    if(error.message==="TRANSLATION_NOT_CONFIGURED")return errorJson("Automatic translation is not configured yet. Please contact the administrator.",503);
    return errorJson("Automatic translation failed. Nothing was saved; please try again.",502);
   }
+  const sharedGamerValues=Object.fromEntries(sharedGamerKeys.filter((key)=>Object.prototype.hasOwnProperty.call(clean,key)).map((key)=>[key,clean[key]]));
   const existingByLocale=Object.fromEntries((existingContents||[]).map((row)=>[row.locale,row.content||{}]));
   const sourceLocale=body.locale,targetLocale=sourceLocale==="id"?"en":"id";
   const timestamp=new Date().toISOString();
   const sourceContent={...COUPLE_CONTENT_DEFAULTS[sourceLocale],...(existingByLocale[sourceLocale]||{}),...clean};
-  const targetContent={...COUPLE_CONTENT_DEFAULTS[targetLocale],...(existingByLocale[targetLocale]||{}),...translated};
+  const targetContent={...COUPLE_CONTENT_DEFAULTS[targetLocale],...(existingByLocale[targetLocale]||{}),...translated,...sharedGamerValues};
   synchronizedRows=[
    {couple_id:profile.id,locale:"id",content:sourceLocale==="id"?sourceContent:targetContent,updated_at:timestamp},
    {couple_id:profile.id,locale:"en",content:sourceLocale==="en"?sourceContent:targetContent,updated_at:timestamp}
