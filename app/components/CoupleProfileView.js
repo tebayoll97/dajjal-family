@@ -6,18 +6,23 @@ import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
 import CoupleImage from "@/app/components/CoupleImage";
 
-function toLocalDateTimeInput(value) {
-  if (!value) return "";
+function splitRelationshipStart(value) {
+  if (!value) return { date: "", time: "" };
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
+  if (Number.isNaN(date.getTime())) return { date: "", time: "" };
   const pad = (number) => String(number).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return { date: `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`, time: `${pad(date.getHours())}:${pad(date.getMinutes())}` };
 }
 
-function fromLocalDateTimeInput(value) {
-  if (!value) return "";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+function relationshipStartToIso(dateValue, timeValue) {
+  if (!dateValue && !timeValue) return "";
+  if (!dateValue || !timeValue) return null;
+  const [year, month, day] = dateValue.split("-").map(Number);
+  const [hour, minute] = timeValue.split(":").map(Number);
+  if (![year, month, day, hour, minute].every(Number.isInteger)) return null;
+  const date = new Date(year, month - 1, day, hour, minute, 0, 0);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day || date.getHours() !== hour || date.getMinutes() !== minute) return null;
+  return date.toISOString();
 }
 
 function durationSince(date) {
@@ -241,8 +246,9 @@ const BATCH_PANEL_FIELDS = {
     { key: "maleNickname", source: "profile", label: "Nama pasangan 1", max: 40 },
     { key: "femaleNickname", source: "profile", label: "Nama pasangan 2", max: 40 },
     { key: "subtitle", label: "Subtitle", max: 220 }, { key: "intro", label: "Intro", multiline: true },
-    { key: "anniversary_label", label: "Label anniversary", max: 220 },
-    { key: "anniversary_datetime", label: "Tanggal dan jam anniversary", type: "datetime-local" },
+    { key: "relationship_label", label: "Label Hari Jadi", max: 220 },
+    { key: "relationship_start_date", label: "Tanggal mulai Hari Jadi", type: "date" },
+    { key: "relationship_start_time", label: "Jam mulai Hari Jadi", type: "time" },
   ],
   identity: [
     { key: "identity_label", label: "Label panel", max: 220 }, { key: "male_role", label: "Role pasangan 1", max: 220 },
@@ -265,7 +271,7 @@ function BatchPanelEdit({ panel, locale, draft, setDraft, onSave, onClose, savin
   return <div className="df-couple-batch-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
     <section className="df-couple-batch-dialog" role="dialog" aria-modal="true" aria-labelledby="df-couple-batch-title">
       <div className="df-couple-batch-heading"><div><p className="df-couple-eyebrow">{en ? "PANEL EDITOR" : "EDITOR PANEL"}</p><h2 id="df-couple-batch-title">{title}</h2><p>{en ? "Edit fields, then save this panel once." : "Ubah kolom, lalu simpan panel ini sekali."}</p></div><button type="button" onClick={onClose} disabled={saving} aria-label={en ? "Close" : "Tutup"}>×</button></div>
-      <div className="df-couple-batch-fields">{(BATCH_PANEL_FIELDS[panel] || []).map((field) => { const value = draft[field.key] ?? ""; return <label key={field.key}>{en ? field.label : field.label}
+      <div className="df-couple-batch-fields">{(BATCH_PANEL_FIELDS[panel] || []).map((field) => { const value = draft[field.key] ?? ""; const fieldLabel = en ? ({ relationship_label: "Journey label", relationship_start_date: "Hari Jadi start date", relationship_start_time: "Hari Jadi start time" }[field.key] || field.label) : field.label; return <label key={field.key}>{fieldLabel}
         {field.multiline ? <textarea rows={4} maxLength={3000} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} /> : <input type={field.type || "text"} maxLength={field.max} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} />}
         {field.max && <small>{value.length}/{field.max}</small>}</label>; })}</div>
       {error && <p className="df-couple-gamer-error" role="alert">{error}</p>}
@@ -298,21 +304,21 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   const copy = en ? {
     eyebrow: "A DAJJAL FAMILY STORY", identity: "THE COUPLE", gallery: "OUR LITTLE MOMENTS",
     openPhoto: "Open photo", closePhoto: "Close photo", previous: "Previous photo", next: "Next photo",
-    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Anniversary date",
+    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Relationship start date",
     empty: "Add a photo", noGallery: "No photos have been added yet.", reset: "Reset Couple Profile", resetMessage: "Are you sure you want to delete all current settings? You will start again from the beginning.", continue: "Continue", cancel: "Cancel",
   } : {
     eyebrow: "CERITA DARI DAJJAL FAMILY", identity: "IDENTITAS PASANGAN", gallery: "KENANGAN KITA",
     openPhoto: "Buka foto", closePhoto: "Tutup foto", previous: "Foto sebelumnya", next: "Foto berikutnya",
-    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Tanggal anniversary",
+    slide: "Slide", footer: "DAJJAL FAMILY · COUPLE PROFILE", date: "Tanggal mulai Hari Jadi",
     empty: "Add a photo", noGallery: "Belum ada foto galeri.", reset: "Reset Couple Profile", resetMessage: "Yakin untuk menghapus semua pengaturan saat ini? Anda akan memulai dari awal lagi", continue: "Lanjutkan", cancel: "Batal",
   };
+  const relationshipStart = Object.prototype.hasOwnProperty.call(content, "relationship_start_at") ? content.relationship_start_at : (content.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00:00" : ""));
   useEffect(() => {
-    const anniversaryStart = content.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "");
-    const update = () => setTime(durationSince(anniversaryStart));
+    const update = () => setTime(durationSince(relationshipStart));
     update();
     const interval = window.setInterval(update, 1000);
     return () => window.clearInterval(interval);
-  }, [profile.anniversary_date, content.anniversary_datetime]);
+  }, [relationshipStart]);
   useEffect(() => {
     if (!activePhoto) return undefined;
     const closeOnEscape = (event) => { if (event.key === "Escape") setActivePhoto(null); };
@@ -347,7 +353,14 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   };
   const openBatchPanel = (panel) => {
     const draft = {};
-    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : profile.female_nickname) : (item.key === "anniversary_datetime" ? (content.anniversary_datetime ? toLocalDateTimeInput(content.anniversary_datetime) : (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "")) : (content[item.key] || ""));
+    const legacyStart = content.relationship_start_at ?? content.anniversary_datetime ?? (profile.anniversary_date ? profile.anniversary_date + "T00:00:00" : "");
+    const startParts = splitRelationshipStart(legacyStart);
+    for (const item of BATCH_PANEL_FIELDS[panel] || []) {
+      if (item.source === "profile") draft[item.key] = item.key === "maleNickname" ? profile.male_nickname : profile.female_nickname;
+      else if (item.key === "relationship_start_date") draft[item.key] = startParts.date;
+      else if (item.key === "relationship_start_time") draft[item.key] = startParts.time;
+      else draft[item.key] = content[item.key] || (item.key === "relationship_label" ? content.anniversary_label || "" : "");
+    }
     setBatchDraft(draft); setBatchError(""); setBatchPanel(panel);
   };
   const saveBatchPanel = async () => {
@@ -357,16 +370,16 @@ export default function CoupleProfileView({ profile, content, media = [], locale
       const change = { content: {}, profile: {} };
       for (const item of BATCH_PANEL_FIELDS[batchPanel] || []) {
         if (item.source === "profile") change.profile[item.key] = batchDraft[item.key] || "";
-        else change.content[item.key] = batchDraft[item.key] || "";
+        else if (!["relationship_start_date", "relationship_start_time"].includes(item.key)) change.content[item.key] = batchDraft[item.key] || "";
+      }
+      if (batchPanel === "hero") {
+        const hasDate = Boolean(batchDraft.relationship_start_date);
+        const hasTime = Boolean(batchDraft.relationship_start_time);
+        const timestamp = relationshipStartToIso(batchDraft.relationship_start_date || "", batchDraft.relationship_start_time || "");
+        if ((hasDate || hasTime) && !timestamp) throw new Error(en ? "Choose a valid start date and time." : "Pilih tanggal dan jam mulai Hari Jadi yang valid.");
+        change.content.relationship_start_at = timestamp;
       }
       if (!Object.keys(change.content).length) delete change.content;
-      if (batchPanel === "hero" && Object.prototype.hasOwnProperty.call(batchDraft, "anniversary_datetime")) {
-        const dateTime = batchDraft.anniversary_datetime || "";
-        const anniversaryTimestamp = fromLocalDateTimeInput(dateTime);
-        if (dateTime && !anniversaryTimestamp) throw new Error(en ? "Please enter a valid anniversary date and time." : "Masukkan tanggal dan jam anniversary yang valid.");
-        change.content.anniversary_datetime = anniversaryTimestamp;
-        change.profile.anniversaryDate = anniversaryTimestamp ? anniversaryTimestamp.slice(0, 10) : null;
-      }
       if (!Object.keys(change.profile).length) delete change.profile;
       await onSave?.(change); setBatchPanel("");
     } catch (error) { setBatchError(error.message || (en ? "Unable to save this panel." : "Panel gagal disimpan.")); }
@@ -417,10 +430,10 @@ export default function CoupleProfileView({ profile, content, media = [], locale
             <EditableImage fileId={mediaMap.cover} label="Cover image" editable={editable} locale={locale} onUpload={(file) => onUpload?.("cover", file)} recommendation="3:4" className="df-couple-featured-photo" openPhoto={openPhoto} />
             <span className="df-couple-featured-label">{en ? "FEATURED MOMENT" : "POTRET UTAMA"}</span>
           </div>
-          <div className="df-couple-anniversary-heading">
-            <p className="df-couple-eyebrow">{field("anniversary_label", "Anniversary label")}</p>
+          <div className="df-couple-journey-heading">
+            <p className="df-couple-eyebrow">{field("relationship_label", "Hari Jadi label")}</p>
           </div>
-          {(content.anniversary_datetime || profile.anniversary_date) && <section className="df-couple-metrics" aria-label={content.anniversary_label}>
+          {relationshipStart && <section className="df-couple-metrics" aria-label={content.relationship_label}>
             {time.map((value, index) => <div className="df-couple-metric" key={timeUnits[index]}><strong>{value.toLocaleString(en ? "en-US" : "id-ID")}</strong><span>{timeUnits[index]}</span></div>)}
           </section>}
 
