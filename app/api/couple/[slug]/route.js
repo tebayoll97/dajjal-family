@@ -57,7 +57,11 @@ export async function GET(request,context){
   supabaseAdmin.from("df_couple_media").select("slot_key,google_drive_file_id").eq("couple_id",profile.id).order("slot_key")
  ]);
  if(ce||me)return errorJson("Unable to load Couple Profile details.",500);
- return NextResponse.json({profile,content:content||null,media:media||[]},{headers:{"Cache-Control":"no-store"}});
+ const storedContent=content?.content||{};
+ const compatibleContent={...storedContent};
+ if(!Object.prototype.hasOwnProperty.call(compatibleContent,"relationship_start_at"))compatibleContent.relationship_start_at=storedContent.anniversary_datetime||(profile.anniversary_date?profile.anniversary_date+"T00:00:00.000Z":"");
+ if(!Object.prototype.hasOwnProperty.call(compatibleContent,"relationship_label"))compatibleContent.relationship_label=storedContent.anniversary_label||COUPLE_CONTENT_DEFAULTS[locale].relationship_label;
+ return NextResponse.json({profile,content:content?{...content,content:compatibleContent}:null,media:media||[]},{headers:{"Cache-Control":"no-store"}});
 }
 
 export async function PATCH(request,context){
@@ -82,9 +86,10 @@ export async function PATCH(request,context){
    }
   }
   if(Object.keys(clean).length!==Object.keys(body.content).length)return errorJson("Unsupported content field.");
-  if(Object.prototype.hasOwnProperty.call(clean,"anniversary_datetime")&&clean.anniversary_datetime){
-   const value=clean.anniversary_datetime;
-   if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)||Number.isNaN(Date.parse(value)))return errorJson("Invalid anniversary date and time.");
+  if(Object.prototype.hasOwnProperty.call(clean,"relationship_start_at")&&clean.relationship_start_at){
+   const value=clean.relationship_start_at;
+   if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)||Number.isNaN(Date.parse(value))||new Date(value).toISOString()!==value)return errorJson("Invalid Hari Jadi start date and time.");
+   if(Date.parse(value)>Date.now())return errorJson("Hari Jadi start time cannot be in the future.");
   }
   const gamerLimits={gamer_profile_title:40,gamer_profile_subtitle:100,gamer_male_nickname:32,gamer_male_alliance:20,gamer_male_gender:16,gamer_male_server:12,gamer_female_nickname:32,gamer_female_alliance:20,gamer_female_gender:16,gamer_female_server:12};
   for(const [key,limit] of Object.entries(gamerLimits)){
@@ -97,7 +102,7 @@ export async function PATCH(request,context){
   const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
   if(readError)return errorJson("Unable to load existing Couple Profile translations.",500);
   const sharedGamerKeys=COUPLE_CONTENT_KEYS.filter((key)=>key.startsWith("gamer_")&&!["gamer_profile_title","gamer_profile_subtitle"].includes(key));
-  const sharedExactKeys=[...sharedGamerKeys,"anniversary_datetime"];
+  const sharedExactKeys=[...sharedGamerKeys,"relationship_start_at"];
   const translationFields=Object.fromEntries(Object.entries(clean).filter(([key])=>!sharedExactKeys.includes(key)));
   let translated;
   try{translated=await translateCoupleContent(translationFields,body.locale);}
@@ -124,10 +129,7 @@ export async function PATCH(request,context){
    update[column]=body[key].trim();
   }
  }
- if(body.anniversaryDate!==undefined){
-  if(body.anniversaryDate!==null&&(typeof body.anniversaryDate!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(body.anniversaryDate)||Number.isNaN(Date.parse(body.anniversaryDate+"T00:00:00Z"))))return errorJson("Invalid anniversary date.");
-  update.anniversary_date=body.anniversaryDate;
- }
+
  if(Object.keys(update).length>1){
   const {error}=await supabaseAdmin.from("df_couple_profiles").update(update).eq("id",profile.id);
   if(error)return errorJson("Unable to save profile details.",500);
