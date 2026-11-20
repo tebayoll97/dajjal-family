@@ -147,12 +147,12 @@ export default function PublicMusicPage() {
   }
 
   return (
-    <main className="music-public-page">
-      <div className="music-public-shell">
-        <header className="music-public-header">
-          <p className="music-public-eyebrow">{t.eyebrow}</p>
-          <h1>{t.title}</h1>
-          <p>{t.intro}</p>
+    <main className="music-public-page df-token-page">
+      <div className="music-public-shell ui-page">
+        <header className="music-public-header ui-page-header">
+          <p className="music-public-eyebrow ui-eyebrow">{t.eyebrow}</p>
+          <h1 className="ui-heading-h1">{t.title}</h1>
+          <p className="ui-subtitle">{t.intro}</p>
         </header>
 
         <section className="music-public-search" aria-label={t.search}>
@@ -219,9 +219,6 @@ export default function PublicMusicPage() {
                     type="button" key={item.id} onClick={() => playTrack(item)}
                     aria-current={active ? "true" : undefined}>
                     <span className="music-public-track-number">{String(items.findIndex((entry) => entry.id === item.id) + 1).padStart(2, "0")}</span>
-                    {item.cover_mime_type
-                      ? <img className="music-public-track-cover" src={"/api/music/" + item.id + "/cover"} alt="" loading="lazy" />
-                      : <span className="music-public-track-cover music-public-track-cover-fallback" aria-hidden="true">♫</span>}
                     <span className="music-public-track-copy"><strong>{item.title}</strong><small>{item.artist || t.noArtist} · {item.genre || "—"}</small></span>
                     <span className="music-public-track-duration">{clock(item.audio_duration_seconds)}</span>
                     <span className="music-public-track-action" aria-hidden="true">{active && playing ? "Ⅱ" : "▶"}</span>
