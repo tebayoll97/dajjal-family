@@ -27,7 +27,9 @@ function relationshipStartToIso(dateValue, timeValue) {
 
 function durationSince(date) {
   if (!date) return [0, 0, 0, 0];
-  const elapsed = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
+  const startTime = new Date(date).getTime();
+  if (!Number.isFinite(startTime)) return [0, 0, 0, 0];
+  const elapsed = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
   return [Math.floor(elapsed / 86400), Math.floor((elapsed % 86400) / 3600), Math.floor((elapsed % 3600) / 60), elapsed % 60];
 }
 
