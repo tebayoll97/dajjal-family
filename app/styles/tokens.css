@@ -53,6 +53,37 @@
   --df-leading-normal: 1.5;
   --df-leading-relaxed: 1.65;
 
+  /* Global Typography System — semantic roles, independent from color presets. */
+  --df-weight-regular: 400;
+  --df-weight-medium: 500;
+  --df-weight-semibold: 600;
+  --df-weight-bold: 700;
+  --df-weight-extrabold: 800;
+
+  --df-type-body-size: var(--df-text-base);
+  --df-type-body-leading: var(--df-leading-normal);
+  --df-type-heading-leading: var(--df-leading-tight);
+  --df-type-caption-size: var(--df-text-xs);
+  --df-type-caption-leading: 1.45;
+
+  /* Shared navigation roles; Mobile Compact UI consumes these centrally. */
+  --df-type-nav-brand-size: .8125rem;
+  --df-type-nav-label-size: .9375rem;
+  --df-type-nav-submenu-size: .8125rem;
+  --df-type-nav-profile-size: .9375rem;
+  --df-type-nav-meta-size: .75rem;
+  --df-type-nav-section-size: .6875rem;
+  --df-type-nav-footer-size: .6875rem;
+  --df-type-nav-brand-leading: 1.25;
+  --df-type-nav-label-leading: 1.3;
+  --df-type-nav-submenu-leading: 1.35;
+  --df-type-nav-meta-leading: 1.4;
+
+  /* Compact desktop workspace sidebar uses a deliberate smaller role variant. */
+  --df-type-sidebar-label-size: .75rem;
+  --df-type-sidebar-submenu-size: .6875rem;
+  --df-type-sidebar-meta-size: .625rem;
+
   /* Spacing: 4px base scale */
   --df-space-1: .25rem;
   --df-space-2: .5rem;
