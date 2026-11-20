@@ -161,3 +161,15 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Validate applicable Global Theme Presets, Light/Dark, ID/EN, small Android/mobile widths, tablet/desktop, keyboard/focus, contrast, reduced motion, long translations, and loading/empty/error states.
 - Detailed standard is maintained in Akashic Record at `dajjal-family/core/mobile_compact_ui.md`. Keep this rule synchronized with `docs/foundation/COMMAND_MASTER.md` and `docs/foundation/MASTER_FOUNDATION.md`.
 - This is a design-system decision; it does not itself claim that any page has been implemented or visually QA-verified.
+
+
+## Global Typography System — working rules (2026-11-20)
+
+- Use the owner-approved Global Typography System as the shared source for font families, semantic type roles, font sizes, weights, and line heights.
+- Keep typography independent from TECNO and Dajjal × Veylora Global Theme Preset color maps. Preset switching must not unexpectedly change typography.
+- Shared Global Navigation and shared components must use central semantic typography tokens, not independent hardcoded font-size scales.
+- Existing typography primitives in app/styles/tokens.css are the starting point. Audit consumers and CSS cascade before changes; preserve compatibility during incremental migration.
+- Mobile Compact UI applies shared typography tokens responsively and is not a separate typography system. Preserve readability, localization, text scaling, accessible touch targets, and desktop behavior.
+- Preserve approved isolated Couple, Wedding, and immersive Games scopes.
+- Implement incrementally; no blanket redesign or broad CSS override. Validate both presets, Light/Dark, ID/EN, mobile/tablet/desktop, long labels, zoom, keyboard/focus, contrast, and accessibility.
+- Canonical specification: Akashic Record dajjal-family/core/global_typography.md. Keep synchronized with docs/foundation/MASTER_FOUNDATION.md, docs/foundation/COMMAND_MASTER.md, and Akashic operating rules.
