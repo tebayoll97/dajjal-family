@@ -586,3 +586,31 @@ For every feature that uploads files to the connected Google Drive storage (incl
 - Verify the final stored name is generated only on the server and reflects the validated slot and MIME type.
 - Test duplicate original filenames, repeated uploads to the same slot, different users/profiles, replacement behavior, and failed database persistence.
 - Keep these rules in sync with `MASTER_FOUNDATION.md` and the project operating rules.
+
+
+## 22. Global mobile presentation standard — Mobile Compact UI
+
+The owner-approved **Mobile Compact UI** is the default mobile responsive presentation/density direction for Dajjal Family. Apply it to new mobile experiences and incrementally when existing pages are next modified.
+
+### 22.1 Governance and theme compatibility
+- Mobile Compact UI is a layout/density layer. It does not replace or outrank MASTER_FOUNDATION.md, DESIGN_SYSTEM.md, or Global Theme Preset Engine.
+- Use the active Global Theme Preset and semantic tokens for every in-scope visual surface. Never create a separate mobile palette, hardcode brand colors, or override the global preset to imitate a reference screenshot.
+- Preserve approved theme isolation for Couple, Wedding, and immersive Games. Do not force isolated experiences into global theme scope; apply compact layout principles only when compatible.
+
+### 22.2 Mobile density requirements
+- Reduce unnecessary whitespace, excessive vertical gaps, oversized padding, and oversized cards.
+- Keep headings, body copy, metadata, and labels readable; compact must never mean illegible or cramped.
+- Use compact inputs, buttons, chips, badges, and rows while preserving accessible touch targets and clear labels.
+- Prefer wrapping chips for short filters and progressive disclosure for secondary/advanced controls. Keep primary actions discoverable and group secondary actions contextually.
+- Prevent unintended horizontal overflow; handle long IDs, titles, tags, and translations deliberately.
+- Preserve loading, empty, error, success, disabled, selected, and focus states and all existing feature behavior.
+- Do not force every route into the same card/list pattern. Choose the compact structure appropriate to its content and user journey.
+
+### 22.3 Responsive and quality gates
+- Mobile is the compact-first target; do not unnecessarily compress desktop layouts.
+- Reuse established breakpoints and responsive utilities; inspect the current implementation before changing breakpoint values.
+- Test small Android widths, larger phones, tablet, desktop, on-screen keyboard/safe areas, and browser text scaling.
+- Test all applicable global presets, Light/Dark, ID/EN, long translations, keyboard/focus, contrast, reduced motion, and WCAG 2.2 AA accessibility requirements.
+- Roll out incrementally. This standard does not authorize a whole-site redesign or mean that any page is already implemented/verified.
+
+Canonical detailed specification: Akashic Record `dajjal-family/core/mobile_compact_ui.md`. Keep synchronized with `docs/aturan-kerja.md` and MASTER_FOUNDATION.md.
