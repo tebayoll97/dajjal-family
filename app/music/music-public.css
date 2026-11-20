@@ -124,3 +124,61 @@
   .music-public-controls>.music-public-main-play{flex-basis:2.15rem;width:2.15rem;height:2.15rem}
 }
 @media(prefers-reduced-motion:reduce){.music-public-artwork img{animation:none}.music-public-track{transition:none}}
+
+
+/* Refined mobile player composition */
+.music-public-title-row{display:flex;min-width:0;align-items:center;gap:.55rem}
+.music-public-title-marquee{min-width:0;flex:1;overflow:hidden}
+.music-public-title-marquee h2{margin:.5rem 0 .15rem}
+.music-public-favorite{
+  display:grid;flex:0 0 2.35rem;width:2.35rem;height:2.35rem;place-items:center;
+  border:1px solid var(--df-border);border-radius:50%;background:var(--df-surface-raised);
+  color:var(--df-text);font-size:1.35rem;cursor:pointer
+}
+.music-public-favorite.is-favorite{color:var(--df-danger);border-color:color-mix(in srgb,var(--df-danger) 45%,var(--df-border))}
+.music-public-favorite:disabled{opacity:.35;cursor:not-allowed}
+.music-public-mode{font-size:1.1rem!important}
+.music-public-mode.is-enabled{color:var(--df-primary)!important;border-color:var(--df-primary)!important;background:var(--df-primary-soft)!important}
+.music-public-equalizer{display:flex;height:1rem;align-items:center;justify-content:center;gap:2px}
+.music-public-equalizer i{display:block;width:2px;height:35%;border-radius:2px;background:currentColor;animation:music-equalize .72s ease-in-out infinite alternate}
+.music-public-equalizer i:nth-child(2){height:85%;animation-delay:-.45s}
+.music-public-equalizer i:nth-child(3){height:55%;animation-delay:-.2s}
+.music-public-equalizer i:nth-child(4){height:100%;animation-delay:-.58s}
+@keyframes music-equalize{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+@keyframes music-title-marquee{
+  0%,12%{transform:translateX(0)}
+  82%,100%{transform:translateX(calc(-100% + 100%))}
+}
+@media(max-width:640px){
+  .music-public-feature{grid-template-columns:minmax(0,1fr);gap:.75rem;padding:.8rem}
+  .music-public-artwork{width:min(68%,17rem);margin-inline:auto;align-self:auto;border-radius:var(--df-radius-lg)}
+  .music-public-artwork>span{right:.45rem;bottom:.4rem;padding:.18rem .35rem;font-size:.48rem}
+  .music-public-artwork-fallback{font-size:3.2rem}
+  .music-public-player-content{width:100%;min-width:0}
+  .music-public-track-meta{font-size:.56rem}
+  .music-public-title-group{min-width:0}
+  .music-public-title-row{gap:.5rem}
+  .music-public-title-marquee{position:relative}
+  .music-public-title-marquee h2{display:block;width:max-content;max-width:none;margin:.35rem 0 .12rem;font-size:1.08rem;white-space:nowrap}
+  .music-public-title-marquee.is-long h2{padding-right:2rem;animation:music-title-marquee 12s ease-in-out infinite alternate}
+  .music-public-favorite{flex-basis:2.1rem;width:2.1rem;height:2.1rem;font-size:1.2rem}
+  .music-public-title-group p{font-size:.72rem}
+  .music-public-progress{margin-top:.65rem}
+  .music-public-progress input{height:1rem}
+  .music-public-times{font-size:.62rem}
+  .music-public-controls{justify-content:space-between;gap:.35rem;margin-top:.5rem}
+  .music-public-controls>button{flex:0 0 2.25rem;width:2.25rem;height:2.25rem;font-size:.92rem}
+  .music-public-controls>.music-public-main-play{flex-basis:3.15rem;width:3.15rem;height:3.15rem;font-size:1.1rem}
+  .music-public-controls>.music-public-mode{border-color:transparent;background:transparent;font-size:1.15rem!important}
+  .music-public-volume{display:none}
+  .music-public-track.is-active .music-public-track-action{background:var(--df-primary-soft);color:var(--df-primary)}
+}
+@media(max-width:360px){
+  .music-public-artwork{width:min(72%,15rem)}
+  .music-public-controls{gap:.15rem}
+  .music-public-controls>button{flex-basis:1.95rem;width:1.95rem;height:1.95rem}
+  .music-public-controls>.music-public-main-play{flex-basis:2.75rem;width:2.75rem;height:2.75rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .music-public-equalizer i,.music-public-title-marquee.is-long h2{animation:none}
+}
