@@ -614,3 +614,19 @@ The owner-approved **Mobile Compact UI** is the default mobile responsive presen
 - Roll out incrementally. This standard does not authorize a whole-site redesign or mean that any page is already implemented/verified.
 
 Canonical detailed specification: Akashic Record `dajjal-family/core/mobile_compact_ui.md`. Keep synchronized with `docs/aturan-kerja.md` and MASTER_FOUNDATION.md.
+
+
+## 23. Global Typography System — mandatory implementation rule
+
+The approved Global Typography System is the shared source of font families, semantic type roles, font sizes, weights, and line heights for standard Dajjal Family UI.
+
+- Keep Global Typography independent from Global Theme Preset color maps. TECNO and Dajjal × Veylora share the same typography contract by default; changing identity preset must not unexpectedly change reading rhythm.
+- Do not put global typography scales into THEME_TOKEN_MAPS or create per-preset duplicate typography maps.
+- Shared Global Navigation and shared components must consume centralized semantic typography tokens; do not hardcode independent font-size scales in component CSS.
+- Existing primitives in app/styles/tokens.css are the starting point. Inspect all consumers and CSS cascade before extending, changing, or renaming tokens; preserve compatibility during gradual migration.
+- Mobile Compact UI applies the shared typography tokens responsively; it is not a separate typography system. Keep text readable, localized, zoomable, and accessible. Do not compress desktop unnecessarily.
+- Preserve approved Couple, Wedding, and immersive Games isolation boundaries.
+- Implement incrementally: shared shell/components first, then pages as they are next modified. No blanket redesign or broad global override.
+- QA both global presets, Light/Dark, ID/EN, mobile/tablet/desktop, long labels, zoom/text scaling, keyboard/focus, contrast, and accessibility. Report implementation, build, browser QA, and deployment as separate statuses.
+
+Canonical specification: Akashic Record dajjal-family/core/global_typography.md. Keep synchronized with Master Foundation, docs/aturan-kerja.md, and the Akashic operating rules.
