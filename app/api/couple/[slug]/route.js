@@ -102,7 +102,7 @@ export async function PATCH(request,context){
   const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
   if(readError)return errorJson("Unable to load existing Couple Profile translations.",500);
   const sharedGamerKeys=COUPLE_CONTENT_KEYS.filter((key)=>key.startsWith("gamer_")&&!["gamer_profile_title","gamer_profile_subtitle"].includes(key));
-  const sharedExactKeys=[...sharedGamerKeys,"relationship_start_at"];
+  const sharedExactKeys=[...sharedGamerKeys,"relationship_start_at","music_track_id"];
   const translationFields=Object.fromEntries(Object.entries(clean).filter(([key])=>!sharedExactKeys.includes(key)));
   let translated;
   try{translated=await translateCoupleContent(translationFields,body.locale);}
