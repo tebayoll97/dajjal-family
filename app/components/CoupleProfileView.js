@@ -409,7 +409,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
 
         <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
           <div className="df-couple-content-panel">
-          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("identity")} aria-label={en ? "Edit couple identity panel" : "Edit panel identitas pasangan"}><Pencil /></button>
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("identity")} aria-label={en ? "Edit couple identity panel" : "Edit panel identitas pasangan"}><Pencil /></button>}
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("identity_label", "Identity section label")}</p>
             <h2 id="df-couple-identities">
@@ -494,7 +494,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         )}
         <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
           <div className="df-couple-content-panel">
-          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("gallery")} aria-label={en ? "Edit memories panel" : "Edit panel kenangan"}><Pencil /></button>
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("gallery")} aria-label={en ? "Edit memories panel" : "Edit panel kenangan"}><Pencil /></button>}
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("gallery_eyebrow", "Gallery eyebrow")}</p>
             <h2 id="df-couple-gallery-title">{field("gallery_title", "Gallery title")}</h2>
