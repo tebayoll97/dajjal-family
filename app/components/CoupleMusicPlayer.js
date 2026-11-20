@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 
 const tracks = [
@@ -66,9 +66,34 @@ const clock = (value) =>
     ? Math.floor(value / 60) + ":" + String(Math.floor(value % 60)).padStart(2, "0")
     : "0:00";
 
-export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
+export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} }) {
   const { language } = useLanguage();
   const t = words[language] || words.id;
+  const [catalogTrack, setCatalogTrack] = useState(null);
+  const [catalogStatus, setCatalogStatus] = useState(content.music_track_id ? "loading" : "idle");
+  useEffect(() => {
+    const trackId = content.music_track_id || "";
+    if (!trackId) { setCatalogTrack(null); setCatalogStatus("idle"); return undefined; }
+    let active = true;
+    setCatalogStatus("loading");
+    fetch("/api/music", { cache: "no-store" }).then(async (response) => {
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || "Music catalog unavailable.");
+      const item = (payload.items || []).find((entry) => entry.id === trackId);
+      if (!item) throw new Error("Selected track is no longer published.");
+      if (active) {
+        setCatalogTrack({
+          title: item.title, artist: item.artist, genre: item.genre || "", mood: item.mood || "",
+          src: "/api/music/" + encodeURIComponent(item.id) + "/stream",
+          cover: "/api/music/" + encodeURIComponent(item.id) + "/cover", theme: "catalog",
+          duration: item.audio_duration_seconds || 0,
+        });
+        setCatalogStatus("ready");
+      }
+    }).catch(() => { if (active) { setCatalogTrack(null); setCatalogStatus("error"); } });
+    return () => { active = false; };
+  }, [content.music_track_id]);
+  const playerTracks = useMemo(() => content.music_track_id ? (catalogTrack ? [catalogTrack] : []) : tracks, [content.music_track_id, catalogTrack]);
 
   const audioRef = useRef(null);
   const shouldPlayRef = useRef(false);
@@ -126,7 +151,8 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     const audio = new Audio();
     audio.preload = "metadata";
     audio.volume = 0;
-    audio.src = tracks[0].src;
+    if (!playerTracks.length) return undefined;
+    audio.src = playerTracks[0].src;
     audio.load();
     audioRef.current = audio;
 
@@ -142,7 +168,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
       playingRef.current = false;
       setPlaying(false);
       shouldPlayRef.current = true;
-      setIndex((current) => (current + 1) % tracks.length);
+      if (playerTracks.length > 1) setIndex((current) => (current + 1) % playerTracks.length);
     };
 
     const failed = () => {
@@ -267,7 +293,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
       audio.load();
       if (audioRef.current === audio) audioRef.current = null;
     };
-  }, []);
+  }, [playerTracks]);
 
   // Load the selected source. Continue only when playback was explicitly requested.
   useEffect(() => {
@@ -276,7 +302,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
 
     // Track selection from a click loads the source synchronously in the
     // click handler, preserving the browser's user-activation permission.
-    if (audio.getAttribute("src") === tracks[index].src) return;
+    if (audio.getAttribute("src") === playerTracks[index].src) return;
 
     playRequestRef.current += 1;
     const requestId = playRequestRef.current;
@@ -403,7 +429,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
   };
 
   const changeTrack = (step) => {
-    selectTrack((index + step + tracks.length) % tracks.length);
+    selectTrack((index + step + playerTracks.length) % tracks.length);
   };
 
   const seek = (event) => {
@@ -413,16 +439,17 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
     setTime(audio.currentTime);
   };
 
-  const track = tracks[index];
+  const track = playerTracks[index];
   const progress = duration ? Math.min(100, (time / duration) * 100) : 0;
+  if (!playerTracks.length) return content.music_track_id && catalogStatus === "loading" ? <section className="df-couple-music-player" aria-live="polite"><div className="df-couple-music-card"><p>{t.eyebrow}</p><p>{language === "en" ? "Loading selected soundtrack…" : "Memuat lagu pilihan…"}</p></div></section> : null;
 
   return (
     <section className="df-couple-music-player" id="df-couple-music-player" aria-labelledby="df-couple-music-title">
       <div className="df-couple-music-card" data-track-theme={track.theme}>
         <div className="df-couple-music-heading">
           <p className="df-couple-eyebrow">{t.eyebrow}</p>
-          <h2 id="df-couple-music-title">{t.title}</h2>
-          <p>{t.intro}</p>
+          <h2 id="df-couple-music-title">{content.music_title || t.title}</h2>
+          <p>{content.music_subtitle || t.intro}</p>
         </div>
         <div className="df-couple-music-artwork" key={"cover-" + index}>
           <img src={track.cover} alt={track.title + " — " + track.artist + " cover"} />
@@ -431,7 +458,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
 
         <div className="df-couple-music-content">
           <div className="df-couple-music-track-meta">
-            <span>{t.track} {String(index + 1).padStart(2, "0")} {t.of} 02</span>
+            <span>{playerTracks.length > 1 ? `${t.track} ${String(index + 1).padStart(2, "0")} ${t.of} ${String(playerTracks.length).padStart(2, "0")}` : (language === "en" ? "SELECTED SOUNDTRACK" : "LAGU PILIHAN")}</span>
             <span>{track.artist}</span>
           </div>
 
@@ -459,11 +486,11 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
           </div>
 
           <div className="df-couple-music-controls">
-            <button type="button" onClick={() => changeTrack(-1)} aria-label={t.prev} title={t.prev}>|‹</button>
+            {playerTracks.length > 1 && <button type="button" onClick={() => changeTrack(-1)} aria-label={t.prev} title={t.prev}>|‹</button> }
             <button className="df-couple-music-play" type="button" onClick={toggle} aria-label={playing ? t.pause : t.play} title={playing ? t.pause : t.play}>
               <span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span>
             </button>
-            <button type="button" onClick={() => changeTrack(1)} aria-label={t.next} title={t.next}>›|</button>
+            {playerTracks.length > 1 && <button type="button" onClick={() => changeTrack(1)} aria-label={t.next} title={t.next}>›|</button> }
             <label className="df-couple-music-volume">
               <span aria-hidden="true">♪</span>
               <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(event) => setVolume(Number(event.target.value))} aria-label={t.volume} />
@@ -473,9 +500,9 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
           <p className="df-couple-music-message" role="status" aria-live="polite">{message || " "}</p>
         </div>
 
-        <div className="df-couple-music-playlist" aria-label={t.playlist}>
+        {playerTracks.length > 1 && <div className="df-couple-music-playlist" aria-label={t.playlist}>
           <h4>{t.playlist}</h4>
-          {tracks.map((item, itemIndex) => {
+          {playerTracks.map((item, itemIndex) => {
             const active = itemIndex === index;
             return (
               <button
@@ -507,7 +534,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange }) {
               </button>
             );
           })}
-        </div>
+        </div>}
       </div>
     </section>
   );
