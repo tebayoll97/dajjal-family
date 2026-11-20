@@ -86,7 +86,8 @@ export async function PATCH(request,context){
   for(const [key,limit] of Object.entries(gamerLimits)){
    if(Object.prototype.hasOwnProperty.call(clean,key)){
     const value=clean[key];
-    if(!value||value.length>limit||/[\\u0000-\\u001F\\u007F]/.test(value))return errorJson("Invalid gamer profile field: "+key+".");
+    if(!value||value.length>limit||/[\u0000-\u001F\u007F]/.test(value))return errorJson("Invalid gamer profile field: "+key+".");
+    if(key.endsWith("_gender")&&!["Male","Female"].includes(value))return errorJson("Invalid gamer gender.");
    }
   }
   const {data:existingContents,error:readError}=await supabaseAdmin.from("df_couple_contents").select("locale,content").eq("couple_id",profile.id);
