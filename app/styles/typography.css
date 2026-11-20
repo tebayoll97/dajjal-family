@@ -14,3 +14,11 @@
 .ui-subtitle{max-width:var(--df-reading-width);color:var(--df-text-secondary);font-size:clamp(.9375rem,.9rem + .18vw,1.0625rem);line-height:var(--df-leading-relaxed)}
 .ui-prose{max-width:var(--df-reading-width);color:var(--df-text-secondary);font-size:var(--df-text-base);line-height:var(--df-leading-relaxed)}
 .ui-caption{color:var(--df-text-muted);font-size:var(--df-text-sm);line-height:1.45}
+
+/* Semantic type roles — shared by components; responsive density is handled separately. */
+.ui-text-body{font-family:var(--df-font-sans);font-size:var(--df-type-body-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-body-leading)}
+.ui-text-heading{font-family:var(--df-font-sans);font-weight:var(--df-weight-bold);line-height:var(--df-type-heading-leading)}
+.ui-text-label{font-family:var(--df-font-sans);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}
+.ui-text-caption{font-family:var(--df-font-sans);font-size:var(--df-type-caption-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-caption-leading)}
+.ui-text-nav{font-family:var(--df-font-sans);font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
+.ui-text-nav-submenu{font-family:var(--df-font-sans);font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-submenu-leading)}
