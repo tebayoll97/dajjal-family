@@ -24,6 +24,6 @@ export async function GET(request) {
   }
 
   return Response.json({ success: true, items: data || [] }, {
-    headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    headers: { "Cache-Control": "private, no-store, no-cache, must-revalidate, max-age=0" },
   });
 }
