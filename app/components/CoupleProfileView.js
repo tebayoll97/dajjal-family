@@ -262,6 +262,11 @@ const BATCH_PANEL_FIELDS = {
     { key: "gallery_intro", label: "Intro galeri", multiline: true }, { key: "gallery_label", label: "Label galeri", max: 220 },
     ...Array.from({ length: 6 }, (_, index) => ({ key: `gallery_${index + 1}_title`, label: `Judul foto ${index + 1}`, max: 220 })),
   ],
+  music: [
+    { key: "music_title", label: "Judul panel musik", max: 220 },
+    { key: "music_subtitle", label: "Subjudul musik", max: 300 },
+    { key: "music_track_id", label: "Lagu pilihan", type: "music-track" },
+  ],
   story: [
     { key: "story_eyebrow", label: "Eyebrow", max: 220 }, { key: "story_title", label: "Judul cerita", max: 220 },
     { key: "story_text", label: "Isi cerita", multiline: true }, { key: "signature", label: "Signature", multiline: true },
@@ -269,12 +274,27 @@ const BATCH_PANEL_FIELDS = {
 };
 function BatchPanelEdit({ panel, locale, draft, setDraft, onSave, onClose, saving, error }) {
   const en = locale === "en";
-  const title = ({ hero: en ? "Main profile" : "Profil utama", identity: en ? "Couple identity" : "Identitas pasangan", gallery: en ? "Memories" : "Kenangan", story: en ? "Our story" : "Kisah kita" })[panel];
+  const [musicItems, setMusicItems] = useState([]);
+  const [musicLoading, setMusicLoading] = useState(false);
+  const [musicError, setMusicError] = useState("");
+  useEffect(() => {
+    if (panel !== "music") return;
+    let active = true;
+    setMusicLoading(true); setMusicError("");
+    fetch("/api/music", { cache: "no-store" }).then(async (response) => {
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || (en ? "Music catalog is unavailable." : "Katalog musik tidak tersedia."));
+      if (active) setMusicItems(Array.isArray(payload.items) ? payload.items : []);
+    }).catch((err) => { if (active) setMusicError(err.message); }).finally(() => { if (active) setMusicLoading(false); });
+    return () => { active = false; };
+  }, [panel, en]);
+  const selectedMusic = musicItems.find((item) => item.id === draft.music_track_id);
+  const title = ({ hero: en ? "Main profile" : "Profil utama", identity: en ? "Couple identity" : "Identitas pasangan", gallery: en ? "Memories" : "Kenangan", story: en ? "Our story" : "Kisah kita", music: en ? "Music panel" : "Panel musik" })[panel];
   return <div className="df-couple-batch-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
     <section className="df-couple-batch-dialog" role="dialog" aria-modal="true" aria-labelledby="df-couple-batch-title">
       <div className="df-couple-batch-heading"><div><p className="df-couple-eyebrow">{en ? "PANEL EDITOR" : "EDITOR PANEL"}</p><h2 id="df-couple-batch-title">{title}</h2><p>{en ? "Edit fields, then save this panel once." : "Ubah kolom, lalu simpan panel ini sekali."}</p></div><button type="button" onClick={onClose} disabled={saving} aria-label={en ? "Close" : "Tutup"}>×</button></div>
-      <div className="df-couple-batch-fields">{(BATCH_PANEL_FIELDS[panel] || []).map((field) => { const value = draft[field.key] ?? ""; const fieldLabel = en ? ({ relationship_label: "Journey label", relationship_start_date: "Journey start date", relationship_start_time: "Journey start time" }[field.key] || field.label) : field.label; return <label key={field.key}>{fieldLabel}
-        {field.multiline ? <textarea rows={4} maxLength={3000} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} /> : <input type={field.type || "text"} maxLength={field.max} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} />}
+      <div className="df-couple-batch-fields">{(BATCH_PANEL_FIELDS[panel] || []).map((field) => { const value = draft[field.key] ?? ""; const fieldLabel = en ? ({ relationship_label: "Journey label", relationship_start_date: "Journey start date", relationship_start_time: "Journey start time", music_title: "Music panel title", music_subtitle: "Music subtitle", music_track_id: "Choose a published song" }[field.key] || field.label) : field.label; return <label key={field.key}>{fieldLabel}
+        {field.type === "music-track" ? <><select value={value} onChange={(event) => setDraft((old) => ({ ...old, music_track_id: event.target.value }))} disabled={saving || musicLoading}><option value="">{en ? "Use default music" : "Gunakan musik bawaan"}</option>{musicItems.map((item) => <option key={item.id} value={item.id}>{item.title} — {item.artist}{item.genre ? " · " + item.genre : ""}</option>)}</select>{musicLoading && <small>{en ? "Loading published songs…" : "Memuat lagu yang telah dipublikasikan…"}</small>}{musicError && <small role="alert">{musicError}</small>}{selectedMusic && <span className="df-couple-batch-music-preview"><strong>{selectedMusic.title}</strong><span>{selectedMusic.artist}{selectedMusic.genre ? " · " + selectedMusic.genre : ""}</span>{selectedMusic.mood && <small>{en ? "Mood: " : "Suasana: "}{selectedMusic.mood}</small>}{selectedMusic.audio_duration_seconds > 0 && <small>{Math.floor(selectedMusic.audio_duration_seconds / 60)}:{String(Math.floor(selectedMusic.audio_duration_seconds % 60)).padStart(2, "0")}</small>}</span>}</> : field.multiline ? <textarea rows={4} maxLength={3000} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} /> : <input type={field.type || "text"} maxLength={field.max} value={value} onChange={(event) => setDraft((old) => ({ ...old, [field.key]: event.target.value }))} disabled={saving} />}
         {field.max && <small>{value.length}/{field.max}</small>}</label>; })}</div>
       {error && <p className="df-couple-gamer-error" role="alert">{error}</p>}
       <div className="df-couple-gamer-actions"><button type="button" onClick={onClose} disabled={saving}>{en ? "Cancel" : "Batal"}</button><button type="button" onClick={onSave} disabled={saving}>{saving ? (en ? "Saving…" : "Menyimpan…") : (en ? "Save panel" : "Simpan panel")}</button></div>
@@ -441,7 +461,10 @@ export default function CoupleProfileView({ profile, content, media = [], locale
 
         </header>
 
-        <CoupleMusicPlayer onPlaybackStateChange={setMusicPlaying} />
+        <section className="df-couple-music-section" aria-label={en ? "Couple soundtrack" : "Musik pasangan"}>
+          {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("music")} aria-label={en ? "Edit music panel" : "Edit panel musik"}><Pencil /></button>}
+          <CoupleMusicPlayer content={content} onPlaybackStateChange={setMusicPlaying} />
+        </section>
 
         <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
           <div className="df-couple-content-panel">
