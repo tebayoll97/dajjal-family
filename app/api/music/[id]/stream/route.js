@@ -41,7 +41,7 @@ export async function GET(request, { params }) {
 
     const responseHeaders = new Headers({
       "Content-Type": data.audio_mime_type,
-      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Cache-Control": "private, no-store",
       "Accept-Ranges": "bytes",
       "X-Content-Type-Options": "nosniff",
     });
