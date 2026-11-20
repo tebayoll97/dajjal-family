@@ -344,6 +344,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         <CoupleMusicPlayer onPlaybackStateChange={setMusicPlaying} />
 
         <section className="df-couple-section" id="df-couple-profile" aria-labelledby="df-couple-identities">
+          <div className="df-couple-content-panel">
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("identity_label", "Identity section label")}</p>
             <h2 id="df-couple-identities">
@@ -374,6 +375,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
               <span className="df-couple-character-index" aria-hidden="true">02</span>
             </article>
           </div>
+          </div>
         </section>
 
         <section className="df-couple-gamer-profile" aria-labelledby="df-couple-gamer-title">
@@ -392,7 +394,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
                 <h3>{content["gamer_"+person+"_nickname"]}</h3>
                 <dl>
                   <div><dt>{en?"Alliance":"Aliansi"}</dt><dd>{content["gamer_"+person+"_alliance"]}</dd></div>
-                  <div><dt>{en?"Gender":"Jenis Kelamin"}</dt><dd>{content["gamer_"+person+"_gender"]==="Male"?(en?"Male":"Laki-laki"):content["gamer_"+person+"_gender"]==="Female"?(en?"Female":"Perempuan"):content["gamer_"+person+"_gender"]}</dd></div>
+                  <div><dt>{en?"Gender":"Jenis Kelamin"}</dt><dd>{content["gamer_"+person+"_gender"]==="Male"?(en?"Male":"Laki-laki"):content["gamer_"+person+"_gender"]==="Female"?(en?"Female":"Perempuan"):content["gamer_"+person+"_gender"]==="Transgender"?(en?"Transgender":"Transgender"):content["gamer_"+person+"_gender"]}</dd></div>
                   <div><dt>{en?"Server":"Server"}</dt><dd>{content["gamer_"+person+"_server"]}</dd></div>
                 </dl>
               </article>
@@ -407,10 +409,10 @@ export default function CoupleProfileView({ profile, content, media = [], locale
               <label>{en?"Subtitle":"Subjudul"}<input maxLength={100} value={gamerDraft.gamer_profile_subtitle||""} onChange={(event)=>setGamerDraft((old)=>({...old,gamer_profile_subtitle:event.target.value}))} disabled={gamerSaving}/><small>{(gamerDraft.gamer_profile_subtitle||"").length}/100</small></label>
               {["male","female"].map((person)=>(
                 <fieldset key={person}>
-                  <legend>{person==="male"?(en?"Dajjal":"Dajjal"):"Veylora"}</legend>
+                  <legend>{person==="male"?profile.male_nickname:profile.female_nickname}</legend>
                   {[[ "nickname",en?"Nickname":"Nickname",32 ],["alliance",en?"Alliance":"Aliansi",20],["gender",en?"Gender":"Jenis kelamin",16],["server","Server",12]].map(([field,label,max])=>(
                     <label key={field}>{label}
-                      {field==="gender"?<select value={gamerDraft["gamer_"+person+"_gender"]||""} onChange={(event)=>setGamerDraft((old)=>({...old,["gamer_"+person+"_gender"]:event.target.value}))} disabled={gamerSaving}><option value="Male">Male</option><option value="Female">Female</option></select>:
+                      {field==="gender"?<select value={gamerDraft["gamer_"+person+"_gender"]||""} onChange={(event)=>setGamerDraft((old)=>({...old,["gamer_"+person+"_gender"]:event.target.value}))} disabled={gamerSaving}><option value="Male">{en?"Male":"Laki-laki"}</option><option value="Female">{en?"Female":"Perempuan"}</option><option value="Transgender">Transgender</option></select>:
                       <input maxLength={max} value={gamerDraft["gamer_"+person+"_"+field]||""} onChange={(event)=>setGamerDraft((old)=>({...old,["gamer_"+person+"_"+field]:event.target.value}))} disabled={gamerSaving}/>}
                       {field!=="gender"&&<small>{(gamerDraft["gamer_"+person+"_"+field]||"").length}/{max}</small>}
                     </label>
@@ -426,6 +428,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </div>
         )}
         <section className="df-couple-gallery" id="df-couple-gallery" aria-labelledby="df-couple-gallery-title">
+          <div className="df-couple-content-panel">
           <div className="df-couple-section-heading">
             <p className="df-couple-eyebrow">{field("gallery_eyebrow", "Gallery eyebrow")}</p>
             <h2 id="df-couple-gallery-title">{field("gallery_title", "Gallery title")}</h2>
@@ -448,6 +451,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
                 {displayGallery.map((item, index) => <button key={item.slot} className="df-couple-moments-dot" type="button" onClick={() => scrollToMoment(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={activeMoment === index ? "true" : undefined} />)}
               </div>
             </div>
+          </div>
           </div>
         </section>
 
