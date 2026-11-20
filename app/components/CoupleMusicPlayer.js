@@ -151,7 +151,6 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     const audio = new Audio();
     audio.preload = "metadata";
     audio.volume = 0;
-    if (!playerTracks.length) return undefined;
     audio.src = playerTracks[0].src;
     audio.load();
     audioRef.current = audio;
@@ -308,7 +307,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     const requestId = playRequestRef.current;
 
     audio.pause();
-    audio.src = tracks[index].src;
+    audio.src = playerTracks[index].src;
     audio.load();
     setTime(0);
     setDuration(0);
@@ -405,7 +404,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     const requestId = playRequestRef.current;
     audio.pause();
     audio.volume = 0;
-    audio.src = tracks[nextIndex].src;
+    audio.src = playerTracks[nextIndex].src;
     audio.load();
     setTime(0);
     setDuration(0);
@@ -429,7 +428,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
   };
 
   const changeTrack = (step) => {
-    selectTrack((index + step + playerTracks.length) % tracks.length);
+    selectTrack((index + step + playerTracks.length) % playerTracks.length);
   };
 
   const seek = (event) => {
