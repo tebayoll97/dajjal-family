@@ -8,8 +8,18 @@ import CoupleImage from "@/app/components/CoupleImage";
 
 function durationSince(date) {
   if (!date) return [0, 0, 0, 0];
-  const elapsed = Math.max(0, Math.floor((Date.now() - new Date(date + "T00:00:00").getTime()) / 1000));
+  const elapsed = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
   return [Math.floor(elapsed / 86400), Math.floor((elapsed % 86400) / 3600), Math.floor((elapsed % 3600) / 60), elapsed % 60];
+}
+
+function GamerFieldIcon({ type }) {
+  const paths = {
+    nickname: <><circle cx="12" cy="8" r="3.2" /><path d="M5.5 19c.8-3 3-4.5 6.5-4.5s5.7 1.5 6.5 4.5" /></>,
+    alliance: <><path d="M12 3 19 6v5c0 4.4-2.8 7.5-7 10-4.2-2.5-7-5.6-7-10V6l7-3Z" /><path d="m9 12 2 2 4-4" /></>,
+    gender: <><circle cx="10" cy="13" r="5" /><path d="m14 9 5-5m-4 0h4v4M10 18v4m-3-2h6" /></>,
+    server: <><rect x="4" y="4" width="16" height="6" rx="1.5" /><rect x="4" y="14" width="16" height="6" rx="1.5" /><path d="M8 7h.01M8 17h.01M12 7h5M12 17h5" /></>,
+  };
+  return <svg className="df-couple-gamer-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[type] || paths.nickname}</svg>;
 }
 
 function Pencil() {
@@ -218,7 +228,7 @@ const BATCH_PANEL_FIELDS = {
     { key: "femaleNickname", source: "profile", label: "Nama pasangan 2", max: 40 },
     { key: "subtitle", label: "Subtitle", max: 220 }, { key: "intro", label: "Intro", multiline: true },
     { key: "anniversary_label", label: "Label anniversary", max: 220 },
-    { key: "anniversaryDate", source: "profile", label: "Tanggal anniversary", type: "date" },
+    { key: "anniversary_datetime", label: "Tanggal dan jam anniversary", type: "datetime-local" },
   ],
   identity: [
     { key: "identity_label", label: "Label panel", max: 220 }, { key: "male_role", label: "Role pasangan 1", max: 220 },
@@ -283,11 +293,12 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     empty: "Add a photo", noGallery: "Belum ada foto galeri.", reset: "Reset Couple Profile", resetMessage: "Yakin untuk menghapus semua pengaturan saat ini? Anda akan memulai dari awal lagi", continue: "Lanjutkan", cancel: "Batal",
   };
   useEffect(() => {
-    const update = () => setTime(durationSince(profile.anniversary_date));
+    const anniversaryStart = content.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "");
+    const update = () => setTime(durationSince(anniversaryStart));
     update();
     const interval = window.setInterval(update, 1000);
     return () => window.clearInterval(interval);
-  }, [profile.anniversary_date]);
+  }, [profile.anniversary_date, content.anniversary_datetime]);
   useEffect(() => {
     if (!activePhoto) return undefined;
     const closeOnEscape = (event) => { if (event.key === "Escape") setActivePhoto(null); };
@@ -322,7 +333,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   };
   const openBatchPanel = (panel) => {
     const draft = {};
-    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : item.key === "femaleNickname" ? profile.female_nickname : profile.anniversary_date || "") : (content[item.key] || "");
+    for (const item of BATCH_PANEL_FIELDS[panel] || []) draft[item.key] = item.source === "profile" ? (item.key === "maleNickname" ? profile.male_nickname : profile.female_nickname) : (item.key === "anniversary_datetime" ? (content.anniversary_datetime || (profile.anniversary_date ? profile.anniversary_date + "T00:00" : "")) : (content[item.key] || ""));
     setBatchDraft(draft); setBatchError(""); setBatchPanel(panel);
   };
   const saveBatchPanel = async () => {
@@ -331,10 +342,14 @@ export default function CoupleProfileView({ profile, content, media = [], locale
     try {
       const change = { content: {}, profile: {} };
       for (const item of BATCH_PANEL_FIELDS[batchPanel] || []) {
-        if (item.source === "profile") change.profile[item.key] = batchDraft[item.key] || (item.key === "anniversaryDate" ? null : "");
+        if (item.source === "profile") change.profile[item.key] = batchDraft[item.key] || "";
         else change.content[item.key] = batchDraft[item.key] || "";
       }
       if (!Object.keys(change.content).length) delete change.content;
+      if (batchPanel === "hero" && Object.prototype.hasOwnProperty.call(batchDraft, "anniversary_datetime")) {
+        const dateTime = batchDraft.anniversary_datetime || "";
+        change.profile.anniversaryDate = dateTime ? dateTime.slice(0, 10) : null;
+      }
       if (!Object.keys(change.profile).length) delete change.profile;
       await onSave?.(change); setBatchPanel("");
     } catch (error) { setBatchError(error.message || (en ? "Unable to save this panel." : "Panel gagal disimpan.")); }
@@ -388,7 +403,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           <div className="df-couple-anniversary-heading">
             <p className="df-couple-eyebrow">{field("anniversary_label", "Anniversary label")}</p>
           </div>
-          {profile.anniversary_date && <section className="df-couple-metrics" aria-label={content.anniversary_label}>
+          {(content.anniversary_datetime || profile.anniversary_date) && <section className="df-couple-metrics" aria-label={content.anniversary_label}>
             {time.map((value, index) => <div className="df-couple-metric" key={timeUnits[index]}><strong>{value.toLocaleString(en ? "en-US" : "id-ID")}</strong><span>{timeUnits[index]}</span></div>)}
           </section>}
 
@@ -445,11 +460,11 @@ export default function CoupleProfileView({ profile, content, media = [], locale
             {["male","female"].map((person,index)=>(
               <article className="df-couple-gamer-card" key={person}>
                 <span className="df-couple-gamer-index">{index===0?"01":"02"}</span>
-                <h3>{content["gamer_"+person+"_nickname"]}</h3>
+                <h3 className="df-couple-gamer-name"><GamerFieldIcon type="nickname" />{content["gamer_"+person+"_nickname"]}</h3>
                 <dl>
-                  <div><dt>{en?"Alliance":"Aliansi"}</dt><dd>{content["gamer_"+person+"_alliance"]}</dd></div>
-                  <div><dt>{en?"Gender":"Jenis Kelamin"}</dt><dd>{content["gamer_"+person+"_gender"]==="Male"?(en?"Male":"Laki-laki"):content["gamer_"+person+"_gender"]==="Female"?(en?"Female":"Perempuan"):content["gamer_"+person+"_gender"]==="Transgender"?(en?"Transgender":"Transgender"):content["gamer_"+person+"_gender"]}</dd></div>
-                  <div><dt>{en?"Server":"Server"}</dt><dd>{content["gamer_"+person+"_server"]}</dd></div>
+                  <div><dt><GamerFieldIcon type="alliance" /><span>{en?"Alliance":"Aliansi"}</span></dt><dd>{content["gamer_"+person+"_alliance"]}</dd></div>
+                  <div><dt><GamerFieldIcon type="gender" /><span>{en?"Gender":"Jenis Kelamin"}</span></dt><dd>{content["gamer_"+person+"_gender"]==="Male"?(en?"Male":"Laki-laki"):content["gamer_"+person+"_gender"]==="Female"?(en?"Female":"Perempuan"):content["gamer_"+person+"_gender"]==="Transgender"?(en?"Transgender":"Transgender"):content["gamer_"+person+"_gender"]}</dd></div>
+                  <div><dt><GamerFieldIcon type="server" /><span>Server</span></dt><dd>{content["gamer_"+person+"_server"]}</dd></div>
                 </dl>
               </article>
             ))}
