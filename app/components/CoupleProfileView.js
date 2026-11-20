@@ -342,9 +342,9 @@ export default function CoupleProfileView({ profile, content, media = [], locale
   };
   const saveContent = (key, value) => onSave?.({ content: { [key]: value } });
   const saveProfile = (key, value) => onSave?.({ profile: { [key]: value } });
-  const field = (key, label, options = {}) => (
-    <EditableText value={content[key]} label={label} editable={editable && !batchPanel} onSave={(value) => saveContent(key, value)} {...options} />
-  );
+  // Text is edited only through its panel-level batch editor. Individual pencil
+  // controls are reserved for image uploads, which remain independently editable.
+  const field = (key) => content[key] || "—";
   const openPhoto = (src, alt) => setActivePhoto({ src, alt });
   const renderGalleryItem = ({ slot, index, fileId }) => {
     const titleKey = "gallery_" + (index + 1) + "_title";
@@ -362,14 +362,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           openPhoto={openPhoto}
         />
         <div className="df-couple-gallery-caption">
-          <EditableText
-            value={galleryTitle}
-            label={(en ? "Photo " : "Foto ") + (index + 1) + (en ? " title" : " — judul")}
-            editable={editable && !batchPanel}
-            onSave={(value) => saveContent(titleKey, value)}
-            className="df-couple-gallery-title-edit"
-            placeholder={en ? "Add photo title" : "Tambahkan judul foto"}
-          />
+          <span className="df-couple-gallery-title-edit">{galleryTitle}</span>
         </div>
       </div>
     );
@@ -382,9 +375,9 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("hero")} aria-label={en ? "Edit main profile panel" : "Edit panel profil utama"}><Pencil /></button>}
           <p className="df-couple-eyebrow">{copy.eyebrow}</p>
           <h1 className="df-couple-title">
-            <EditableText value={profile.male_nickname} label="Male name" editable={editable && !batchPanel} onSave={(value) => saveProfile("maleNickname", value)} />
+            {profile.male_nickname}
             <span className="df-couple-connector" aria-hidden="true">×</span>
-            <EditableText value={profile.female_nickname} label="Female name" editable={editable && !batchPanel} onSave={(value) => saveProfile("femaleNickname", value)} />
+            {profile.female_nickname}
           </h1>
           <div className="df-couple-editable-block df-couple-subtitle">{field("subtitle", "Subtitle")}</div>
           <div className="df-couple-editable-block df-couple-intro">{field("intro", "Introduction", { multiline: true })}</div>
@@ -398,11 +391,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           {profile.anniversary_date && <section className="df-couple-metrics" aria-label={content.anniversary_label}>
             {time.map((value, index) => <div className="df-couple-metric" key={timeUnits[index]}><strong>{value.toLocaleString(en ? "en-US" : "id-ID")}</strong><span>{timeUnits[index]}</span></div>)}
           </section>}
-          {editable && (
-            <div className="df-couple-date-edit">
-              <EditableText value={profile.anniversary_date || ""} label={copy.date} editable={editable && !batchPanel} inputType="date" onSave={(value) => saveProfile("anniversaryDate", value || null)} />
-            </div>
-          )}
+
         </header>
 
         <CoupleMusicPlayer onPlaybackStateChange={setMusicPlaying} />
