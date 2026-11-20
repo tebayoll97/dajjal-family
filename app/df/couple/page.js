@@ -46,20 +46,20 @@ const copy = {
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
     anniversaryLabel: "SUDAH SELAMA INI, DAN MASIH MAU TERUS BERSAMA ❤️",
     timeUnits: ["Hari", "Jam", "Menit", "Detik"],
-    visualEyebrow: "THEIR SIGNATURE LOOKS",
-    visualTitle: "Beda gaya, sama-sama punya pesona. ✨",
-    hair: "Rambut",
-    eyes: "Mata",
-    outfit: "Busana khas",
-    palette: "Palet karakter",
-    dajjalHair: "Merah gelap",
-    dajjalEyes: "Merah",
-    dajjalOutfit: "Hitam dengan aksen merah",
-    dajjalPalette: "Crimson · Black",
-    veyloraHair: "Perak-putih panjang",
-    veyloraEyes: "Biru",
-    veyloraOutfit: "Putih-biru dengan detail emas dan fur",
-    veyloraPalette: "Azure · White",
+    visualEyebrow: "PROFIL GAMER — DARKWAR SURVIVAL",
+    visualTitle: "Identitas, aliansi, dan medan pertempuran mereka.",
+    nickname: "Nama panggilan",
+    alliance: "Aliansi",
+    gender: "Jenis kelamin",
+    state: "Server",
+    dajjalNickname: "†Ðαjjαし•†",
+    dajjalAlliance: "—",
+    dajjalGender: "Laki-laki",
+    dajjalState: "—",
+    veyloraNickname: "†Veyしorα•†",
+    veyloraAlliance: "—",
+    veyloraGender: "Perempuan",
+    veyloraState: "—",
     featuredLabel: "POTRET UTAMA",
     galleryEyebrow: "OUR LITTLE WORLD",
     galleryTitle: "Kumpulan momen yang nggak akan terlupakan. ❤️",
@@ -104,20 +104,20 @@ const copy = {
     footer: "DAJJAL FAMILY · COUPLE PROFILE",
     anniversaryLabel: "THIS LONG TOGETHER, AND STILL CHOOSING EACH OTHER ❤️",
     timeUnits: ["Days", "Hours", "Minutes", "Seconds"],
-    visualEyebrow: "THEIR SIGNATURE LOOKS",
-    visualTitle: "Different styles, equally captivating. ✨",
-    hair: "Hair",
-    eyes: "Eyes",
-    outfit: "Signature outfit",
-    palette: "Character palette",
-    dajjalHair: "Dark reddish",
-    dajjalEyes: "Red",
-    dajjalOutfit: "Black with red accents",
-    dajjalPalette: "Crimson · Black",
-    veyloraHair: "Long silver-white",
-    veyloraEyes: "Blue",
-    veyloraOutfit: "White-blue with gold and fur details",
-    veyloraPalette: "Azure · White",
+    visualEyebrow: "GAMER PROFILE — DARKWAR SURVIVAL",
+    visualTitle: "Their identity, alliance, and battlefield.",
+    nickname: "Nickname",
+    alliance: "Alliance",
+    gender: "Gender",
+    state: "State",
+    dajjalNickname: "†Ðαjjαし•†",
+    dajjalAlliance: "—",
+    dajjalGender: "Male",
+    dajjalState: "—",
+    veyloraNickname: "†Veyしorα•†",
+    veyloraAlliance: "—",
+    veyloraGender: "Female",
+    veyloraState: "—",
     featuredLabel: "FEATURED PORTRAIT",
     galleryEyebrow: "OUR LITTLE WORLD",
     galleryTitle: "A collection of moments we’ll never forget. ❤️",
@@ -142,6 +142,21 @@ const copy = {
     whisperError: "The voice note is unavailable or could not be played.",
   },
 };
+
+function CoupleDetailIcon({ name }) {
+  const paths = {
+    nickname: <><circle cx="12" cy="8" r="3.5" /><path d="M5 20c.7-3.2 3.1-5 7-5s6.3 1.8 7 5" /></>,
+    alliance: <><path d="M12 3 19 6v5c0 4.5-2.8 7.8-7 10-4.2-2.2-7-5.5-7-10V6l7-3Z" /><path d="m9 12 2 2 4-4" /></>,
+    gender: <><circle cx="9" cy="8" r="3" /><path d="M3.5 20c.5-3.1 2.3-4.7 5.5-4.7 1.4 0 2.5.3 3.4.9" /><circle cx="17" cy="15" r="3" /><path d="M17 10v2m0 6v2m-5-5h2m6 0h2" /></>,
+    state: <><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" /><circle cx="12" cy="9" r="2.3" /></>,
+  };
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      {paths[name]}
+    </svg>
+  );
+}
 
 const relationshipStart = new Date("2026-09-09T21:33:00+07:00").getTime();
 
@@ -404,19 +419,19 @@ export default function CoupleProfilePage() {
             <article className="df-couple-detail-card" data-character="dajjal">
               <div className="df-couple-detail-heading"><span className="df-couple-detail-index">01 / DAJJAL</span><h3>{t.dajjalTitle}</h3></div>
               <dl>
-                <div><dt>{t.hair}</dt><dd>{t.dajjalHair}</dd></div>
-                <div><dt>{t.eyes}</dt><dd>{t.dajjalEyes}</dd></div>
-                <div><dt>{t.outfit}</dt><dd>{t.dajjalOutfit}</dd></div>
-                <div><dt>{t.palette}</dt><dd>{t.dajjalPalette}</dd></div>
+                <div><dt><CoupleDetailIcon name="nickname" />{t.nickname}</dt><dd>{t.dajjalNickname}</dd></div>
+                <div><dt><CoupleDetailIcon name="alliance" />{t.alliance}</dt><dd>{t.dajjalAlliance}</dd></div>
+                <div><dt><CoupleDetailIcon name="gender" />{t.gender}</dt><dd>{t.dajjalGender}</dd></div>
+                <div><dt><CoupleDetailIcon name="state" />{t.state}</dt><dd>{t.dajjalState}</dd></div>
               </dl>
             </article>
             <article className="df-couple-detail-card" data-character="veylora">
               <div className="df-couple-detail-heading"><span className="df-couple-detail-index">02 / VEYLORA</span><h3>{t.veyloraTitle}</h3></div>
               <dl>
-                <div><dt>{t.hair}</dt><dd>{t.veyloraHair}</dd></div>
-                <div><dt>{t.eyes}</dt><dd>{t.veyloraEyes}</dd></div>
-                <div><dt>{t.outfit}</dt><dd>{t.veyloraOutfit}</dd></div>
-                <div><dt>{t.palette}</dt><dd>{t.veyloraPalette}</dd></div>
+                <div><dt><CoupleDetailIcon name="nickname" />{t.nickname}</dt><dd>{t.veyloraNickname}</dd></div>
+                <div><dt><CoupleDetailIcon name="alliance" />{t.alliance}</dt><dd>{t.veyloraAlliance}</dd></div>
+                <div><dt><CoupleDetailIcon name="gender" />{t.gender}</dt><dd>{t.veyloraGender}</dd></div>
+                <div><dt><CoupleDetailIcon name="state" />{t.state}</dt><dd>{t.veyloraState}</dd></div>
               </dl>
             </article>
           </div>
