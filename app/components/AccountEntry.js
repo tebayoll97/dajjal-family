@@ -4,10 +4,12 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
+import { useLoginModal } from "./LoginModalProvider";
 import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
 export default function AccountEntry() {
   const { language } = useLanguage();
+  const { openLoginModal } = useLoginModal();
   const isID = language === "id";
   const [status, setStatus] = useState("checking");
   const [player, setPlayer] = useState(null);
@@ -80,15 +82,16 @@ export default function AccountEntry() {
     : status === "signed-in"
       ? (player?.nickname || (isID ? "Profil Saya" : "My Profile"))
       : (isID ? "Masuk" : "Log in");
-  const href = status === "signed-in"
-    ? withLocalePrefix("/profile", language)
-    : `${withLocalePrefix("/login", language)}?next=%2Fprofile`;
   const initials = (player?.nickname || "U").trim().charAt(0).toUpperCase();
 
-  return <Link href={href} aria-label={status === "signed-in" ? (isID ? "Buka profil" : "Open profile") : label} title={label}
-    className="inline-flex min-w-10 h-10 items-center justify-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-2.5 text-sm font-semibold text-purple-200 transition hover:border-purple-400/60 hover:bg-purple-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300">
+  const className = "inline-flex min-w-10 h-10 items-center justify-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-2.5 text-sm font-semibold text-purple-200 transition hover:border-purple-400/60 hover:bg-purple-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300";
+  const content = <>
     {player?.avatar_url ? <img src={player.avatar_url} alt="" className="h-6 w-6 rounded-full object-cover" /> :
       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-500/20 text-xs font-black" aria-hidden="true">{status === "signed-in" ? initials : "♙"}</span>}
     <span className="hidden max-w-36 truncate text-xs sm:inline">{label}</span>
-  </Link>;
+  </>;
+  if (status === "signed-in") {
+    return <Link href={withLocalePrefix("/profile", language)} aria-label={isID ? "Buka profil" : "Open profile"} title={label} className={className}>{content}</Link>;
+  }
+  return <button type="button" onClick={() => openLoginModal({ next: withLocalePrefix("/profile", language) })} aria-label={label} title={label} className={className}>{content}</button>;
 }
