@@ -112,13 +112,13 @@ export default function AccountLogout() {
   }
 
   return (
-    <div className="mt-6 rounded-xl border border-purple-500/20 bg-white/5 p-4 space-y-3 ui-card">
+    <div className="df-account-logout">
 
       {!showWarning && !showFinalConfirm && (
         <button
           onClick={startLogout}
           disabled={checking || loading}
-          className="w-full rounded-lg border border-red-500/30 bg-red-500/10 py-3 text-sm font-bold text-red-300 hover:bg-red-500/20 transition disabled:opacity-50"
+          className="df-account-logout-button"
         >
           {checking ? t.checking : t.title}
         </button>
