@@ -369,9 +369,10 @@ This section records the public component signatures found in the source files l
 - Signature: `Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", className = "" })`
 - API: each tab object has `value`, `label`, optional `disabled`, and `content`; `value` is controlled; `onChange` receives the selected value.
 - Semantics: `tablist`, `tab` buttons with `aria-selected`, `aria-controls`, roving `tabIndex`, and one `tabpanel`.
-- Keyboard behavior implemented: ArrowLeft/ArrowRight wrap through indices; Home/End move to first/last. Focus moves to the target tab; selection changes only when the target tab is not disabled. Click selects a tab.
+- Keyboard behavior implemented: ArrowLeft/ArrowRight wrap and skip disabled tabs; Home/End move to the first/last enabled tab. Focus moves to the target tab and controlled selection is requested through `onChange`. If every tab is disabled, keyboard navigation makes no selection change. Click selects a tab.
+- Semantics: tablist explicitly declares horizontal orientation, matching the horizontal scrolling tab strip.
 - Consumer responsibility: provide a non-empty stable tab list with unique values and localized labels; update controlled `value` from `onChange`.
-- Limitation: arrow navigation does not skip disabled tabs; no manual activation mode or separate panel-per-tab IDs. Verify keyboard behavior with actual consumers before treating it as a complete tabs pattern.
+- Limitation: no manual activation mode or separate panel-per-tab IDs. Verify focus/selection synchronization with actual consumers before treating it as a complete tabs pattern.
 
 ### 11.12 DropdownMenu
 
@@ -418,8 +419,8 @@ This section records the public component signatures found in the source files l
 
 **Source:** `app/components/ui/Pagination.js`
 
-- Signature: `Pagination({ page, totalPages, onPageChange, ariaLabel = "Pagination", className = "" })`
-- API: integer `page`, integer `totalPages`, callback `onPageChange` (receives target page), optional landmark label and className.
+- Signature: `Pagination({ page, totalPages, onPageChange, ariaLabel = "Pagination", previousLabel = "Previous", nextLabel = "Next", pageLabel = (number) => \`Page \${number}\`, className = "" })`
+- API: integer `page`, integer `totalPages`, callback `onPageChange` (receives target page), optional localized `ariaLabel`, `previousLabel`, `nextLabel`, `pageLabel(number)`, and className.
 - Behavior: returns `null` if page/totalPages are not integers or totalPages is below 1. Displayed current page is clamped to 1…totalPages. Renders Previous/Next, current page, adjacent pages, first/last pages, and ellipses as needed.
 - Semantics: labeled `nav`; current page has `aria-current="page"`; Previous/Next and numbered buttons have accessible labels.
 - Consumer responsibility: own data fetching/page state, localize the visible Previous/Next text and aria labels (the current implementation uses English strings), and keep page changes in range.
@@ -454,9 +455,9 @@ The following are implementation observations, not claims of completed visual or
 1. **Token exceptions requiring a later CSS audit:** the current shared stylesheet contains literal white values for the danger button text and switch thumb, and literal RGBA backdrop colors for the native dialog. Review whether these should map to existing semantic roles or documented fixed contrast values before changing them. Do not silently recolor scoped experiences.
 2. **Reduced motion:** shared CSS explicitly disables button/card transitions, button spinner animation, and Skeleton shimmer under `prefers-reduced-motion`. Verify actual behavior in browser.
 3. **Focus styling:** explicit focus-visible rules exist for buttons, text controls, icon buttons, dropdown summary/items, tabs, choice inputs, switch, pagination, and dialog. Confirm all actual interactive descendants and consumer-supplied controls remain visibly focusable.
-4. **Mobile sizing:** base Button and form controls use 44px minimum height; Button Small is 36px, pagination controls are 40px (and 36px minimum width under 480px), dropdown items are 40px, tabs are 44px, and switch is 48×28px. These are source measurements, not a WCAG conformance result.
-5. **Localization gaps in component defaults:** Pagination, EmptyState, ErrorState, Dialog close label, Breadcrumbs aria label, and Tabs aria label default to English. Consumers must pass localized copy where rendered in Indonesian.
-6. **Keyboard behavior needs targeted QA:** Tabs does not skip disabled tabs during arrow navigation. DropdownMenu is disclosure-based rather than a full application menu. Dialog relies on native browser dialog behavior. These limitations must remain visible in consumer decisions.
+4. **Mobile sizing:** base Button and form controls use 44px minimum height; Button Small is 36px, pagination controls now use 44px minimum width and height at all breakpoints, dropdown items are 40px, tabs are 44px, and switch is 48×28px. These are source measurements, not a WCAG conformance result.
+5. **Localization gaps in component defaults:** Pagination now accepts localized previous/next/page/landmark labels, but its defaults remain English. EmptyState, ErrorState, Dialog close label, Breadcrumbs aria label, and Tabs aria label also default to English. Consumers must pass localized copy where rendered in Indonesian.
+6. **Keyboard behavior needs targeted QA:** Tabs now skips disabled tabs and supports Home/End among enabled tabs, but still needs browser QA. DropdownMenu is disclosure-based rather than a full application menu. Dialog relies on native browser dialog behavior. These limitations must remain visible in consumer decisions.
 7. **Table overflow is deliberate and bounded:** `.ui-table-wrap` provides horizontal scrolling. Test at narrow Android widths with long localized values and confirm the surrounding page does not overflow.
 8. **Four-theme verification remains required:** source-level token usage does not prove contrast or visual quality across TECNO Light/Dark and Dajjal × Veylora Light/Dark.
 9. **Mobile Compact UI remains a review requirement:** this API reference records current CSS and expected consumer behavior; it does not certify each component or consumer as Mobile Compact UI compliant.
