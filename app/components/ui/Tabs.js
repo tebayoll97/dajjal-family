@@ -14,7 +14,12 @@ export function Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", c
     if (event.key === "Home") {
       next = tabs.findIndex((tab) => !tab.disabled);
     } else if (event.key === "End") {
-      next = tabs.findLastIndex((tab) => !tab.disabled);
+      for (let candidate = tabs.length - 1; candidate >= 0; candidate -= 1) {
+        if (!tabs[candidate].disabled) {
+          next = candidate;
+          break;
+        }
+      }
     } else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
       const direction = event.key === "ArrowRight" ? 1 : -1;
       for (let offset = 1; offset <= tabs.length; offset += 1) {
