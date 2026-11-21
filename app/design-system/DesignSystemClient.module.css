@@ -4,7 +4,7 @@
 .progressHead{display:flex;justify-content:space-between;gap:.75rem;color:var(--df-text);font-size:.78rem}
 .progressHead span,.progress small{color:var(--df-text-secondary);font-size:.68rem}
 .progressTrack{height:8px;overflow:hidden;border-radius:var(--df-radius-pill);background:var(--df-surface-raised)}
-.progressTrack span{display:block;width:46.43%;height:100%;border-radius:inherit;background:var(--df-primary)}
+.progressTrack span{display:block;height:100%;border-radius:inherit;background:var(--df-primary)}
 .navigator{position:sticky;top:.5rem;z-index:40;display:grid;gap:.55rem;padding:.75rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-lg);background:color-mix(in srgb,var(--df-surface) 94%,transparent);backdrop-filter:blur(14px);box-shadow:var(--df-shadow-md)}
 .navTop{display:flex;align-items:center;justify-content:space-between;color:var(--df-text);font-size:.68rem;letter-spacing:.08em}
 .navTop span{color:var(--df-text-muted);font-size:.65rem;letter-spacing:0}
@@ -63,5 +63,7 @@
 .footer{padding-block:var(--df-space-4);color:var(--df-text-muted);font-size:.65rem;text-align:center}
 .backTop{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom));z-index:80;display:flex;min-width:52px;min-height:48px;align-items:center;justify-content:center;gap:.35rem;padding:.5rem .75rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-pill);background:var(--df-primary);color:var(--df-on-primary);box-shadow:var(--df-shadow-lg);font:inherit;font-size:.9rem;font-weight:900;cursor:pointer}
 .backTop span{font-size:.55rem;letter-spacing:.08em}
-@media(max-width:600px){.page{gap:.8rem;padding-block:1rem 4rem}.hero{padding:1rem}.navigator{top:.25rem;padding:.55rem;border-radius:var(--df-radius-md)}.navTop{font-size:.62rem}.navGroups button{min-height:34px;padding:.35rem .5rem}.navNumbers button{min-width:34px;min-height:32px}.sectionToggle{min-height:60px;padding:.7rem .75rem;gap:.6rem}.sectionContent{padding:0 .75rem .75rem}.iconGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.colorGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.spacingRow{grid-template-columns:4.8rem 2rem minmax(0,1fr)}.shapeGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.sizeExamples{grid-template-columns:1fr}.backTop{right:.75rem;bottom:calc(.75rem + env(safe-area-inset-bottom))}}
+@media(max-width:600px){.page{gap:.8rem;padding-block:1rem 4rem}.hero{padding:1rem}.navigator{top:.25rem;padding:.55rem;border-radius:var(--df-radius-md)}.navTop{font-size:.62rem}.navGroups button{min-height:44px;padding:.35rem .5rem}.navNumbers button{min-width:44px;min-height:44px}.sectionToggle{min-height:60px;padding:.7rem .75rem;gap:.6rem}.sectionContent{padding:0 .75rem .75rem}.iconGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.colorGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.spacingRow{grid-template-columns:4.8rem 2rem minmax(0,1fr)}.shapeGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.sizeExamples{grid-template-columns:1fr}.backTop{right:.75rem;bottom:calc(.75rem + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.backTop{scroll-behavior:auto}}
+
+@media(max-width:380px){.progress{padding:.75rem}.progressHead{align-items:flex-start;flex-direction:column;gap:.2rem}.navGroups,.navNumbers{gap:.25rem}.sectionToggle{gap:.45rem}.sectionNumber{width:2rem;height:2rem}.sectionTitle{font-size:.72rem}.sectionDescription{font-size:.62rem}.demoCard{padding:.75rem}}
