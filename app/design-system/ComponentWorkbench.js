@@ -29,6 +29,9 @@ export default function ComponentWorkbench() {
   const [tab, setTab] = useState("overview");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [page, setPage] = useState(2);
+  const [retryCount, setRetryCount] = useState(0);
+  const [itemAdded, setItemAdded] = useState(false);
+  const [menuAction, setMenuAction] = useState("");
   const theme = themes.find((item) => item.id === themeId) || themes[0];
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
@@ -44,10 +47,10 @@ export default function ComponentWorkbench() {
     ["Dialog", "Dialog", <div key="dialog"><Button onClick={() => setDialogOpen(true)}>Open dialog</Button><Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Shared Dialog" description="Native dialog component preview." actions={<Button onClick={() => setDialogOpen(false)}>Done</Button>}>Dialog content uses the shared production component.</Dialog></div>],
     ["Breadcrumbs", "Breadcrumbs", <Breadcrumbs key="crumbs" items={[{label:"Home",href:"#"},{label:"Library",href:"#"},{label:"Current page"}]} />],
     ["Tabs", "Tabs", <Tabs key="tabs" value={tab} onChange={setTab} tabs={[{value:"overview",label:"Overview",content:<p>Overview panel content.</p>},{value:"details",label:"Details",content:<p>Details panel content.</p>}]} />],
-    ["DropdownMenu", "DropdownMenu", <DropdownMenu key="dropdown" label="Open options"><button type="button" className="ui-dropdown-item">Edit item</button><button type="button" className="ui-dropdown-item">View details</button></DropdownMenu>],
+    ["DropdownMenu", "DropdownMenu", <DropdownMenu key="dropdown" label="Open options"><button type="button" className="ui-dropdown-item" onClick={() => setMenuAction("Edit selected")}>Edit item</button><button type="button" className="ui-dropdown-item" onClick={() => setMenuAction("Details selected")}>View details</button></DropdownMenu>, menuAction ? <small key="menu-status">{menuAction}</small> : null],
     ["Skeleton", "Skeleton", <div key="skeleton" className={styles.stack}><Skeleton variant="text" width="72%" /><Skeleton variant="rect" height="2.5rem" /><Skeleton variant="circle" /></div>],
-    ["EmptyState", "EmptyState", <EmptyState key="empty" title="No saved items" description="An empty state with a clear next step." action={<Button size="sm">Add item</Button>} />],
-    ["ErrorState", "ErrorState", <ErrorState key="error" title="Preview error" description="A recoverable error state." onRetry={() => {}} />],
+    ["EmptyState", "EmptyState", <EmptyState key="empty" title="No saved items" description="An empty state with a clear next step." action={<Button size="sm" onClick={() => setItemAdded(true)}>{itemAdded ? "Item added" : "Add item"}</Button>} />],
+    ["ErrorState", "ErrorState", <div key="error" className={styles.stack}><ErrorState title="Preview error" description="A recoverable error state." onRetry={() => setRetryCount((count) => count + 1)} /><small>Retry activations: {retryCount}</small></div>],
     ["Pagination", "Pagination", <div key="pagination" className={styles.stack}><Pagination page={page} totalPages={5} onPageChange={setPage} /><small>Current page: {page}</small></div>],
     ["Table", "Table", <Table key="table" caption="Component inventory sample" columns={[{key:"id",header:"ID"},{key:"name",header:"Name"},{key:"status",header:"Status"}]} rows={sampleRows} />],
     ["Avatar", "Avatar", <div key="avatar" className={styles.inline}><Avatar name="Dajjal Family" size="sm" /><Avatar name="Prisma" size="md" /><Avatar name="Community Member" size="lg" /></div>],
