@@ -220,8 +220,16 @@ export default function PublicMusicPage() {
       }
       if (current.repeatMode === "once") { setPlaying(false); return; }
       let next = null;
-      if (current.shuffle && current.items.length > 1) next = takeShuffleTrack();
-      else {
+      if (current.shuffle && current.items.length > 1) {
+        let queue = shuffleQueueRef.current.filter((id) => id !== current.activeId);
+        if (!queue.length && current.repeatMode === "queue") {
+          queue = current.items.filter((item) => item.id !== current.activeId).map((item) => item.id).sort(() => Math.random() - 0.5);
+        }
+        shuffleQueueRef.current = queue;
+        const nextId = queue.shift();
+        shuffleQueueRef.current = queue;
+        next = current.items.find((item) => item.id === nextId) || null;
+      } else {
         const index = current.items.findIndex((item) => item.id === current.activeId);
         if (index >= 0 && index < current.items.length - 1) next = current.items[index + 1];
         else if (current.repeatMode === "queue" && current.items.length) next = current.items[0];
@@ -288,7 +296,10 @@ export default function PublicMusicPage() {
   function changeVolume(nextVolume) {
     const value = Math.max(0, Math.min(1, Number(nextVolume)));
     setVolume(value);
-    if (audioRef.current && !playing) audioRef.current.volume = value;
+    if (audioRef.current) {
+      if (playing) { cancelAnimationFrame(fadeFrameRef.current); audioRef.current.volume = value; }
+      else audioRef.current.volume = value;
+    }
   }
 
   function seek(event) {
