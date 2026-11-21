@@ -145,3 +145,14 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
  .df-card{transition:none}
  .df-card:hover{transform:none}
 }
+
+
+/* Restore hero navigation actions; keep the event entry in the compact card system. */
+.df-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1.2rem}
+.df-hero-actions .df-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+#events{scroll-margin-top:6rem}
+#projects{scroll-margin-top:6rem}
+@media(max-width:560px){
+ .df-hero-actions{gap:.5rem;margin-top:1rem}
+ .df-hero-actions .df-button{flex:1 1 0;min-width:0;padding:.65rem .7rem;font-size:.65rem}
+}
