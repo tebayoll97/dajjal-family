@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
@@ -22,7 +21,6 @@ function GoogleIcon() {
 export function LoginModalProvider({ children }) {
   const { language } = useLanguage();
   const isID = language === "id";
-  const pathname = usePathname() || "/";
   const [request, setRequest] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
