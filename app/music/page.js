@@ -15,7 +15,7 @@ const copy = {
     emptyHint: "Katalog akan menampilkan musik setelah admin menerbitkannya.",
     loading: "Memuat katalog musik...", error: "Musik tidak dapat diputar. Periksa koneksi lalu coba lagi.",
     now: "SEDANG DIPUTAR", all: "DAFTAR LAGU", noArtist: "Artis tidak dicantumkan",
-    volume: "Volume", seek: "Posisi lagu", track: "LAGU",
+    volume: "Volume", seek: "Posisi lagu", track: "LAGU", repeatQueue: "Putar ulang Antrian", repeatSong: "Putar ulang Lagu", repeatOff: "Jangan diulang", playOnce: "Mainkan sekali", shuffle: "Putar acak", sequential: "Putar berurutan", volumeLevel: "Tingkat volume",
   },
   en: {
     eyebrow: "DAJJAL FAMILY · MUSIC",
@@ -27,9 +27,16 @@ const copy = {
     emptyHint: "Tracks will appear here after an admin publishes them.",
     loading: "Loading music catalog...", error: "Music could not be played. Check your connection and try again.",
     now: "NOW PLAYING", all: "PLAYLIST", noArtist: "Artist not listed",
-    volume: "Volume", seek: "Track position", track: "TRACK",
+    volume: "Volume", seek: "Track position", track: "TRACK", repeatQueue: "Repeat Queue", repeatSong: "Repeat Song", repeatOff: "No Repeat", playOnce: "Play Once", shuffle: "Shuffle playback", sequential: "Play in order", volumeLevel: "Volume level",
   },
 };
+
+function Icon({ name, size = 22 }) {
+  const paths = {
+    shuffle: <><path d="m16 3 5 5-5 5"/><path d="M4 7h2.5c5 0 6 10 11 10H21"/><path d="m16 14 5 5-5 5"/><path d="M4 17h2.5c1.7 0 2.8-1.4 3.8-3"/></>, ordered: <><path d="M4 6h16M4 12h16M4 18h16"/><path d="m17 3 3 3-3 3"/></>, previous: <><path d="M6 5v14"/><path d="m19 5-10 7 10 7z" fill="currentColor" stroke="none"/></>, next: <><path d="M18 5v14"/><path d="m5 5 10 7-10 7z" fill="currentColor" stroke="none"/></>, play: <path d="m8 5 12 7-12 7z" fill="currentColor" stroke="none"/>, pause: <><path d="M8 5v14M16 5v14"/></>, queue: <><path d="M3 7h13a5 5 0 0 1 5 5"/><path d="m17 3 4 4-4 4"/><path d="M3 17h13a5 5 0 0 0 5-5"/><path d="m7 13-4 4 4 4"/></>, repeat: <><path d="m17 2 4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></>, repeatOne: <><path d="m17 2 4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/><path d="M12 10v5m-1.5-3.5L12 10l1.5 1.5"/></>, repeatOff: <><path d="m17 2 4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/><path d="m4 4 16 16"/></>, once: <><path d="M4 12h15"/><path d="m14 6 6 6-6 6"/></>, volume: <><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+}
 
 function clock(value) {
   const seconds = Math.max(0, Math.floor(Number(value) || 0));
@@ -50,7 +57,9 @@ export default function PublicMusicPage() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [shuffle, setShuffle] = useState(false);
-  const [repeat, setRepeat] = useState(false);
+  const [repeatMode, setRepeatMode] = useState("queue");
+  const [repeatOpen, setRepeatOpen] = useState(false);
+  const [volumeOpen, setVolumeOpen] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState([]);
 
   useEffect(() => {
@@ -68,7 +77,7 @@ export default function PublicMusicPage() {
       }
     })();
     return () => { active = false; };
-  }, [t.error]);
+  }, [t.error, repeatMode, items, activeId, shuffle]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -77,7 +86,15 @@ export default function PublicMusicPage() {
     const updateDuration = () => setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
     const onPlay = () => setPlaying(true);
     const onPause = () => setPlaying(false);
-    const onEnded = () => setPlaying(false);
+    const onEnded = () => {
+      setPlaying(false);
+      if (repeatMode === "song") { audio.currentTime = 0; audio.play().catch(() => setNotice(t.error)); return; }
+      if (repeatMode === "once") return;
+      const index = items.findIndex((item) => item.id === activeId);
+      if (shuffle && items.length > 1) { const choices = items.filter((item) => item.id !== activeId); const next = choices[Math.floor(Math.random() * choices.length)]; if (next) playTrack(next); return; }
+      if (index >= 0 && index < items.length - 1) playTrack(items[index + 1]);
+      else if (repeatMode === "queue" && items.length) playTrack(items[0]);
+    };
     const onError = () => { if (audio.src) { setPlaying(false); setNotice(t.error); } };
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
@@ -100,9 +117,9 @@ export default function PublicMusicPage() {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
-      audioRef.current.loop = repeat;
+      audioRef.current.loop = repeatMode === "song";
     }
-  }, [volume, repeat]);
+  }, [volume, repeatMode]);
 
   const visibleItems = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -139,11 +156,10 @@ export default function PublicMusicPage() {
 
   async function moveTrack(step) {
     if (!items.length) return;
-    const nextIndex = activeIndex < 0
-      ? (step > 0 ? 0 : items.length - 1)
-      : shuffle && step > 0 && items.length > 1
-        ? (() => { const choices = items.map((_, index) => index).filter((index) => index !== activeIndex); return choices[Math.floor(Math.random() * choices.length)]; })()
-        : (activeIndex + step + items.length) % items.length;
+    let nextIndex;
+    if (activeIndex < 0) nextIndex = step > 0 ? 0 : items.length - 1;
+    else if (shuffle && step > 0 && items.length > 1) { const choices = items.map((_, index) => index).filter((index) => index !== activeIndex); nextIndex = choices[Math.floor(Math.random() * choices.length)]; }
+    else { nextIndex = activeIndex + step; if (nextIndex < 0 || nextIndex >= items.length) { if (repeatMode === "queue") nextIndex = (nextIndex + items.length) % items.length; else return; } }
     await playTrack(items[nextIndex]);
   }
 
@@ -218,13 +234,17 @@ export default function PublicMusicPage() {
                   <div className="music-public-times"><span>{clock(currentTime)}</span><span>{clock(progressDuration)}</span></div>
                 </div>
                 <div className="music-public-controls">
-                  <button className={"music-public-mode" + (shuffle ? " is-enabled" : "")} type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle">⤨</button>
-                  <button type="button" onClick={() => moveTrack(-1)} disabled={!items.length} aria-label={t.previous}>|‹</button>
-                  <button className="music-public-main-play" type="button" onClick={() => activeTrack ? playTrack(activeTrack) : moveTrack(1)} disabled={!items.length} aria-label={playing ? t.pause : t.play}>{playing ? "Ⅱ" : "▶"}</button>
-                  <button type="button" onClick={() => moveTrack(1)} disabled={!items.length} aria-label={t.next}>›|</button>
-                  <button className={"music-public-mode" + (repeat ? " is-enabled" : "")} type="button" onClick={() => setRepeat((value) => !value)} aria-pressed={repeat} aria-label="Repeat">↻</button>
+                  <button className={"music-public-mode" + (shuffle ? " is-enabled" : "")} type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label={shuffle ? t.sequential : t.shuffle} title={shuffle ? t.sequential : t.shuffle}><Icon name={shuffle ? "ordered" : "shuffle"}/></button>
+                  <button type="button" onClick={() => moveTrack(-1)} disabled={!items.length} aria-label={t.previous}><Icon name="previous"/></button>
+                  <button className="music-public-main-play" type="button" onClick={() => activeTrack ? playTrack(activeTrack) : moveTrack(1)} disabled={!items.length} aria-label={playing ? t.pause : t.play}><Icon name={playing ? "pause" : "play"} size={25}/></button>
+                  <button type="button" onClick={() => moveTrack(1)} disabled={!items.length} aria-label={t.next}><Icon name="next"/></button>
+                  <div className="music-public-repeat-wrap"><button className={"music-public-mode" + (repeatMode !== "off" ? " is-enabled" : "")} type="button" onClick={() => setRepeatOpen((value) => !value)} aria-expanded={repeatOpen} aria-label={t.repeatQueue}><Icon name={repeatMode === "queue" ? "queue" : repeatMode === "song" ? "repeatOne" : repeatMode === "once" ? "once" : "repeatOff"}/></button>
+                    {repeatOpen && <div className="music-public-popover music-public-repeat-menu" role="menu">{[["queue","queue",t.repeatQueue],["song","repeatOne",t.repeatSong],["off","repeatOff",t.repeatOff],["once","once",t.playOnce]].map(([mode,icon,label])=><button type="button" role="menuitemradio" aria-checked={repeatMode===mode} className={repeatMode===mode?"is-selected":""} key={mode} onClick={()=>{setRepeatMode(mode);setRepeatOpen(false);}}><Icon name={icon} size={21}/><span>{label}</span>{repeatMode===mode&&<span className="music-public-selected-mark">✓</span>}</button>)}</div>}
+                  </div>
                 </div>
-                <label className="music-public-volume"><span aria-hidden="true">♪</span><input type="range" min="0" max="1" step="0.01" value={volume} onChange={(event) => setVolume(Number(event.target.value))} aria-label={t.volume} /></label>
+                <div className="music-public-volume-row"><button className="music-public-volume-trigger" type="button" onClick={()=>setVolumeOpen((value)=>!value)} aria-expanded={volumeOpen} aria-label={t.volume + " " + Math.round(volume*100) + "%"}><Icon name="volume" size={18}/><span>{Math.round(volume*100)}%</span></button>
+                  {volumeOpen && <><button className="music-public-popover-dismiss" type="button" aria-label="Close volume control" onClick={()=>setVolumeOpen(false)}></button><div className="music-public-volume-popover"><Icon name="volume" size={21}/><input type="range" min="0" max="1" step="0.01" value={volume} onChange={(event)=>setVolume(Number(event.target.value))} aria-label={t.volumeLevel}/><Icon name="volume" size={19}/></div></>}
+                </div>
               </div>
             </section>
 
