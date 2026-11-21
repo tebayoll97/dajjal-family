@@ -98,7 +98,7 @@ export default function AccountLogout() {
 
     try {
       const { error: signOutError } =
-        await supabase.auth.signOut();
+        await supabase.auth.signOut({ scope: "local" });
 
       if (signOutError) throw signOutError;
 
