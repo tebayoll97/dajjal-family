@@ -19,7 +19,6 @@ const COPY = {
     loading: "Memuat galeri...",
     empty: "Belum ada Couple Profile yang dipublikasikan.",
     retry: "Coba lagi",
-    open: "BUKA PROFIL",
     error: "Galeri belum dapat dimuat. Silakan coba kembali.",
     page: "Halaman",
     of: "dari",
@@ -41,7 +40,6 @@ const COPY = {
     loading: "Loading gallery...",
     empty: "There are no published Couple Profiles yet.",
     retry: "Try again",
-    open: "OPEN PROFILE",
     error: "The gallery could not be loaded. Please try again.",
     page: "Page",
     of: "of",
@@ -111,14 +109,15 @@ export default function CoupleGalleryPage() {
             items.length === 0 ? <p className="df-couple-gallery__state">{t.empty}</p> :
             <>
               <div className="df-couple-gallery__grid">
-                {items.map((item) => <Link className="df-couple-gallery__card" href={item.href} key={item.id}>
+                {items.map((item) => <Link className="df-couple-gallery__card" href={item.href} key={item.id} aria-label={`${item.maleNickname} × ${item.femaleNickname}`}>
                   <div className="df-couple-gallery__cover">
                     {item.coverUrl ? <img src={item.coverUrl} alt={t.coverAlt} loading="lazy" /> : <div className="df-couple-gallery__cover-fallback" aria-hidden="true">♡</div>}
                   </div>
                   <div className="df-couple-gallery__card-body">
                     <h3>{item.maleNickname} <span>×</span> {item.femaleNickname}</h3>
-                    <span className="df-couple-gallery__card-link">{t.open}<b aria-hidden="true">↗</b></span>
+                    {item.subtitle && <p>{item.subtitle}</p>}
                   </div>
+                  <span className="df-couple-gallery__card-arrow" aria-hidden="true">↗</span>
                 </Link>)}
               </div>
               {pagination.totalPages > 1 && <nav className="df-couple-gallery__pagination" aria-label="Gallery pagination">
