@@ -10,3 +10,13 @@
 - Added the shared component catalog and interaction-state contracts.
 - Kept the Design System document in Draft status pending final review and approval.
 - No legacy pages were redesigned as part of this foundation work.
+
+## 2026-11-22 — Component Workbench and Mobile Compact UI contract
+
+- Added a live Component Workbench to the Design System route for all 18 existing shared React exports.
+- Added isolated preview selection for TECNO Dark/Light and Dajjal × Veylora Dark/Light without changing the visitor's global theme preference.
+- Replaced the hardcoded 13/28 label with an explicit 18/18 shared-component inventory statement; this is inventory coverage, not a QA completion percentage.
+- Added mandatory Mobile Compact UI requirements to Design System Foundation Section 16.4 and Component Catalog Section 8.1.
+- Future shared components and materially revised components must document mobile density strategy, touch usability, overflow behavior, action hierarchy, retained states, localization, theme scope, and accessibility checks.
+- Owner reports testing the Component Workbench. The scope and results of that owner-run test have not been independently recorded here; build, browser automation, contrast, accessibility, and deployment status remain separately verifiable.
+- Component Catalog remains Draft pending per-component documentation and formal QA evidence.
