@@ -527,3 +527,28 @@
   .df-site-navigation-home { min-height:31px !important; }
   .df-site-navigation-submenu[data-expanded="true"]>a { min-height:26px !important; }
 }
+
+/* Compact sign-out action attached to the drawer profile identity card. */
+.df-navigation-profile-shell{min-width:0;margin-bottom:.75rem}
+.df-navigation-profile-shell .df-navigation-profile-card{margin-bottom:0}
+.df-navigation-profile-logout{display:flex;justify-content:flex-end;align-items:center;margin-top:.28rem;padding-right:.15rem}
+.df-navigation-profile-logout .df-account-logout{display:flex;justify-content:flex-end}
+.df-navigation-profile-logout .df-account-logout-button{
+  display:inline-flex;align-items:center;justify-content:center;width:auto;min-height:25px;
+  padding:.2rem .45rem;border:1px solid color-mix(in srgb,var(--df-danger,var(--df-primary)) 28%,transparent);
+  border-radius:6px;background:color-mix(in srgb,var(--df-danger,var(--df-primary)) 9%,transparent);
+  color:var(--df-danger,var(--df-primary));font:inherit;font-size:.58rem;font-weight:850;
+  letter-spacing:.06em;line-height:1.2;cursor:pointer;transition:background var(--df-duration-fast),border-color var(--df-duration-fast);
+}
+.df-navigation-profile-logout .df-account-logout-button:hover{
+  background:color-mix(in srgb,var(--df-danger,var(--df-primary)) 15%,transparent);
+  border-color:color-mix(in srgb,var(--df-danger,var(--df-primary)) 48%,transparent)
+}
+.df-navigation-profile-logout .df-account-logout-button:disabled{opacity:.55;cursor:wait}
+.df-navigation-profile-logout .df-account-logout>p{margin:.2rem 0 0;font-size:.62rem}
+@media(max-width:760px){
+  .df-navigation-profile-shell{margin-bottom:.45rem}
+  .df-navigation-profile-logout{margin-top:.18rem;padding-right:.1rem}
+  .df-navigation-profile-logout .df-account-logout-button{min-height:23px;padding:.16rem .4rem;font-size:.55rem}
+}
+
