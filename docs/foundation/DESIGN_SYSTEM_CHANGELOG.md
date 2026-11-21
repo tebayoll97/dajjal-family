@@ -45,3 +45,11 @@
 - Raised Design System section-navigation group controls to a 44px minimum height and numbered navigation controls to 44×44px, retaining bounded horizontal scrolling on narrow screens.
 - This is a source-level Mobile Compact UI refinement only. No browser/device visual QA, keyboard session, screen-reader test, or contrast measurement is claimed by this change.
 - Component Catalog remains Draft until the four-theme, ID/EN, responsive, accessibility, and runtime checks are evidenced.
+
+
+## 2026-11-22 — Contrast-safe primary text token
+
+- Source-level contrast calculations found the brand fill token `--df-primary` below 4.5:1 when used as small foreground text on its surface in TECNO Dark, Dajjal × Veylora Dark, and Dajjal × Veylora Light.
+- Added `--df-primary-text` to all four global theme maps, using the existing focus-color values as a high-contrast foreground accent while preserving `--df-primary` for filled controls and borders.
+- Updated shared empty-state/avatar text and Design System preview accent text to use the new foreground token.
+- Catalog documents the semantic distinction. Ratios are source-token calculations; browser-rendered contrast and component QA remain pending.
