@@ -45,7 +45,7 @@ function Section({ id, title, headingId, description, open, onToggle, children }
       <button className={styles.sectionToggle} type="button" aria-expanded={open} aria-controls={id + "-content"} onClick={onToggle}>
         <span className={styles.sectionNumber}>{id}</span>
         <span className={styles.sectionHeading}>
-          <span className={styles.sectionTitle}>{title}</span>
+          <span id={headingId} className={styles.sectionTitle}>{title}</span>
           <span className={styles.sectionDescription}>{description}</span>
         </span>
         <span className={styles.chevron} aria-hidden="true">{open ? "−" : "+"}</span>
