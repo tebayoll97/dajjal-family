@@ -36,6 +36,7 @@ Status meanings:
 | Badge | React shared component | `app/components/ui/Badge.js` | Validate semantic status contrast |
 | Alert | React shared component | `app/components/ui/Alert.js` | Document announcement semantics and variants |
 | TextField | React shared component | `app/components/ui/TextField.js` | Covers input, textarea and select through `as`; document API |
+| SearchField | React shared component | `app/components/ui/SearchField.js`; semantic root `.df-search` | Validate all four themes, ID/EN, Mobile Compact UI, and real Help Center consumer |
 | CheckboxField | React shared component | `app/components/ui/CheckboxField.js` | Document native state behavior |
 | RadioGroup | React shared component | `app/components/ui/RadioGroup.js` | Validate keyboard behavior and disabled options |
 | SwitchField | React shared component | `app/components/ui/SwitchField.js` | Keep distinct from generic checkbox semantics |
@@ -449,6 +450,22 @@ This section records the public component signatures found in the source files l
 - Consumer responsibility: provide a useful non-sensitive display name and meaningful `alt` when the image conveys information beyond the name; choose size appropriate to the context.
 - Limitation: no group/stack, status indicator, presence state, or image loading placeholder.
 
+
+
+### 11.19 SearchField
+
+**Source:** `app/components/ui/SearchField.js`  
+**Export:** `SearchField` from `app/components/ui`  
+**Semantic root:** `.df-search`
+
+- Signature: `SearchField({ label, id, className, labelClassName, inputClassName, size = "md", ...inputProps })`
+- Behavior: renders a native `type="search"` input; native form submission, `name`, `defaultValue`, `value`, `onChange`, constraints, and ARIA attributes are forwarded to the input.
+- Accessibility: provide a visible `label` or an `aria-label`; the component generates an input ID when one is not supplied and associates a visible label with it.
+- Styling: `.df-search` consumes shared typography and visual tokens; the input composes the existing `.ui-input` primitive. Optional consumer classes support page layout without duplicating control implementation.
+- Responsive behavior: minimum 44px control height, no intrinsic width, and compact sizing that preserves a usable touch target. Page consumers control responsive placement.
+- Theme behavior: uses semantic surface, text, border, and focus tokens and follows all four Global Theme Preset combinations.
+- Limitation: filtering, query state, URL synchronization, and submission remain the responsibility of the consuming form/page.
+
 ## 12. CROSS-COMPONENT SOURCE FINDINGS AND QA GATES
 
 The following are implementation observations, not claims of completed visual or browser QA:
@@ -471,6 +488,7 @@ The following are implementation observations, not claims of completed visual or
 - `app/components/ui/Badge.js`
 - `app/components/ui/Alert.js`
 - `app/components/ui/TextField.js`
+- `app/components/ui/SearchField.js`
 - `app/components/ui/CheckboxField.js`
 - `app/components/ui/RadioGroup.js`
 - `app/components/ui/SwitchField.js`

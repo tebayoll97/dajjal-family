@@ -22,3 +22,9 @@
 .ui-text-caption{font-family:var(--df-font-sans);font-size:var(--df-type-caption-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-caption-leading)}
 .ui-text-nav{font-family:var(--df-font-sans);font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
 .ui-text-nav-submenu{font-family:var(--df-font-sans);font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-submenu-leading)}
+
+
+/* Semantic typography contracts shared by reusable controls. */
+.ui-text-control{font-family:var(--df-font-sans);font-size:var(--df-type-control-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-control-leading)}
+.ui-text-control-label{font-family:var(--df-font-sans);font-size:var(--df-type-control-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-control-label-leading)}
+.ui-text-meta{font-family:var(--df-font-sans);font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}

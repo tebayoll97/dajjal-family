@@ -17,11 +17,11 @@
 .ui-button:disabled,.ui-button[aria-disabled="true"]{opacity:.52;cursor:not-allowed;transform:none}
 .ui-button:focus-visible,.ui-input:focus-visible,.ui-select:focus-visible,.ui-textarea:focus-visible,.ui-icon-button:focus-visible{outline:3px solid var(--df-focus);outline-offset:2px}
 .ui-icon-button{width:44px;min-width:44px;height:44px;display:inline-grid;place-items:center;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text);cursor:pointer}
-.ui-input,.ui-select,.ui-textarea{width:100%;min-width:0;min-height:44px;padding:.7rem .85rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text);font:inherit;line-height:1.45}
+.ui-input,.ui-select,.ui-textarea{width:100%;min-width:0;min-height:44px;padding:.7rem .85rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text);font-family:var(--df-font-sans);font-size:var(--df-type-control-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-control-leading)}
 .ui-textarea{min-height:112px;resize:vertical}
 .ui-input::placeholder,.ui-textarea::placeholder{color:var(--df-text-muted);opacity:1}
 .ui-input[aria-invalid="true"],.ui-select[aria-invalid="true"],.ui-textarea[aria-invalid="true"]{border-color:var(--df-danger)}
-.ui-field-label{display:block;margin-bottom:var(--df-space-2);color:var(--df-text);font-size:var(--df-text-sm);font-weight:650}
+.ui-field-label{display:block;margin-bottom:var(--df-space-2);color:var(--df-text);font-size:var(--df-type-control-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-control-label-leading)}
 .ui-field-help{margin-top:var(--df-space-1);color:var(--df-text-muted);font-size:var(--df-text-sm)}
 .ui-badge{display:inline-flex;align-items:center;gap:.35rem;min-height:24px;padding:.2rem .6rem;border:1px solid var(--df-border);border-radius:var(--df-radius-pill);background:var(--df-surface-raised);color:var(--df-text-secondary);font-size:var(--df-text-xs);font-weight:700;line-height:1.2}
 .ui-badge-success{border-color:color-mix(in srgb,var(--df-success) 35%,transparent);background:color-mix(in srgb,var(--df-success) 12%,var(--df-surface));color:var(--df-success)}
@@ -119,3 +119,11 @@
 .ui-avatar-sm{width:28px;height:28px;font-size:.65rem}.ui-avatar-md{width:40px;height:40px;font-size:.8rem}.ui-avatar-lg{width:56px;height:56px;font-size:1rem}.ui-avatar-xl{width:80px;height:80px;font-size:1.35rem}
 @media(prefers-reduced-motion:reduce){.ui-skeleton{animation:none}}
 @media(max-width:480px){.ui-pagination{justify-content:center}.ui-pagination-button{min-width:44px;min-height:44px;padding:.35rem .5rem}.ui-table th,.ui-table td{padding:.7rem .75rem}}
+
+
+/* Reusable semantic SearchField — consumed by the Design System lab and website pages. */
+.df-search{display:grid;gap:var(--df-space-2);min-width:0}
+.df-search__label{display:block;color:var(--df-text)}
+.df-search__input{width:100%;min-width:0;min-height:44px}
+.df-search--sm .df-search__input{min-height:44px;padding-block:.55rem}
+.df-search__input:focus-visible{outline:3px solid var(--df-focus);outline-offset:2px}
