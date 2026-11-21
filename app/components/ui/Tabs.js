@@ -6,21 +6,40 @@ export function Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", c
   const id = useId();
   const refs = useRef([]);
   const selectedIndex = Math.max(0, tabs.findIndex((tab) => tab.value === value));
+
   function handleKeyDown(event, index) {
-    let next = index;
-    if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
-    else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = tabs.length - 1;
-    else return;
+    if (!tabs.length) return;
+
+    let next;
+    if (event.key === "Home") {
+      next = tabs.findIndex((tab) => !tab.disabled);
+    } else if (event.key === "End") {
+      next = tabs.findLastIndex((tab) => !tab.disabled);
+    } else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      for (let offset = 1; offset <= tabs.length; offset += 1) {
+        const candidate = (index + direction * offset + tabs.length) % tabs.length;
+        if (!tabs[candidate].disabled) {
+          next = candidate;
+          break;
+        }
+      }
+    } else {
+      return;
+    }
+
     event.preventDefault();
+    if (next === undefined || next < 0) return;
+
     refs.current[next]?.focus();
-    if (!tabs[next]?.disabled) onChange?.(tabs[next].value);
+    onChange?.(tabs[next].value);
   }
+
   const active = tabs[selectedIndex];
+
   return (
     <div className={["ui-tabs", className].filter(Boolean).join(" ")}>
-      <div className="ui-tab-list" role="tablist" aria-label={ariaLabel}>
+      <div className="ui-tab-list" role="tablist" aria-label={ariaLabel} aria-orientation="horizontal">
         {tabs.map((tab, index) => (
           <button
             key={tab.value}
