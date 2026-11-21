@@ -1,7 +1,7 @@
 # DAJJAL FAMILY — SHARED COMPONENT CATALOG
 
 **Document ID:** DF-UI-001  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** Draft — Reconciled Repository Inventory  
 **Parent:** DESIGN_SYSTEM.md v1.1  
 **Audit reference:** DESIGN_SYSTEM_AUDIT_2026-11-22.md  
@@ -488,3 +488,24 @@ The following are implementation observations, not claims of completed visual or
 - `app/styles/tokens.css`
 
 **Documentation status:** source API inventory is documented. This does not change the catalog's Draft status; browser, accessibility, four-theme, bilingual, and mobile QA evidence is still required.
+
+
+## 13. MOBILE COMPACT UI — DESIGN SYSTEM REQUIREMENTS
+
+Mobile Compact UI is a layout-density rule, not permission to shrink essential interaction targets.
+
+### 13.1 Required behavior
+- Keep primary touch targets at least 44px high/wide where practical, including section navigation and compact number controls.
+- Reduce surrounding padding, gaps, decorative density, and secondary copy before reducing control dimensions.
+- Use a single-column component preview at narrow widths; prevent cards, labels, code samples, and controls from forcing horizontal page overflow.
+- Let toolbars and theme selectors wrap or stack. Select controls must remain full-width and comfortably operable on narrow screens.
+- Preserve visible keyboard focus, readable text, and safe-area spacing for fixed controls.
+- Validate narrow layouts at 360px and 380px, then tablet and desktop widths. This is a QA target, not a claim that browser validation has passed.
+
+### 13.2 Design System route implementation
+The Design System route now keeps its mobile section-navigation controls at 44px minimum dimensions while reducing surrounding spacing. The Component Workbench switches to a single-column preview at 640px and below, stacks its toolbar controls, and adds narrow-screen wrapping safeguards.
+
+**Status:** CSS implementation updated on the feature branch. Browser-level responsive, touch, keyboard, and overflow verification remains pending.
+
+### 13.3 Scope and impact
+These CSS changes affect only the internal Design System route and its Component Workbench. They do not alter shared production component APIs, global theme tokens, Couple/Wedding/Games theme isolation, or existing visitor-facing pages.
