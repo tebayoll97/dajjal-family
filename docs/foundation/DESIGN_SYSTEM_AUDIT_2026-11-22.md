@@ -112,42 +112,33 @@ Each has `dark` and `light` token maps. Therefore, the source defines the four r
 
 This is **source-level coverage only**. It does not establish that every component renders correctly or has adequate contrast in all four combinations. No browser visual QA or contrast audit was performed as part of this audit.
 
-## 4. DESIGN SYSTEM ROUTE AUDIT
+## 4. DESIGN SYSTEM ROUTE AUDIT — VERIFIED SOURCE STATE
 
 Current route source:
 - `app/design-system/page.js`
 - `app/design-system/DesignSystemClient.js`
 - `app/design-system/DesignSystemClient.module.css`
+- `app/design-system/ComponentWorkbench.js`
+- `app/design-system/ComponentWorkbench.module.css`
 
-The page currently presents 13 groups:
-1. Typography
-2. Actions
-3. Feedback
-4. Forms
-5. Dialog
-6. Navigation & Controls
-7. Responsive Layout
-8. Data Display
-9. Iconography
-10. Color System
-11. Spacing & Sizing
-12. Surfaces & Elevation
-13. Interaction States
+The current Design System route has **14 groups**, with group 14 dedicated to Component Workbench. Its progress text reports 18 / 18 shared React exports inventoried and explicitly says visual QA remains pending.
 
-Positive findings:
-- The route imports actual shared React components for Button, Badge, Card, Alert and TextField.
-- Dialog, controls and data display use preview helpers that import shared primitives.
-- Most component styling is token-driven.
-- The route has section navigation, collapsible groups, focus-visible styles and a back-to-top control.
-- It is explicitly marked as an internal QA route and not production approval.
+The Component Workbench:
+- Imports and previews all 18 shared React exports from `app/components/ui`.
+- Offers explicit TECNO Light, TECNO Dark, Dajjal × Veylora Light, and Dajjal × Veylora Dark preview choices.
+- Applies the selected `THEME_TOKEN_MAPS` to its own preview wrapper; it does not change the visitor's global theme preference.
+- Uses production component implementations for its previews. This remains a source-level preview, not browser/accessibility certification.
 
-Gaps:
-- The route does not yet demonstrate all 18 React exports as a systematic component catalog.
-- The current hero progress label is hardcoded as 13 / 28; it is not a measured implementation-completion metric.
-- Iconography examples are Unicode glyph samples, not evidence of a standardized icon package or final icon API.
-- The route's theme control is a ThemeToggle; there is no explicit test matrix that lets reviewers inspect all four global preset/mode combinations from the Design System itself.
-- The current route is a collection of preview sections, not yet a complete component contract workbench with API, variants, state, accessibility, theme, and responsive documentation for each component.
-- Some local preview CSS uses literal spacing/font values rather than semantic tokens. These should be reviewed; not every intrinsic layout value needs a token, but repeated design-system values should use the shared scale.
+The earlier source note that the route had only 13 groups, lacked a four-theme selector, or used a 13 / 28 progress label is superseded by the current source and must not be treated as a current finding.
+
+### Mobile Compact UI implementation
+
+The feature branch `feat/design-system-mobile-compact` updates only the Design System route styles:
+- Mobile section-navigation controls retain 44px minimum dimensions while surrounding spacing is compacted.
+- The Component Workbench uses one column at 640px and below, stacks the theme selector, and adds narrow-screen wrapping safeguards.
+- The static progress-track width declaration was removed so the live progress width is controlled by the component markup.
+
+Browser validation at narrow Android widths, tablet, desktop, zoom, keyboard, and assistive technology remains pending. These CSS changes are limited to the internal Design System route; they do not change global tokens or visitor-facing pages.
 
 ## 5. CATALOG-TO-CODE GAP ANALYSIS
 
@@ -231,19 +222,23 @@ No claim of accessibility certification or responsive QA is made.
 - Validate contrast and state visibility across four theme combinations.
 - Perform responsive, keyboard, screen-reader and reduced-motion checks.
 
-## 9. RECOMMENDED NEXT BATCH
+## 9. IMPLEMENTATION STATUS
 
-**Batch 2 — Component Catalog Reconciliation and Semantic Token Audit**
+Approved implementation package: **Component Catalog Reconciliation + Component Workbench Enhancement + Mobile Compact UI + Four-Theme QA**.
 
-Deliverables:
-1. Update the catalog so every entry has an explicit status: React component, CSS primitive, wrapper, external shared component, missing, or deprecated.
-2. Define the canonical API and naming for overlapping concepts.
-3. Map every shared component's visual roles to existing semantic tokens.
-4. Record missing semantic tokens only where the current foundation genuinely lacks a required role.
-5. Define the Design System preview structure and four-theme validation method before adding more UI.
-6. Propose implementation order based on actual usage and dependency relationships.
+Completed on feature branch `feat/design-system-mobile-compact`:
+1. Added Mobile Compact UI safeguards to the Design System route navigation.
+2. Tuned Component Workbench stacking and wrapping for narrow screens.
+3. Removed the stale CSS fallback width from the component progress bar.
+4. Updated the Component Catalog with Mobile Compact UI requirements and clearly stated implementation scope.
 
-No broad page redesign, production migration, database/auth change, or deployment is implied by this next batch.
+Still pending:
+- Browser validation of responsive behavior and horizontal overflow.
+- Keyboard and screen-reader verification.
+- Contrast review across all four theme combinations.
+- Review and reconciliation of any remaining catalog/source API differences.
+
+No production deployment has been performed. The implementation branch is intended for review before merge.
 
 ## 10. AUDIT SOURCES
 
