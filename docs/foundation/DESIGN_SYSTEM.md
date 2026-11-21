@@ -491,3 +491,18 @@ Game titles and supporting copy follow the selected locale. The former Run Jump 
 All shared navigation text must be bilingual (Indonesian and English) through the central navigation label registry. The Family Universe invitation item uses the canonical route `/df/wedding-anak-dajjal` and a localized “Acara” / “Event” badge. The badge class `.df-nav-event-badge` consumes `--df-event-badge-bg` and `--df-event-badge-text` from the active Global Theme Preset token map; never hardcode a preset color in the navigation component. Its blink animation must stop under `prefers-reduced-motion: reduce`.
 
 The Admin group links to the existing Theme Preset Manager at `/admin/theme`. The general `/settings` page is retired and redirects to Profile; settings remain contextual to the feature that owns them. Footer branding uses the official Dajjal Family icon asset rather than a text-only DF substitute.
+
+
+# 24. SEMANTIC BUTTON COLOR TOKENS — 2026-11-21
+
+Button foreground colors must be independent from general content-text tokens. Do not change `--df-text`, `--df-text-secondary`, or `--df-text-muted` to correct button contrast. Button variants consume dedicated semantic roles supplied by the active Global Theme Preset:
+
+- `--df-button-primary-bg`, `--df-button-primary-hover-bg`, `--df-button-primary-text`, and `--df-button-primary-border` define the primary action pair.
+- `--df-button-secondary-bg`, `--df-button-secondary-hover-bg`, `--df-button-secondary-text`, and `--df-button-secondary-border` define the secondary action pair.
+- Other variants (ghost, danger, link, disabled) retain their own semantic behavior and must not borrow general text tokens as a substitute for a button foreground contract where a filled surface is present.
+
+The default fallback tokens in `app/styles/tokens.css` and Light Mode compatibility layer preserve existing behavior for any scope not yet migrated. Global preset maps in `app/theme/themeTokens.js` may override the button-specific values independently for TECNO and Dajjal × Veylora, in both Light and Dark modes.
+
+The shared `.ui-button-primary` / `.ui-button-secondary` primitives and DF Universe `.df-button` / `.df-button-secondary` now consume these dedicated tokens. General text tokens remain unchanged. Dajjal × Veylora Light Mode uses a deeper Azure primary button with white foreground, while its secondary action uses a pale Azure surface with a dark navy foreground. This is a scoped visual refinement; it does not claim all legacy button selectors across the application have been migrated or visually QA-verified.
+
+Validation remains required for all preset/mode combinations, mobile and desktop, hover/focus/active/disabled states, and WCAG contrast before Design System approval.
