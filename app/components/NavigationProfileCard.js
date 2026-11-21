@@ -7,6 +7,7 @@ import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
 import { useLoginModal } from "./LoginModalProvider";
 import ContactCenterNavIndicator from "./ContactCenterNavIndicator";
+import AccountLogout from "./AccountLogout";
 import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
 const copy = {
@@ -92,16 +93,23 @@ export default function NavigationProfileCard({ onNavigate }) {
   const initial = (identity.name || identity.email || "U").trim().charAt(0).toUpperCase();
 
   return (
-    <Link href={signedIn ? withLocalePrefix("/profile", language) : "#"} onClick={(event) => { onNavigate?.(); if (!signedIn) { event.preventDefault(); openLoginModal({ next: withLocalePrefix("/profile", language) }); } }} className="df-navigation-profile-card" aria-label={signedIn ? t.profile : t.login}>
-      <span className="df-navigation-profile-avatar">
-        {identity.avatar ? <img src={identity.avatar} alt="" /> : <span aria-hidden="true">{signedIn ? initial : "♙"}</span>}
-      </span>
-      <span className="df-navigation-profile-copy">
-        <strong>{title}</strong>
-        <small>{signedIn ? (identity.email || t.member) : status === "checking" ? t.checking : t.login}</small>
-      </span>
-      <ContactCenterNavIndicator mode="member" />
-      <span className="df-navigation-profile-arrow" aria-hidden="true">→</span>
-    </Link>
+    <div className={`df-navigation-profile-shell${signedIn ? " is-signed-in" : ""}`}>
+      <Link href={signedIn ? withLocalePrefix("/profile", language) : "#"} onClick={(event) => { onNavigate?.(); if (!signedIn) { event.preventDefault(); openLoginModal({ next: withLocalePrefix("/profile", language) }); } }} className="df-navigation-profile-card" aria-label={signedIn ? t.profile : t.login}>
+        <span className="df-navigation-profile-avatar">
+          {identity.avatar ? <img src={identity.avatar} alt="" /> : <span aria-hidden="true">{signedIn ? initial : "♙"}</span>}
+        </span>
+        <span className="df-navigation-profile-copy">
+          <strong>{title}</strong>
+          <small>{signedIn ? (identity.email || t.member) : status === "checking" ? t.checking : t.login}</small>
+        </span>
+        <ContactCenterNavIndicator mode="member" />
+        <span className="df-navigation-profile-arrow" aria-hidden="true">→</span>
+      </Link>
+      {signedIn && (
+        <div className="df-navigation-profile-logout">
+          <AccountLogout />
+        </div>
+      )}
+    </div>
   );
 }
