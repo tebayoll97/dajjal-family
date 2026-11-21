@@ -545,3 +545,22 @@ Illustrative names such as `df-search`, `df-button`, and `df-modal` are proposal
 The component inventory, semantic names/APIs, examples, and implementation status must be maintained together. A preview-only mock is not a completed reusable component. If documentation and source disagree, inspect and reconcile them before adding consumers.
 
 The governing rules are in `docs/aturan-kerja.md` and `docs/foundation/MASTER_FOUNDATION.md` (approved v1.4). The project brief and pending inventory work are tracked in Akashic Record at `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
+
+
+## 16.4 Mobile Compact UI — mandatory responsive component contract
+
+Mobile Compact UI is the owner-approved default mobile presentation and density standard defined by Master Foundation v1.4, Section 22, and the canonical implementation guide in Akashic Record at `dajjal-family/core/mobile_compact_ui.md`.
+
+Every new or materially revised shared component and Design System workbench surface must follow this contract:
+- Treat Mobile Compact UI as a responsive layout/density layer over the existing Design System, Global Theme Preset Engine, and semantic tokens—not as a new theme, palette, or component system.
+- On narrow screens, reduce unnecessary whitespace, oversized padding, repeated panels, and excessive vertical stacking while preserving hierarchy and readability.
+- Use compact but accessible controls, labels, badges, chips, and rows. Keep touch targets aligned with WCAG 2.2 AA expectations and the Master Foundation; compact styling must not shrink essential targets or remove labels.
+- Prefer wrapping chips for short options and progressive disclosure for secondary or advanced controls. Keep primary actions discoverable and group secondary actions contextually.
+- Prevent unintended horizontal page overflow. Wrap long labels/IDs/tags or use accessible truncation; horizontal scrolling is allowed only inside deliberately bounded components such as data tables.
+- Preserve all functionality and loading, empty, error, success, selected, disabled, hover, and keyboard-focus states.
+- Choose the layout according to the component's task. Do not force every component into the same card/list pattern or assume one-column stacking is always the most compact solution.
+- Preserve the established desktop composition and responsive breakpoints. Inspect existing consumers and breakpoint behavior before introducing new values.
+- Apply global theme tokens only within global scope. Couple, Wedding, and immersive Games retain their approved scoped visual boundaries; use compact principles only where compatible.
+- Validate applicable four-way theme combinations, ID/EN including long translations, small Android widths, larger phones, tablet, desktop, zoom/text scaling, keyboard/focus, contrast, reduced motion, screen-reader labels, and touch targets.
+
+**Consumer rule:** A component is not considered responsive-ready merely because it fits the viewport. Its Mobile Compact UI behavior, content density, overflow handling, touch usability, and retained functionality must be documented and reviewed in the Design System lab before it becomes the recommended shared pattern for new consumers.
