@@ -1,9 +1,9 @@
 # DAJJAL FAMILY — DESIGN SYSTEM FOUNDATION
 
 **Document ID:** DF-DS-001  
-**Version:** 1.0  
-**Status:** Draft — Pending Approval  
-**Parent Standard:** MASTER FOUNDATION DAJJAL FAMILY v1.0  
+**Version:** 1.1  
+**Status:** Approved — v1.1  
+**Parent Standard:** MASTER FOUNDATION DAJJAL FAMILY v1.4  
 **Scope:** Shared visual language and reusable UI standards
 
 ---
@@ -513,3 +513,35 @@ Secondary button contract:
 Page-specific visual exceptions may use narrowly scoped page styles when genuinely required, but ordinary buttons must not require editing each instance. Existing button classes should continue consuming the shared semantic tokens.
 
 Validation remains required for all preset/mode combinations, mobile and desktop, hover/focus/active/disabled states, and WCAG contrast before Design System approval.
+
+# 16. REUSABLE UI COMPONENT LAB CONTRACT
+
+The Design System lab is the practical component library for DAJJAL FAMILY. Its main output is reusable, implemented UI elements that future website pages can consume—not primarily a palette showcase or abstract token gallery.
+
+## 16.1 Component definition
+
+Each approved reusable component must provide:
+- A stable semantic name/API and documented usage contract.
+- A real shared implementation that can be imported/consumed by website pages.
+- Defined variants, sizes, interaction states, and behavior.
+- Accessibility and responsive/Mobile Compact UI behavior.
+- Compatibility with TECNO Light, TECNO Dark, Dajjal × Veylora Light, and Dajjal × Veylora Dark.
+- A live lab preview that exercises the same implementation/API used by website pages.
+
+Illustrative names such as `df-search`, `df-button`, and `df-modal` are proposals only until implemented and listed in the component inventory.
+
+## 16.2 Mandatory consumer rule
+
+- New or modified website UI must use the semantic component contracts and design tokens defined by this Design System.
+- Reuse an existing component whenever it meets the need; do not duplicate it with page-local markup/styles.
+- If a reusable element is missing, build and document it in the lab first, then consume it on the target page.
+- Use semantic tokens for all visual roles they cover. Do not hardcode local visual values when an approved token/component role exists.
+- Unique page composition may remain local, but its visual properties must still use the relevant semantic tokens.
+- Existing isolated experiences keep their approved theme scope and use the corresponding scoped semantic contracts rather than being forced into global recoloring.
+- Existing legacy pages migrate incrementally; this standard does not authorize a blanket redesign.
+
+## 16.3 Inventory and governance
+
+The component inventory, semantic names/APIs, examples, and implementation status must be maintained together. A preview-only mock is not a completed reusable component. If documentation and source disagree, inspect and reconcile them before adding consumers.
+
+The governing rules are in `docs/aturan-kerja.md` and `docs/foundation/MASTER_FOUNDATION.md` (approved v1.4). The project brief and pending inventory work are tracked in Akashic Record at `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
