@@ -147,6 +147,11 @@
 .df-design-system {
   color: var(--df-text);
 }
+.df-design-system .df-theme-toggle {
+  color: var(--df-text);
+  background: var(--df-primary-soft);
+  border-color: var(--df-border);
+}
 .df-design-system .ui-page-header {
   color: var(--df-text);
   border-color: var(--df-border);
