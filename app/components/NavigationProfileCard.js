@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { withLocalePrefix } from "@/lib/localePath";
 import { useLanguage } from "./LanguageProvider";
+import { useLoginModal } from "./LoginModalProvider";
 import ContactCenterNavIndicator from "./ContactCenterNavIndicator";
 import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
@@ -15,6 +16,7 @@ const copy = {
 
 export default function NavigationProfileCard({ onNavigate }) {
   const { language } = useLanguage();
+  const { openLoginModal } = useLoginModal();
   const t = copy[language] || copy.id;
   const [status, setStatus] = useState("checking");
   const currentUserId = useRef(null);
@@ -87,11 +89,10 @@ export default function NavigationProfileCard({ onNavigate }) {
 
   const signedIn = status === "signed-in";
   const title = identity.name || (signedIn ? t.profile : status === "checking" ? t.checking : t.guest);
-  const href = signedIn ? withLocalePrefix("/profile", language) : `${withLocalePrefix("/login", language)}?next=%2Fprofile`;
   const initial = (identity.name || identity.email || "U").trim().charAt(0).toUpperCase();
 
   return (
-    <Link href={href} onClick={onNavigate} className="df-navigation-profile-card" aria-label={signedIn ? t.profile : t.login}>
+    <Link href={signedIn ? withLocalePrefix("/profile", language) : "#"} onClick={(event) => { onNavigate?.(); if (!signedIn) { event.preventDefault(); openLoginModal({ next: withLocalePrefix("/profile", language) }); } }} className="df-navigation-profile-card" aria-label={signedIn ? t.profile : t.login}>
       <span className="df-navigation-profile-avatar">
         {identity.avatar ? <img src={identity.avatar} alt="" /> : <span aria-hidden="true">{signedIn ? initial : "♙"}</span>}
       </span>
