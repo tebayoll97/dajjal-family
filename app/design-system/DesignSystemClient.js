@@ -88,8 +88,8 @@ export default function DesignSystemClient() {
         <h1 className="ui-heading-h1">Design System</h1>
         <p className="ui-subtitle">A controlled lab for reviewing shared foundations and reusable interface components across themes and screen sizes.</p>
         <div className={styles.progress}>
-          <div className={styles.progressHead}><strong>Foundation progress</strong><span>18 / 18 shared components</span></div>
-          <div className={styles.progressTrack} role="progressbar" aria-label="Design System elements available" aria-valuemin="0" aria-valuemax="18" aria-valuenow="18"><span style={{ width: "100%" }} /></div>
+          <div className={styles.progressHead}><strong>Shared component inventory</strong><span>18 / 18 shared components</span></div>
+          <div className={styles.progressTrack} role="progressbar" aria-label="Shared React components inventoried" aria-valuemin="0" aria-valuemax="18" aria-valuenow="18"><span style={{ width: "100%" }} /></div>
           <small>All 18 shared React exports are inventoried. Workbench previews use the production component implementations; visual QA remains pending.</small>
         </div>
       </header>
