@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function DesignSystemPreviewPage() {
   return (
-    <main className="ui-page" style={{ paddingBlock: "var(--df-space-8)" }}>
+    <main className="ui-page df-design-system" style={{ paddingBlock: "var(--df-space-8)" }}>
       <header className="ui-page-header ui-stack">
         <div className="ui-cluster" style={{ justifyContent: "space-between" }}>
           <Badge variant="info">Internal preview · v1.0 draft</Badge>
