@@ -182,7 +182,23 @@ Every substantial shared component should document:
 7. Theme behavior across four combinations.
 8. Responsive behavior.
 9. Example usage.
-10. Known limitations and consumer responsibilities.
+10. Mobile Compact UI behavior and validation notes.
+11. Known limitations and consumer responsibilities.
+
+## 8.1 MOBILE COMPACT UI CONTRACT
+
+Mobile Compact UI is mandatory for future mobile component work and for incremental refinements when an existing component is next changed. Follow Master Foundation v1.4 Section 22, Design System Foundation Section 16.4, and Akashic Record `dajjal-family/core/mobile_compact_ui.md`.
+
+For every component, record and validate:
+- Mobile density strategy: compact inline/wrapping, one-column, responsive grid, disclosure, or bounded scrolling—chosen by task, not applied universally.
+- Mobile spacing and sizing: reduce excess gaps/padding while keeping readable type, visible labels, and accessible touch targets.
+- Overflow behavior: long text/IDs/tags, wrapping or accessible truncation, and any intentionally bounded horizontal scrolling.
+- Action hierarchy: primary actions remain discoverable; secondary actions are grouped or progressively disclosed.
+- State retention: loading, empty, error, success, selected, disabled, and keyboard-focus states remain available and understandable.
+- Localization and viewport coverage: Indonesian/English (including long strings), small Android widths, larger phones, tablet, desktop, and browser text scaling/zoom.
+- Theme and accessibility coverage: applicable four global preset/mode combinations, scoped-experience boundaries, keyboard, focus, contrast, reduced motion, screen-reader labels, and touch-target checks.
+
+Do not interpret Mobile Compact UI as permission to introduce local brand colors, remove useful content, reduce essential touch targets, or compress desktop layouts. A responsive component is not automatically Mobile Compact UI-compliant just because it avoids overflow.
 
 ## 9. MIGRATION POLICY
 
