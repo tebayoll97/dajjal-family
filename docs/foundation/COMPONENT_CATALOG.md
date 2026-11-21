@@ -170,6 +170,33 @@ A state must be both visually understandable and semantically exposed where appl
 - ID/EN labels and messages must use the established localization architecture.
 - Test zoomed text and reduced-motion preferences where applicable.
 
+### 7.1 Mobile Compact UI behavior by current component
+
+The following is the required responsive review baseline for the 18 existing exports. It describes the intended mobile behavior to verify; it is not a claim that every behavior has already passed browser QA.
+
+| Component | Mobile Compact UI behavior to preserve/verify |
+|---|---|
+| Button | Keep labels concise; allow action groups to wrap or stack by priority. Use touch-appropriate height for touch contexts; do not use the 36px Small size for essential mobile actions without a compensating accessible hit area. |
+| Card | Reduce unnecessary padding and nested-card framing; use fluid width and preserve content hierarchy. Avoid making every card a tall full-width panel when a compact row or grid better serves the task. |
+| Badge | Allow short labels/status chips to wrap in compact rows; retain readable text and non-color status meaning. |
+| Alert | Keep title/message concise and readable; wrap naturally without horizontal overflow. Do not remove critical status or recovery instructions to save space. |
+| TextField | Use full available width, persistent labels, concise helper/error copy, and appropriate input types. Account for on-screen keyboard and zoom. |
+| CheckboxField | Keep label and control aligned in a compact row; ensure the complete label remains tappable and the hit area is accessible. |
+| RadioGroup | Use wrapping/stacking according to option length; preserve fieldset/legend and clear selected/disabled states. |
+| SwitchField | Keep label/description and switch in a compact aligned layout; preserve a usable switch target and state announcement. |
+| Dialog | Fit within the viewport and safe areas; constrain height with internal scrolling where needed; keep close and primary actions reachable above the keyboard. |
+| Breadcrumbs | Allow wrapping or deliberate truncation for long localized paths; keep the current-page indication understandable. |
+| Tabs | Permit bounded horizontal scrolling for many tabs or wrapping where the pattern supports it; preserve keyboard navigation and selected-state visibility. |
+| DropdownMenu | Use the existing disclosure behavior for secondary options; ensure the panel stays within viewport bounds and its controls remain touch-accessible. |
+| Skeleton | Match the compact dimensions of the content being loaded; avoid decorative placeholder blocks that create excessive page height. |
+| EmptyState | Reduce decorative padding/illustration size on narrow screens; keep the explanation and next action visible. |
+| ErrorState | Keep recovery action discoverable; preserve the error meaning and retry affordance without oversized vertical framing. |
+| Pagination | Use compact page controls with accessible labels; when space is constrained, preserve previous/next and current-page context rather than causing page overflow. |
+| Table | Use a deliberately bounded horizontal scroll container only when columns cannot be responsibly reflowed; retain caption, headers, and row context. |
+| Avatar | Preserve legible size and fallback initials; avoid oversized avatar clusters that displace primary content. |
+
+For every component, also verify ID/EN long strings, small Android widths, larger phones, tablet/desktop return behavior, focus/keyboard, screen-reader labels, contrast, reduced motion, touch target sizing, and all applicable theme combinations. Component consumers remain responsible for page-specific grouping and action priority.
+
 ## 8. COMPONENT DOCUMENTATION TEMPLATE
 
 Every substantial shared component should document:
