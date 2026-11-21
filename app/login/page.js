@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
@@ -48,7 +47,6 @@ function StatusIcon({ success = false }) {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const { language } = useLanguage();
   const isID = language === "id";
   const [loading, setLoading] = useState(true);
