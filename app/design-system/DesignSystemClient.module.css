@@ -9,9 +9,9 @@
 .navTop{display:flex;align-items:center;justify-content:space-between;color:var(--df-text);font-size:.68rem;letter-spacing:.08em}
 .navTop span{color:var(--df-text-muted);font-size:.65rem;letter-spacing:0}
 .navGroups,.navNumbers{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
-.navGroups button,.navNumbers button{flex:0 0 auto;min-height:36px;padding:.4rem .6rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);font:inherit;font-size:.65rem;font-weight:750;cursor:pointer}
+.navGroups button,.navNumbers button{flex:0 0 auto;min-height:44px;padding:.5rem .65rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);font:inherit;font-size:.65rem;font-weight:750;cursor:pointer}
 .navGroups button span{display:block;color:var(--df-text-muted);font-size:.55rem;font-weight:500}
-.navNumbers button{min-width:36px;min-height:34px;padding:.35rem;font-variant-numeric:tabular-nums}
+.navNumbers button{min-width:44px;min-height:44px;padding:.35rem;font-variant-numeric:tabular-nums}
 .navGroups button:hover,.navNumbers button:hover{border-color:var(--df-primary);background:var(--df-primary-soft)}
 .navGroups button:focus-visible,.navNumbers button:focus-visible,.sectionToggle:focus-visible,.backTop:focus-visible{outline:3px solid var(--df-focus);outline-offset:2px}
 .sectionList{display:grid;gap:.65rem;scroll-margin-top:1rem}
