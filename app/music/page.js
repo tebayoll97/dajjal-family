@@ -133,7 +133,7 @@ export default function PublicMusicPage() {
 
   useEffect(() => {
     shuffleQueueRef.current = items.filter((item) => item.id !== activeId).map((item) => item.id).sort(() => Math.random() - 0.5);
-  }, [shuffle, items, activeId]);
+  }, [shuffle, items]);
 
   const activeTrack = items.find((item) => item.id === activeId) || null;
   const activeIndex = items.findIndex((item) => item.id === activeId);
