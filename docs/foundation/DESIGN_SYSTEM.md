@@ -493,16 +493,23 @@ All shared navigation text must be bilingual (Indonesian and English) through th
 The Admin group links to the existing Theme Preset Manager at `/admin/theme`. The general `/settings` page is retired and redirects to Profile; settings remain contextual to the feature that owns them. Footer branding uses the official Dajjal Family icon asset rather than a text-only DF substitute.
 
 
-# 24. SEMANTIC BUTTON COLOR TOKENS — 2026-11-21
+# 24. BUTTON COLOR TOKEN CONTRACT — 2026-11-21
 
-Button foreground colors must be independent from general content-text tokens. Do not change `--df-text`, `--df-text-secondary`, or `--df-text-muted` to correct button contrast. Button variants consume dedicated semantic roles supplied by the active Global Theme Preset:
+Buttons reuse the existing shared semantic color tokens. Do not introduce a separate set of global button color tokens for ordinary Primary and Secondary buttons; shared component styles should update centrally so existing buttons adopt the change without page-by-page edits.
 
-- `--df-button-primary-bg`, `--df-button-primary-hover-bg`, `--df-button-primary-text`, and `--df-button-primary-border` define the primary action pair.
-- `--df-button-secondary-bg`, `--df-button-secondary-hover-bg`, `--df-button-secondary-text`, and `--df-button-secondary-border` define the secondary action pair.
-- Other variants (ghost, danger, link, disabled) retain their own semantic behavior and must not borrow general text tokens as a substitute for a button foreground contract where a filled surface is present.
+Primary button contract:
+- `--df-primary`: button background and border.
+- `--df-primary-hover`: button hover background and border.
+- `--df-on-primary`: foreground (text/icons) displayed on the Primary surface.
 
-The default fallback tokens in `app/styles/tokens.css` and Light Mode compatibility layer preserve existing behavior for any scope not yet migrated. Global preset maps in `app/theme/themeTokens.js` may override the button-specific values independently for TECNO and Dajjal × Veylora, in both Light and Dark modes.
+Secondary button contract:
+- `--df-surface-raised`: default background.
+- `--df-surface-overlay`: hover background.
+- `--df-text`: foreground.
+- `--df-border-strong`: border.
 
-The shared `.ui-button-primary` / `.ui-button-secondary` primitives and DF Universe `.df-button` / `.df-button-secondary` now consume these dedicated tokens. General text tokens remain unchanged. Dajjal × Veylora Light Mode uses a deeper Azure primary button with white foreground, while its secondary action uses a pale Azure surface with a dark navy foreground. This is a scoped visual refinement; it does not claim all legacy button selectors across the application have been migrated or visually QA-verified.
+`--df-on-primary` is a shared foreground token, not a button-only token. It is also used by other elements displayed on a Primary-colored surface, including active pagination, accessibility skip links, and selected Library/action elements. Changing it therefore affects every consumer of the token. Before changing its value, inspect all usages and verify foreground/background contrast in each active preset and Light/Dark mode.
+
+Page-specific visual exceptions may use narrowly scoped page styles when genuinely required, but ordinary buttons must not require editing each instance. Existing button classes should continue consuming the shared semantic tokens.
 
 Validation remains required for all preset/mode combinations, mobile and desktop, hover/focus/active/disabled states, and WCAG contrast before Design System approval.
