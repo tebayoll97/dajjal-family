@@ -12,6 +12,13 @@ const copy = {
     title: "DAJJAL FAMILY",
     subtitle: "UNIVERSE",
     intro: "A home for our family, characters, games, stories, creative projects, and unforgettable moments. One family, endless stories.",
+    explore: "EXPLORE PROJECTS",
+    viewEvents: "VIEW EVENTS",
+    events: "Family Events",
+    eventsSub: "Special moments deserve their own place.",
+    wedding: "The Royal Wedding",
+    weddingText: "Anak Dajjal & Malika · Digital Wedding Invitation",
+    openInvite: "OPEN INVITATION",
     family: "Inside the Family",
     familySub: "Different characters. One extraordinary universe.",
     cards: [
@@ -32,6 +39,13 @@ const copy = {
     title: "DAJJAL FAMILY",
     subtitle: "UNIVERSE",
     intro: "Rumah bagi keluarga, karakter, game, cerita, proyek kreatif, dan momen tak terlupakan. Satu keluarga, cerita tanpa batas.",
+    explore: "JELAJAHI PROYEK",
+    viewEvents: "LIHAT ACARA",
+    events: "Acara Keluarga",
+    eventsSub: "Momen istimewa layak memiliki tempatnya sendiri.",
+    wedding: "Pernikahan Kerajaan",
+    weddingText: "Anak Dajjal & Malika · Undangan Pernikahan Digital",
+    openInvite: "BUKA UNDANGAN",
     family: "Di Dalam Keluarga",
     familySub: "Karakter yang berbeda. Satu universe yang luar biasa.",
     cards: [
@@ -59,6 +73,10 @@ export default function DajjalFamilyHome() {
         <p className="df-eyebrow">{t.eyebrow}</p>
         <h1>{t.title}<span>{t.subtitle}</span></h1>
         <p className="df-hero-copy">{t.intro}</p>
+        <div className="df-hero-actions">
+          <Link href="#projects" className="df-button">{t.explore}</Link>
+          <Link href="#events" className="df-button df-button-secondary">{t.viewEvents}</Link>
+        </div>
       </section>
 
       <section className="df-section" id="family">
@@ -92,6 +110,17 @@ export default function DajjalFamilyHome() {
         </div>
       </section>
 
+      <section className="df-section" id="events">
+        <h2 className="df-section-heading">{t.events}</h2>
+        <p className="df-section-subtitle">{t.eventsSub}</p>
+        <div className="df-card-grid">
+          <Link className="df-card" href={withLocalePrefix("/df/wedding-anak-dajjal", language)}>
+            <span className="df-card-icon" aria-hidden="true">♕</span>
+            <span className="df-card-copy"><strong>{t.wedding}</strong><span>{t.weddingText}</span></span>
+            <span className="df-card-arrow" aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
