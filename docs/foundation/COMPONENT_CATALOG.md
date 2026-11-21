@@ -76,6 +76,7 @@ Shared components must consume semantic roles. Existing tokens are the starting 
 | Strong border | `--df-border-strong` |
 | Primary action | `--df-primary` |
 | Primary hover | `--df-primary-hover` |
+| Primary text/accent on surfaces | `--df-primary-text` (contrast-safe foreground; do not use fill token as small text) |
 | Soft primary surface | `--df-primary-soft` |
 | Secondary brand role | `--df-secondary` |
 | Accent role | `--df-accent` |
