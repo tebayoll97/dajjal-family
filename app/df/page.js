@@ -88,7 +88,7 @@ export default function DajjalFamilyHome() {
             return card[2]
               ? <Link className="df-card" href={withLocalePrefix(card[2], language)} key={card[0]}>{content}</Link>
               : <article className="df-card" key={card[0]}>{content}</article>;
-          }}
+          })}
         </div>
       </section>
 
