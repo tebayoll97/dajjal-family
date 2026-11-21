@@ -47,6 +47,7 @@ export default function PublicMusicPage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
   const audioRef = useRef(null);
+  const shuffleQueueRef = useRef([]);
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -91,7 +92,7 @@ export default function PublicMusicPage() {
       if (repeatMode === "song") { audio.currentTime = 0; audio.play().catch(() => setNotice(t.error)); return; }
       if (repeatMode === "once") return;
       const index = items.findIndex((item) => item.id === activeId);
-      if (shuffle && items.length > 1) { const choices = items.filter((item) => item.id !== activeId); const next = choices[Math.floor(Math.random() * choices.length)]; if (next) playTrack(next); return; }
+      if (shuffle && items.length > 1) { const next = takeShuffleTrack(); if (next) playTrack(next); return; }
       if (index >= 0 && index < items.length - 1) playTrack(items[index + 1]);
       else if (repeatMode === "queue" && items.length) playTrack(items[0]);
     };
@@ -130,9 +131,21 @@ export default function PublicMusicPage() {
     );
   }, [items, query]);
 
+  useEffect(() => {
+    shuffleQueueRef.current = items.filter((item) => item.id !== activeId).map((item) => item.id).sort(() => Math.random() - 0.5);
+  }, [shuffle, items, activeId]);
+
   const activeTrack = items.find((item) => item.id === activeId) || null;
   const activeIndex = items.findIndex((item) => item.id === activeId);
   const progressDuration = duration || Number(activeTrack?.audio_duration_seconds) || 0;
+
+  function takeShuffleTrack() {
+    if (!shuffleQueueRef.current.length && repeatMode === "queue") {
+      shuffleQueueRef.current = items.filter((item) => item.id !== activeId).map((item) => item.id).sort(() => Math.random() - 0.5);
+    }
+    const id = shuffleQueueRef.current.shift();
+    return items.find((item) => item.id === id) || null;
+  }
 
   async function playTrack(item) {
     const audio = audioRef.current;
@@ -144,6 +157,7 @@ export default function PublicMusicPage() {
       } else audio.pause();
       return;
     }
+    if (shuffle) shuffleQueueRef.current = shuffleQueueRef.current.filter((id) => id !== item.id);
     setActiveId(item.id);
     setCurrentTime(0);
     setDuration(Number(item.audio_duration_seconds) || 0);
@@ -158,7 +172,7 @@ export default function PublicMusicPage() {
     if (!items.length) return;
     let nextIndex;
     if (activeIndex < 0) nextIndex = step > 0 ? 0 : items.length - 1;
-    else if (shuffle && step > 0 && items.length > 1) { const choices = items.map((_, index) => index).filter((index) => index !== activeIndex); nextIndex = choices[Math.floor(Math.random() * choices.length)]; }
+    else if (shuffle && step > 0 && items.length > 1) { const next = takeShuffleTrack(); if (!next) return; await playTrack(next); return; }
     else { nextIndex = activeIndex + step; if (nextIndex < 0 || nextIndex >= items.length) { if (repeatMode === "queue") nextIndex = (nextIndex + items.length) % items.length; else return; } }
     await playTrack(items[nextIndex]);
   }
