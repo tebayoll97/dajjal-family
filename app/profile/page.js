@@ -1,400 +1,69 @@
- 
 "use client";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
 import AccountLogout from "../components/AccountLogout";
-import GameCharacter from "@/lib/GameCharacter";
 
-const translations = {
-  en: {
-    loading: "Loading profile...",
-    title: "PLAYER PROFILE",
-    nickname: "Display Name",
-    server: "State Darkwar",
-    joined: "Joined",
-    edit: "EDIT PROFILE",
-    retry: "TRY AGAIN",
-    error: "Unable to load profile.",
-    stats: "GAME UNIVERSE STATS",
-    points: "Total Points",
-    gamesPlayed: "Sessions",
-    wins: "Wins",
-    bestScore: "Best",
-    streak: "Streak",
-    noStats: "No game statistics yet.",
-    activity: "RECENT ACTIVITY",
-    noActivity: "No recorded game activity yet.",
-    won: "VICTORY",
-    lost: "COMPLETED",
-    security: "ACCOUNT SECURITY",
-    securityTitle: "Account Security",
-    securityDescription: "Protect your account and game progress.",
-    email: "Login email",
-    provider: "Sign-in method",
-    lastSignIn: "Last sign-in",
-    unknown: "Not available",
-    dateLocale: "en-US",
-  },
-  id: {
-    loading: "Memuat profil...",
-    title: "PROFIL PEMAIN",
-    nickname: "Nama Tampilan",
-    server: "State Darkwar",
-    joined: "Bergabung",
-    edit: "EDIT PROFIL",
-    retry: "COBA LAGI",
-    error: "Tidak dapat memuat profil.",
-    stats: "STATISTIK GAME UNIVERSE",
-    points: "Total Poin",
-    gamesPlayed: "Sesi Bermain",
-    wins: "Kemenangan",
-    bestScore: "Terbaik",
-    streak: "Rekor Beruntun",
-    noStats: "Belum ada statistik permainan.",
-    activity: "RIWAYAT AKTIVITAS",
-    noActivity: "Belum ada aktivitas permainan yang tercatat.",
-    won: "MENANG",
-    lost: "SELESAI",
-    security: "KEAMANAN AKUN",
-    securityTitle: "Keamanan Akun",
-    securityDescription: "Lindungi akun dan progres permainanmu.",
-    email: "Email login",
-    provider: "Metode masuk",
-    lastSignIn: "Login terakhir",
-    unknown: "Tidak tersedia",
-    dateLocale: "id-ID",
-  },
-};
+function Icon({ name }) {
+  const paths = {
+    at: <><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.5"/></>,
+    phone: <><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M10 5h4m-3 13h2"/></>,
+    calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></>,
+    clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+    user: <><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-3.2 3.1-5 7-5s6.3 1.8 7 5"/></>
+  };
+  return <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+}
+function GoogleIcon(){return <svg viewBox="0 0 48 48" width="24" height="24" aria-hidden="true"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.7-.4-4H24v7.6h11a9.4 9.4 0 0 1-4.1 6.2v5h6.6c3.9-3.6 6.1-8.7 6.1-14.8Z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.6-5c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4H5.8v5.2A20 20 0 0 0 24 44Z"/><path fill="#FBBC05" d="M12.6 27.8a12 12 0 0 1 0-7.6V15H5.8a20 20 0 0 0 0 17.2l6.8-5.2Z"/><path fill="#EA4335" d="M24 11.8c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.8 29.5 4 24 4A20 20 0 0 0 5.8 15l6.8 5.2c1.6-4.8 6.1-8.4 11.4-8.4Z"/></svg>}
+function DiscordIcon(){return <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M19.7 5.1a18 18 0 0 0-4.4-1.4l-.5 1a16.7 16.7 0 0 0-5.6 0l-.5-1a18 18 0 0 0-4.4 1.4C1.5 9.2.8 13.2 1.2 17.1a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a12.8 12.8 0 0 0 11.2 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.5-.8-8.5-3.1-12ZM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>}
+function LoadingIcon(){return <svg className="df-profile-loading-mark" viewBox="0 0 64 64" aria-label="Loading" role="img"><circle className="df-profile-loading-track" cx="32" cy="32" r="25"/><circle className="df-profile-loading-spinner" cx="32" cy="32" r="25"/><circle className="df-profile-loading-core" cx="32" cy="32" r="12"/></svg>}
 
 export default function ProfilePage() {
-  const router = useRouter();
-  const { language } = useLanguage();
-  const t = translations[language] || translations.en;
-
-  const [player, setPlayer] = useState(null);
-  const [stats, setStats] = useState({ summary: {}, games: [], activity: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [avatarFailed, setAvatarFailed] = useState(false);
-  const [account, setAccount] = useState({ email: "", lastSignInAt: null });
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadProfile() {
-      try {
-        const {
-          data: sessionData,
-          error: sessionError,
-        } = await supabase.auth.getSession();
-
-        if (sessionError) throw sessionError;
-
-        const session = sessionData.session;
-
-        if (!session) {
-          router.replace("/login?next=%2Fprofile");
-          return;
-        }
-
-        if (active) setAccount({
-          email: session.user.email || "",
-          lastSignInAt: session.user.last_sign_in_at || null,
-        });
-
-        const profileResponse = await fetch("/api/player/me", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-          cache: "no-store",
-        });
-
-        const profileResult = await profileResponse.json();
-
-        if (profileResponse.status === 401) {
-          router.replace("/login?next=%2Fprofile");
-          return;
-        }
-
-        if (!profileResponse.ok) {
-          throw new Error(profileResult.error || t.error);
-        }
-
-        if (!profileResult.player) {
-          throw new Error(t.error);
-        }
-
-        // Activity is returned by the server-side profile API using service-role access.
-        // The browser must not query game_result_events directly.
-        const activity = profileResult.stats?.activity || [];
-
-        if (active) {
-          setPlayer(profileResult.player);
-          setStats({
-            ...(profileResult.stats || { summary: {}, games: [] }),
-            activity,
-          });
-          setAvatarFailed(false);
-        }
-      } catch (err) {
-        console.error(err);
-
-        if (active) {
-          setError(err.message || t.error);
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-
-    loadProfile();
-
-    return () => {
-      active = false;
-    };
-  }, [router, t.error]);
-
-  if (loading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-2 text-purple-300">
-        <GameCharacter character="veylora" expression="thinking" animation="float" size={68} />
-        <p className="text-xs tracking-[0.2em] animate-pulse">{t.loading}</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
-        <p className="text-red-400">{error}</p>
-
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 bg-purple-600 px-5 py-3 rounded-xl"
-        >
-          {t.retry}
-        </button>
-      </div>
-    );
-  }
-
-  if (!player) return null;
-
-  const joinedDate = player.created_at
-    ? new Date(player.created_at).toLocaleDateString(
-        t.dateLocale,
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }
-      )
-    : "-";
-
-  return (
-    <main className="df-token-page df-profile-page min-h-[70vh] px-5 py-10">
-      <div className="df-profile-content max-w-3xl mx-auto">
-
-        {player.profileIdentityEnabled && !player.username && (
-          <section className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 ui-card">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl" aria-hidden="true">✦</span>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-black tracking-widest text-amber-300">{language === "id" ? "TASK PROFIL" : "PROFILE TASK"}</p>
-                <h2 className="mt-1 text-lg font-bold text-white">{language === "id" ? "Lengkapi profil pemainmu" : "Complete your player profile"}</h2>
-                <p className="mt-1 text-sm text-gray-300">{language === "id" ? "Tambahkan nama tampilan dan username unik agar identitasmu siap digunakan di leaderboard dan fitur akun." : "Add a display name and unique username to use your identity across leaderboards and account features."}</p>
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <span className="text-xs text-amber-200">{language === "id" ? "Username belum diatur" : "Username not set"}</span>
-                  <Link href="/profile/edit" className="shrink-0 rounded-lg bg-amber-400 px-4 py-2 text-xs font-black text-black">{language === "id" ? "LENGKAPI" : "COMPLETE"}</Link>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* PLAYER PROFILE */}
-        <section className="df-profile-identity-card mt-6 rounded-2xl border border-purple-500/30 bg-[#151020] p-6 ui-card">
-          <div className="df-profile-identity-row">
-          <div className="df-profile-avatar w-28 h-28 rounded-full overflow-hidden bg-purple-600/20 border-2 border-purple-400/50 flex items-center justify-center">
-            {player.avatar_url && !avatarFailed ? (
-              <img
-                src={player.avatar_url}
-                alt={player.nickname || "Player avatar"}
-                onError={() => setAvatarFailed(true)}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-4xl font-black text-purple-300">
-                {(player.nickname || "?").charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
-          <div className="df-profile-identity-copy">
-            <p className="df-profile-eyebrow">DAJJAL FAMILY · GAMING UNIVERSE</p>
-            <h1 className="df-profile-page-title">{t.title}</h1>
-            <h2 className="df-profile-name">{player.nickname}</h2>
-            <p className="df-profile-server">SERVER {player.server_number || "—"}</p>
-            <Link href="/profile/edit" className="df-profile-edit-link">✎ {t.edit}</Link>
-          </div>
-          </div>
-
-          <div className="border-t border-purple-500/20 mt-6 pt-5 space-y-4">
-
-            <div className="flex justify-between gap-4 text-sm">
-              <span className="text-gray-400">
-                {t.nickname}
-              </span>
-              <span className="font-semibold">
-                {player.nickname}
-              </span>
-            </div>
-
-            <div className="flex justify-between gap-4 text-sm">
-              <span className="text-gray-400">
-                {t.server}
-              </span>
-              <span className="font-semibold">
-                {player.server_number || "—"}
-              </span>
-            </div>
-
-            <div className="flex justify-between gap-4 text-sm">
-              <span className="text-gray-400">
-                {t.joined}
-              </span>
-              <span className="font-semibold">
-                {joinedDate}
-              </span>
-            </div>
-
-          </div>
-        </section>
-
-        <section className="mt-6 rounded-2xl border border-sky-400/20 bg-gradient-to-br from-sky-950/30 to-rose-950/20 p-5 ui-card">
-          <p className="text-xs tracking-[0.2em] text-sky-300 font-bold">DAJJAL FAMILY · COUPLE</p>
-          <h2 className="mt-2 text-lg font-black text-white">{language === "id" ? "Profil Couple" : "Couple Profile"}</h2>
-          <p className="mt-1 text-sm text-gray-300">{language === "id" ? "Buat dan kelola halaman cerita pasanganmu." : "Create and manage your couple story page."}</p>
-          <Link href="/app/create-profile-couple" className="inline-flex mt-4 min-h-11 items-center rounded-xl bg-gradient-to-r from-sky-700 to-rose-700 px-5 py-2.5 text-sm font-bold text-white">
-            {language === "id" ? "BUKA COUPLE PROFILE" : "OPEN COUPLE PROFILE"}
-          </Link>
-        </section>
-
-        {/* UNIVERSAL GAME STATISTICS */}
-        <section className="df-profile-data-card mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
-          <p className="text-purple-400 text-xs tracking-[0.25em]">{t.stats}</p>
-          <div className="grid grid-cols-3 gap-2 mt-4">
-            {[
-              { label: t.points, value: stats.summary?.totalPoints || 0 },
-              { label: t.gamesPlayed, value: stats.summary?.gamesPlayed || 0 },
-              { label: t.wins, value: stats.summary?.wins || 0 },
-            ].map((item) => (
-              <div key={item.label} className="rounded-xl bg-purple-500/10 border border-purple-500/20 p-3 text-center min-w-0">
-                <p className="text-xl font-black text-white">{item.value.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-1 break-words">{item.label}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 space-y-2">
-            {stats.games?.length ? stats.games.map((game) => (
-              <div key={game.gameId} className="flex items-center justify-between gap-3 rounded-xl bg-black/20 px-4 py-3">
-                <div className="min-w-0">
-                  <p className="font-bold text-sm truncate">{game.gameName}</p>
-                  <p className="text-xs text-gray-400">{game.gamesPlayed} {t.gamesPlayed.toLowerCase()} · {game.wins} {t.wins.toLowerCase()}</p>
-                  <p className="text-[10px] text-gray-500 mt-1">{t.bestScore}: {game.bestScore.toLocaleString()} · {t.streak}: {game.longestStreak}</p>
-                </div>
-                <p className="font-black text-purple-300 whitespace-nowrap">{game.totalPoints.toLocaleString()} pts</p>
-              </div>
-            )) : <p className="text-sm text-gray-400 text-center py-3">{t.noStats}</p>}
-          </div>
-        </section>
-
-        {/* RECENT GAME ACTIVITY */}
-        <section className="mt-8 rounded-2xl border border-purple-500/30 bg-[#151020] p-5 ui-card">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-purple-400 text-xs tracking-[0.25em]">{t.activity}</p>
-              <p className="text-[10px] text-gray-500 mt-1">LAST 15 SESSIONS</p>
-            </div>
-            <span className="w-9 h-9 rounded-xl border border-purple-400/20 bg-purple-500/10 flex items-center justify-center text-purple-300">◷</span>
-          </div>
-
-          <div className="mt-4 space-y-2">
-            {stats.activity?.length ? stats.activity.map((item) => (
-              <div key={item.id} className="flex items-center gap-3 rounded-xl border border-white/5 bg-black/20 px-3 py-3">
-                <div className={`w-9 h-9 shrink-0 rounded-lg flex items-center justify-center text-sm font-black ${item.won ? "bg-emerald-500/10 text-emerald-300" : "bg-purple-500/10 text-purple-300"}`}>
-                  {item.won ? "✓" : "◆"}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold text-xs sm:text-sm truncate">{item.gameName}</p>
-                  <p className="text-[10px] text-gray-500 mt-1">
-                    {new Date(item.createdAt).toLocaleString(t.dateLocale, {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="font-black text-sm text-purple-200">{item.score.toLocaleString()}</p>
-                  <p className={`text-[9px] font-bold tracking-wider mt-1 ${item.won ? "text-emerald-300" : "text-gray-500"}`}>
-                    {item.won ? t.won : t.lost}
-                  </p>
-                </div>
-              </div>
-            )) : (
-              <div className="rounded-xl border border-dashed border-purple-500/20 bg-black/10 px-4 py-7 text-center">
-                <span className="text-2xl text-purple-400/70">◷</span>
-                <p className="text-xs text-gray-400 mt-2">{t.noActivity}</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ACCOUNT SECURITY */}
-        <section
-          id="account-security"
-          className="df-profile-security mt-8 space-y-4 scroll-mt-32"
-        >
-          <div>
-            <p className="text-purple-400 text-xs tracking-[0.25em]">
-              {t.security}
-            </p>
-
-            <h2 className="text-xl font-bold mt-2 ui-section-title">
-              {t.securityTitle}
-            </h2>
-
-            <p className="text-sm text-gray-400 mt-1">
-              {t.securityDescription}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-purple-500/20 bg-[#151020] p-4 space-y-3 ui-card">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold tracking-widest text-gray-500">{t.email}</span>
-              <span className="text-sm font-semibold text-white break-all">{account.email || "—"}</span>
-            </div>
-            <div className="border-t border-purple-500/10 pt-3">
-              <span className="text-[10px] font-bold tracking-widest text-gray-500">{t.lastSignIn}</span>
-              <p className="text-xs font-bold text-purple-200 mt-1">{account.lastSignInAt ? new Date(account.lastSignInAt).toLocaleDateString(t.dateLocale) : t.unknown}</p>
-            </div>
-          </div>
-
-          <AccountLogout />
-        </section>
-
-        <Link
-          href="/games"
-          className="block text-center mt-8 w-full rounded-xl bg-purple-600 hover:bg-purple-500 py-4 font-bold tracking-wider transition"
-        >
-          {language === "id" ? "JELAJAHI SEMUA GAME" : "EXPLORE ALL GAMES"}
-        </Link>
-
-      </div>
-    </main>
-  );
+ const router=useRouter();
+ const {language}=useLanguage();
+ const id=language==="id";
+ const [player,setPlayer]=useState(null);
+ const [loading,setLoading]=useState(true);
+ const [error,setError]=useState("");
+ const [avatarFailed,setAvatarFailed]=useState(false);
+ const [account,setAccount]=useState({email:"",lastSignInAt:null,emailVerified:false,googleConnected:false,discordConnected:false});
+ useEffect(()=>{
+  let active=true;
+  (async()=>{
+   try{
+    const {data,error:sessionError}=await supabase.auth.getSession();
+    if(sessionError)throw sessionError;
+    const session=data.session;
+    if(!session){router.replace("/login?next=%2Fprofile");return;}
+    const user=session.user;
+    const providers=new Set([...(user.app_metadata?.providers||[]),...(user.identities||[]).map(x=>x.provider),user.app_metadata?.provider].filter(Boolean));
+    if(active)setAccount({email:user.email||"",lastSignInAt:user.last_sign_in_at||null,emailVerified:Boolean(user.email_confirmed_at),googleConnected:providers.has("google"),discordConnected:providers.has("discord")});
+    const response=await fetch("/api/player/me",{headers:{Authorization:"Bearer "+session.access_token},cache:"no-store"});
+    const result=await response.json();
+    if(response.status===401){router.replace("/login?next=%2Fprofile");return;}
+    if(!response.ok||!result.player)throw new Error(result.error||(id?"Tidak dapat memuat profil.":"Unable to load profile."));
+    if(active){setPlayer(result.player);setAvatarFailed(false);}
+   }catch(e){if(active)setError(e.message);}
+   finally{if(active)setLoading(false);}
+  })();
+  return()=>{active=false;};
+ },[router,id]);
+ if(loading)return <main className="df-token-page df-profile-page df-profile-loading" aria-busy="true"><div className="df-profile-loading-content"><LoadingIcon/><p>{id?"Memeriksa akun...":"Checking your account..."}</p></div></main>;
+ if(error)return <main className="df-token-page df-profile-page df-profile-state"><p role="alert">{error}</p><button onClick={()=>window.location.reload()}>{id?"COBA LAGI":"TRY AGAIN"}</button></main>;
+ if(!player)return null;
+ const empty=id?"Belum diisi":"Not provided";
+ const joined=player.created_at?new Date(player.created_at).toLocaleDateString(id?"id-ID":"en-US",{day:"numeric",month:"long",year:"numeric"}):"—";
+ const last=account.lastSignInAt?new Date(account.lastSignInAt).toLocaleString(id?"id-ID":"en-US",{dateStyle:"medium",timeStyle:"short"}):(id?"Tidak tersedia":"Not available");
+ const gender=player.gender==="male"?(id?"Laki-laki":"Male"):player.gender==="female"?(id?"Perempuan":"Female"):empty;
+ const rows=[...(player.username?[{icon:"at",label:"Username",value:player.username}]:[]),...(player.profileIdentityEnabled?[{icon:"phone",label:id?"Nomor HP":"Phone number",value:player.phone_number||empty},{icon:"user",label:id?"Jenis kelamin":"Gender",value:gender},{icon:"calendar",label:id?"Tanggal lahir":"Date of birth",value:player.birth_date?new Date(player.birth_date+"T00:00:00").toLocaleDateString(id?"id-ID":"en-US"):empty}]:[]),{icon:"calendar",label:id?"Bergabung sejak":"Member since",value:joined}];
+ return <main className="df-token-page df-profile-page"><div className="df-profile-content">
+  {player.profileIdentityEnabled&&!player.username&&<section className="df-profile-task ui-card"><span className="df-profile-task-icon">✦</span><div className="df-profile-task-copy"><p>{id?"TASK PROFIL":"PROFILE TASK"}</p><h2>{id?"Lengkapi profil pemainmu":"Complete your player profile"}</h2><span>{id?"Tambahkan nama tampilan dan username agar identitasmu lengkap.":"Add a display name and username to complete your player identity."}</span></div><Link href="/profile/edit">{id?"LENGKAPI":"COMPLETE"}</Link></section>}
+  <section className="df-profile-panel ui-card"><div className="df-profile-panel-heading"><h1>{id?"Profil Pemain":"Player Profile"}</h1><Link href="/profile/edit" className="df-profile-edit-link">{id?"EDIT PROFIL":"EDIT PROFILE"}</Link></div><div className="df-profile-identity-row"><div className="df-profile-avatar">{player.avatar_url&&!avatarFailed?<img src={player.avatar_url} alt={player.nickname||"Player avatar"} onError={()=>setAvatarFailed(true)}/>:<span>{(player.nickname||"?").charAt(0).toUpperCase()}</span>}</div><div className="df-profile-identity-copy"><h2 className="df-profile-name">{player.nickname||"—"}</h2><p className="df-profile-server">Server: {player.server_number||"—"}</p></div></div><div className="df-profile-data-list">{rows.map(row=><div className="df-profile-data-row" key={row.label}><span className="df-profile-data-icon"><Icon name={row.icon}/></span><span className="df-profile-data-label">{row.label}</span><strong>{row.value||"—"}</strong></div>)}</div></section>
+  <section className="df-profile-panel ui-card"><div className="df-profile-panel-heading"><h2>{id?"Koneksi Akun":"Account Connections"}</h2></div><div className="df-profile-connection-row"><span className="df-profile-provider-icon"><GoogleIcon/></span><span className="df-profile-connection-copy"><strong>Google</strong><small>{id?"Login menggunakan Google":"Google sign-in"}</small></span><button className="df-profile-connected" disabled>{account.googleConnected?(id?"Terhubung":"Connected"):(id?"Tidak terhubung":"Not connected")}</button></div><div className="df-profile-connection-row"><span className="df-profile-provider-icon df-profile-discord-icon"><DiscordIcon/></span><span className="df-profile-connection-copy"><strong>Discord</strong><small>{id?"Hubungkan akun Discord":"Connect your Discord account"}</small></span>{account.discordConnected?<button className="df-profile-connected" disabled>{id?"Terhubung":"Connected"}</button>:<button className="df-profile-connect" disabled title={id?"Integrasi Discord belum dikonfigurasi.":"Discord integration is not configured yet."}>{id?"Hubungkan":"Connect"}</button>}</div>{!account.discordConnected&&<p className="df-profile-connection-note">{id?"Penghubungan Discord akan diaktifkan setelah OAuth dan penyimpanan koneksi disiapkan.":"Discord linking will be enabled after OAuth and connection storage are configured."}</p>}</section>
+  <section className="df-profile-panel ui-card"><div className="df-profile-panel-heading"><h2>{id?"Informasi Login & Sesi":"Login & Session Information"}</h2></div><div className="df-profile-session-row"><span className="df-profile-data-icon"><Icon name="mail"/></span><span className="df-profile-session-copy"><small>{id?"Email akun":"Account email"}</small><strong>{account.email||"—"}</strong></span><span className={"df-profile-verification "+(account.emailVerified?"is-verified":"is-unverified")}>{account.emailVerified?(id?"Terverifikasi":"Verified"):(id?"Belum terverifikasi":"Not verified")}</span></div><div className="df-profile-session-row"><span className="df-profile-data-icon"><Icon name="clock"/></span><span className="df-profile-session-copy"><small>{id?"Login terakhir":"Last sign-in"}</small><strong>{last}</strong></span></div><div className="df-profile-logout"><AccountLogout/></div></section>
+  <section className="df-profile-panel ui-card df-profile-couple"><div><h2>{id?"Profil Couple":"Couple Profile"}</h2><p>{id?"Buat dan kelola halaman cerita pasanganmu.":"Create and manage your couple story page."}</p></div><Link href="/app/create-profile-couple">{id?"BUKA COUPLE PROFILE":"OPEN COUPLE PROFILE"} ↗</Link></section>
+ </div></main>;
 }
