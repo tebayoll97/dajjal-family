@@ -81,7 +81,7 @@ export default function GamesPage() {
         router.push(withLocalePrefix("/games/mamah-ngamuk?splash=1", language));
         return;
       }
-      setShowGooglePrompt(true);
+      openLoginModal({ reason: "game", next: withLocalePrefix("/games/mamah-ngamuk?splash=1", language) });
     } catch (error) {
       console.error("Mamah Ngamuk launch error:", error);
       setShowError(true);
