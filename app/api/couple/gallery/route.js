@@ -38,11 +38,27 @@ export async function GET(request) {
     media = result.data || [];
   }
 
+  let contents = [];
+  if (ids.length) {
+    const result = await supabaseAdmin
+      .from("df_couple_contents")
+      .select("couple_id,content")
+      .eq("locale", locale)
+      .in("couple_id", ids);
+    if (result.error) {
+      console.error("Couple gallery content query failed:", result.error);
+      return NextResponse.json({ error: "Unable to load Couple Profile titles." }, { status: 500, headers: { "Cache-Control": "no-store" } });
+    }
+    contents = result.data || [];
+  }
+
   const coverMap = new Map(media.map((item) => [item.couple_id, item.google_drive_file_id]));
+  const contentMap = new Map(contents.map((item) => [item.couple_id, item.content || {}]));
   const items = (profiles || []).map(({ id, male_nickname, female_nickname, slug, created_at }) => ({
     id,
     maleNickname: male_nickname,
     femaleNickname: female_nickname,
+    subtitle: typeof contentMap.get(id)?.subtitle === "string" ? contentMap.get(id).subtitle.trim() : "",
     slug,
     createdAt: created_at,
     coverUrl: coupleDriveImage(coverMap.get(id), 900) || null,
