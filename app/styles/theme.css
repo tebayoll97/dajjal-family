@@ -594,11 +594,3 @@
  .df-couple-gallery__card-body p{font-size:.65rem}
 }
 
-
-/* Design System color experiment: reuse the existing on-primary token as the shared text role. */
-.df-design-system {
-  --df-text: var(--df-on-primary);
-}
-.df-design-system .ui-button-primary {
-  color: var(--df-text);
-}
