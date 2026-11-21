@@ -179,3 +179,18 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - First focused migration is committed to main at `603fa92e0b39c962283a65410a8fa9dcf23907ac`: semantic typography/weight tokens, reusable utilities, Global Navigation Drawer roles, and desktop workspace sidebar roles.
 - Do not treat all legacy/page-specific font sizes as migrated; audit and convert incrementally.
 - Vercel deployment for this commit was blocked by HTTP 402 `api-deployments-free-per-day`. Build, production release, and live visual QA are unverified until a matching deployment is READY and inspected.
+
+## Reusable UI Component System and mandatory semantic design contract — 2026-11-21
+
+- The Design System lab at `/id/design-system` is the canonical practical reference for reusable UI components and their semantic usage contracts. It is not merely a visual showcase.
+- **Every new or modified website UI element must use the applicable semantic design tokens and reusable component contracts defined/documented by the Design System.** Do not recreate a component that already exists in the shared library.
+- Before implementing a page or feature, inspect the Design System inventory and use the existing shared component/API (including its approved semantic class/name, such as a future `df-search`) rather than writing a parallel page-local version.
+- If a required reusable component or semantic role is missing, define and implement it in the Design System lab first, document its usage contract, variants, sizes, states, accessibility and responsive behavior, then consume it on the target page. Do not invent component names or assume illustrative examples are already implemented.
+- Component previews in the lab must use the same real implementation/API that website pages consume; demo-only markup is not sufficient for a completed reusable component.
+- Use the centralized semantic tokens for every visual role they cover (theme colors/surfaces/text/borders/focus, typography, spacing, sizing, radii, shadows, motion, layers, etc.). Do not use hardcoded visual values or local CSS overrides when an approved semantic token/component role exists.
+- Page-specific layout/composition may remain local where it is genuinely unique and not a reusable UI element, but its visual values must still consume the relevant semantic tokens. Technical values with no design-token role (for example a necessary media-query breakpoint or algorithmic measurement) may remain local only when justified and consistent with the foundation.
+- Validate reusable components against all four supported global theme combinations: TECNO Light, TECNO Dark, Dajjal × Veylora Light, and Dajjal × Veylora Dark; also validate ID/EN, Mobile Compact UI, accessibility, and responsive behavior as applicable.
+- Preserve approved isolated scopes (Couple, Wedding, immersive Games, and other explicitly scoped experiences). They must use their approved scoped semantic component/token contracts; do not force them into the global preset where prohibited, and do not use isolation as a reason to bypass semantic design-system discipline.
+- The Design System inventory and actual source implementation are authoritative together. If documentation and code differ, inspect and reconcile before using or extending a component.
+- This requirement applies to all future website work and to existing pages whenever they are next modified; it does not authorize a blanket redesign of legacy pages by itself.
+- Governing architecture: `docs/foundation/MASTER_FOUNDATION.md` (current approved version) and `docs/foundation/DESIGN_SYSTEM.md`. Detailed component-system plan is maintained in Akashic Record: `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
