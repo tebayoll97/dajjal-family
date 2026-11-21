@@ -28,3 +28,11 @@
 - Recorded the current hardcoded white/dialog backdrop CSS values as a future token-audit finding rather than changing visual behavior without review.
 - Re-fetched the updated catalog from GitHub and confirmed the API section, findings section, Mobile Compact UI contract, and Draft status are present.
 - This batch changes documentation only. No component source, CSS, browser behavior, build, deployment, or QA status was changed or certified.
+
+## 2026-11-22 — Component quality audit: keyboard, localization and touch targets
+
+- Updated `Tabs` keyboard navigation to skip disabled tabs, wrap across enabled tabs, and support Home/End movement to the first/last enabled tab. Added explicit horizontal tablist orientation.
+- Extended `Pagination` with caller-supplied localized landmark, previous, next, and page accessible labels while preserving existing English defaults for backward compatibility.
+- Increased Pagination button minimum hit area to 44 × 44px at all breakpoints, including narrow mobile widths; page grouping remains wrapping/centered under the existing mobile rule.
+- Updated Component Catalog API documentation and QA findings to reflect the source changes.
+- Source changes were committed to `main`; runtime keyboard, visual, screen-reader, and responsive behavior still require browser verification. No build or deployment result is implied by these commits.
