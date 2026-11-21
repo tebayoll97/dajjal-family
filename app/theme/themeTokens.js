@@ -32,7 +32,7 @@ const tecno = Object.freeze({
 const coupleTextAndStatus = {
   dark: {
     "--df-text":"#f7f4ff","--df-text-secondary":"#c3b8d2","--df-text-muted":"#978da7",
-    "--df-border":"rgba(195,184,210,.16)","--df-border-strong":"rgba(195,184,210,.28)",
+    "--df-border":"rgba(211,74,98,.22)","--df-border-strong":"rgba(211,74,98,.38)",
     "--df-success":"#22c55e","--df-warning":"#f59e0b","--df-danger":"#ef4444","--df-info":"#38bdf8","--df-on-primary":"#ffffff",
   },
   light: {
@@ -46,9 +46,9 @@ function coupleMode(mode) {
   const light = mode === "light";
   return Object.freeze({
     "--df-bg": light ? "#f3faff" : "#100b0e",
-    "--df-surface": light ? "#ffffff" : "#160e12",
-    "--df-surface-raised": light ? "#eaf6fd" : "#241018",
-    "--df-surface-overlay": light ? "#ffffff" : "#241018",
+    "--df-surface": light ? "#ffffff" : "#1b1217",
+    "--df-surface-raised": light ? "#eaf6fd" : "#281b22",
+    "--df-surface-overlay": light ? "#ffffff" : "#34232b",
     "--df-primary": light ? "#398fc5" : "#b51f3b",
     "--df-primary-hover": light ? "#2876a8" : "#94182f",
     "--df-primary-soft": light ? "rgba(57,143,197,.12)" : "rgba(181,31,59,.15)",
