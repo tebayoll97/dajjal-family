@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, TextField } from "../components/ui";
+import ComponentWorkbench from "./ComponentWorkbench";
 import ThemeToggle from "../components/ThemeToggle";
 import { DialogPreview } from "../components/ui/DialogPreview";
 import { ControlsPreview } from "../components/ui/ControlsPreview";
@@ -22,6 +23,7 @@ const sections = [
   ["11","SPACING & SIZING","spacing-heading","Spacing scale and sizing roles"],
   ["12","SURFACES & ELEVATION","surface-heading","Surfaces, borders, radius and shadows"],
   ["13","INTERACTION STATES","states-heading","Hover, focus, active and disabled"],
+  ["14","COMPONENT WORKBENCH","workbench-heading","Live previews of the shared React component inventory"],
 ];
 
 const tokenColors = [
@@ -86,9 +88,9 @@ export default function DesignSystemClient() {
         <h1 className="ui-heading-h1">Design System</h1>
         <p className="ui-subtitle">A controlled lab for reviewing shared foundations and reusable interface components across themes and screen sizes.</p>
         <div className={styles.progress}>
-          <div className={styles.progressHead}><strong>Foundation progress</strong><span>13 / 28 elements</span></div>
-          <div className={styles.progressTrack} role="progressbar" aria-label="Design System elements available" aria-valuemin="0" aria-valuemax="28" aria-valuenow="13"><span /></div>
-          <small>13 groups are represented in this lab. The remaining groups are planned for later batches.</small>
+          <div className={styles.progressHead}><strong>Foundation progress</strong><span>18 / 18 shared components</span></div>
+          <div className={styles.progressTrack} role="progressbar" aria-label="Design System elements available" aria-valuemin="0" aria-valuemax="18" aria-valuenow="18"><span style={{ width: "100%" }} /></div>
+          <small>All 18 shared React exports are inventoried. Workbench previews use the production component implementations; visual QA remains pending.</small>
         </div>
       </header>
 
@@ -97,6 +99,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
@@ -197,6 +200,10 @@ export default function DesignSystemClient() {
             <div className={styles.stateControls}><button type="button" className={styles.statePrimary}>Default / Hover</button><button type="button" className={styles.stateSecondary}>Secondary</button><button type="button" className={styles.stateDisabled} disabled>Disabled</button><a href="#13" className={styles.stateLink}>Focus me with Tab</a></div>
             <p className={styles.demoNote}>Use pointer hover, keyboard Tab, click/press, and disabled states. Focus must remain visible and must not rely on color alone. Reduced-motion preferences are respected.</p>
           </div>
+        </Section>
+
+        <Section id="14" title="COMPONENT WORKBENCH" headingId="workbench-heading" description="Live previews of all shared React components" open={!!expanded["14"]} onToggle={() => toggle("14")}>
+          <ComponentWorkbench />
         </Section>
       </div>
 
