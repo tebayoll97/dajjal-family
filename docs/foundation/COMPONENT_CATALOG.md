@@ -250,3 +250,239 @@ Do not interpret Mobile Compact UI as permission to introduce local brand colors
 6. Defer Tooltip until there is a concrete repeated interaction need.
 
 **Audit boundary:** This catalog records repository source evidence and intended contracts. It does not certify browser behavior, accessibility conformance, visual contrast, or production readiness.
+
+## 11. CANONICAL API REFERENCE — 18 REACT EXPORTS
+
+This section records the public component signatures found in the source files listed below. Props are source-derived, not a promise that every arbitrary HTML attribute is accepted by every component. Unless noted otherwise, class names are appended to the shared root class through `className`. Examples are illustrative; consumers must still supply page-level composition, localization, and data behavior.
+
+### 11.1 Button
+
+**Source:** `app/components/ui/Button.js`
+
+- Signature: `Button({ children, variant = "primary", size = "md", loading = false, disabled = false, type = "button", className = "", ...props })`
+- Variants implemented in CSS: `primary`, `secondary`, `ghost`, `danger`. The component constructs the variant class directly; unsupported values do not receive a defined variant style.
+- Sizes: `sm`, `md` (default; no extra size class), `lg`. CSS defines 36px minimum height for `sm`, 44px base, and 48px for `lg`.
+- State: `loading` disables the native button, sets `aria-busy`, and renders a spinner plus the children. `disabled` also disables it.
+- Semantics: native `button`; default type is `button`. Additional native button props and event handlers are forwarded.
+- Consumer responsibility: use a semantic link for navigation; provide concise localized children and a meaningful action label. Avoid `sm` for essential mobile actions unless a separate accessible hit area is provided.
+- Limitation: no built-in icon-only API, confirmation behavior, or form submission state management.
+
+### 11.2 Card
+
+**Source:** `app/components/ui/Card.js`
+
+- Signature: `Card({ children, interactive = false, as: Element = "div", className = "", ...props })`
+- API: `interactive` adds the `ui-card-interactive` class; `as` selects the rendered element; remaining props are forwarded.
+- Variants/sizes: no named variant or size API.
+- Semantics: default is a non-interactive `div`. The source explicitly directs interactive behavior to a semantic link or button.
+- Consumer responsibility: if the card navigates or triggers an action, put a real link/button inside it or choose an appropriate semantic `as` element and provide the required behavior and accessible name.
+- Limitation: `interactive` only adds hover styling; it does not make the card keyboard-operable or clickable.
+
+### 11.3 Badge
+
+**Source:** `app/components/ui/Badge.js`
+
+- Signature: `Badge({ children, variant = "neutral", className = "", ...props })`
+- Variants: `neutral` (default), `success`, `warning`, `danger`, `info`. Unknown values safely fall back to `neutral`.
+- Sizes: no size prop; visual dimensions are CSS-defined.
+- Semantics: rendered as a `span`; remaining span props are forwarded.
+- Consumer responsibility: include text or another non-color cue for status; keep labels short enough to wrap cleanly on mobile.
+- Limitation: no built-in icon, dot, count, or live announcement behavior.
+
+### 11.4 Alert
+
+**Source:** `app/components/ui/Alert.js`
+
+- Signature: `Alert({ children, variant = "info", title, className = "", ...props })`
+- Variants: `info` (default), `success`, `warning`, `danger`. Unknown values fall back to `info`.
+- Semantics: `warning` and `danger` render with `role="alert"`; `info` and `success` render with `role="status"`.
+- API: optional `title`; body is supplied as children; remaining div props are forwarded.
+- Consumer responsibility: use assertive alerts only for messages requiring prompt attention; avoid repeating the same announcement on every render. Keep recovery instructions available.
+- Limitation: no dismiss control, action slot, or automatic announcement lifecycle.
+
+### 11.5 TextField
+
+**Source:** `app/components/ui/TextField.js`
+
+- Signature: `TextField({ label, helpText, error, id, className = "", inputClassName = "", as: Element = "input", ...props })`
+- Intended element modes: `input` (default), `textarea`, and `select`; the rendered class is selected for those three element names.
+- API: `label`, `helpText`, `error`, explicit `id`, wrapper `className`, control `inputClassName`, and native element props such as `type`, `name`, `value`, `onChange`, `required`, `disabled`, and `aria-*`.
+- Accessibility: generates an ID with React `useId` when none is supplied; label is associated using `htmlFor`; help and error IDs are merged with caller `aria-describedby`; error sets `aria-invalid` and `aria-errormessage`.
+- Consumer responsibility: provide a visible `label` for normal form use, validation rules and messages, controlled/uncontrolled value behavior, and localized copy. Ensure select options or textarea content are supplied correctly.
+- Limitation: validation is explicitly owned by the consuming form. An error message is not itself a validation engine.
+
+### 11.6 CheckboxField
+
+**Source:** `app/components/ui/CheckboxField.js`
+
+- Signature: `CheckboxField({ label, helpText, id, className = "", ...props })`
+- API: visible `label`, optional `helpText`, optional `id`, wrapper `className`, and remaining native checkbox props (`checked`/`defaultChecked`, `onChange`, `name`, `value`, `disabled`, etc.).
+- Semantics/accessibility: native checkbox nested in a label; generated ID is used when none is supplied; help text is connected through `aria-describedby`.
+- Consumer responsibility: supply a meaningful label and manage checked state/form submission. Keep the whole label comfortably tappable.
+- Limitation: no error prop or built-in validation message slot.
+
+### 11.7 RadioGroup
+
+**Source:** `app/components/ui/RadioGroup.js`
+
+- Signature: `RadioGroup({ label, name, options = [], value, onChange, direction = "column", disabled = false, className = "" })`
+- API: `options` is an array of objects with `value`, `label`, and optional `disabled`; `value` is the selected option value; `onChange` receives the selected option value; `direction` is `column` (default) or `row`; `disabled` disables the fieldset.
+- Semantics: native `fieldset` and optional `legend`, with native radio inputs sharing `name`; option labels are associated with generated IDs.
+- Consumer responsibility: provide a stable unique `name`, a controlled `value`, and an `onChange` handler. Keep option labels concise; row mode wraps through CSS.
+- Limitation: no help/error text API. The component does not validate that the supplied value exists in options.
+
+### 11.8 SwitchField
+
+**Source:** `app/components/ui/SwitchField.js`
+
+- Signature: `SwitchField({ label, description, checked, onChange, disabled = false, id, className = "", name })`
+- API: controlled boolean `checked`; `onChange` receives the inverted boolean; optional `description`, `disabled`, `id`, `name`, and `className`.
+- Semantics/accessibility: native button with `type="button"`, `role="switch"`, `aria-checked`, associated visible label, and optional description via `aria-describedby`.
+- Consumer responsibility: always provide a boolean `checked` value and update it in `onChange`; localize label and description.
+- Limitation: no uncontrolled/defaultChecked mode and no form serialization beyond the forwarded `name` attribute on the button.
+
+### 11.9 Dialog
+
+**Source:** `app/components/ui/Dialog.js`
+
+- Signature: `Dialog({ open, onClose, title, description, children, actions, closeOnEscape = true, closeOnBackdrop = false, closeLabel = "Close dialog", initialFocusRef, className = "", ...props })`
+- API: parent-controlled `open`; `onClose` callback; optional `title`, `description`, `actions`, `closeOnEscape`, `closeOnBackdrop`, localized `closeLabel`, and `initialFocusRef`.
+- Semantics: native `<dialog>` opened with `showModal()`; title/description IDs are generated and connected with `aria-labelledby`/`aria-describedby`. When no title is supplied, `closeLabel` is used as `aria-label`. The browser provides native modal focus containment/restoration and Escape cancellation behavior.
+- Close behavior: the internal close button calls native `close()`; native close events call `onClose`. The parent should set `open={false}` in response. Escape can be prevented with `closeOnEscape={false}`; backdrop close is opt-in.
+- Consumer responsibility: control the open state, localize `closeLabel`, provide a meaningful title or label, manage action buttons, and ensure the dialog content remains usable with the mobile keyboard.
+- Limitation: no built-in portal, nested-dialog manager, async action handling, or custom focus-trap implementation. The implementation relies on native browser dialog behavior.
+
+### 11.10 Breadcrumbs
+
+**Source:** `app/components/ui/Breadcrumbs.js`
+
+- Signature: `Breadcrumbs({ items = [], className = "", ariaLabel = "Breadcrumb" })`
+- API: `items` is an ordered array of objects with `label` and `href`; `ariaLabel` names the navigation landmark.
+- Semantics: `nav` containing an ordered list; all but the final item render as anchors; the final item receives `aria-current="page"`.
+- Consumer responsibility: provide localized labels and locale-aware hrefs, with the current page last. Ensure non-current items have valid destinations.
+- Limitation: uses native anchors, not the Next.js Link component; no collapse/truncation control is built in.
+
+### 11.11 Tabs
+
+**Source:** `app/components/ui/Tabs.js`
+
+- Signature: `Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", className = "" })`
+- API: each tab object has `value`, `label`, optional `disabled`, and `content`; `value` is controlled; `onChange` receives the selected value.
+- Semantics: `tablist`, `tab` buttons with `aria-selected`, `aria-controls`, roving `tabIndex`, and one `tabpanel`.
+- Keyboard behavior implemented: ArrowLeft/ArrowRight wrap through indices; Home/End move to first/last. Focus moves to the target tab; selection changes only when the target tab is not disabled. Click selects a tab.
+- Consumer responsibility: provide a non-empty stable tab list with unique values and localized labels; update controlled `value` from `onChange`.
+- Limitation: arrow navigation does not skip disabled tabs; no manual activation mode or separate panel-per-tab IDs. Verify keyboard behavior with actual consumers before treating it as a complete tabs pattern.
+
+### 11.12 DropdownMenu
+
+**Source:** `app/components/ui/DropdownMenu.js`
+
+- Signature: `DropdownMenu({ label, children, className = "" })`
+- API: `label` is the disclosure summary; `children` is the panel content.
+- Semantics: native `details` and `summary`, so the browser supplies disclosure behavior; panel content is ordinary children.
+- Consumer responsibility: use links/buttons with their own accessible names inside the panel; ensure the panel is not clipped by surrounding layout and remains within the viewport.
+- Limitation: this is not an ARIA application menu. It has no item model, controlled open state, outside-click manager, Escape handling contract, or menu-arrow-key navigation. Do not describe or use it as a full application-menu widget.
+
+### 11.13 Skeleton
+
+**Source:** `app/components/ui/Skeleton.js`
+
+- Signature: `Skeleton({ variant = "text", width, height, className = "", count = 1, ...props })`
+- Variants: `text` (default), `rect`, `circle`; unknown values fall back to `text`.
+- API: optional CSS width/height values, repeated `count`, `className`, and span props.
+- Semantics: root is `aria-hidden="true"`; it is decorative and does not announce loading.
+- Consumer responsibility: announce loading at the surrounding region when needed (for example, `role="status"` and localized text); size skeletons to match the actual content layout.
+- Limitation: no built-in loading state, label, or reduced-motion prop. Reduced motion is handled in shared CSS.
+
+### 11.14 EmptyState
+
+**Source:** `app/components/ui/EmptyState.js`
+
+- Signature: `EmptyState({ title = "Nothing here yet", description, action, icon = "—", className = "" })`
+- API: title, optional description, optional action node, optional decorative icon text, and className.
+- Semantics: root uses `role="status"`; icon is hidden from assistive technology.
+- Consumer responsibility: localize all copy, supply a relevant action node when recovery/creation is possible, and keep action labels explicit.
+- Limitation: no dedicated illustration component, layout variant, or heading-level prop; title is always an `h3`.
+
+### 11.15 ErrorState
+
+**Source:** `app/components/ui/ErrorState.js`
+
+- Signature: `ErrorState({ title = "Something went wrong", description = "Please try again.", onRetry, retryLabel = "Try again", className = "" })`
+- API: title, description, optional `onRetry`, localized `retryLabel`, and className.
+- Semantics: root uses `role="alert"`; retry is a native button rendered only when `onRetry` exists.
+- Consumer responsibility: provide a safe retry callback, localized text, and any additional support/contact path required by the failure.
+- Limitation: retry is synchronous from the component's perspective; no built-in pending/disabled state or error-code display.
+
+### 11.16 Pagination
+
+**Source:** `app/components/ui/Pagination.js`
+
+- Signature: `Pagination({ page, totalPages, onPageChange, ariaLabel = "Pagination", className = "" })`
+- API: integer `page`, integer `totalPages`, callback `onPageChange` (receives target page), optional landmark label and className.
+- Behavior: returns `null` if page/totalPages are not integers or totalPages is below 1. Displayed current page is clamped to 1…totalPages. Renders Previous/Next, current page, adjacent pages, first/last pages, and ellipses as needed.
+- Semantics: labeled `nav`; current page has `aria-current="page"`; Previous/Next and numbered buttons have accessible labels.
+- Consumer responsibility: own data fetching/page state, localize the visible Previous/Next text and aria labels (the current implementation uses English strings), and keep page changes in range.
+- Limitation: no page-size selector, total-record count, or localized label props.
+
+### 11.17 Table
+
+**Source:** `app/components/ui/Table.js`
+
+- Signature: `Table({ columns = [], rows = [], rowKey = "id", caption, loading = false, loadingRows = 4, emptyState, className = "" })`
+- API: `columns` array with `key`, `header`, optional `align` (`center`/`right` CSS classes), optional `render(row, rowIndex)`; `rows` array; `rowKey` property name or function; optional `caption`, `loading`, `loadingRows`, custom `emptyState`, and className.
+- Behavior: loading renders skeleton rows; non-empty rows render cell values or render callbacks; empty rows render the supplied emptyState or a default EmptyState.
+- Semantics: native table, thead/tbody, column headers with `scope="col"`, optional caption. The wrapper is horizontally scrollable.
+- Consumer responsibility: provide stable row keys, meaningful column headers/caption, localized empty state, and a deliberate small-screen data strategy. For complex tables, consider whether a responsive card/list representation is more usable than horizontal scrolling.
+- Limitation: no sorting, selection, pagination integration, row-header API, sticky columns, or built-in responsive column hiding.
+
+### 11.18 Avatar
+
+**Source:** `app/components/ui/Avatar.js`
+
+- Signature: `Avatar({ src, name = "User", alt, size = "md", className = "" })`
+- Sizes: `sm` (28px), `md` (40px), `lg` (56px), `xl` (80px); unknown values fall back to `md`.
+- Behavior: image failure falls back to initials generated from up to the first two words of `name`; absent/empty initials fall back to `?`.
+- Semantics: root uses `role="img"` and accessible label `alt ?? name`; the inner image has empty alt text to avoid duplicate announcement.
+- Consumer responsibility: provide a useful non-sensitive display name and meaningful `alt` when the image conveys information beyond the name; choose size appropriate to the context.
+- Limitation: no group/stack, status indicator, presence state, or image loading placeholder.
+
+## 12. CROSS-COMPONENT SOURCE FINDINGS AND QA GATES
+
+The following are implementation observations, not claims of completed visual or browser QA:
+
+1. **Token exceptions requiring a later CSS audit:** the current shared stylesheet contains literal white values for the danger button text and switch thumb, and literal RGBA backdrop colors for the native dialog. Review whether these should map to existing semantic roles or documented fixed contrast values before changing them. Do not silently recolor scoped experiences.
+2. **Reduced motion:** shared CSS explicitly disables button/card transitions, button spinner animation, and Skeleton shimmer under `prefers-reduced-motion`. Verify actual behavior in browser.
+3. **Focus styling:** explicit focus-visible rules exist for buttons, text controls, icon buttons, dropdown summary/items, tabs, choice inputs, switch, pagination, and dialog. Confirm all actual interactive descendants and consumer-supplied controls remain visibly focusable.
+4. **Mobile sizing:** base Button and form controls use 44px minimum height; Button Small is 36px, pagination controls are 40px (and 36px minimum width under 480px), dropdown items are 40px, tabs are 44px, and switch is 48×28px. These are source measurements, not a WCAG conformance result.
+5. **Localization gaps in component defaults:** Pagination, EmptyState, ErrorState, Dialog close label, Breadcrumbs aria label, and Tabs aria label default to English. Consumers must pass localized copy where rendered in Indonesian.
+6. **Keyboard behavior needs targeted QA:** Tabs does not skip disabled tabs during arrow navigation. DropdownMenu is disclosure-based rather than a full application menu. Dialog relies on native browser dialog behavior. These limitations must remain visible in consumer decisions.
+7. **Table overflow is deliberate and bounded:** `.ui-table-wrap` provides horizontal scrolling. Test at narrow Android widths with long localized values and confirm the surrounding page does not overflow.
+8. **Four-theme verification remains required:** source-level token usage does not prove contrast or visual quality across TECNO Light/Dark and Dajjal × Veylora Light/Dark.
+9. **Mobile Compact UI remains a review requirement:** this API reference records current CSS and expected consumer behavior; it does not certify each component or consumer as Mobile Compact UI compliant.
+
+### 12.1 Component source inventory used
+
+- `app/components/ui/index.js`
+- `app/components/ui/Button.js`
+- `app/components/ui/Card.js`
+- `app/components/ui/Badge.js`
+- `app/components/ui/Alert.js`
+- `app/components/ui/TextField.js`
+- `app/components/ui/CheckboxField.js`
+- `app/components/ui/RadioGroup.js`
+- `app/components/ui/SwitchField.js`
+- `app/components/ui/Dialog.js`
+- `app/components/ui/Breadcrumbs.js`
+- `app/components/ui/Tabs.js`
+- `app/components/ui/DropdownMenu.js`
+- `app/components/ui/Skeleton.js`
+- `app/components/ui/EmptyState.js`
+- `app/components/ui/ErrorState.js`
+- `app/components/ui/Pagination.js`
+- `app/components/ui/Table.js`
+- `app/components/ui/Avatar.js`
+- `app/styles/components.css`
+- `app/styles/tokens.css`
+
+**Documentation status:** source API inventory is documented. This does not change the catalog's Draft status; browser, accessibility, four-theme, bilingual, and mobile QA evidence is still required.
