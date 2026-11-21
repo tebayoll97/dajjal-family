@@ -39,14 +39,14 @@
 .df-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.8rem; }
 .df-button {
   display: inline-flex; min-height: 46px; align-items: center; justify-content: center;
-  padding: .75rem 1.25rem; border: 1px solid var(--df-button-primary-border); border-radius: var(--df-radius-pill);
-  background: var(--df-button-primary-bg); color: var(--df-button-primary-text); font-size: .72rem; font-weight: 850;
+  padding: .75rem 1.25rem; border: 1px solid var(--df-primary); border-radius: var(--df-radius-pill);
+  background: var(--df-primary); color: var(--df-on-primary); font-size: .72rem; font-weight: 850;
   letter-spacing: .08em; line-height: 1.35; text-align: center; text-decoration: none;
   transition: background var(--df-duration-fast), border-color var(--df-duration-fast), transform var(--df-duration-fast);
 }
-.df-button:hover { background: var(--df-button-primary-hover-bg); border-color: var(--df-button-primary-hover-bg); transform: translateY(-1px); }
-.df-button-secondary { background: var(--df-button-secondary-bg); color: var(--df-button-secondary-text); border-color: var(--df-button-secondary-border); }
-.df-button-secondary:hover { background: var(--df-button-secondary-hover-bg); border-color: var(--df-button-secondary-border); }
+.df-button:hover { background: var(--df-primary-hover); border-color: var(--df-primary-hover); transform: translateY(-1px); }
+.df-button-secondary { background: var(--df-surface-raised); color: var(--df-text); border-color: var(--df-border-strong); }
+.df-button-secondary:hover { background: var(--df-surface-overlay); border-color: var(--df-border-strong); }
 .df-section { margin-top: clamp(2rem, 5vw, 3.75rem); }
 .df-section-heading {
   margin: 0 0 1rem; padding-left: .9rem; border-left: 3px solid var(--df-primary);
