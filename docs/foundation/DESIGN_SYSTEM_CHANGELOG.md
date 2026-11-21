@@ -36,3 +36,12 @@
 - Increased Pagination button minimum hit area to 44 × 44px at all breakpoints, including narrow mobile widths; page grouping remains wrapping/centered under the existing mobile rule.
 - Updated Component Catalog API documentation and QA findings to reflect the source changes.
 - Source changes were committed to `main`; runtime keyboard, visual, screen-reader, and responsive behavior still require browser verification. No build or deployment result is implied by these commits.
+
+
+## 2026-11-22 — Design System QA pass 1: touch-target hardening
+
+- Source inspection confirmed the Component Workbench already exposes isolated previews for all four global preset/mode combinations and mounts the 18 production shared React exports.
+- Raised the Workbench theme selector minimum height to 44px.
+- Raised Design System section-navigation group controls to a 44px minimum height and numbered navigation controls to 44×44px, retaining bounded horizontal scrolling on narrow screens.
+- This is a source-level Mobile Compact UI refinement only. No browser/device visual QA, keyboard session, screen-reader test, or contrast measurement is claimed by this change.
+- Component Catalog remains Draft until the four-theme, ID/EN, responsive, accessibility, and runtime checks are evidenced.
