@@ -153,32 +153,32 @@ export default async function CommunityGuidelinesPage() {
   const href = (path) => `/${locale}${path}`;
 
   return (
-    <main className="df-public-info">
+    <main className="df-public-info df-guidelines-page">
       <header className="df-public-hero">
         <span className="df-public-eyebrow">{t.eyebrow}</span>
         <h1>{t.title}</h1>
         <p className="df-public-lead">{t.lead}</p>
-        <p style={{ marginTop: "1rem", color: "var(--df-text-muted)", fontSize: ".8rem" }}>{t.updated}</p>
+        <p className="df-guidelines-updated">{t.updated}</p>
       </header>
 
-      <section className="df-public-section" style={{ maxWidth: "900px", marginInline: "auto" }}>
-        <div className="df-contact-note" style={{ marginBottom: "1.5rem" }}>
+      <section className="df-public-section df-guidelines-content">
+        <div className="df-contact-note df-guidelines-intro">
           <h2>{t.introTitle}</h2>
           <p>{t.intro}</p>
         </div>
 
-        <div style={{ display: "grid", gap: "1rem" }}>
+        <div className="df-guidelines-list">
           {t.sections.map((section) => (
-            <section key={section.id} id={section.id} style={{ padding: "1.25rem", border: "1px solid var(--df-border)", borderRadius: "var(--df-radius-lg)", background: "var(--df-surface)" }}>
-              <h2 style={{ margin: "0 0 .8rem", color: "var(--df-text)", fontSize: "1.12rem", lineHeight: 1.4 }}>{section.title}</h2>
-              <ul style={{ margin: 0, paddingLeft: "1.25rem", color: "var(--df-text-secondary)", lineHeight: 1.8 }}>
-                {section.points.map((point, index) => <li key={index} style={{ paddingLeft: ".2rem", marginBottom: ".5rem" }}>{point}</li>)}
+            <section className="df-guidelines-card" key={section.id} id={section.id}>
+              <h2>{section.title}</h2>
+              <ul>
+                {section.points.map((point, index) => <li key={index}>{point}</li>)}
               </ul>
             </section>
           ))}
         </div>
 
-        <div className="df-contact-note" style={{ marginTop: "1.5rem" }}>
+        <div className="df-contact-note df-guidelines-final">
           <h2>{t.finalTitle}</h2>
           <p>{t.finalText}</p>
         </div>

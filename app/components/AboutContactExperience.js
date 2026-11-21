@@ -208,17 +208,17 @@ export default function AboutContactExperience({ section }) {
           .df-contact-channel-arrow { align-self: flex-start; color: var(--df-text-muted); font-size: 1.1rem; }
           .df-contact-channel-hint { margin: .85rem 0 0; color: var(--df-text-muted); font-size: .78rem; line-height: 1.6; }
           @media (max-width: 760px) {
-            .df-contact-channels { margin-top: 2.75rem; }
+            .df-contact-channels { margin-top: 2.25rem; }
             .df-contact-channel-grid { grid-template-columns: minmax(0, 1fr); gap: .8rem; }
-            .df-contact-channel { min-height: 104px; gap: .9rem; padding: 1rem; border-radius: 1.15rem; }
-            .df-contact-channel-icon { width: 3rem; height: 3rem; flex-basis: 3rem; border-radius: 1rem; }
+            .df-contact-channel { min-height: 92px; gap: .75rem; padding: .85rem; border-radius: 1rem; }
+            .df-contact-channel-icon { width: 2.75rem; height: 2.75rem; flex-basis: 2.75rem; border-radius: .9rem; }
             .df-contact-channel-copy strong { font-size: 1rem; }
             .df-contact-channel-copy > span { font-size: .82rem; }
             .df-contact-channel-copy small { font-size: .76rem; }
           }
           @media (max-width: 360px) {
-            .df-contact-channel { gap: .7rem; padding: .85rem; }
-            .df-contact-channel-icon { width: 2.7rem; height: 2.7rem; flex-basis: 2.7rem; }
+            .df-contact-channel { gap: .6rem; padding: .75rem; }
+            .df-contact-channel-icon { width: 2.55rem; height: 2.55rem; flex-basis: 2.55rem; }
           }
           @media (prefers-reduced-motion: reduce) {
             .df-contact-channel { transition: none; }

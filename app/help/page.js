@@ -128,25 +128,25 @@ export default async function HelpCenterPage({ searchParams }) {
   };
 
   return (
-    <main className="df-public-info">
+    <main className="df-public-info df-help-page">
       <header className="df-public-hero">
         <span className="df-public-eyebrow">{t.eyebrow}</span>
         <h1>{t.title}</h1>
         <p className="df-public-lead">{t.lead}</p>
-        <form action={localizedPath} method="get" style={{ display: "grid", gap: ".55rem", maxWidth: "680px", marginTop: "1.75rem" }}>
+        <form className="df-help-search-form" action={localizedPath} method="get">
           {category !== "all" && <input type="hidden" name="category" value={category} />}
-          <label htmlFor="df-help-search" style={{ color: "var(--df-text-secondary)", fontSize: ".85rem", fontWeight: 750 }}>{t.searchLabel}</label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: ".6rem" }}>
+          <label className="df-help-search-label" htmlFor="df-help-search">{t.searchLabel}</label>
+          <div className="df-help-search-controls">
             <input id="df-help-search" name="q" type="search" defaultValue={query} maxLength={100} placeholder={t.searchPlaceholder}
-              style={{ flex: "1 1 250px", minWidth: 0, minHeight: "48px", padding: ".75rem 1rem", border: "1px solid var(--df-border-strong)", borderRadius: "var(--df-radius-md)", background: "var(--df-surface)", color: "var(--df-text)", font: "inherit" }} />
+              className="df-help-search-input" />
             <button type="submit" className="df-public-button df-public-button-primary">{t.searchLabel}</button>
           </div>
-          {query && <Link href={href(category, "")} style={{ color: "var(--df-primary)", fontSize: ".82rem", width: "fit-content" }}>{t.clear}</Link>}
+          {query && <Link className="df-help-clear" href={href(category, "")}>{t.clear}</Link>}
         </form>
       </header>
 
       <section className="df-public-section" aria-label={t.searchLabel}>
-        <nav aria-label={t.all} style={{ display: "flex", flexWrap: "wrap", gap: ".55rem" }}>
+        <nav className="df-help-categories" aria-label={t.all}>
           <Link href={href("all")} className={`df-public-button ${category === "all" ? "df-public-button-primary" : "df-public-button-secondary"}`}>{t.all}</Link>
           {t.categories.map((item) => (
             <Link key={item.id} href={href(item.id)} aria-current={category === item.id ? "page" : undefined}
@@ -154,14 +154,14 @@ export default async function HelpCenterPage({ searchParams }) {
           ))}
         </nav>
 
-        <p style={{ margin: "1.25rem 0 .85rem", color: "var(--df-text-muted)", fontSize: ".8rem" }} aria-live="polite">{t.resultCount(filtered.length)}</p>
-        <div style={{ display: "grid", gap: ".75rem" }}>
+        <p className="df-help-results-meta" aria-live="polite">{t.resultCount(filtered.length)}</p>
+        <div className="df-help-faq-list">
           {filtered.map((item) => (
-            <details key={item.id} style={{ padding: "1.1rem 1.2rem", border: "1px solid var(--df-border)", borderRadius: "var(--df-radius-lg)", background: "var(--df-surface)" }}>
-              <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", color: "var(--df-text)", fontWeight: 800, lineHeight: 1.5, cursor: "pointer" }}>
+            <details className="df-help-faq-item" key={item.id}>
+              <summary className="df-help-faq-question">
                 {item.question}<span aria-hidden="true" style={{ color: "var(--df-primary)", fontSize: "1.25rem" }}>+</span>
               </summary>
-              <p style={{ margin: ".85rem 0 0", paddingTop: ".85rem", borderTop: "1px solid var(--df-border)", color: "var(--df-text-secondary)", lineHeight: 1.8 }}>{item.answer}</p>
+              <p className="df-help-faq-answer">{item.answer}</p>
             </details>
           ))}
         </div>

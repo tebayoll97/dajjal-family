@@ -124,3 +124,69 @@
   .df-public-button, .df-universe-card { transition: none; }
   .df-public-button:hover, .df-universe-card:hover { transform: none; }
 }
+
+
+/* Public support pages — Mobile Compact UI, scoped to existing page components. */
+.df-help-search-form { display: grid; gap: .55rem; max-width: 680px; margin-top: 1.5rem; }
+.df-help-search-label { color: var(--df-text-secondary); font-size: .85rem; font-weight: 750; }
+.df-help-search-controls { display: flex; flex-wrap: wrap; gap: .6rem; }
+.df-help-search-input {
+  flex: 1 1 250px; min-width: 0; min-height: 48px; padding: .75rem 1rem;
+  border: 1px solid var(--df-border-strong); border-radius: var(--df-radius-md);
+  background: var(--df-surface); color: var(--df-text); font: inherit;
+}
+.df-help-clear { color: var(--df-primary); font-size: .82rem; width: fit-content; }
+.df-help-categories { display: flex; flex-wrap: wrap; gap: .55rem; }
+.df-help-results-meta { margin: 1rem 0 .7rem; color: var(--df-text-muted); font-size: .8rem; }
+.df-help-faq-list { display: grid; gap: .7rem; }
+.df-help-faq-item { padding: 1rem 1.1rem; border: 1px solid var(--df-border); border-radius: var(--df-radius-lg); background: var(--df-surface); }
+.df-help-faq-question { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--df-text); font-weight: 800; line-height: 1.5; cursor: pointer; }
+.df-help-faq-answer { margin: .8rem 0 0; padding-top: .8rem; border-top: 1px solid var(--df-border); color: var(--df-text-secondary); line-height: 1.75; }
+.df-guidelines-content { max-width: 900px; margin-inline: auto; }
+.df-guidelines-updated { margin-top: .8rem; color: var(--df-text-muted); font-size: .8rem; }
+.df-guidelines-intro { margin-bottom: 1.25rem; }
+.df-guidelines-list { display: grid; gap: .85rem; }
+.df-guidelines-card { padding: 1.15rem; border: 1px solid var(--df-border); border-radius: var(--df-radius-lg); background: var(--df-surface); }
+.df-guidelines-card h2 { margin: 0 0 .7rem; color: var(--df-text); font-size: 1.08rem; line-height: 1.4; }
+.df-guidelines-card ul { margin: 0; padding-left: 1.2rem; color: var(--df-text-secondary); line-height: 1.75; }
+.df-guidelines-card li { padding-left: .2rem; margin-bottom: .45rem; }
+.df-guidelines-final { margin-top: 1.25rem; }
+
+@media (max-width: 760px) {
+  .df-public-info { width: min(100% - 1rem, 1120px); padding-top: 1rem; padding-bottom: 2.5rem; }
+  .df-public-hero { padding: 1.2rem 1rem 1.35rem; border-radius: 1rem; }
+  .df-public-eyebrow, .df-public-kicker { font-size: .64rem; letter-spacing: .13em; }
+  .df-public-hero h1 { margin-top: .65rem; font-size: clamp(1.9rem, 9vw, 2.8rem); line-height: 1.06; letter-spacing: -.045em; }
+  .df-public-lead { margin-top: .8rem; font-size: .94rem; line-height: 1.6; }
+  .df-public-section { margin-top: 2rem; }
+  .df-public-actions { gap: .55rem; margin-top: 1.25rem; }
+  .df-public-button { min-height: 44px; gap: .55rem; padding: .62rem .85rem; font-size: .8rem; }
+  .df-about-cta { gap: .85rem; margin-top: 2rem; padding: 1.1rem; border-radius: 1rem; }
+  .df-about-cta h2 { margin-top: .35rem; font-size: 1.25rem; }
+  .df-help-search-form { gap: .4rem; margin-top: 1rem; }
+  .df-help-search-controls { gap: .45rem; }
+  .df-help-search-input { flex-basis: 100%; min-height: 44px; padding: .65rem .8rem; font-size: 16px; }
+  .df-help-categories { gap: .4rem; }
+  .df-help-categories .df-public-button { width: auto; min-height: 44px; padding: .55rem .72rem; }
+  .df-help-results-meta { margin: .8rem 0 .55rem; }
+  .df-help-faq-list { gap: .55rem; }
+  .df-help-faq-item { padding: .8rem .85rem; border-radius: .85rem; }
+  .df-help-faq-question { gap: .7rem; font-size: .9rem; line-height: 1.4; }
+  .df-help-faq-answer { margin-top: .65rem; padding-top: .65rem; font-size: .88rem; line-height: 1.65; }
+  .df-guidelines-content { margin-top: 1.6rem; }
+  .df-guidelines-updated { margin-top: .6rem; font-size: .76rem; }
+  .df-guidelines-intro { margin-bottom: .9rem; padding: 1rem; }
+  .df-guidelines-list { gap: .6rem; }
+  .df-guidelines-card { padding: .9rem; border-radius: .85rem; }
+  .df-guidelines-card h2 { margin-bottom: .55rem; font-size: 1rem; line-height: 1.35; }
+  .df-guidelines-card ul { padding-left: 1.05rem; font-size: .88rem; line-height: 1.65; }
+  .df-guidelines-card li { margin-bottom: .35rem; }
+  .df-guidelines-final { margin-top: .9rem; padding: 1rem; }
+}
+@media (max-width: 420px) {
+  .df-public-info { width: min(100% - .85rem, 1120px); }
+  .df-public-hero { padding: 1.05rem .85rem 1.2rem; }
+  .df-public-hero h1 { font-size: clamp(1.8rem, 8.8vw, 2.35rem); }
+  .df-help-categories .df-public-button { flex: 0 1 auto; }
+  .df-guidelines-card { padding: .82rem; }
+}
