@@ -142,60 +142,82 @@
 }
 
 
-/* Design-system preview: neutralize legacy dark-only surfaces in Light Mode.
-   Keep this scoped to the new foundation page so legacy routes remain unchanged. */
-:root[data-theme="light"] .ui-page {
+/* Design System lab — all visual colors come from the active Global Theme Preset.
+   This page intentionally contains no independent Light/Dark color palette. */
+.df-design-system {
   color: var(--df-text);
 }
-:root[data-theme="light"] .ui-page > section {
+.df-design-system .ui-page-header {
+  color: var(--df-text);
+  border-color: var(--df-border);
+  background:
+    radial-gradient(ellipse at 0 0, var(--df-primary-soft), transparent 62%),
+    var(--df-surface);
+  box-shadow: var(--df-shadow-sm);
+}
+.df-design-system > section {
+  color: var(--df-text);
   border: 1px solid var(--df-border);
   border-radius: var(--df-radius-xl);
   padding: clamp(1rem, 2vw, 1.5rem);
-  background: linear-gradient(145deg, #fff, #f2f1f9);
+  background: var(--df-surface);
   box-shadow: var(--df-shadow-sm);
 }
-:root[data-theme="light"] .ui-page .ui-card,
-:root[data-theme="light"] .ui-page .ui-card .ui-card,
-:root[data-theme="light"] .ui-page .ui-surface,
-:root[data-theme="light"] .ui-page .ui-panel {
+.df-design-system .ui-card,
+.df-design-system .ui-surface,
+.df-design-system .ui-panel {
   color: var(--df-text);
   border-color: var(--df-border);
   background: var(--df-surface);
   box-shadow: var(--df-shadow-sm);
 }
-:root[data-theme="light"] .ui-page .ui-heading-h1,
-:root[data-theme="light"] .ui-page .ui-heading-h2,
-:root[data-theme="light"] .ui-page .ui-heading-h3,
-:root[data-theme="light"] .ui-page .ui-heading-h4,
-:root[data-theme="light"] .ui-page h1,
-:root[data-theme="light"] .ui-page h2,
-:root[data-theme="light"] .ui-page h3,
-:root[data-theme="light"] .ui-page h4 {
+.df-design-system :is(.ui-heading-h1,.ui-heading-h2,.ui-heading-h3,.ui-heading-h4,h1,h2,h3,h4) {
   color: var(--df-text);
   background: transparent;
   box-shadow: none;
 }
-:root[data-theme="light"] .ui-page .ui-heading-h1 {
+.df-design-system .ui-heading-h1 {
   padding: 0;
   border: 0;
 }
-:root[data-theme="light"] .ui-page .ui-heading-h2,
-:root[data-theme="light"] .ui-page .ui-heading-h3,
-:root[data-theme="light"] .ui-page .ui-heading-h4 {
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
-  border-left-color: var(--ui-heading-line);
+.df-design-system :is(.ui-heading-h2,.ui-heading-h3,.ui-heading-h4) {
+  border-left-color: var(--df-primary);
 }
-:root[data-theme="light"] .ui-page .ui-prose,
-:root[data-theme="light"] .ui-page .ui-subtitle,
-:root[data-theme="light"] .ui-page .ui-caption,
-:root[data-theme="light"] .ui-page .ui-field-help,
-:root[data-theme="light"] .ui-page .ui-dialog-body {
+.df-design-system :is(.ui-prose,.ui-subtitle,.ui-caption,.ui-field-help,.ui-dialog-body) {
   color: var(--df-text-secondary);
 }
-:root[data-theme="light"] .ui-page .ui-eyebrow {
-  color: #6848a7;
+.df-design-system .ui-eyebrow {
+  color: var(--df-primary);
+}
+
+/* Override legacy Light Mode presentation rules only inside the Design System lab. */
+:root[data-theme="light"] .df-design-system .ui-page-header {
+  color: var(--df-text);
+  border-color: var(--df-border);
+  background:
+    radial-gradient(ellipse at 0 0, var(--df-primary-soft), transparent 62%),
+    var(--df-surface);
+  box-shadow: var(--df-shadow-sm);
+}
+:root[data-theme="light"] .df-design-system > section {
+  color: var(--df-text);
+  border-color: var(--df-border);
+  background: var(--df-surface);
+  box-shadow: var(--df-shadow-sm);
+}
+:root[data-theme="light"] .df-design-system :is(.ui-heading-h1,.ui-heading-h2,.ui-heading-h3,.ui-heading-h4,h1,h2,h3,h4) {
+  color: var(--df-text);
+  background: transparent;
+  box-shadow: none;
+}
+:root[data-theme="light"] .df-design-system :is(.ui-heading-h2,.ui-heading-h3,.ui-heading-h4) {
+  border-left-color: var(--df-primary);
+}
+:root[data-theme="light"] .df-design-system :is(.ui-subtitle,.ui-page-header p) {
+  color: var(--df-text-secondary);
+}
+:root[data-theme="light"] .df-design-system .ui-eyebrow {
+  color: var(--df-primary);
 }
 
 /* Homepage semantic surface mapping. Scoped so legacy routes are unaffected. */
