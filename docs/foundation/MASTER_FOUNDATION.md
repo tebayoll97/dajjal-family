@@ -2,8 +2,8 @@
 # MASTER WEBSITE FOUNDATION
 
 **Document ID:** DF-MF-001  
-**Version:** 1.3  
-**Status:** Approved — v1.2  
+**Version:** 1.4  
+**Status:** Approved — v1.4  
 **Project:** Dajjal Family  
 **Primary Domain:** https://dajjalfamily.com  
 **Tagline:** One Family. Many Possibilities.
@@ -872,3 +872,46 @@ Canonical detailed specification: Akashic Record, dajjal-family/core/global_typo
 
 ## 23.6 First implementation checkpoint — 2026-11-20
 The first focused source migration is committed on application main at `603fa92e0b39c962283a65410a8fa9dcf23907ac`. It adds centralized semantic typography/weight roles, reusable semantic type utilities, and applies token roles to the Global Navigation Drawer and desktop workspace sidebar. Existing legacy/page-specific literal typography remains for incremental migration after audits. This checkpoint does not claim production release: Vercel deployment creation was blocked by HTTP 402 `api-deployments-free-per-day`; build and live visual QA remain unverified.
+
+# 24. REUSABLE UI COMPONENT SYSTEM AND SEMANTIC DESIGN CONTRACT
+
+## 24.1 Design System as the implementation reference
+
+The Design System lab at `/id/design-system`, governed by `docs/foundation/DESIGN_SYSTEM.md`, is the canonical practical reference for reusable DAJJAL FAMILY UI components and semantic usage contracts. Its primary deliverable is a library of real reusable interface elements—not a color-palette gallery or abstract token showcase.
+
+The lab inventory/documentation and the shared source implementation must remain aligned. A component is not complete merely because a visual example exists; the lab preview must exercise the same implementation/API that actual website pages consume.
+
+## 24.2 Mandatory usage for all website work
+
+- Every new or modified website UI element MUST use the applicable semantic design tokens and reusable component contracts defined by the Design System.
+- Before implementing a page or feature, inspect the current component inventory and reuse an existing shared component/API whenever it satisfies the requirement.
+- Do not duplicate an existing shared component through page-local markup/CSS or create an alternate naming/API for the same role.
+- If a reusable component is missing, define and implement it in the Design System lab first, document its semantic name/API, usage, variants, sizes, interaction states, accessibility, and responsive behavior, then use it on the target page.
+- Semantic names such as `df-search` are examples of the intended component contract. They are not considered available until actually implemented and documented in the lab.
+- Every applicable visual role must consume the established semantic tokens: theme colors, surfaces, text, borders, focus, typography, spacing, sizing, radii, shadows, motion, and layering. Do not hardcode a visual value or create a local override when an approved semantic token or component role exists.
+- Unique page composition and layout may remain page-specific where it is genuinely not reusable, but must still use the relevant semantic tokens for its visual properties. Technical values without a suitable design-token role may remain local only when justified and consistent with this foundation.
+- The lab must not become a source of demo-only components; previews and production consumers must share the same component implementation/API.
+
+## 24.3 Theme and scope compatibility
+
+Every reusable component must be validated against all four supported Global Theme Preset combinations:
+1. TECNO Light.
+2. TECNO Dark.
+3. Dajjal × Veylora Light.
+4. Dajjal × Veylora Dark.
+
+Also validate Indonesian/English content, Mobile Compact UI, responsive layouts, keyboard/focus, contrast, reduced motion, and relevant loading/empty/error/disabled states.
+
+Approved isolated experiences—including Couple, Wedding, and immersive Games—must retain their approved theme boundaries. They must still follow the semantic component/token discipline using their approved scoped contracts; do not force global recoloring where isolation is required.
+
+## 24.4 Migration and enforcement
+
+- Apply this rule to all new website pages/features and whenever existing pages are modified.
+- Existing legacy pages are migrated incrementally; this rule alone does not authorize a blanket redesign.
+- Before marking work complete, identify which Design System components/tokens were reused or added and report any justified exception.
+- If the live implementation and Design System documentation disagree, inspect and reconcile them before extending or consuming the disputed contract.
+- Do not invent missing token/component names or claim four-theme support without validation.
+
+**Canonical implementation reference:** `/id/design-system` and `docs/foundation/DESIGN_SYSTEM.md`.  
+**Related operating rule:** `docs/aturan-kerja.md`.  
+**Detailed project plan:** Akashic Record `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
