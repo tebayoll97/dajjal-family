@@ -360,3 +360,104 @@
 @media(prefers-reduced-motion:reduce) {
   .music-public-cover-animation i { animation:none; transform:scaleY(.6); }
 }
+
+
+/* Android-safe vertical volume slider: physical dimensions are vertical, never rotated. */
+.music-public-volume-popover {
+  display:flex;
+  width:3.8rem;
+  min-width:3.8rem;
+  height:13rem;
+  min-height:13rem;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1.05rem;
+  padding:.85rem .5rem;
+  touch-action:none;
+  overscroll-behavior:contain;
+}
+.music-public-volume-popover input[type="range"] {
+  -webkit-appearance:none;
+  appearance:none;
+  display:block;
+  box-sizing:border-box;
+  flex:0 0 8.6rem;
+  width:1.4rem;
+  min-width:1.4rem;
+  max-width:1.4rem;
+  height:8.6rem;
+  min-height:8.6rem;
+  max-height:8.6rem;
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  accent-color:var(--df-primary);
+  writing-mode:vertical-lr;
+  direction:rtl;
+  transform:none;
+  cursor:pointer;
+  touch-action:none;
+  overscroll-behavior:contain;
+}
+.music-public-volume-popover input[type="range"]::-webkit-slider-runnable-track {
+  width:.28rem;
+  height:100%;
+  border:0;
+  border-radius:999px;
+  background:var(--df-border);
+}
+.music-public-volume-popover input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  appearance:none;
+  width:1.05rem;
+  height:1.05rem;
+  margin:0 0 0 -.385rem;
+  border:2px solid var(--df-surface-raised);
+  border-radius:50%;
+  background:var(--df-primary);
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.music-public-volume-popover input[type="range"]::-moz-range-track {
+  width:.28rem;
+  height:100%;
+  border:0;
+  border-radius:999px;
+  background:var(--df-border);
+}
+.music-public-volume-popover input[type="range"]::-moz-range-thumb {
+  width:1.05rem;
+  height:1.05rem;
+  border:2px solid var(--df-surface-raised);
+  border-radius:50%;
+  background:var(--df-primary);
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.music-public-volume-popover > svg {
+  display:block;
+  flex:0 0 1.25rem;
+  width:1.25rem;
+  height:1.25rem;
+  margin:0;
+  pointer-events:none;
+}
+@media(max-width:640px) {
+  .music-public-volume-popover {
+    width:3.8rem;
+    min-width:3.8rem;
+    height:13rem;
+    min-height:13rem;
+    gap:1.05rem;
+  }
+  .music-public-volume-popover input[type="range"] {
+    width:1.4rem;
+    min-width:1.4rem;
+    max-width:1.4rem;
+    height:8.6rem;
+    min-height:8.6rem;
+    max-height:8.6rem;
+    flex-basis:8.6rem;
+  }
+}
