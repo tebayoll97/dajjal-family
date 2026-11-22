@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./music-public.css";
-import { BottomNavigation, Pagination } from "../components/ui";
+import { BottomNavigation, Pagination, KaraokeLyrics } from "../components/ui";
 
 const copy = {
   id: {
@@ -90,6 +90,7 @@ export default function PublicMusicPage() {
   const [favoriteIds, setFavoriteIds] = useState([]);
   const [favoritesReady, setFavoritesReady] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [karaokeOpen, setKaraokeOpen] = useState(false);
   const [page, setPage] = useState(1);
   const searchInputRef = useRef(null);
 
@@ -385,6 +386,7 @@ export default function PublicMusicPage() {
                       <Icon name={activeTrack && favoriteIds.includes(activeTrack.id) ? "heartFill" : "heart"} size={20}/>
                     </button>
                   </div>
+                  {activeTrack && <button className="music-public-karaoke-trigger" type="button" onClick={() => setKaraokeOpen(true)}>{language === "en" ? "♫ Karaoke" : "♫ Karaoke"}</button>}
                   <p>{activeTrack ? (activeTrack.artist || t.noArtist) : t.intro}</p>
                 </div>
                 <div className="music-public-progress">
@@ -427,6 +429,7 @@ export default function PublicMusicPage() {
           </>
         )}
         <audio ref={audioRef} preload="none"/>
+        {karaokeOpen && activeTrack && <KaraokeLyrics trackId={activeTrack.id} audioRef={audioRef} language={language} onClose={() => setKaraokeOpen(false)} /> }
         {!loading && items.length > 0 && <BottomNavigation fixed ariaLabel={language === "en" ? "Music navigation" : "Navigasi musik"} items={[
           { key: "home", label: t.navHome, icon: <Icon name="home" size={21}/>, onClick: () => document.getElementById("music-public-home")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
           { key: "tracks", label: t.navTracks, icon: <Icon name="listMusic" size={21}/>, onClick: () => document.getElementById("music-public-playlist")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
