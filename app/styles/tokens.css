@@ -140,6 +140,10 @@
   --df-progress-track-size: .5rem;
   --df-z-dropdown: 30;
   --df-z-overlay: 1000;
+  --df-bottom-nav-height: 4.25rem;
+  --df-bottom-nav-z-index: 120;
+  --df-bottom-nav-icon-size: 1.2rem;
+  --df-bottom-nav-label-size: var(--df-text-xs);
 }
 
 /* Existing legacy token names remain available during gradual migration. */
