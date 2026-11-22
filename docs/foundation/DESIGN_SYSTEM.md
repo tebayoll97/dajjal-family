@@ -564,3 +564,15 @@ Every new or materially revised shared component and Design System workbench sur
 - Validate applicable four-way theme combinations, ID/EN including long translations, small Android widths, larger phones, tablet, desktop, zoom/text scaling, keyboard/focus, contrast, reduced motion, screen-reader labels, and touch targets.
 
 **Consumer rule:** A component is not considered responsive-ready merely because it fits the viewport. Its Mobile Compact UI behavior, content density, overflow handling, touch usability, and retained functionality must be documented and reviewed in the Design System lab before it becomes the recommended shared pattern for new consumers.
+
+
+# 15. REUSABLE COMPONENT AND SEMANTIC IMPLEMENTATION CONTRACT
+
+New standard web pages must use the Design System as their source of reusable UI and semantic roles.
+
+- Reuse exported components from `app/components/ui` and layout/typography primitives from the four global foundation stylesheets.
+- When a needed pattern is missing, create a reusable component, document its API and limitations in the Component Catalog, and add a live instance to the Design System Workbench before using it in a new page.
+- Integrate every new semantic role into the appropriate shared foundation files: `tokens.css`, `typography.css`, `layout.css`, and `components.css`. New components must not ship with page-local duplicate styles.
+- Add tokens; do not remove or rename existing semantic tokens during routine component work.
+- Verify all four global preset/mode combinations, ID/EN, Mobile Compact UI, keyboard/focus, reduced motion and responsive behavior.
+- This contract applies to new standard pages. Existing pages are not part of a blanket migration. Couple, Wedding and immersive Games retain their approved isolation boundaries.
