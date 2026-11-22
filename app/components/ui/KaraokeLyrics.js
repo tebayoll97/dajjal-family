@@ -5,7 +5,8 @@ const PlayIcon=({paused})=><svg viewBox="0 0 24 24" width="25" height="25" fill=
 const clock=value=>{const s=Math.max(0,Math.floor(Number(value)||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
 export function KaraokeLyrics({trackId,audioRef,language="id",onClose}){
  const [lyrics,setLyrics]=useState([]),[active,setActive]=useState(-1),[font,setFont]=useState(1),[error,setError]=useState(""),[loading,setLoading]=useState(true),[playing,setPlaying]=useState(false),[currentTime,setCurrentTime]=useState(0),[duration,setDuration]=useState(0);
- const rows=useRef([]),closeRef=useRef(null),didPop=useRef(false),closing=useRef(false),touchStart=useRef(null);
+ const rows=useRef([]),closeRef=useRef(null),didPop=useRef(false),closing=useRef(false),touchStart=useRef(null),onCloseRef=useRef(onClose);
+ onCloseRef.current=onClose;
  const copy=language==="en"?{title:"Karaoke mode",empty:"Lyrics are not available yet.",close:"Close",play:"Play",pause:"Pause",size:"Lyrics size",loading:"Loading lyrics…",position:"Song position"}:{title:"Mode Karaoke",empty:"Lirik belum tersedia.",close:"Tutup",play:"Putar",pause:"Jeda",size:"Ukuran lirik",loading:"Memuat lirik…",position:"Posisi lagu"};
  const close=()=>{if(closing.current)return;closing.current=true;const a=audioRef?.current;if(a&&!a.paused)a.pause();if(window.history.state?.dfKaraoke){window.history.back();}else onClose?.();};
  useEffect(()=>{
