@@ -28,3 +28,14 @@
 .ui-text-control{font-family:var(--df-font-sans);font-size:var(--df-type-control-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-control-leading)}
 .ui-text-control-label{font-family:var(--df-font-sans);font-size:var(--df-type-control-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-control-label-leading)}
 .ui-text-meta{font-family:var(--df-font-sans);font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
+
+
+/* Page and section heading roles shared by new page compositions. */
+.ui-page-heading .ui-heading-h1{margin:0}
+.ui-page-heading .ui-subtitle{margin:var(--df-space-2) 0 0}
+.ui-section-heading .ui-heading-h2,.ui-section-heading .ui-heading-h3{margin:0}
+.ui-section-description{margin:var(--df-space-2) 0 0;color:var(--df-text-secondary);font-size:var(--df-text-sm);line-height:var(--df-leading-relaxed)}
+.ui-stat-label{color:var(--df-text-secondary);font-size:var(--df-text-sm);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}
+.ui-stat-value{color:var(--df-text);font-size:clamp(1.5rem,1.2rem + 1vw,2rem);font-weight:var(--df-weight-extrabold);line-height:var(--df-leading-tight);font-variant-numeric:tabular-nums}
+.ui-stat-description{color:var(--df-text-muted);font-size:var(--df-text-xs);line-height:var(--df-type-caption-leading)}
+.ui-stat-trend{color:var(--df-success);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
