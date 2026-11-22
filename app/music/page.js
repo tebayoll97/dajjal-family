@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./music-public.css";
+import { BottomNavigation, Pagination } from "../components/ui";
 
 const copy = {
   id: {
@@ -17,6 +18,8 @@ const copy = {
     repeatQueue: "Putar ulang Antrian", repeatSong: "Putar ulang Lagu",
     repeatOff: "Jangan diulang", playOnce: "Mainkan sekali",
     shuffle: "Putar acak", sequential: "Putar berurutan", volumeLevel: "Tingkat volume",
+    favorites: "Favorit", favoritesEmpty: "Belum ada lagu favorit.", navHome: "Beranda", navTracks: "Lagu", navSearch: "Cari",
+    previousPage: "Sebelumnya", nextPage: "Berikutnya", pageLabel: (number) => `Halaman ${number}`, pageStatus: (page, total) => `Halaman ${page} dari ${total}`,
   },
   en: {
     eyebrow: "DAJJAL FAMILY · MUSIC", title: "Music Library",
@@ -30,6 +33,8 @@ const copy = {
     repeatQueue: "Repeat Queue", repeatSong: "Repeat Song", repeatOff: "No Repeat",
     playOnce: "Play Once", shuffle: "Shuffle playback", sequential: "Play in order",
     volumeLevel: "Volume level",
+    favorites: "Favorites", favoritesEmpty: "No favorite tracks yet.", navHome: "Home", navTracks: "Tracks", navSearch: "Search",
+    previousPage: "Previous", nextPage: "Next", pageLabel: (number) => `Page ${number}`, pageStatus: (page, total) => `Page ${page} of ${total}`,
   },
 };
 
@@ -50,6 +55,8 @@ function Icon({ name, size = 22 }) {
     volume: <><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></>,
     heart: <path d="M20.8 8.8c0 5-8.8 10.2-8.8 10.2S3.2 13.8 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/>,
     heartFill: <path d="M20.8 8.8c0 5-8.8 10.2-8.8 10.2S3.2 13.8 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z" fill="currentColor"/>,
+    home: <><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></>,
+    listMusic: <><path d="M4 6h12M4 12h12M4 18h7"/><path d="M19 4v11.5a2.5 2.5 0 1 1-2-2.45V6l5-1v8.5a2.5 2.5 0 1 1-2-2.45V4z"/></>,
   };
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -81,6 +88,10 @@ export default function PublicMusicPage() {
   const [repeatOpen, setRepeatOpen] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState([]);
+  const [favoritesReady, setFavoritesReady] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [page, setPage] = useState(1);
+  const searchInputRef = useRef(null);
 
   stateRef.current = { items, activeId, repeatMode, shuffle, volume, playing };
 
@@ -265,14 +276,33 @@ export default function PublicMusicPage() {
     if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute("src"); }
   }, []);
 
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem("df-music-favorites") || "[]");
+      if (Array.isArray(stored)) setFavoriteIds(stored.filter((id) => typeof id === "string"));
+    } catch { /* Ignore unavailable or malformed local preferences. */ }
+    setFavoritesReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!favoritesReady) return;
+    try { window.localStorage.setItem("df-music-favorites", JSON.stringify(favoriteIds)); }
+    catch { /* Favorites remain usable for the current session when storage is unavailable. */ }
+  }, [favoriteIds, favoritesReady]);
+
+  useEffect(() => { setPage((current) => Math.min(current, Math.max(1, Math.ceil(visibleItems.length / 10)))); }, [visibleItems.length]);
+
   const visibleItems = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter((item) =>
+    const matched = !q ? items : items.filter((item) =>
       [item.title, item.artist, item.genre, ...(item.tags || [])]
         .some((value) => String(value || "").toLowerCase().includes(q))
     );
-  }, [items, query]);
+    return showFavorites ? matched.filter((item) => favoriteIds.includes(item.id)) : matched;
+  }, [items, query, showFavorites, favoriteIds]);
+  const pageSize = 10;
+  const totalPages = Math.max(1, Math.ceil(visibleItems.length / pageSize));
+  const pageItems = visibleItems.slice((page - 1) * pageSize, page * pageSize);
 
   const activeTrack = items.find((item) => item.id === activeId) || null;
   const activeIndex = items.findIndex((item) => item.id === activeId);
@@ -314,7 +344,7 @@ export default function PublicMusicPage() {
   return (
     <main className="music-public-page df-token-page">
       <div className="music-public-shell ui-page">
-        <header className="music-public-header ui-page-header">
+        <header id="music-public-home" className="music-public-header ui-page-header">
           <p className="music-public-eyebrow ui-eyebrow">{t.eyebrow}</p>
           <h1 className="ui-heading-h1">{t.title}</h1>
           <p className="ui-subtitle">{t.intro}</p>
@@ -322,7 +352,7 @@ export default function PublicMusicPage() {
 
         <section className="music-public-search" aria-label={t.search}>
           <span aria-hidden="true"><Icon name="search" size={18}/></span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.search} aria-label={t.search}/>
+          <input ref={searchInputRef} value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder={t.search} aria-label={t.search}/>
           {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><Icon name="close" size={17}/></button>}
         </section>
 
@@ -337,7 +367,7 @@ export default function PublicMusicPage() {
                 {activeTrack?.cover_mime_type
                   ? <img key={activeTrack.id} src={"/api/music/" + encodeURIComponent(activeTrack.id) + "/cover"} alt={activeTrack.title + " cover"}/>
                   : <div className="music-public-artwork-fallback" aria-hidden="true">DF</div>}
-                {playing && <div className="music-public-cover-animation" aria-label="Music playing"><i/><i/><i/><i/><i/><i/><i/></div>}
+                {playing && <div className="music-public-cover-animation" role="status" aria-label={language === "en" ? "Music playing" : "Musik sedang diputar"}><i/><i/><i/><i/><i/></div>}
                 <span>DF MUSIC</span>
               </div>
 
@@ -380,9 +410,10 @@ export default function PublicMusicPage() {
               </div>
             </section>
 
-            <section className="music-public-playlist" aria-label={t.all}>
-              <div className="music-public-playlist-heading"><h2>{t.all}</h2><span>{visibleItems.length} / {items.length}</span></div>
-              {visibleItems.map((item) => {
+            <section id="music-public-playlist" className="music-public-playlist" aria-label={showFavorites ? t.favorites : t.all}>
+              <div className="music-public-playlist-heading"><h2>{showFavorites ? t.favorites : t.all}</h2><span>{visibleItems.length} / {items.length}</span></div>
+              {visibleItems.length === 0 ? <p className="music-public-filter-empty">{showFavorites ? t.favoritesEmpty : t.empty}</p> : null}
+              {pageItems.map((item) => {
                 const active = item.id === activeId;
                 return <button className={"music-public-track" + (active ? " is-active" : "")} type="button" key={item.id} onClick={() => playTrack(item, { forceRestart: true })} aria-current={active ? "true" : undefined}>
                   <span className="music-public-track-number">{String(items.findIndex((entry) => entry.id === item.id) + 1).padStart(2, "0")}</span>
@@ -391,10 +422,17 @@ export default function PublicMusicPage() {
                   <span className="music-public-track-action" aria-hidden="true">{active && playing ? <span className="music-public-equalizer"><i/><i/><i/><i/></span> : <Icon name="play" size={16}/>}</span>
                 </button>;
               })}
+              {visibleItems.length > pageSize && <div className="music-public-pagination-wrap"><span>{t.pageStatus(page, totalPages)}</span><Pagination page={page} totalPages={totalPages} onPageChange={(nextPage) => { setPage(nextPage); document.getElementById("music-public-playlist")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} ariaLabel={language === "en" ? "Track pages" : "Halaman daftar lagu"} previousLabel={t.previousPage} nextLabel={t.nextPage} pageLabel={t.pageLabel} className="music-public-pagination"/></div>}
             </section>
           </>
         )}
         <audio ref={audioRef} preload="none"/>
+        {!loading && items.length > 0 && <BottomNavigation fixed ariaLabel={language === "en" ? "Music navigation" : "Navigasi musik"} items={[
+          { key: "home", label: t.navHome, icon: <Icon name="home" size={21}/>, onClick: () => document.getElementById("music-public-home")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
+          { key: "tracks", label: t.navTracks, icon: <Icon name="listMusic" size={21}/>, onClick: () => document.getElementById("music-public-playlist")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
+          { key: "favorites", label: t.favorites, icon: <Icon name="heart" size={21}/>, active: showFavorites, onClick: () => { setShowFavorites((value) => !value); setPage(1); document.getElementById("music-public-playlist")?.scrollIntoView({ behavior: "smooth", block: "start" }); } },
+          { key: "search", label: t.navSearch, icon: <Icon name="search" size={21}/>, onClick: () => { searchInputRef.current?.focus(); searchInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); } },
+        ]} centerAction={{ label: playing ? t.pause : t.play, icon: <Icon name={playing ? "pause" : "play"} size={23}/>, active: playing, disabled: !activeTrack, onClick: () => activeTrack ? playTrack(activeTrack) : moveTrack(1) }} />}
       </div>
     </main>
   );
