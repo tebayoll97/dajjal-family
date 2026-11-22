@@ -143,7 +143,7 @@
   --df-bottom-nav-height: 4.25rem;
   --df-bottom-nav-z-index: 120;
   --df-bottom-nav-icon-size: 1.2rem;
-  --df-bottom-nav-label-size: var(--df-text-xs);
+  --df-bottom-nav-label-size: var(--df-text-xs);\n  --df-bottom-nav-center-size: 3.55rem;\n  --df-bottom-nav-center-rise: 1.65rem;\n  --df-bottom-nav-center-border: .3rem;\n  --df-bottom-nav-center-label-size: .625rem;
 }
 
 /* Existing legacy token names remain available during gradual migration. */
