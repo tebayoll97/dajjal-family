@@ -5,6 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField,
+  Accordion, ConfirmDialog, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -32,6 +33,8 @@ export default function ComponentWorkbench() {
   const [retryCount, setRetryCount] = useState(0);
   const [itemAdded, setItemAdded] = useState(false);
   const [menuAction, setMenuAction] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [progress, setProgress] = useState(68);
   const theme = themes.find((item) => item.id === themeId) || themes[0];
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
@@ -55,12 +58,21 @@ export default function ComponentWorkbench() {
     ["Pagination", "Pagination", <div key="pagination" className={styles.stack}><Pagination page={page} totalPages={5} onPageChange={setPage} /><small>Current page: {page}</small></div>],
     ["Table", "Table", <Table key="table" caption="Component inventory sample" columns={[{key:"id",header:"ID"},{key:"name",header:"Name"},{key:"status",header:"Status"}]} rows={sampleRows} />],
     ["Avatar", "Avatar", <div key="avatar" className={styles.inline}><Avatar name="Dajjal Family" size="sm" /><Avatar name="Prisma" size="md" /><Avatar name="Community Member" size="lg" /></div>],
+    ["Link", "Link", <div key="link" className={styles.stack}><Link href="#workbench">Internal navigation link</Link><Link href="https://nextjs.org" external>External link</Link></div>],
+    ["IconButton", "IconButton", <div key="icon-button" className={styles.inline}><IconButton label="Close" icon={<span aria-hidden="true">×</span>} /><IconButton label="Edit" variant="secondary" icon={<span aria-hidden="true">✎</span>} /></div>],
+    ["Tooltip", "Tooltip", <div key="tooltip" className={styles.inline}><Tooltip content="Helpful contextual information"><Button variant="secondary">Focus or hover me</Button></Tooltip></div>],
+    ["Accordion", "Accordion", <Accordion key="accordion" items={[{value:"one",title:"What is reusable UI?",content:"Shared components keep behavior, accessibility and visual rules consistent."},{value:"two",title:"When should I add one?",content:"When a pattern is repeated or likely to be reused across standard pages."}]} />],
+    ["ProgressBar", "ProgressBar", <div key="progress" className={styles.stack}><ProgressBar label="Profile completion" value={progress} showValue /><input aria-label="Adjust progress preview" type="range" min="0" max="100" value={progress} onChange={(event) => setProgress(Number(event.target.value))} /></div>],
+    ["StatCard", "StatCard", <div key="stat" className="ui-stat-grid"><StatCard label="Active players" value="12,840" description="Across all servers" trend="+8.2%" /><StatCard label="Published games" value="24" description="Library total" /></div>],
+    ["PageHeader", "PageHeader", <PageHeader key="page-header" eyebrow="Example page" title="Reusable page title" description="Consistent heading, description and action layout." actions={<Button size="sm">Create</Button>} />],
+    ["SectionHeader", "SectionHeader", <SectionHeader key="section-header" title="Section heading" description="Supporting context for a page section." actions={<Button size="sm" variant="secondary">View all</Button>} />],
+    ["ConfirmDialog", "ConfirmDialog", <div key="confirm-dialog"><Button variant="danger" onClick={() => setConfirmOpen(true)}>Open confirmation</Button><ConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={() => setConfirmOpen(false)} title="Confirm action" description="This demonstrates the shared confirmation pattern." confirmLabel="Confirm" cancelLabel="Cancel" /></div>],
   ];
 
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>19 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>28 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
