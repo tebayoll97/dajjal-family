@@ -29,3 +29,4 @@ export { SectionHeader } from "./SectionHeader";
 export { ConfirmDialog } from "./ConfirmDialog";
 
 export { BottomNavigation } from "./BottomNavigation";
+export { KaraokeLyrics } from "./KaraokeLyrics";
