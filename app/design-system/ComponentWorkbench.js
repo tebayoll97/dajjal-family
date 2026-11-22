@@ -68,12 +68,13 @@ export default function ComponentWorkbench() {
     ["SectionHeader", "SectionHeader", <SectionHeader key="section-header" title="Section heading" description="Supporting context for a page section." actions={<Button size="sm" variant="secondary">View all</Button>} />],
     ["ConfirmDialog", "ConfirmDialog", <div key="confirm-dialog"><Button variant="danger" onClick={() => setConfirmOpen(true)}>Open confirmation</Button><ConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={() => setConfirmOpen(false)} title="Confirm action" description="This demonstrates the shared confirmation pattern." confirmLabel="Confirm" cancelLabel="Cancel" /></div>],
     ["BottomNavigation", "BottomNavigation", <div key="bottom-navigation" className={styles.stack}><BottomNavigation ariaLabel="Component preview navigation" items={[{key:"home",label:"Home",icon:<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H14v-7h-4v7H3z"/></svg>,active:true,onClick:()=>{}},{key:"library",label:"Library",icon:<svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>,onClick:()=>{}},{key:"favorites",label:"Favorites",icon:<svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5-8.8 10.2-8.8 10.2S3.2 13.8 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg>,onClick:()=>{}},{key:"search",label:"Search",icon:<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>,onClick:()=>{}}]} centerAction={{label:"Play",icon:<svg viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z"/></svg>,onClick:()=>{}}} /></div>],
+    ["KaraokeLyrics", "KaraokeLyrics", <div key="karaoke" className={styles.stack}><strong>Full-screen synchronized lyrics</strong><small>Active line · previous/next context · responsive transcript · font scaling</small></div>],
   ];
 
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>29 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>30 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
