@@ -386,10 +386,10 @@ export default function PublicMusicPage() {
                       <Icon name={activeTrack && favoriteIds.includes(activeTrack.id) ? "heartFill" : "heart"} size={20}/>
                     </button>
                   </div>
-                  {activeTrack && <button className="music-public-karaoke-trigger" type="button" onClick={() => setKaraokeOpen(true)}>{language === "en" ? "♫ Karaoke" : "♫ Karaoke"}</button>}
                   <p>{activeTrack ? (activeTrack.artist || t.noArtist) : t.intro}</p>
                 </div>
                 <div className="music-public-progress">
+                  {activeTrack && <div className="music-public-progress-tools"><button className="music-public-karaoke-trigger" type="button" onClick={() => setKaraokeOpen(true)}><svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true"><path d="M4 8.5h2.2l2.3-2v11l-2.3-2H4zM13 8a5 5 0 0 1 0 8m2.5-10.5a8.5 8.5 0 0 1 0 13" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M18.5 4.5v3m-1.5-1.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg><span>{language === "en" ? "Karaoke Mode" : "Mode Karoeke"}</span></button></div>}
                   <input type="range" min="0" max={Math.max(1, progressDuration)} step="1" value={Math.min(currentTime, progressDuration || 0)} onChange={seek} disabled={!activeTrack || !progressDuration} aria-label={t.seek} style={{ "--music-progress": progressDuration ? (currentTime / progressDuration) * 100 + "%" : "0%" }}/>
                   <div className="music-public-times"><span>{clock(currentTime)}</span><span>{clock(progressDuration)}</span></div>
                 </div>
