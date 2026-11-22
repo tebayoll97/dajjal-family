@@ -66,6 +66,12 @@
   --df-type-caption-size: var(--df-text-xs);
   --df-type-caption-leading: 1.45;
 
+  /* Shared form-control typography roles. */
+  --df-type-control-size: var(--df-text-base);
+  --df-type-control-leading: var(--df-leading-normal);
+  --df-type-control-label-size: var(--df-text-sm);
+  --df-type-control-label-leading: var(--df-leading-normal);
+
   /* Shared navigation roles; Mobile Compact UI consumes these centrally. */
   --df-type-nav-brand-size: .8125rem;
   --df-type-nav-label-size: .9375rem;

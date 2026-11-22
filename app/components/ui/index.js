@@ -3,6 +3,7 @@ export { Card } from "./Card";
 export { Badge } from "./Badge";
 export { Alert } from "./Alert";
 export { TextField } from "./TextField";
+export { SearchField } from "./SearchField";
 export { Dialog } from "./Dialog";
 export { CheckboxField } from "./CheckboxField";
 export { RadioGroup } from "./RadioGroup";

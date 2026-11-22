@@ -128,12 +128,13 @@
 
 /* Public support pages — Mobile Compact UI, scoped to existing page components. */
 .df-help-search-form { display: grid; gap: .55rem; max-width: 680px; margin-top: 1.5rem; }
-.df-help-search-label { color: var(--df-text-secondary); font-size: .85rem; font-weight: 750; }
-.df-help-search-controls { display: flex; flex-wrap: wrap; gap: .6rem; }
+.df-help-search-label { color: var(--df-text-secondary); font-size: var(--df-type-control-label-size); font-weight: var(--df-weight-semibold); line-height: var(--df-type-control-label-leading); }
+.df-help-search-controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; }
+.df-help-search-field { flex: 1 1 250px; min-width: 0; }
 .df-help-search-input {
-  flex: 1 1 250px; min-width: 0; min-height: 48px; padding: .75rem 1rem;
+  width: 100%; min-width: 0; min-height: 48px; padding: .75rem 1rem;
   border: 1px solid var(--df-border-strong); border-radius: var(--df-radius-md);
-  background: var(--df-surface); color: var(--df-text); font: inherit;
+  background: var(--df-surface); color: var(--df-text);
 }
 .df-help-clear { color: var(--df-primary); font-size: .82rem; width: fit-content; }
 .df-help-categories { display: flex; flex-wrap: wrap; gap: .55rem; }
@@ -165,7 +166,8 @@
   .df-about-cta h2 { margin-top: .35rem; font-size: 1.25rem; }
   .df-help-search-form { gap: .4rem; margin-top: 1rem; }
   .df-help-search-controls { gap: .45rem; }
-  .df-help-search-input { flex-basis: 100%; min-height: 44px; padding: .65rem .8rem; font-size: 16px; }
+  .df-help-search-field { flex-basis: 100%; }
+  .df-help-search-input { min-height: 44px; padding: .65rem .8rem; font-size: var(--df-type-control-size); }
   .df-help-categories { gap: .4rem; }
   .df-help-categories .df-public-button { width: auto; min-height: 44px; padding: .55rem .72rem; }
   .df-help-results-meta { margin: .8rem 0 .55rem; }

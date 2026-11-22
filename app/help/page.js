@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SearchField } from "../components/ui";
 import { headers } from "next/headers";
 
 const copy = {
@@ -135,10 +136,10 @@ export default async function HelpCenterPage({ searchParams }) {
         <p className="df-public-lead">{t.lead}</p>
         <form className="df-help-search-form" action={localizedPath} method="get">
           {category !== "all" && <input type="hidden" name="category" value={category} />}
-          <label className="df-help-search-label" htmlFor="df-help-search">{t.searchLabel}</label>
           <div className="df-help-search-controls">
-            <input id="df-help-search" name="q" type="search" defaultValue={query} maxLength={100} placeholder={t.searchPlaceholder}
-              className="df-help-search-input" />
+            <SearchField id="df-help-search" name="q" label={t.searchLabel} defaultValue={query} maxLength={100}
+              placeholder={t.searchPlaceholder} className="df-help-search-field" labelClassName="df-help-search-label"
+              inputClassName="df-help-search-input" />
             <button type="submit" className="df-public-button df-public-button-primary">{t.searchLabel}</button>
           </div>
           {query && <Link className="df-help-clear" href={href(category, "")}>{t.clear}</Link>}
