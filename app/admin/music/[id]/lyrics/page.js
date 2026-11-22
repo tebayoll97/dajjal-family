@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useParams,useRouter} from "next/navigation";
 import {supabaseAdminClient} from "@/lib/supabaseAdminClient";
 import {useLanguage} from "@/app/components/LanguageProvider";
-import "../music.css";
+import "../../music.css";
 import "./lyrics.css";
 const copy={id:{back:"Kembali ke lagu",title:"Lyrics Studio",hint:"Masukkan lirik satu baris setiap kali. Putar lagu dan tekan Rekam tepat saat baris mulai dinyanyikan.",add:"Tambah baris",record:"REKAM BARIS BERIKUTNYA",rerecord:"Rekam ulang baris terpilih",save:"Simpan draft",publish:"Terbitkan lirik",draft:"Jadikan draft",undo:"Urungkan rekaman",empty:"Belum ada baris lirik.",loading:"Memuat editor...",error:"Gagal memuat data lagu."},en:{back:"Back to track",title:"Lyrics Studio",hint:"Add one lyric line at a time. Play the song and record when each line begins.",add:"Add line",record:"RECORD NEXT LINE",rerecord:"Re-record selected line",save:"Save draft",publish:"Publish lyrics",draft:"Move to draft",undo:"Undo recording",empty:"No lyric lines yet.",loading:"Loading editor...",error:"Unable to load track."}};
 const stamp=n=>{const x=Math.max(0,n||0);return Math.floor(x/60000)+":"+String(Math.floor(x/1000)%60).padStart(2,"0")+"."+String(x%1000).padStart(3,"0");};
