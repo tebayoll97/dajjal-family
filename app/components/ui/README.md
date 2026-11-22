@@ -18,3 +18,7 @@ Use `SearchField` for reusable native search inputs. Provide a visible `label` o
 - `StatCard`: compact dashboard metric surface.
 - `PageHeader` and `SectionHeader`: shared page/section composition.
 - `ConfirmDialog`: shared confirmation layout built on Dialog and Button.
+
+
+### BottomNavigation
+Use `BottomNavigation` for compact fixed or inline navigation with up to four destinations and one centered primary action. Provide localized accessible labels and consumer-owned callbacks. When `fixed` is enabled, reserve bottom space in the page content and verify device safe areas.
