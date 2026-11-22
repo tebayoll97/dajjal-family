@@ -506,3 +506,51 @@ The following are implementation observations, not claims of completed visual or
 - `app/styles/tokens.css`
 
 **Documentation status:** source API inventory is documented. This does not change the catalog's Draft status; browser, accessibility, four-theme, bilingual, and mobile QA evidence is still required.
+
+
+## 13. New reusable components — 2026-11-22
+
+All components below are exported from `app/components/ui` and previewed using the production implementation in Design System Workbench.
+
+### Link
+- Source: `Link.js`; API: `Link({ children, href, external = false, variant = "default", ...props })`.
+- Next.js semantic navigation link. Variants: `default`, `subtle`, `strong`. External links open a new tab with `noopener noreferrer` by default. Use Button for actions, not navigation.
+
+### IconButton
+- Source: `IconButton.js`; API: `IconButton({ icon, label, size = "md", variant = "ghost", ...buttonProps })`.
+- Icon-only action with required accessible label. Variants: `ghost`, `secondary`, `danger`; sizes: `sm`, `md`, `lg`. Shared minimum touch target is 44px.
+
+### Tooltip
+- Source: `Tooltip.js`; API: `Tooltip({ content, children, placement = "top", className })`.
+- Helper content appears on hover and keyboard focus. Placements: top/right/bottom/left. Do not use it as the only source of essential instructions or form labels.
+
+### Accordion
+- Source: `Accordion.js`; API: `Accordion({ items, multiple = false, defaultOpen = [], ariaLabel, className })`.
+- Each item contains `value`, `title`, `content`. Supports one open item by default or multiple open items. Native buttons provide keyboard activation and labelled disclosure regions.
+
+### ProgressBar
+- Source: `ProgressBar.js`; API: `ProgressBar({ value, max = 100, label, valueLabel, showValue = false, variant = "primary", className })`.
+- Finite value is determinate; `value={null}` is indeterminate. Variants: primary/success/warning/danger. Uses progressbar ARIA values.
+
+### StatCard
+- Source: `StatCard.js`; API: `StatCard({ label, value, description, trend, icon, className })`.
+- Metric surface for dashboards and summary layouts. Trend text must communicate meaning without relying on color alone.
+
+### PageHeader
+- Source: `PageHeader.js`; API: `PageHeader({ eyebrow, title, description, breadcrumbs, actions, meta, className })`.
+- Standard page header with one H1, optional breadcrumb/action/meta slots and localized copy.
+
+### SectionHeader
+- Source: `SectionHeader.js`; API: `SectionHeader({ title, description, eyebrow, actions, level = 2, className })`.
+- Section heading row; renders H2 by default or H3 for nested sections.
+
+### ConfirmDialog
+- Source: `ConfirmDialog.js`; API: `ConfirmDialog({ open, onClose, onConfirm, title, description, children, confirmLabel, cancelLabel, confirmVariant = "danger", loading = false, className })`.
+- Consistent confirmation pattern built on shared Dialog and Button. Consumer owns business action, async request and loading lifecycle.
+
+### Shared semantic contracts
+- New non-color tokens in `tokens.css`: control heights, touch target, icon sizes, focus-ring dimensions, tooltip width, progress thickness and overlay z-index.
+- New page/section and metric type roles in `typography.css`.
+- New page heading, section heading and responsive stat grid primitives in `layout.css`.
+- New link, icon button, tooltip, accordion, progress and stat card styles in `components.css`.
+- Theme colors continue to come from the existing Global Theme Preset Engine maps. Existing tokens were retained.
