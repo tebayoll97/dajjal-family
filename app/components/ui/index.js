@@ -27,3 +27,5 @@ export { StatCard } from "./StatCard";
 export { PageHeader } from "./PageHeader";
 export { SectionHeader } from "./SectionHeader";
 export { ConfirmDialog } from "./ConfirmDialog";
+
+export { BottomNavigation } from "./BottomNavigation";
