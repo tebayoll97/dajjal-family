@@ -8,13 +8,13 @@ export function KaraokeLyrics({trackId,audioRef,language="id",onClose}){
  const rows=useRef([]),closeRef=useRef(null),didPop=useRef(false),closing=useRef(false),touchStart=useRef(null),onCloseRef=useRef(onClose);
  onCloseRef.current=onClose;
  const copy=language==="en"?{title:"Karaoke mode",empty:"Lyrics are not available yet.",close:"Close",play:"Play",pause:"Pause",size:"Lyrics size",loading:"Loading lyrics…",position:"Song position"}:{title:"Mode Karaoke",empty:"Lirik belum tersedia.",close:"Tutup",play:"Putar",pause:"Jeda",size:"Ukuran lirik",loading:"Memuat lirik…",position:"Posisi lagu"};
- const close=()=>{if(closing.current)return;closing.current=true;const a=audioRef?.current;if(a&&!a.paused)a.pause();if(window.history.state?.dfKaraoke){window.history.back();}else onClose?.();};
+ const close=()=>{if(closing.current)return;closing.current=true;const a=audioRef?.current;if(a&&!a.paused)a.pause();if(window.history.state?.dfKaraoke){window.history.back();}else onCloseRef.current?.();};
  useEffect(()=>{
   const previous=document.activeElement,bodyOverflow=document.body.style.overflow;
   document.body.style.overflow="hidden";
   window.history.pushState({...window.history.state,dfKaraoke:true},"","#karaoke");
   closeRef.current?.focus();
-  const pop=()=>{didPop.current=true;const a=audioRef?.current;if(a&&!a.paused)a.pause();onClose?.();};
+  const pop=()=>{didPop.current=true;const a=audioRef?.current;if(a&&!a.paused)a.pause();onCloseRef.current?.();};
   const key=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
   const start=e=>{const t=e.touches?.[0];if(t)touchStart.current={x:t.clientX,y:t.clientY};};
   const end=e=>{const t=e.changedTouches?.[0],s=touchStart.current;touchStart.current=null;if(!t||!s)return;const dx=t.clientX-s.x,dy=t.clientY-s.y;if(s.x<36&&dx>90&&Math.abs(dy)<65)close();};
