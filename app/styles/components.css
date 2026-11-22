@@ -127,3 +127,51 @@
 .df-search__input{width:100%;min-width:0;min-height:44px}
 .df-search--sm .df-search__input{min-height:44px;padding-block:.55rem}
 .df-search__input:focus-visible{outline:3px solid var(--df-focus);outline-offset:2px}
+
+
+/* Semantic navigation link. */
+.ui-link{color:var(--df-primary);font:inherit;font-weight:var(--df-weight-semibold);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;overflow-wrap:anywhere}
+.ui-link:hover{color:var(--df-primary-hover)}
+.ui-link-subtle{color:var(--df-text-secondary);text-decoration-color:var(--df-border-strong)}
+.ui-link-strong{font-weight:var(--df-weight-bold)}
+.ui-link:focus-visible,.ui-icon-button:focus-visible,.ui-tooltip:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.ui-icon-button{width:var(--df-touch-target-min);height:var(--df-touch-target-min);min-width:var(--df-touch-target-min);display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid transparent;border-radius:var(--df-radius-md);background:transparent;color:var(--df-text);font:inherit;cursor:pointer;transition:background var(--df-duration-fast),border-color var(--df-duration-fast),color var(--df-duration-fast)}
+.ui-icon-button-sm{width:var(--df-control-height-sm);height:var(--df-control-height-sm);min-width:var(--df-control-height-sm)}
+.ui-icon-button-lg{width:var(--df-control-height-lg);height:var(--df-control-height-lg);min-width:var(--df-control-height-lg)}
+.ui-icon-button-secondary{border-color:var(--df-border);background:var(--df-surface-raised)}
+.ui-icon-button-danger{color:var(--df-danger)}
+.ui-icon-button:hover:not(:disabled){background:var(--df-primary-soft)}
+.ui-icon-button-danger:hover:not(:disabled){background:color-mix(in srgb,var(--df-danger) 12%,transparent)}
+.ui-icon-button:disabled{opacity:.5;cursor:not-allowed}
+.ui-tooltip{position:relative;display:inline-flex;align-items:center;max-width:100%}
+.ui-tooltip-content{position:absolute;z-index:var(--df-z-dropdown);width:max-content;max-width:min(var(--df-tooltip-max-width),calc(100vw - 2rem));padding:var(--df-space-2) var(--df-space-3);border:1px solid var(--df-border-strong);border-radius:var(--df-radius-sm);background:var(--df-surface-overlay);color:var(--df-text);box-shadow:var(--df-shadow-md);font-size:var(--df-text-xs);font-weight:var(--df-weight-medium);line-height:var(--df-leading-normal);text-align:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--df-duration-fast),visibility var(--df-duration-fast)}
+.ui-tooltip-top{left:50%;bottom:calc(100% + var(--df-space-2));transform:translateX(-50%)}
+.ui-tooltip-bottom{left:50%;top:calc(100% + var(--df-space-2));transform:translateX(-50%)}
+.ui-tooltip-left{right:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
+.ui-tooltip-right{left:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
+.ui-tooltip:hover .ui-tooltip-content,.ui-tooltip:focus-within .ui-tooltip-content{opacity:1;visibility:visible}
+.ui-accordion{display:grid;gap:var(--df-space-2);min-width:0}
+.ui-accordion-item{min-width:0;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface)}
+.ui-accordion-heading{margin:0}
+.ui-accordion-trigger{width:100%;min-height:var(--df-touch-target-min);display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);padding:var(--df-space-3) var(--df-space-4);border:0;border-radius:inherit;background:transparent;color:var(--df-text);font:inherit;font-weight:var(--df-weight-semibold);text-align:left;cursor:pointer}
+.ui-accordion-trigger:hover{background:var(--df-primary-soft)}
+.ui-accordion-trigger:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.ui-accordion-panel{padding:0 var(--df-space-4) var(--df-space-4);color:var(--df-text-secondary);line-height:var(--df-leading-relaxed)}
+.ui-accordion-panel[hidden]{display:none}
+.ui-progress{display:grid;gap:var(--df-space-2);min-width:0}
+.ui-progress-head{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3)}
+.ui-progress-label{color:var(--df-text-secondary);font-size:var(--df-text-sm);font-weight:var(--df-weight-semibold)}
+.ui-progress-value{color:var(--df-text-muted);font-size:var(--df-text-xs);font-variant-numeric:tabular-nums}
+.ui-progress-track{height:var(--df-progress-track-size);overflow:hidden;border-radius:var(--df-radius-pill);background:var(--df-surface-raised)}
+.ui-progress-bar{display:block;height:100%;border-radius:inherit;background:var(--df-primary);transition:width var(--df-duration-normal) var(--df-motion-standard)}
+.ui-progress-success{background:var(--df-success)}.ui-progress-warning{background:var(--df-warning)}.ui-progress-danger{background:var(--df-danger)}
+.ui-progress-indeterminate{width:38%;animation:ui-progress-slide 1.25s ease-in-out infinite}
+@keyframes ui-progress-slide{0%{transform:translateX(-110%)}100%{transform:translateX(290%)}}
+@media(prefers-reduced-motion:reduce){.ui-progress-bar{transition:none}.ui-progress-indeterminate{width:100%;animation:none;opacity:.65}}
+.ui-stat-card{display:flex;flex-direction:column;gap:var(--df-space-3);min-width:0;padding:var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface);box-shadow:var(--df-shadow-sm)}
+.ui-stat-card-head{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-2)}
+.ui-stat-icon{display:inline-flex;align-items:center;justify-content:center;color:var(--df-primary);font-size:var(--df-icon-size-lg)}
+.ui-stat-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--df-space-2)}
+.ui-page-heading .ui-eyebrow,.ui-section-heading .ui-eyebrow{margin-bottom:var(--df-space-1)}
+.ui-page-heading .ui-heading-h1,.ui-section-heading .ui-heading-h2,.ui-section-heading .ui-heading-h3{overflow-wrap:anywhere}
+@media(max-width:479px){.ui-page-heading{padding:var(--df-space-4);gap:var(--df-space-3)}.ui-section-actions{flex-wrap:wrap}.ui-stat-card{padding:var(--df-space-3)}}
