@@ -554,3 +554,14 @@ All components below are exported from `app/components/ui` and previewed using t
 - New page heading, section heading and responsive stat grid primitives in `layout.css`.
 - New link, icon button, tooltip, accordion, progress and stat card styles in `components.css`.
 - Theme colors continue to come from the existing Global Theme Preset Engine maps. Existing tokens were retained.
+
+
+## 8. BottomNavigation
+
+- **Export:** `BottomNavigation` from `app/components/ui`.
+- **Purpose:** reusable compact navigation bar with up to four destination actions and one centered primary action.
+- **Props:** `items` (`key`, `label`, `icon`, `onClick`, optional `active`), `centerAction` (`label`, `icon`, `onClick`, optional `active`/`disabled`), `ariaLabel`, `fixed`, `className`.
+- **Styling:** semantic tokens `--df-bottom-nav-height`, `--df-bottom-nav-z-index`, `--df-bottom-nav-icon-size`, `--df-bottom-nav-label-size`; global layout and component styles.
+- **Accessibility:** every action is a named native button; current item exposes `aria-current`; active state exposes `aria-pressed`; visible keyboard focus and reduced-motion behavior are provided.
+- **Layout:** `fixed` enables edge-to-edge fixed positioning and safe-area padding. Consumers must reserve equivalent bottom space in page content.
+- **Limits:** component does not perform routing or business logic; consumers own callbacks and locale-specific labels.
