@@ -212,7 +212,7 @@ export default function PublicMusicPage() {
       setPlaying(false);
       // Autoplay may be blocked by browser policy; selected track and cover remain visible.
     });
-  }, [activeId, items]);
+  }, [activeId, items, volume]);
 
   useEffect(() => {
     const audio = audioRef.current;
