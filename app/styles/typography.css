@@ -43,4 +43,4 @@
 
 /* Shared compact bottom navigation typography roles. */
 .ui-bottom-navigation-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-label-size);font-weight:var(--df-weight-semibold);line-height:1.15}
-.ui-bottom-navigation-center-label{font-family:var(--df-font-sans);font-size:.625rem;font-weight:var(--df-weight-bold);line-height:1.1}
+.ui-bottom-navigation-center-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-center-label-size);font-weight:var(--df-weight-bold);line-height:1.1}
