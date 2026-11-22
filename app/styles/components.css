@@ -136,7 +136,7 @@
 .ui-link-strong{font-weight:var(--df-weight-bold)}
 .ui-link:focus-visible,.ui-icon-button:focus-visible,.ui-tooltip:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
 .ui-icon-button{width:var(--df-touch-target-min);height:var(--df-touch-target-min);min-width:var(--df-touch-target-min);display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid transparent;border-radius:var(--df-radius-md);background:transparent;color:var(--df-text);font:inherit;cursor:pointer;transition:background var(--df-duration-fast),border-color var(--df-duration-fast),color var(--df-duration-fast)}
-.ui-icon-button-sm{width:var(--df-control-height-sm);height:var(--df-control-height-sm);min-width:var(--df-control-height-sm)}
+.ui-icon-button-sm{width:var(--df-touch-target-min);height:var(--df-touch-target-min);min-width:var(--df-touch-target-min)}
 .ui-icon-button-lg{width:var(--df-control-height-lg);height:var(--df-control-height-lg);min-width:var(--df-control-height-lg)}
 .ui-icon-button-secondary{border-color:var(--df-border);background:var(--df-surface-raised)}
 .ui-icon-button-danger{color:var(--df-danger)}
