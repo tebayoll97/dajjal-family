@@ -152,7 +152,8 @@
 .ui-tooltip-bottom{left:50%;top:calc(100% + var(--df-space-2));transform:translateX(-50%)}
 .ui-tooltip-left{right:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
 .ui-tooltip-right{left:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
-.ui-tooltip:hover:not(.ui-tooltip-open) .ui-tooltip-content,.ui-tooltip:focus-within:not(.ui-tooltip-open) .ui-tooltip-content{opacity:1;visibility:visible}
+@media (hover:hover) and (pointer:fine){.ui-tooltip:hover:not(.ui-tooltip-open) .ui-tooltip-content{opacity:1;visibility:visible}}
+.ui-tooltip:focus-within:not(.ui-tooltip-open) .ui-tooltip-content{opacity:1;visibility:visible}
 .ui-accordion{display:grid;gap:var(--df-space-2);min-width:0}
 .ui-accordion-item{min-width:0;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface)}
 .ui-accordion-heading{margin:0}
