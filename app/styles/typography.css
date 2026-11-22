@@ -39,3 +39,8 @@
 .ui-stat-value{color:var(--df-text);font-size:clamp(1.5rem,1.2rem + 1vw,2rem);font-weight:var(--df-weight-extrabold);line-height:var(--df-leading-tight);font-variant-numeric:tabular-nums}
 .ui-stat-description{color:var(--df-text-muted);font-size:var(--df-text-xs);line-height:var(--df-type-caption-leading)}
 .ui-stat-trend{color:var(--df-success);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
+
+
+/* Shared compact bottom navigation typography roles. */
+.ui-bottom-navigation-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-label-size);font-weight:var(--df-weight-semibold);line-height:1.15}
+.ui-bottom-navigation-center-label{font-family:var(--df-font-sans);font-size:.625rem;font-weight:var(--df-weight-bold);line-height:1.1}
