@@ -13,6 +13,7 @@ const publicRoutes = [
   "/about",
   "/contact",
   "/help",
+  "/music",
   "/df",
   "/df/wedding-anak-dajjal",
 ];
@@ -22,7 +23,7 @@ export default function sitemap() {
     locales.map((locale) => ({
       url: `${origin}/${locale}${route}`,
       changeFrequency: route === "" ? "weekly" : "monthly",
-      priority: route === "" ? 1 : route === "/games" ? 0.8 : route === "/help" ? 0.7 : 0.6,
+      priority: route === "" ? 1 : route === "/games" ? 0.8 : route === "/help" || route === "/music" ? 0.7 : 0.6,
       alternates: {
         languages: {
           id: `${origin}/id${route}`,
