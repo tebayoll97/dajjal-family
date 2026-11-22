@@ -6,3 +6,15 @@ Reusable React UI primitives live here. Components should be accessible, respons
 ## SearchField
 
 Use `SearchField` for reusable native search inputs. Provide a visible `label` or `aria-label`; pass form attributes and handlers directly as props. The semantic root is `.df-search`, with shared component CSS and semantic tokens. Use it in the Design System workbench and production pages instead of rebuilding search markup.
+
+
+## New shared components
+
+- `Link`: semantic Next.js navigation; external link behavior is opt-in.
+- `IconButton`: icon-only action with required accessible label and shared touch target.
+- `Tooltip`: focus/hover helper; not a replacement for essential labels.
+- `Accordion`: keyboard-operable disclosure list.
+- `ProgressBar`: determinate and indeterminate progress semantics.
+- `StatCard`: compact dashboard metric surface.
+- `PageHeader` and `SectionHeader`: shared page/section composition.
+- `ConfirmDialog`: shared confirmation layout built on Dialog and Button.
