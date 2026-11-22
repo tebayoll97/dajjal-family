@@ -290,8 +290,6 @@ export default function PublicMusicPage() {
     catch { /* Favorites remain usable for the current session when storage is unavailable. */ }
   }, [favoriteIds, favoritesReady]);
 
-  useEffect(() => { setPage((current) => Math.min(current, Math.max(1, Math.ceil(visibleItems.length / 10)))); }, [visibleItems.length]);
-
   const visibleItems = useMemo(() => {
     const q = query.trim().toLowerCase();
     const matched = !q ? items : items.filter((item) =>
@@ -300,6 +298,8 @@ export default function PublicMusicPage() {
     );
     return showFavorites ? matched.filter((item) => favoriteIds.includes(item.id)) : matched;
   }, [items, query, showFavorites, favoriteIds]);
+
+  useEffect(() => { setPage((current) => Math.min(current, Math.max(1, Math.ceil(visibleItems.length / 10)))); }, [visibleItems.length]);
   const pageSize = 10;
   const totalPages = Math.max(1, Math.ceil(visibleItems.length / pageSize));
   const pageItems = visibleItems.slice((page - 1) * pageSize, page * pageSize);
