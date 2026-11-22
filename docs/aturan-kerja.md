@@ -206,3 +206,13 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - The Design System inventory and actual source implementation are authoritative together. If documentation and code differ, inspect and reconcile before using or extending a component.
 - This requirement applies to all future website work and to existing pages whenever they are next modified; it does not authorize a blanket redesign of legacy pages by itself.
 - Governing architecture: `docs/foundation/MASTER_FOUNDATION.md` (current approved version) and `docs/foundation/DESIGN_SYSTEM.md`. Detailed component-system plan is maintained in Akashic Record: `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
+
+
+## Music Public — player, library, and navigation refinement — 2026-11-22
+
+- Public Music page uses a compact five-bar waveform pill on the album cover; it must not obscure artwork and must respect `prefers-reduced-motion`.
+- The public track list is paginated at 10 tracks per page. Search applies to the full published catalog; changing search/favorites resets pagination to the first page.
+- Favorite IDs are persisted locally in the visitor's browser only. This does not create account synchronization or database state.
+- The fixed Music bottom navigation is a consumer of the reusable `BottomNavigation` component, supports Indonesian and English labels, reserves page space, spans the viewport edge-to-edge, and accounts for device safe areas.
+- `BottomNavigation` is part of the shared UI export and Design System Workbench. Its semantic tokens and styling live additively in all four global CSS foundation files.
+- `/id/music` and `/en/music` have localized metadata, canonical/hreflang declarations, and sitemap entries. Public Music remains indexable; no API, database, authentication, or existing page migration is included in this scope.
