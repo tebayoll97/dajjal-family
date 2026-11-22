@@ -50,14 +50,14 @@ Status meanings:
 | Pagination | React shared component | `app/components/ui/Pagination.js` | Validate compact mobile behavior and accessible labels |
 | Table | React shared component | `app/components/ui/Table.js` | Validate narrow-screen overflow and table semantics |
 | Avatar | React shared component | `app/components/ui/Avatar.js` | Document fallback and alt-text behavior |
-| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Validate fixed safe-area placement, compact labels, and active/center actions |
+| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Validate fixed safe-area placement, compact labels, and active/center actions |\n| KaraokeLyrics | React shared component | `app/components/ui/KaraokeLyrics.js` | Full-screen line-synced lyrics overlay; validate live audio sync, reduced motion, and mobile/desktop layout |
 | IconButton | CSS primitive only | `.ui-icon-button` in `app/styles/components.css`; used by Dialog | Consider React API only if repeated consumers justify it |
 | Link | Native/framework pattern | `next/link` is used by pages; locale routing is handled by existing locale utilities | Do not wrap blindly; define shared API only if it adds consistent locale/accessibility behavior |
 | ThemeToggle | Separate shared component | `app/components/ThemeToggle.js` | Keep existing provider integration; document separately from UI primitives |
 | Language switching | Provider/context exists; dedicated switcher not confirmed | `app/components/LanguageProvider.js`; navigation uses locale-aware routing | Search and document current header control before creating another switcher |
 | Tooltip | Not found in audited shared UI scope | No export or matching primitive identified | Defer until a concrete repeated use case exists |
 
-The 29 React exports above are the verified public surface of `app/components/ui/index.js`. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
+The 30 React exports above are the verified public surface of `app/components/ui/index.js`. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
 
 ## 3. CANONICAL TOKEN CONTRACT
 
