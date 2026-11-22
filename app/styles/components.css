@@ -144,12 +144,15 @@
 .ui-icon-button-danger:hover:not(:disabled){background:color-mix(in srgb,var(--df-danger) 12%,transparent)}
 .ui-icon-button:disabled{opacity:.5;cursor:not-allowed}
 .ui-tooltip{position:relative;display:inline-flex;align-items:center;max-width:100%}
-.ui-tooltip-content{position:absolute;z-index:var(--df-z-dropdown);width:max-content;max-width:min(var(--df-tooltip-max-width),calc(100vw - 2rem));padding:var(--df-space-2) var(--df-space-3);border:1px solid var(--df-border-strong);border-radius:var(--df-radius-sm);background:var(--df-surface-overlay);color:var(--df-text);box-shadow:var(--df-shadow-md);font-size:var(--df-text-xs);font-weight:var(--df-weight-medium);line-height:var(--df-leading-normal);text-align:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--df-duration-fast),visibility var(--df-duration-fast)}
+.ui-tooltip-content{position:absolute;z-index:var(--df-z-dropdown);width:max-content;max-width:min(var(--df-tooltip-max-width),calc(100vw - 2rem));padding:var(--df-space-2) var(--df-space-3);border:1px solid var(--df-border-strong);border-radius:var(--df-radius-sm);background:var(--df-surface-overlay);color:var(--df-text);box-shadow:var(--df-shadow-md);font-size:var(--df-text-xs);font-weight:var(--df-weight-medium);line-height:var(--df-leading-normal);text-align:center;opacity:0;visibility:hidden;pointer-events:none;overflow-wrap:anywhere;transition:opacity var(--df-duration-fast),visibility var(--df-duration-fast)}
+.ui-tooltip-content[hidden]{display:none}
+.ui-tooltip-open .ui-tooltip-content{opacity:1;visibility:visible;pointer-events:auto}
+.ui-tooltip-top-end{right:0;bottom:calc(100% + var(--df-space-2))}
 .ui-tooltip-top{left:50%;bottom:calc(100% + var(--df-space-2));transform:translateX(-50%)}
 .ui-tooltip-bottom{left:50%;top:calc(100% + var(--df-space-2));transform:translateX(-50%)}
 .ui-tooltip-left{right:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
 .ui-tooltip-right{left:calc(100% + var(--df-space-2));top:50%;transform:translateY(-50%)}
-.ui-tooltip:hover .ui-tooltip-content,.ui-tooltip:focus-within .ui-tooltip-content{opacity:1;visibility:visible}
+.ui-tooltip:hover:not(.ui-tooltip-open) .ui-tooltip-content,.ui-tooltip:focus-within:not(.ui-tooltip-open) .ui-tooltip-content{opacity:1;visibility:visible}
 .ui-accordion{display:grid;gap:var(--df-space-2);min-width:0}
 .ui-accordion-item{min-width:0;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface)}
 .ui-accordion-heading{margin:0}
