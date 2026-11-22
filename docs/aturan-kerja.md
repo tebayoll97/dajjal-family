@@ -11,6 +11,18 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 5. Sebelum pekerjaan proyek, baca dan terapkan `docs/aturan-kerja.md`, `docs/foundation/COMMAND_MASTER.md`, `docs/foundation/MASTER_FOUNDATION.md`, dan `docs/foundation/DESIGN_SYSTEM.md`. Periksa juga implementasi Global Theme Preset Engine yang relevan sebelum mengubah halaman, komponen, token, atau konfigurasi tema.
 6. Aturan deployment, branch, persetujuan database, keamanan, dan pelaporan mengikuti keputusan pemilik serta ketentuan dalam Command Master. Tidak ada jeda Vercel khusus yang berlaku; build, QA, preview, dan deployment dapat dilakukan sesuai alur kerja yang diizinkan dan kondisi layanan aktual.
 
+## Standar Reusable dan Semantic Design System — 2026-11-22
+
+- Semua halaman web baru dalam cakupan Global Theme Preset Engine WAJIB menggunakan komponen reusable, layout primitives, typography roles, dan semantic design tokens yang tersedia di halaman Design System.
+- Jangan membuat ulang komponen yang sudah tersedia, menyalin markup/styling komponen ke halaman, atau menggunakan warna/spacing/typography lokal untuk menggantikan semantik global.
+- Jika pola UI belum tersedia, implementasikan sebagai komponen reusable di `app/components/ui/`, ekspor melalui `index.js`, dokumentasikan API/aksesibilitas/batasannya di Component Catalog, dan tampilkan implementasi yang sama di Design System Workbench sebelum dipakai pada halaman baru.
+- Setiap komponen atau semantic role baru wajib diintegrasikan ke empat global foundation CSS: `tokens.css`, `typography.css`, `layout.css`, dan `components.css`. Warna mengikuti Global Theme Preset Engine; jangan membuat palet lokal.
+- Semantic token yang sudah ada wajib dipertahankan. Tambahkan token secara aditif dan jangan menghapus atau mengganti nama token tanpa persetujuan pemilik.
+- Komponen baru wajib mempertimbangkan empat kombinasi tema, ID/EN, keyboard/focus, reduced motion, responsive behavior, dan Mobile Compact UI.
+- Komponen hanya menyediakan pola UI generik; validasi bisnis, data fetching, authorization, dan state halaman tetap tanggung jawab consumer.
+- Halaman lama tidak wajib dimigrasikan dan tidak boleh disentuh dalam pekerjaan penambahan Reusable kecuali diminta eksplisit. Couple, Wedding, dan immersive Games tetap mengikuti batas isolasinya.
+- Jangan menghapus komponen/token yang ada hanya untuk merapikan inventaris. Penghapusan komponen memerlukan bukti tidak digunakan dan tidak dibutuhkan; token yang sudah ada tetap dipertahankan.
+
 ## Penerapan
 
 - Aturan ini berlaku untuk seluruh pekerjaan proyek sampai pengguna mengubah atau mencabutnya.
