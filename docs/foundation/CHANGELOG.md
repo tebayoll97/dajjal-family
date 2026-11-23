@@ -212,4 +212,4 @@
 - Migrated Wedding Event, Wedding Gallery, Guestbook, Central Storage, and Admin Login to the shared LanguageProvider; existing admin CRUD and authorization flows remain in their page/API modules.
 - Added semantic-token compatibility styling for legacy admin utilities and made private admin layouts dynamic/non-revalidated.
 - No Supabase schema, RLS policy, production data, or game logic changes.
-- Status: source committed on `main`; Vercel build and responsive/theme/locale/interactive browser QA must pass before production verification.
+- Status: source committed on `main` at `35ea911`. `npm run build` passes with non-production placeholder Supabase environment values. Production deployment is blocked by Vercel HTTP 402 `api-deployments-free-per-day` (24-hour retry); live visual and interactive QA remain pending.
