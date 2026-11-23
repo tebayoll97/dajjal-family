@@ -115,10 +115,10 @@ export default function AdminWeddingEventPage() {
           {notice && <p role="status" className="mb-4 rounded-xl border border-[var(--df-success)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-success)]">{notice}</p>}
           <form onSubmit={saveEventTime} className="space-y-5">
             <label className="block text-sm font-bold text-[var(--df-text)]">{tx("Tanggal acara", "Event date")}
-              <input required type="date" value={eventDate} onChange={event => setEventDate(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-base text-[var(--df-text)]" />
+              <input required type="date" value={eventDate} onChange={event => setEventDate(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-base text-[var(--df-text)]" />
             </label>
-            <label className="block text-sm font-bold text-gray-200">{tx("Waktu acara (Waktu Server)", "Event time (Server Time)")}
-              <input required type="time" value={eventTime} onChange={event => setEventTime(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-base text-white [color-scheme:dark]" />
+            <label className="block text-sm font-bold text-[var(--df-text)]">{tx("Waktu acara (Waktu Server)", "Event time (Server Time)")}
+              <input required type="time" value={eventTime} onChange={event => setEventTime(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-base text-[var(--df-text)] " />
             </label>
             <p className="text-xs leading-relaxed text-[var(--df-text-muted)]">{tx("Jam yang disimpan digunakan oleh hitung mundur dan ditampilkan sebagai waktu server pada panel Rangkaian Acara.", "The saved time drives the countdown and is displayed as server time in the Event Schedule panel.")}</p>
             <button type="submit" disabled={loading || saving || !eventDate || !eventTime} className="min-h-12 w-full rounded-xl bg-[var(--df-primary)] px-5 py-3 text-sm font-extrabold text-[var(--df-on-primary)] hover:opacity-90 disabled:opacity-50">{saving ? tx("MENYIMPAN...", "SAVING...") : loading ? tx("MEMUAT...", "LOADING...") : tx("SIMPAN WAKTU ACARA", "SAVE EVENT TIME")}</button>
