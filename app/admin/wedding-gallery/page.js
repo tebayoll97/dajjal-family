@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const SLUG = "anak-dajjal-malika";
@@ -45,7 +46,7 @@ export default function WeddingGalleryAdminPage() {
     ]);
     if(se) throw se;if(ge) throw ge;setInvite(i);if(s){setEvent(current=>({...current,...s,event_date:s.event_date||""}));setCover(s.couple_photo_url||"");}setItems(g||[]);
   },[]);
-  useEffect(()=>{let active=true;(async()=>{try{const {data,error:e}=await supabaseAdminClient.auth.getSession();if(e)throw e;if(!data?.session){router.replace("/admin/login");return;}const r=await fetch("/api/admin/me",{headers:{Authorization:`Bearer ${data.session.access_token}`},cache:"no-store"});if(!r.ok){router.replace("/admin/login");return;}if(active)await load();}catch(e){if(active)setError(e.message);}finally{if(active)setChecking(false);}})();return()=>{active=false;};},[router,load]);
+  useEffect(()=>{let active=true;(async()=>{try{const {data,error:e}=await supabaseAdminClient.auth.getSession();if(e)throw e;if(!data?.session){router.replace("/admin/login");return;}const r=await verifyAdminSession(data.session);if(!r.ok){router.replace("/admin/login");return;}if(active)await load();}catch(e){if(active)setError(e.message);}finally{if(active)setChecking(false);}})();return()=>{active=false;};},[router,load]);
   async function saveCover(e){e.preventDefault();setBusy(true);setError("");const url=driveUrl(cover);if(!url){setError(tx("Masukkan URL HTTPS atau link Google Drive yang valid.","Enter a valid HTTPS or Google Drive URL."));setBusy(false);return;}try{const {error:e}=await supabaseAdminClient.from("df_event_settings").upsert({invitation_id:activeInvitationId,event_title:event.event_title,couple_photo_url:url},{onConflict:"invitation_id"});if(e)throw e;setCover(url);setEvent(v=>({...v,couple_photo_url:url}));notify(tx("Foto utama berhasil diperbarui.","Cover photo updated successfully."));}catch(e){setError(e.message);}finally{setBusy(false);}}
   async function saveDetails(e){e.preventDefault();setBusy(true);setError("");try{const {error:e}=await supabaseAdminClient.from("df_event_settings").upsert({invitation_id:activeInvitationId,event_title:event.event_title||"Wedding Invitation",event_date:event.event_date||null,event_time:event.event_time||null,venue:event.venue||null,schedule:event.schedule||null,music_url:event.music_url||null,couple_photo_url:event.couple_photo_url||null},{onConflict:"invitation_id"});if(e)throw e;notify(tx("Detail undangan berhasil disimpan.","Invitation details saved successfully."));}catch(e){setError(e.message);}finally{setBusy(false);}}
   const testImage=(url)=>new Promise(resolve=>{const im=new Image();let done=false;const finish=v=>{if(!done){done=true;resolve(v);}};im.onload=()=>finish(true);im.onerror=()=>finish(false);im.src=url;window.setTimeout(()=>finish(false),8000);});
