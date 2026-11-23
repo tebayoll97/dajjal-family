@@ -105,21 +105,7 @@ export default function ManageCouplePage() {
     finally { setLoading(false); }
   }, [router, t.error]);
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!data?.session) { router.replace("/admin/login"); return; }
-        const response = await verifyAdminSession(data.session);
-        if (!response.ok) { router.replace("/admin/login"); return; }
-        if (active) setAdmin(true);
-      } catch (err) { if (active) setError(err.message || t.error); }
-      finally { if (active) setChecking(false); }
-    })();
-    return () => { active = false; };
-  }, [router, t.error]);
+
 
   useEffect(() => { if (admin) loadProfiles(1); }, [admin, loadProfiles]);
 
