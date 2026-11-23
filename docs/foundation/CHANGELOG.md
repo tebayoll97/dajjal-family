@@ -202,3 +202,14 @@
 - Added a looping event-badge class driven by Global Theme Preset semantic color tokens and disabled its animation for reduced-motion preferences.
 - Replaced the footer's text-only DF mark with the official Dajjal Family icon and kept footer copy/navigation localized.
 - Source update only; build, responsive/browser QA, and production deployment remain to be verified.
+
+
+## Unified Admin Dashboard redesign — 2026-11-23
+
+- Added a dedicated bilingual Admin Shell for the dashboard and all existing admin child routes, including a desktop grouped sidebar and compact mobile navigation.
+- Reused shared Design System primitives and added compact admin typography roles with a live Design System preview.
+- Added route-aware localized admin metadata, private noindex policy, localized canonical URLs, and the Dajjal Family Open Graph fallback image.
+- Migrated Wedding Event, Wedding Gallery, Guestbook, Central Storage, and Admin Login to the shared LanguageProvider; existing admin CRUD and authorization flows remain in their page/API modules.
+- Added semantic-token compatibility styling for legacy admin utilities and made private admin layouts dynamic/non-revalidated.
+- No Supabase schema, RLS policy, production data, or game logic changes.
+- Status: source committed on `main`; Vercel build and responsive/theme/locale/interactive browser QA must pass before production verification.
