@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
@@ -84,7 +84,7 @@ export default function AdminStoragePage() {
   const [notice, setNotice] = useState("");
   const [file, setFile] = useState(null);
 
-  async function loadStatus(accessToken) {
+  const loadStatus = useCallback(async (accessToken) => {
     const response = await fetch("/api/storage/google/status", {
       headers: { Authorization: "Bearer " + accessToken },
       cache: "no-store",
@@ -92,7 +92,7 @@ export default function AdminStoragePage() {
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || t.error);
     setStatus(result);
-  }
+  }, [t.error]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -133,7 +133,7 @@ export default function AdminStoragePage() {
       }
     })();
     return () => { active = false; };
-  }, [router]);
+  }, [router, language, loadStatus]);
 
   async function connectDrive() {
     if (busy || !token) return;
