@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const copy = {
@@ -108,10 +109,7 @@ export default function AdminDashboardPage() {
           return;
         }
 
-        const response = await fetch("/api/admin/me", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-          cache: "no-store",
-        });
+        const response = await verifyAdminSession(session);
         const result = await response.json();
 
         if (!response.ok) {
