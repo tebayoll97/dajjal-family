@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { verifyAdminSession } from "@/lib/adminClientSession";
@@ -11,8 +11,10 @@ const AdminAuthContext = createContext(null);
 export function AdminAuthProvider({ children }) {
   const router = useRouter();
   const [auth, setAuth] = useState({ status: "checking", session: null, admin: null, error: "" });
+  const verifyAttempt = useRef(0);
 
   const verify = useCallback(async (session) => {
+    const attempt = ++verifyAttempt.current;
     if (!session?.access_token || !session?.user?.id) {
       setAuth({ status: "signed-out", session: null, admin: null, error: "" });
       router.replace("/admin/login");
@@ -24,6 +26,7 @@ export function AdminAuthProvider({ children }) {
     try {
       const response = await verifyAdminSession(session);
       const result = await response.json().catch(() => ({}));
+      if (attempt !== verifyAttempt.current) return;
       if (!response.ok || !result?.admin) {
         if (response.status === 401 || response.status === 403) {
           await supabaseAdminClient.auth.signOut();
@@ -33,9 +36,9 @@ export function AdminAuthProvider({ children }) {
         }
         throw new Error(result?.error || "Administrator access could not be verified.");
       }
-      setAuth({ status: "verified", session, admin: result.admin, error: "" });
+      if (attempt === verifyAttempt.current) setAuth({ status: "verified", session, admin: result.admin, error: "" });
     } catch (error) {
-      setAuth({ status: "error", session: null, admin: null, error: error?.message || "Administrator verification failed." });
+      if (attempt === verifyAttempt.current) setAuth({ status: "error", session: null, admin: null, error: error?.message || "Administrator verification failed." });
     }
   }, [router]);
 
@@ -55,14 +58,13 @@ export function AdminAuthProvider({ children }) {
       Promise.resolve().then(async () => {
         if (!active) return;
         if (event === "SIGNED_OUT") {
+          verifyAttempt.current += 1;
           setAuth({ status: "signed-out", session: null, admin: null, error: "" });
           router.replace("/admin/login");
           return;
         }
         if (event === "TOKEN_REFRESHED" && session?.access_token) {
-          setAuth((current) => current.status === "verified" && current.session?.user?.id === session.user?.id
-            ? { ...current, session }
-            : current);
+          await verify(session);
           return;
         }
         if (event === "SIGNED_IN" || event === "USER_UPDATED") await verify(session);
