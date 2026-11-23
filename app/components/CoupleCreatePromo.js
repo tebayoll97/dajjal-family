@@ -5,13 +5,16 @@ import { useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./CoupleCreatePromo.css";
 
-export default function CoupleCreatePromo() {
+export default function CoupleCreatePromo({ profileSlug = "", locale = "id" } = {}) {
   const { language } = useLanguage();
   const en = language === "en";
   const [status, setStatus] = useState("");
 
   async function shareProfile() {
-    const url = window.location.href;
+    const publicPath = profileSlug
+      ? `/${locale === "en" ? "en" : "id"}/couple/${encodeURIComponent(profileSlug)}`
+      : window.location.pathname + window.location.search + window.location.hash;
+    const url = new URL(publicPath, window.location.origin).toString();
     const title = en ? "Our Couple Profile" : "Profil Pasangan Kami";
     const text = en ? "Take a look at our Couple Profile." : "Lihat profil pasangan kami.";
     try {
