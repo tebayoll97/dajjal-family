@@ -1,6 +1,9 @@
 import { headers } from "next/headers";
 
 const ORIGIN = "https://dajjalfamily.com";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 const routeMetadata = {
   "/admin": { id: "Dashboard Admin", en: "Admin Dashboard", idDescription: "Pusat kendali privat untuk mengelola ekosistem Dajjal Family.", enDescription: "Private control center for managing the Dajjal Family ecosystem." },
   "/admin/players": { id: "Manajemen Pengguna", en: "User Management", idDescription: "Kelola akun, profil pemain, akses, dan aktivitas pengguna.", enDescription: "Manage user accounts, player profiles, access, and activity." },
