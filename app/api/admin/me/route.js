@@ -1,5 +1,10 @@
-
 import { verifyAdmin } from "@/lib/adminAuth";
+
+export const dynamic = "force-dynamic";
+
+const PRIVATE_HEADERS = {
+  "Cache-Control": "private, no-store, max-age=0, must-revalidate",
+};
 
 export async function GET(request) {
   const result = await verifyAdmin(request);
@@ -7,7 +12,7 @@ export async function GET(request) {
   if (!result.authorized) {
     return Response.json(
       { error: result.error },
-      { status: result.status }
+      { status: result.status, headers: PRIVATE_HEADERS }
     );
   }
 
@@ -17,5 +22,5 @@ export async function GET(request) {
       id: result.user.id,
       email: result.user.email,
     },
-  });
+  }, { headers: PRIVATE_HEADERS });
 }
