@@ -27,11 +27,11 @@ export function VerificationState({ variant = "user", status = "checking", compa
   const kind = variant === "admin" ? "admin" : "user";
   const content = copy[kind];
   const statusTitle = status === "verified" ? copy.verified : status === "expired" ? copy.expired : status === "error" || status === "denied" ? copy.failed : content.title;
-  const icon = kind === "admin" ? "◆" : "●";
+  const icon = status === "verified" ? "✓" : status === "error" || status === "denied" || status === "expired" ? "!" : kind === "admin" ? "◆" : "●";
 
   return (
-    <section className={["df-verification", `df-verification--${kind}`, compact ? "df-verification--compact" : "", `df-verification--${status}`, className].filter(Boolean).join(" ")} role="status" aria-live="polite" aria-atomic="true">
-      <div className="df-verification__mark" aria-hidden="true"><span>{icon}</span><i /></div>
+    <section className={["df-verification", `df-verification--${kind}`, compact ? "df-verification--compact" : "", `df-verification--${status}`, className].filter(Boolean).join(" ")} role={status === "error" || status === "denied" || status === "expired" ? "alert" : "status"} aria-live="polite" aria-atomic="true" aria-busy={status === "checking" || undefined}>
+      <div className="df-verification__mark" aria-hidden="true"><span>{icon}</span>{status === "checking" && <i />}</div>
       <div className="df-verification__copy">
         <p className="df-verification__eyebrow">{content.label}</p>
         <h2 className="df-verification__title">{title || statusTitle}</h2>
