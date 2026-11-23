@@ -1,4 +1,8 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  checkWeddingSubmissionRateLimit,
+  weddingRateLimitResponse,
+} from "@/lib/weddingSubmissionRateLimit";
 
 function validOrigin(request) {
   const origin = request.headers.get("origin");
@@ -68,6 +72,11 @@ export async function POST(request) {
       .select("guestbook_enabled").eq("invitation_id", invitation.id).maybeSingle();
     if (profileError) throw profileError;
     if (profile?.guestbook_enabled !== true) return Response.json({ error: "Guestbook is disabled." }, { status: 403 });
+
+    // The database counter is shared with direct Data API attempts and all Vercel instances.
+    const rateLimit = await checkWeddingSubmissionRateLimit(request, "guestbook");
+    if (!rateLimit.allowed) return weddingRateLimitResponse(rateLimit);
+
     const { error } = await supabaseAdmin.from("df_guestbook").insert({
       invitation_id: invitation.id, guest_name: guestName, server_name: serverName,
       attendance, message, language, is_approved: true,
@@ -76,6 +85,6 @@ export async function POST(request) {
     return Response.json({ ok: true }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Wedding guestbook submission:", error);
-    return Response.json({ error: "Unable to submit guestbook message." }, { status: 500 });
+    return Response.json({ error: "Unable to submit guestbook message." }, { status: 500, headers: { "Cache-Control": "no-store" } });
   }
 }
