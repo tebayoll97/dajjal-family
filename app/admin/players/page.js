@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const translations = {
@@ -173,10 +173,10 @@ function accountStyle(type) {
 export default function AdminPlayersPage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { admin } = useAdminAuth();
   const t = translations[language] || translations.en;
 
-  const [admin, setAdmin] = useState(null);
-  const [checking, setChecking] = useState(true);
+
 
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
