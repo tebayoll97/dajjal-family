@@ -92,46 +92,7 @@ export default function AdminDashboardPage() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let active = true;
 
-    async function verifyAccess() {
-      try {
-        const { data, error: sessionError } =
-          await supabaseAdminClient.auth.getSession();
-
-        if (sessionError) throw sessionError;
-
-        const session = data?.session;
-        if (!session) {
-          router.replace("/admin/login");
-          return;
-        }
-
-        const response = await verifyAdminSession(session);
-        const result = await response.json();
-
-        if (!response.ok) {
-          await supabaseAdminClient.auth.signOut();
-          if (response.status === 401 || response.status === 403) {
-            router.replace("/admin/login");
-            return;
-          }
-          throw new Error(result.error || t.error);
-        }
-
-        if (active) setAdmin(result.admin);
-      } catch (err) {
-        console.error("Admin dashboard error:", err);
-        if (active) setError(err.message || t.error);
-      } finally {
-        if (active) setChecking(false);
-      }
-    }
-
-    verifyAccess();
-    return () => { active = false; };
-  }, [router]);
 
   async function handleLogout() {
     if (loggingOut) return;
@@ -149,19 +110,6 @@ export default function AdminDashboardPage() {
       setLoggingOut(false);
       setShowLogoutModal(false);
     }
-  }
-
-  if (checking) {
-    return (
-      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-[var(--df-primary)]">
-        <div className="relative flex h-16 w-16 items-center justify-center">
-          <div className="absolute inset-0 rounded-full border border-purple-500/20" />
-          <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-purple-400 border-r-cyan-400 animate-spin" />
-          <span className="text-2xl">♛</span>
-        </div>
-        <p className="ui-eyebrow animate-pulse">{t.checking}</p>
-      </main>
-    );
   }
 
   if (error && !admin) {
