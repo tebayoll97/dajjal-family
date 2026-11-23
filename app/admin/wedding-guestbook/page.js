@@ -216,10 +216,10 @@ export default function AdminWeddingGuestbookPage() {
 
         <section className="mb-5 flex flex-col gap-3 rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div>
-            <p className="text-xs font-bold text-gray-400">{tx("TOTAL PESAN","TOTAL MESSAGES")}</p>
+            <p className="text-xs font-bold text-[var(--df-text-secondary)]">{tx("TOTAL PESAN","TOTAL MESSAGES")}</p>
             <p className="mt-1 text-2xl font-black tabular-nums">{pagination.total.toLocaleString(id ? "id-ID" : "en-US")}</p>
           </div>
-          <div className="text-sm text-gray-400">{loading ? tx("Memuat pesan...","Loading messages...") : pagination.total ? (id ? `Menampilkan ${start}–${end} dari ${pagination.total} pesan` : `Showing ${start}–${end} of ${pagination.total} messages`) : tx("Belum ada pesan.","No messages yet.")}</div>
+          <div className="text-sm text-[var(--df-text-secondary)]">{loading ? tx("Memuat pesan...","Loading messages...") : pagination.total ? (id ? `Menampilkan ${start}–${end} dari ${pagination.total} pesan` : `Showing ${start}–${end} of ${pagination.total} messages`) : tx("Belum ada pesan.","No messages yet.")}</div>
           <button type="button" onClick={() => loadEntries(page)} disabled={loading} className="min-h-11 rounded-xl border border-purple-300/25 px-4 py-2 text-xs font-bold text-[var(--df-primary)] hover:bg-[var(--df-primary-soft)] disabled:opacity-50">
             {loading ? tx("MEMUAT...","LOADING...") : tx("MUAT ULANG","REFRESH")}
           </button>
@@ -230,24 +230,24 @@ export default function AdminWeddingGuestbookPage() {
 
         <section className="space-y-3">
           {entries.map((entry, index) => (
-            <article key={entry.id} className="rounded-2xl border border-[var(--df-border)] bg-[#151020] p-4 sm:p-5">
+            <article key={entry.id} className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-4 sm:p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="break-words text-base font-extrabold">{entry.guest_name}</h2>
-                    <span className="rounded-full border border-[var(--df-border)] bg-purple-500/10 px-2.5 py-1 text-[10px] font-bold text-purple-200">Server {entry.server_name || "—"}</span>
+                    <span className="rounded-full border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-primary)]">Server {entry.server_name || "—"}</span>
                     <span className="rounded-full border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-accent)]">{attendanceLabel(entry.attendance, language)}</span>
-                    <span className={entry.is_approved ? "rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-200" : "rounded-full bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold text-[var(--df-warning)]"}>{entry.is_approved ? tx("Tampil","Published") : tx("Belum disetujui","Pending approval")}</span>
+                    <span className={entry.is_approved ? "rounded-full bg-[var(--df-surface-raised)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-success)]" : "rounded-full bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold text-[var(--df-warning)]"}>{entry.is_approved ? tx("Tampil","Published") : tx("Belum disetujui","Pending approval")}</span>
                   </div>
                   <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-[var(--df-text-secondary)]">{entry.message}</p>
                   <time className="mt-3 block text-[11px] text-[var(--df-text-muted)]">{formatDate(entry.created_at, language)}</time>
                 </div>
-                <div className="flex shrink-0 items-center justify-between gap-3 border-t border-white/10 pt-3 sm:border-0 sm:pt-0">
+                <div className="flex shrink-0 items-center justify-between gap-3 border-t border-[var(--df-border)] pt-3 sm:border-0 sm:pt-0">
                   <span className="text-[10px] font-mono text-[var(--df-text-muted)]">#{(start + index).toString().padStart(3, "0")}</span>
-                  <button type="button" onClick={() => { setEditingEntry(entry); setEditName(entry.guest_name || ""); setEditServer(entry.server_name || ""); setEditDate(formatDateInput(entry.created_at)); setEditTime(formatTimeInput(entry.created_at)); setEditError(""); setError(""); setNotice(""); }} disabled={Boolean(deletingId) || savingEdit} className="min-h-11 min-w-24 rounded-xl border border-[var(--df-border)] bg-purple-500/10 px-4 py-2 text-xs font-extrabold text-purple-200 hover:opacity-90/20 disabled:opacity-50">
+                  <button type="button" onClick={() => { setEditingEntry(entry); setEditName(entry.guest_name || ""); setEditServer(entry.server_name || ""); setEditDate(formatDateInput(entry.created_at)); setEditTime(formatTimeInput(entry.created_at)); setEditError(""); setError(""); setNotice(""); }} disabled={Boolean(deletingId) || savingEdit} className="min-h-11 min-w-24 rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-2 text-xs font-extrabold text-[var(--df-primary)] hover:opacity-90 disabled:opacity-50">
                     EDIT
                   </button>
-                  <button type="button" onClick={() => setConfirmEntry(entry)} disabled={Boolean(deletingId)} className="min-h-11 min-w-24 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-xs font-extrabold text-red-200 hover:opacity-90/20 disabled:opacity-50">
+                  <button type="button" onClick={() => setConfirmEntry(entry)} disabled={Boolean(deletingId)} className="min-h-11 min-w-24 rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] px-4 py-2 text-xs font-extrabold text-[var(--df-danger)] hover:opacity-90 disabled:opacity-50">
                     HAPUS
                   </button>
                 </div>
@@ -255,68 +255,68 @@ export default function AdminWeddingGuestbookPage() {
             </article>
           ))}
           {!loading && entries.length === 0 && !error && (
-            <div className="rounded-2xl border border-dashed border-[var(--df-border-strong)] bg-[#151020] px-5 py-12 text-center">
+            <div className="rounded-2xl border border-dashed border-[var(--df-border-strong)] bg-[var(--df-surface)] px-5 py-12 text-center">
               <div className="text-3xl">✉</div>
               <h2 className="mt-3 font-bold">{tx("Belum ada ucapan","No guestbook messages yet")}</h2>
-              <p className="mt-1 text-sm text-gray-500">{tx("Pesan yang masuk akan tampil di sini.","New messages will appear here.")}</p>
+              <p className="mt-1 text-sm text-[var(--df-text-muted)]">{tx("Pesan yang masuk akan tampil di sini.","New messages will appear here.")}</p>
             </div>
           )}
-          {loading && entries.length === 0 && <div className="rounded-2xl bg-[#151020] p-8 text-center text-sm text-purple-200">{tx("MEMUAT DAFTAR PESAN...","LOADING MESSAGE LIST...")}</div>}
+          {loading && entries.length === 0 && <div className="rounded-2xl bg-[var(--df-surface)] p-8 text-center text-sm text-[var(--df-primary)]">{tx("MEMUAT DAFTAR PESAN...","LOADING MESSAGE LIST...")}</div>}
         </section>
 
         {pagination.totalPages > 1 && (
-          <nav aria-label={tx("Navigasi halaman guestbook","Guestbook pagination")} className="mt-7 flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#151020] p-3">
-            <button type="button" onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={page <= 1 || loading} className="min-h-11 rounded-lg border border-white/10 px-3 text-xs font-bold disabled:opacity-35">← {tx("Sebelumnya","Previous")}</button>
+          <nav aria-label={tx("Navigasi halaman guestbook","Guestbook pagination")} className="mt-7 flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3">
+            <button type="button" onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={page <= 1 || loading} className="min-h-11 rounded-lg border border-[var(--df-border)] px-3 text-xs font-bold disabled:opacity-35">← {tx("Sebelumnya","Previous")}</button>
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
               .filter(number => number === 1 || number === pagination.totalPages || Math.abs(number - page) <= 2)
               .map((number, index, visible) => (
                 <span key={number} className="contents">
-                  {index > 0 && number - visible[index - 1] > 1 && <span className="px-1 text-gray-600">…</span>}
-                  <button type="button" onClick={() => setPage(number)} disabled={loading} aria-current={page === number ? "page" : undefined} className={page === number ? "min-h-11 min-w-11 rounded-lg bg-[var(--df-primary)] px-3 text-xs font-black text-[var(--df-on-primary)]" : "min-h-11 min-w-11 rounded-lg border border-white/10 px-3 text-xs font-bold text-gray-300 hover:bg-white/5"}>{number}</button>
+                  {index > 0 && number - visible[index - 1] > 1 && <span className="px-1 text-[var(--df-text-muted)]">…</span>}
+                  <button type="button" onClick={() => setPage(number)} disabled={loading} aria-current={page === number ? "page" : undefined} className={page === number ? "min-h-11 min-w-11 rounded-lg bg-[var(--df-primary)] px-3 text-xs font-black text-[var(--df-on-primary)]" : "min-h-11 min-w-11 rounded-lg border border-[var(--df-border)] px-3 text-xs font-bold text-[var(--df-text-secondary)] hover:bg-white/5"}>{number}</button>
                 </span>
               ))}
-            <button type="button" onClick={() => setPage(value => Math.min(pagination.totalPages, value + 1))} disabled={page >= pagination.totalPages || loading} className="min-h-11 rounded-lg border border-white/10 px-3 text-xs font-bold disabled:opacity-35">{tx("Berikutnya","Next")} →</button>
+            <button type="button" onClick={() => setPage(value => Math.min(pagination.totalPages, value + 1))} disabled={page >= pagination.totalPages || loading} className="min-h-11 rounded-lg border border-[var(--df-border)] px-3 text-xs font-bold disabled:opacity-35">{tx("Berikutnya","Next")} →</button>
           </nav>
         )}
       </div>
 
       {editingEntry && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-black/75 px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !savingEdit) setEditingEntry(null); }}>
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-[var(--df-surface-overlay)] px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !savingEdit) setEditingEntry(null); }}>
           <section role="dialog" aria-modal="true" aria-labelledby="guestbook-edit-title" className="w-full max-w-sm rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 shadow-2xl sm:p-6">
             <h2 id="guestbook-edit-title" className="text-lg font-black">{tx("Edit Data Guestbook","Edit Guestbook Entry")}</h2>
-            <p className="mt-1 text-sm text-gray-400">{tx("Ubah nama, server, tanggal, dan waktu pesan.","Edit the message name, server, date, and time.")}</p>
+            <p className="mt-1 text-sm text-[var(--df-text-secondary)]">{tx("Ubah nama, server, tanggal, dan waktu pesan.","Edit the message name, server, date, and time.")}</p>
             <form onSubmit={saveEntryEdit} className="mt-5 space-y-4">
-              {editError && <p role="alert" className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{editError}</p>}
-              <label className="block text-xs font-bold text-gray-300">Nama
-                <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
-                <span className="mt-1 block text-[11px] font-normal text-gray-500">{editName.length}/16 {tx("karakter","characters")}</span>
+              {editError && <p role="alert" className="rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-danger)]">{editError}</p>}
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Nama
+                <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
+                <span className="mt-1 block text-[11px] font-normal text-[var(--df-text-muted)]">{editName.length}/16 {tx("karakter","characters")}</span>
               </label>
-              <label className="block text-xs font-bold text-gray-300">Server (1–4 angka)
-                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Server (1–4 angka)
+                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
-              <label className="block text-xs font-bold text-gray-300">Tanggal (DD/MM/YYYY)
-                <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Tanggal (DD/MM/YYYY)
+                <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
-              <label className="block text-xs font-bold text-gray-300">Waktu (HH:mm, WIB)
-                <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-white/15 bg-black/20 px-3 text-sm text-white outline-none focus:border-purple-400" />
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Waktu (HH:mm, WIB)
+                <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
-                <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">{tx("BATAL","CANCEL")}</button>
-                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\d{1,4}$/.test(editServer) || !/^\d{2}\/\d{2}\/\d{4}$/.test(editDate) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(editTime)} className="min-h-11 rounded-xl bg-purple-600 px-3 text-xs font-extrabold text-white hover:bg-purple-500 disabled:opacity-50">{savingEdit ? tx("MENYIMPAN...","SAVING...") : tx("SIMPAN","SAVE")}</button>
+                <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-[var(--df-border-strong)] px-3 text-xs font-bold text-[var(--df-text)]">{tx("BATAL","CANCEL")}</button>
+                <button type="submit" disabled={savingEdit || !editName.trim() || !/^\d{1,4}$/.test(editServer) || !/^\d{2}\/\d{2}\/\d{4}$/.test(editDate) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(editTime)} className="min-h-11 rounded-xl bg-[var(--df-primary)] px-3 text-xs font-extrabold text-[var(--df-on-primary)] hover:opacity-90 disabled:opacity-50">{savingEdit ? tx("MENYIMPAN...","SAVING...") : tx("SIMPAN","SAVE")}</button>
               </div>
             </form>
           </section>
         </div>
       )}
       {confirmEntry && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-black/75 px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !deletingId) setConfirmEntry(null); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="guestbook-delete-title" className="w-full max-w-sm rounded-2xl border border-red-400/25 bg-[#171321] p-5 shadow-2xl sm:p-6">
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-[var(--df-surface-overlay)] px-4 py-6 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !deletingId) setConfirmEntry(null); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="guestbook-delete-title" className="w-full max-w-sm rounded-2xl border border-[var(--df-danger)] bg-[var(--df-surface)] p-5 shadow-2xl sm:p-6">
             <div className="text-3xl">⚠</div>
             <h2 id="guestbook-delete-title" className="mt-3 text-lg font-black">{tx("Hapus pesan ini?","Delete this message?")}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-gray-400">Pesan dari <strong className="text-white">{confirmEntry.guest_name}</strong> akan dihapus permanen dari Guestbook.</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--df-text-secondary)]">Pesan dari <strong className="text-[var(--df-text)]">{confirmEntry.guest_name}</strong> akan dihapus permanen dari Guestbook.</p>
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setConfirmEntry(null)} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl border border-white/15 px-3 text-xs font-bold text-gray-200">BATAL</button>
-              <button type="button" onClick={deleteEntry} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl bg-[var(--df-danger)] px-3 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-50">{deletingId ? tx("MENGHAPUS...","DELETING...") : tx("YA, HAPUS","YES, DELETE")}</button>
+              <button type="button" onClick={() => setConfirmEntry(null)} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl border border-[var(--df-border-strong)] px-3 text-xs font-bold text-[var(--df-text)]">BATAL</button>
+              <button type="button" onClick={deleteEntry} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl bg-[var(--df-danger)] px-3 text-xs font-extrabold text-[var(--df-text)] hover:opacity-90 disabled:opacity-50">{deletingId ? tx("MENGHAPUS...","DELETING...") : tx("YA, HAPUS","YES, DELETE")}</button>
             </div>
           </section>
         </div>
