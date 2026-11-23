@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const COPY = {
@@ -111,9 +112,7 @@ export default function ManageCouplePage() {
         const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
         if (sessionError) throw sessionError;
         if (!data?.session) { router.replace("/admin/login"); return; }
-        const response = await fetch("/api/admin/me", {
-          headers: { Authorization: `Bearer ${data.session.access_token}` }, cache: "no-store",
-        });
+        const response = await verifyAdminSession(data.session);
         if (!response.ok) { router.replace("/admin/login"); return; }
         if (active) setAdmin(true);
       } catch (err) { if (active) setError(err.message || t.error); }
