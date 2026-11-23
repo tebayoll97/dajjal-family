@@ -30,6 +30,7 @@ export async function generateMetadata() {
       url: ORIGIN + "/" + locale + PATH,
       siteName: "Dajjal Family",
       type: "website",
+      images: [{ url: "/dajjalfamily_icon_192.png", width: 192, height: 192, alt: "Dajjal Family" }],
     },
     robots: { index: true, follow: true },
   };
