@@ -124,4 +124,4 @@
 #df-admin-shell .df-admin-main [class*="bg-pink-"]{background:var(--df-primary-soft)!important}
 #df-admin-shell .df-admin-main [class*="border-pink-"]{border-color:var(--df-border)!important}
 #df-admin-shell .df-admin-main [class*="text-pink-"]{color:var(--df-primary)!important}
-#df-admin-shell .df-admin-main .text-white[class*="bg-"]{color:var(--df-on-primary)!important}
+#df-admin-shell .df-admin-main .text-white[class*="bg-purple-"],#df-admin-shell .df-admin-main .text-white[class*="bg-pink-"],#df-admin-shell .df-admin-main .text-white[class*="bg-red-"],#df-admin-shell .df-admin-main .text-white[class*="bg-amber-"],#df-admin-shell .df-admin-main .text-white[class*="bg-cyan-"],#df-admin-shell .df-admin-main .text-white[class*="bg-blue-"],#df-admin-shell .df-admin-main .text-white[class*="bg-green-"]{color:var(--df-on-primary)!important}
