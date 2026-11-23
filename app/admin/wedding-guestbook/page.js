@@ -220,7 +220,7 @@ export default function AdminWeddingGuestbookPage() {
             <p className="mt-1 text-2xl font-black tabular-nums">{pagination.total.toLocaleString(id ? "id-ID" : "en-US")}</p>
           </div>
           <div className="text-sm text-[var(--df-text-secondary)]">{loading ? tx("Memuat pesan...","Loading messages...") : pagination.total ? (id ? `Menampilkan ${start}–${end} dari ${pagination.total} pesan` : `Showing ${start}–${end} of ${pagination.total} messages`) : tx("Belum ada pesan.","No messages yet.")}</div>
-          <button type="button" onClick={() => loadEntries(page)} disabled={loading} className="min-h-11 rounded-xl border border-purple-300/25 px-4 py-2 text-xs font-bold text-[var(--df-primary)] hover:bg-[var(--df-primary-soft)] disabled:opacity-50">
+          <button type="button" onClick={() => loadEntries(page)} disabled={loading} className="min-h-11 rounded-xl border border-[var(--df-border)] px-4 py-2 text-xs font-bold text-[var(--df-primary)] hover:bg-[var(--df-primary-soft)] disabled:opacity-50">
             {loading ? tx("MEMUAT...","LOADING...") : tx("MUAT ULANG","REFRESH")}
           </button>
         </section>
@@ -287,17 +287,17 @@ export default function AdminWeddingGuestbookPage() {
             <p className="mt-1 text-sm text-[var(--df-text-secondary)]">{tx("Ubah nama, server, tanggal, dan waktu pesan.","Edit the message name, server, date, and time.")}</p>
             <form onSubmit={saveEntryEdit} className="mt-5 space-y-4">
               {editError && <p role="alert" className="rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-danger)]">{editError}</p>}
-              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Nama
-                <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Nama","Name")}
+                <input autoFocus required maxLength={16} value={editName} onChange={event => setEditName(event.target.value.slice(0, 16))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-focus)]" />
                 <span className="mt-1 block text-[11px] font-normal text-[var(--df-text-muted)]">{editName.length}/16 {tx("karakter","characters")}</span>
               </label>
-              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Server (1–4 angka)
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Server (1–4 angka)","Server (1–4 digits)")}
                 <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
-              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Tanggal (DD/MM/YYYY)
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Tanggal (DD/MM/YYYY)","Date (DD/MM/YYYY)")}
                 <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
-              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">Waktu (HH:mm, WIB)
+              <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Waktu (HH:mm, WIB)","Time (HH:mm, WIB)")}
                 <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
@@ -313,9 +313,9 @@ export default function AdminWeddingGuestbookPage() {
           <section role="dialog" aria-modal="true" aria-labelledby="guestbook-delete-title" className="w-full max-w-sm rounded-2xl border border-[var(--df-danger)] bg-[var(--df-surface)] p-5 shadow-2xl sm:p-6">
             <div className="text-3xl">⚠</div>
             <h2 id="guestbook-delete-title" className="mt-3 text-lg font-black">{tx("Hapus pesan ini?","Delete this message?")}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--df-text-secondary)]">Pesan dari <strong className="text-[var(--df-text)]">{confirmEntry.guest_name}</strong> akan dihapus permanen dari Guestbook.</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--df-text-secondary)]">{tx("Pesan dari","Message from")} <strong className="text-[var(--df-text)]">{confirmEntry.guest_name}</strong> {tx("akan dihapus permanen dari Guestbook.","will be permanently deleted from the Guestbook.")}</p>
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setConfirmEntry(null)} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl border border-[var(--df-border-strong)] px-3 text-xs font-bold text-[var(--df-text)]">BATAL</button>
+              <button type="button" onClick={() => setConfirmEntry(null)} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl border border-[var(--df-border-strong)] px-3 text-xs font-bold text-[var(--df-text)]">{tx("BATAL","CANCEL")}</button>
               <button type="button" onClick={deleteEntry} disabled={Boolean(deletingId)} className="min-h-11 rounded-xl bg-[var(--df-danger)] px-3 text-xs font-extrabold text-[var(--df-text)] hover:opacity-90 disabled:opacity-50">{deletingId ? tx("MENGHAPUS...","DELETING...") : tx("YA, HAPUS","YES, DELETE")}</button>
             </div>
           </section>
