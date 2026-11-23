@@ -95,6 +95,7 @@ export default function CoupleGalleryPage() {
             <h2 id="df-couple-featured-title">{t.specialTitle}</h2>
             <p>{t.specialText}</p>
             <Link href={`/${locale}/df/couple`} className="df-couple-gallery__action">{t.openSpecial}<span aria-hidden="true">↗</span></Link>
+            <Link href={`/${locale}/app/create-profile-couple`} className="df-couple-gallery__action df-couple-gallery__create-action">{locale === "en" ? "CREATE COUPLE PROFILE" : "BUAT PROFIL PASANGAN"}<span aria-hidden="true">↗</span></Link>
           </div>
         </section>
 

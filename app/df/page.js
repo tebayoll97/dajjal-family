@@ -29,7 +29,6 @@ const copy = {
     projects: "Featured Projects",
     projectsSub: "A growing collection of experiences from the DF universe.",
     projectCards: [
-      ["Create a Couple Profile", "Create a couple profile page to preserve your identities, photos, and story together.", "/app/create-profile-couple"],
       ["Stories & Characters", "A space to discover the characters and stories that shape the DAJJAL FAMILY universe."],
       ["Coming Soon", "Look forward to new projects, features, and experiences being prepared for DAJJAL FAMILY."],
     ],
@@ -56,7 +55,6 @@ const copy = {
     projects: "Proyek Unggulan",
     projectsSub: "Kumpulan pengalaman yang terus berkembang dari universe DF.",
     projectCards: [
-      ["Buat Couple Profile", "Buat halaman profil pasangan untuk mengabadikan identitas, foto, dan cerita kalian bersama.", "/app/create-profile-couple"],
       ["Cerita & Karakter", "Ruang untuk mengenal lebih jauh karakter dan kisah yang membentuk dunia DAJJAL FAMILY."],
       ["Segera Hadir", "Nantikan proyek, fitur, dan pengalaman baru yang sedang dipersiapkan untuk keluarga DAJJAL FAMILY."],
     ],
