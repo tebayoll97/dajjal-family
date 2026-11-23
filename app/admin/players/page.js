@@ -263,50 +263,7 @@ export default function AdminPlayersPage() {
     }
   }, [page, search, router, t.error]);
 
-  useEffect(() => {
-    let active = true;
 
-    async function verifyAccess() {
-      try {
-        const { data, error: sessionError } =
-          await supabaseAdminClient.auth.getSession();
-
-        if (sessionError) throw sessionError;
-
-        const session = data?.session;
-
-        if (!session) {
-          router.replace("/admin/login");
-          return;
-        }
-
-        const response = await verifyAdminSession(session);
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          await supabaseAdminClient.auth.signOut();
-          router.replace("/admin/login");
-          return;
-        }
-
-        if (active) {
-          setAdmin(result.admin);
-        }
-      } catch (err) {
-        console.error("Admin verification error:", err);
-        if (active) setError(err.message || t.error);
-      } finally {
-        if (active) setChecking(false);
-      }
-    }
-
-    verifyAccess();
-
-    return () => {
-      active = false;
-    };
-  }, [router, t.error]);
 
   useEffect(() => {
     if (admin) loadPlayers();
@@ -391,17 +348,6 @@ export default function AdminPlayersPage() {
   const googleCount = players.filter(
     (p) => p.accountType === "GOOGLE"
   ).length;
-
-  if (checking) {
-    return (
-      <main className="min-h-screen bg-[#080711] flex flex-col items-center justify-center text-purple-300 gap-4">
-        <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-400 rounded-full animate-spin" />
-        <p className="text-xs tracking-widest animate-pulse">
-          {t.checking}
-        </p>
-      </main>
-    );
-  }
 
   if (!admin) {
     return (
