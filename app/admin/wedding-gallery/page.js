@@ -1,9 +1,8 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const SLUG = "anak-dajjal-malika";
@@ -28,11 +27,11 @@ function Panel({ title, subtitle, open, onClick, children }) {
   </section>;
 }
 export default function WeddingGalleryAdminPage() {
-  const router = useRouter();
   const { language } = useLanguage();
+  const { status: authStatus } = useAdminAuth();
   const id = language === "id";
   const tx = (indonesian, english) => id ? indonesian : english;
-  const [checking,setChecking]=useState(true), [invite,setInvite]=useState(null), [items,setItems]=useState([]);
+  const [invite,setInvite]=useState(null), [items,setItems]=useState([]);
   const [event,setEvent]=useState({event_title:"The Royal Wedding — Anak Dajjal & Malika",event_date:"",event_time:"",venue:"",schedule:"",music_url:"",couple_photo_url:""});
   const [cover,setCover]=useState(""), [urls,setUrls]=useState(""), [album,setAlbum]=useState("Prewedding"), [description,setDescription]=useState("");
   const [panel,setPanel]=useState("cover"), [busy,setBusy]=useState(false), [toast,setToast]=useState(""), [error,setError]=useState("");
@@ -46,14 +45,14 @@ export default function WeddingGalleryAdminPage() {
     ]);
     if(se) throw se;if(ge) throw ge;setInvite(i);if(s){setEvent(current=>({...current,...s,event_date:s.event_date||""}));setCover(s.couple_photo_url||"");}setItems(g||[]);
   },[]);
-  useEffect(()=>{let active=true;(async()=>{try{const {data,error:e}=await supabaseAdminClient.auth.getSession();if(e)throw e;if(!data?.session){router.replace("/admin/login");return;}const r=await verifyAdminSession(data.session);if(!r.ok){router.replace("/admin/login");return;}if(active)await load();}catch(e){if(active)setError(e.message);}finally{if(active)setChecking(false);}})();return()=>{active=false;};},[router,load]);
+  useEffect(()=>{if(authStatus!=="verified")return;let active=true;load().catch(e=>{if(active)setError(e.message);});return()=>{active=false;};},[authStatus,load]);
   async function saveCover(e){e.preventDefault();setBusy(true);setError("");const url=driveUrl(cover);if(!url){setError(tx("Masukkan URL HTTPS atau link Google Drive yang valid.","Enter a valid HTTPS or Google Drive URL."));setBusy(false);return;}try{const {error:e}=await supabaseAdminClient.from("df_event_settings").upsert({invitation_id:activeInvitationId,event_title:event.event_title,couple_photo_url:url},{onConflict:"invitation_id"});if(e)throw e;setCover(url);setEvent(v=>({...v,couple_photo_url:url}));notify(tx("Foto utama berhasil diperbarui.","Cover photo updated successfully."));}catch(e){setError(e.message);}finally{setBusy(false);}}
   async function saveDetails(e){e.preventDefault();setBusy(true);setError("");try{const {error:e}=await supabaseAdminClient.from("df_event_settings").upsert({invitation_id:activeInvitationId,event_title:event.event_title||"Wedding Invitation",event_date:event.event_date||null,event_time:event.event_time||null,venue:event.venue||null,schedule:event.schedule||null,music_url:event.music_url||null,couple_photo_url:event.couple_photo_url||null},{onConflict:"invitation_id"});if(e)throw e;notify(tx("Detail undangan berhasil disimpan.","Invitation details saved successfully."));}catch(e){setError(e.message);}finally{setBusy(false);}}
   const testImage=(url)=>new Promise(resolve=>{const im=new Image();let done=false;const finish=v=>{if(!done){done=true;resolve(v);}};im.onload=()=>finish(true);im.onerror=()=>finish(false);im.src=url;window.setTimeout(()=>finish(false),8000);});
   async function saveBatch(e){e.preventDefault();setBusy(true);setError("");let saved=0,skipped=0;try{const lines=urls.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)throw new Error(tx("Masukkan minimal satu URL.","Enter at least one URL."));const normalized=lines.map(driveUrl);skipped+=normalized.filter(x=>!x).length;const unique=[...new Set(normalized.filter(Boolean))];const existing=new Set(items.map(x=>x.image_url));let order=items.length;for(const url of unique){if(existing.has(url)||!(await testImage(url))){skipped++;continue;}const {error:e}=await supabaseAdminClient.from("df_gallery_items").insert({invitation_id:activeInvitationId,title:`Wedding Photo ${String(order+1).padStart(3,"0")}`,description:description.trim(),album:album.trim()||"Wedding",image_url:url,storage_path:null,is_published:true,sort_order:order});if(e)throw e;existing.add(url);order++;saved++;}await load();setUrls("");notify(id ? `${saved} foto dipublikasikan.${skipped? ` ${skipped} URL dilewati.`:""}` : `${saved} photos published.${skipped? ` ${skipped} URLs skipped.`:""}`);}catch(e){setError(e.message||"Gagal menyimpan foto.");await load();}finally{setBusy(false);}}
   async function toggle(item){setBusy(true);try{const {error:e}=await supabaseAdminClient.from("df_gallery_items").update({is_published:!item.is_published}).eq("id",item.id);if(e)throw e;await load();notify(item.is_published?tx("Foto disembunyikan.","Photo hidden."):tx("Foto dipublikasikan.","Photo published."));}catch(e){setError(e.message);}finally{setBusy(false);}}
   async function remove(item){if(!window.confirm(tx("Hapus foto ini?","Delete this photo?")))return;setBusy(true);try{const {error:e}=await supabaseAdminClient.from("df_gallery_items").delete().eq("id",item.id);if(e)throw e;if(item.storage_path)await supabaseAdminClient.storage.from("df-wedding-gallery").remove([item.storage_path]);await load();notify(tx("Foto berhasil dihapus.","Photo deleted successfully."));}catch(e){setError(e.message);}finally{setBusy(false);}}
-  if(checking)return <main className="min-h-screen bg-[var(--df-bg)] text-[var(--df-text-secondary)] grid place-items-center admin-small">{tx("MEMVERIFIKASI ADMIN...","VERIFYING ADMIN...")}</main>;
+
   return <main className="min-h-screen bg-[var(--df-bg)] px-4 py-5 text-[var(--df-text)] sm:px-6"><div className="mx-auto max-w-5xl">
     <Link href={`/${language}/admin`} className="inline-flex rounded-lg border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-2 text-xs font-bold text-[var(--df-primary)]">← {tx("KEMBALI KE DASHBOARD","BACK TO DASHBOARD")}</Link>
     <header className="my-7"><p className="text-[10px] font-extrabold tracking-[.22em] text-[var(--df-primary)]">DAJJAL FAMILY · WEDDING MANAGEMENT</p><h1 className="mt-2 text-3xl font-black">{tx("PENGELOLA WEDDING","WEDDING MANAGER")}</h1><p className="mt-2 text-sm text-[var(--df-text-secondary)]">{invite?.title || "The Royal Wedding — Anak Dajjal & Malika"}</p><p className="text-xs text-[var(--df-accent)]">{tx("URL","URL")}: /df/wedding={invite?.slug || SLUG}</p></header>
