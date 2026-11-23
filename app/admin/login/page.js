@@ -123,7 +123,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-[80vh] bg-[#080711] text-[var(--df-text)] px-5 py-12 flex items-center justify-center">
+    <main className="min-h-[80vh] bg-[var(--df-bg)] text-[var(--df-text)] px-5 py-12 flex items-center justify-center">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center ui-card">
@@ -135,7 +135,7 @@ export default function AdminLoginPage() {
           </p>
 
           <h1 className="text-3xl font-black mt-3 ui-title">
-            ADMIN <span className="text-purple-400">PORTAL</span>
+            ADMIN <span className="text-[var(--df-primary)]">PORTAL</span>
           </h1>
 
           <p className="text-[var(--df-text-muted)] text-sm mt-3">
@@ -156,7 +156,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-sm text-gray-300 mb-2">
+              <label className="block text-sm text-[var(--df-text-secondary)] mb-2">
                 Email
               </label>
 
@@ -167,12 +167,12 @@ export default function AdminLoginPage() {
                 placeholder="admin@example.com"
                 autoComplete="username"
                 required
-                className="w-full rounded-xl border border-purple-500/20 bg-[var(--df-surface-raised)] px-4 py-3 text-white outline-none focus:border-[var(--df-focus)]"
+                className="w-full rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-4 py-3 text-[var(--df-text)] outline-none focus:border-[var(--df-focus)]"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">
+              <label className="block text-sm text-[var(--df-text-secondary)] mb-2">
                 {isID ? "Kata Sandi" : "Password"}
               </label>
 
@@ -183,12 +183,12 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
                 autoComplete="current-password"
                 required
-                className="w-full rounded-xl border border-purple-500/20 bg-black/30 px-4 py-3 text-white outline-none focus:border-purple-500"
+                className="w-full rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-4 py-3 text-[var(--df-text)] outline-none focus:border-[var(--df-focus)]"
               />
             </div>
 
             {error && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 ui-card">
+              <div className="rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-danger)] ui-card">
                 {error}
               </div>
             )}
@@ -196,7 +196,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[var(--df-primary)] hover:opacity-90 disabled:opacity-50 py-3.5 font-bold tracking-wider transition"
+              className="w-full rounded-xl bg-[var(--df-primary)] hover:opacity-90 disabled:opacity-50 py-3.5 font-bold tracking-wider text-[var(--df-on-primary)] transition"
             >
               {loading
                 ? isID
@@ -208,7 +208,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-[11px] text-gray-600 mt-6">
+          <p className="text-center text-[11px] text-[var(--df-text-muted)] mt-6">
             {isID
               ? "Akses khusus administrator yang terdaftar."
               : "Restricted access for registered administrators."}
