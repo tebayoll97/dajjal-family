@@ -62,36 +62,36 @@
 #df-admin-shell .df-admin-main > main > .relative > header{display:none}
 #df-admin-shell .df-admin-main>main .ui-gradient-frame{border-color:var(--df-border)}
 #df-admin-shell .df-admin-main>main .bg-purple-600{background:var(--df-primary)}
-#df-admin-shell .df-admin-main>main .hover\\:bg-purple-500:hover{background:var(--df-primary-hover)}
+#df-admin-shell .df-admin-main>main .hover\:bg-purple-500:hover{background:var(--df-primary-hover)}
 #df-admin-shell .df-admin-main>main .text-red-300{color:var(--df-danger)}
 #df-admin-shell .df-admin-main>main .text-purple-200{color:var(--df-primary)}
 #df-admin-shell .df-admin-main>main .text-red-200{color:var(--df-danger)}
-#df-admin-shell .df-admin-main>main .border-red-400\\/20{border-color:color-mix(in srgb,var(--df-danger) 30%,transparent)}
-#df-admin-shell .df-admin-main>main .bg-red-500\\/10{background:color-mix(in srgb,var(--df-danger) 10%,var(--df-surface))}
+#df-admin-shell .df-admin-main>main .border-red-400\/20{border-color:color-mix(in srgb,var(--df-danger) 30%,transparent)}
+#df-admin-shell .df-admin-main>main .bg-red-500\/10{background:color-mix(in srgb,var(--df-danger) 10%,var(--df-surface))}
 #df-admin-shell .df-admin-main>main .bg-red-600{background:var(--df-danger)}
-#df-admin-shell .df-admin-main>main .hover\\:bg-red-500:hover{filter:brightness(1.08)}
+#df-admin-shell .df-admin-main>main .hover\:bg-red-500:hover{filter:brightness(1.08)}
 #df-admin-shell .df-admin-main>main .text-red-300{color:var(--df-danger)}
 #df-admin-shell .df-admin-main>main .text-white{color:var(--df-text)}
-#df-admin-shell .df-admin-main>main .bg-white\\/5{background:var(--df-surface-raised)}
-#df-admin-shell .df-admin-main>main .border-white\\/5{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .bg-white\/5{background:var(--df-surface-raised)}
+#df-admin-shell .df-admin-main>main .border-white\/5{border-color:var(--df-border)}
 #df-admin-shell .df-admin-main>main .text-gray-500{color:var(--df-text-muted)}
 #df-admin-shell .df-admin-main>main .text-gray-400{color:var(--df-text-secondary)}
 #df-admin-shell .df-admin-main>main .text-gray-600{color:var(--df-text-muted)}
 #df-admin-shell .df-admin-main>main .text-purple-300{color:var(--df-primary)}
 #df-admin-shell .df-admin-main>main .text-cyan-300{color:var(--df-accent)}
-#df-admin-shell .df-admin-main>main .border-purple-500\\/20{border-color:var(--df-border)}
-#df-admin-shell .df-admin-main>main .border-purple-400\\/25{border-color:var(--df-border-strong)}
-#df-admin-shell .df-admin-main>main .bg-purple-500\\/10{background:var(--df-primary-soft)}
-#df-admin-shell .df-admin-main>main .bg-purple-500\\/15{background:var(--df-primary-soft)}
-#df-admin-shell .df-admin-main>main .bg-purple-600\\/10{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .border-purple-500\/20{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .border-purple-400\/25{border-color:var(--df-border-strong)}
+#df-admin-shell .df-admin-main>main .bg-purple-500\/10{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .bg-purple-500\/15{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .bg-purple-600\/10{background:var(--df-primary-soft)}
 #df-admin-shell .df-admin-main>main .bg-pink-600{background:var(--df-primary)}
 #df-admin-shell .df-admin-main>main .text-pink-300{color:var(--df-primary)}
-#df-admin-shell .df-admin-main>main .border-pink-300\\/20{border-color:var(--df-border)}
-#df-admin-shell .df-admin-main>main .bg-emerald-400\\/10{background:color-mix(in srgb,var(--df-success) 10%,var(--df-surface))}
+#df-admin-shell .df-admin-main>main .border-pink-300\/20{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .bg-emerald-400\/10{background:color-mix(in srgb,var(--df-success) 10%,var(--df-surface))}
 #df-admin-shell .df-admin-main>main .text-emerald-300{color:var(--df-success)}
-#df-admin-shell .df-admin-main>main .bg-black\\/75{background:color-mix(in srgb,var(--df-bg) 88%,transparent)}
-#df-admin-shell .df-admin-main>main .bg-black\\/20{background:var(--df-surface-raised)}
-#df-admin-shell .df-admin-main>main .border-white\\/15{border-color:var(--df-border-strong)}
+#df-admin-shell .df-admin-main>main .bg-black\/75{background:color-mix(in srgb,var(--df-bg) 88%,transparent)}
+#df-admin-shell .df-admin-main>main .bg-black\/20{background:var(--df-surface-raised)}
+#df-admin-shell .df-admin-main>main .border-white\/15{border-color:var(--df-border-strong)}
 #df-admin-shell .df-admin-main>main .text-gray-300{color:var(--df-text-secondary)}
 
 #df-admin-shell .df-admin-current-route{margin:0;color:var(--df-text);font-size:var(--df-type-admin-small-size);font-weight:750}
