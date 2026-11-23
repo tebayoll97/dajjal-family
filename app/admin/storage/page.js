@@ -189,9 +189,9 @@ export default function AdminStoragePage() {
   if (checking) return <main className="min-h-screen grid place-items-center bg-[var(--df-bg)] text-[var(--df-text-secondary)]">{t.checking}</main>;
 
   return (
-    <main className="min-h-screen bg-[#080711] px-4 py-7 text-[var(--df-text)] sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-[var(--df-bg)] px-4 py-7 text-[var(--df-text)] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-4xl">
-        <Link href={`/${language}/admin`} className="inline-flex min-h-11 items-center rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-2 text-xs font-bold text-purple-200">← {t.back}</Link>
+        <Link href={`/${language}/admin`} className="inline-flex min-h-11 items-center rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-2 text-xs font-bold text-[var(--df-primary)]">← {t.back}</Link>
         <header className="my-7">
           <p className="text-[10px] font-extrabold tracking-[.22em] text-[var(--df-primary)]">DAJJAL FAMILY · ADMIN CONTROL</p>
           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -201,12 +201,12 @@ export default function AdminStoragePage() {
             </div>
             <div className="flex gap-2">
               <button type="button" onClick={() => setLanguage(language === "id" ? "en" : "id")} className="min-h-10 rounded-lg border border-[var(--df-border)] px-3 text-xs font-bold">{language.toUpperCase()}</button>
-              <button type="button" onClick={refreshStatus} disabled={busy || !token} className="min-h-10 rounded-lg border border-white/10 px-3 text-xs font-bold disabled:opacity-50">{t.refresh}</button>
+              <button type="button" onClick={refreshStatus} disabled={busy || !token} className="min-h-10 rounded-lg border border-[var(--df-border)] px-3 text-xs font-bold disabled:opacity-50">{t.refresh}</button>
             </div>
           </div>
         </header>
 
-        {notice && <p role="status" aria-live="polite" className="mb-5 rounded-xl border border-cyan-400/20 bg-cyan-500/10 p-4 text-sm text-cyan-100">{notice}</p>}
+        {notice && <p role="status" aria-live="polite" className="mb-5 rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] p-4 text-sm text-[var(--df-text)]">{notice}</p>}
 
         <section className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 sm:p-7">
           <div className="flex flex-wrap items-center gap-3">
@@ -215,17 +215,17 @@ export default function AdminStoragePage() {
           </div>
           {status?.connected ? (
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-[var(--df-surface-raised)] p-4">
+              <div className="rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] p-4">
                 <p className="text-[10px] font-bold tracking-widest text-[var(--df-text-muted)]">{t.account}</p>
                 <p className="mt-2 break-all text-sm font-semibold">{status.accountEmail}</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-[10px] font-bold tracking-widest text-gray-500">{t.folder}</p>
+              <div className="rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] p-4">
+                <p className="text-[10px] font-bold tracking-widest text-[var(--df-text-muted)]">{t.folder}</p>
                 <p className="mt-2 text-sm font-semibold">{status.rootFolderReady ? t.folderReady : "—"}</p>
               </div>
             </div>
           ) : (
-            <p className="mt-3 text-sm leading-relaxed text-gray-400">{t.connectNote}</p>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--df-text-secondary)]">{t.connectNote}</p>
           )}
           <button type="button" onClick={connectDrive} disabled={busy || !token} className="mt-6 min-h-12 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-sm font-extrabold text-white hover:opacity-90 disabled:opacity-50">
             {busy ? t.connecting : status?.connected ? t.reconnect : t.connect}
@@ -233,15 +233,15 @@ export default function AdminStoragePage() {
         </section>
 
         {status?.connected && (
-          <section className="mt-5 rounded-2xl border border-white/10 bg-[#151020] p-5 sm:p-7">
+          <section className="mt-5 rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 sm:p-7">
             <h2 className="text-lg font-extrabold">{t.uploadTitle}</h2>
-            <p className="mt-2 text-sm text-gray-400">{t.uploadNote}</p>
+            <p className="mt-2 text-sm text-[var(--df-text-secondary)]">{t.uploadNote}</p>
             <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,audio/mpeg,audio/mp4,audio/aac,audio/ogg,audio/wav" onChange={(event) => setFile(event.target.files?.[0] || null)} className="mt-5 block w-full text-sm text-[var(--df-text-secondary)] file:mr-3 file:min-h-11 file:rounded-lg file:border-0 file:bg-[var(--df-primary)] file:px-4 file:font-bold file:text-white" />
-            {file && <p className="mt-2 break-all text-xs text-gray-400">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</p>}
+            {file && <p className="mt-2 break-all text-xs text-[var(--df-text-secondary)]">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</p>}
             <button type="button" onClick={uploadFile} disabled={busy || !file} className="mt-4 min-h-11 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-xs font-extrabold text-white hover:opacity-90 disabled:opacity-50">{busy ? t.uploading : t.upload}</button>
           </section>
         )}
-        <footer className="mt-10 border-t border-white/10 pt-5 text-center text-[10px] font-bold tracking-[.18em] text-gray-600">DAJJAL FAMILY · CENTRAL STORAGE</footer>
+        <footer className="mt-10 border-t border-[var(--df-border)] pt-5 text-center text-[10px] font-bold tracking-[.18em] text-[var(--df-text-muted)]">DAJJAL FAMILY · CENTRAL STORAGE</footer>
       </div>
     </main>
   );
