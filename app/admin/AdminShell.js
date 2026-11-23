@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { useTheme } from "@/app/components/ThemeProvider";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { stripLocalePrefix } from "@/lib/localePath";
-import { Badge, Button, PageHeader } from "@/app/components/ui";
+import { Badge, Button, ConfirmDialog, PageHeader } from "@/app/components/ui";
 import "./admin.css";
 
 const groups = [
@@ -60,6 +61,8 @@ export default function AdminShell({ children }) {
   const path = stripLocalePrefix(pathname);
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
+  const { theme, toggleTheme, ready: themeReady } = useTheme();
+  const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   const isLogin = path === "/admin/login";
@@ -77,6 +80,7 @@ export default function AdminShell({ children }) {
     try {
       const { error } = await supabaseAdminClient.auth.signOut();
       if (error) throw error;
+      setSignOutConfirmOpen(false);
       router.replace(localized("/admin/login"));
     } catch (error) {
       setLogoutError(error?.message || (language === "id" ? "Gagal keluar dari sesi admin." : "Unable to sign out."));
@@ -127,7 +131,8 @@ export default function AdminShell({ children }) {
           <div className="df-admin-topbar-actions">
             <Badge variant="success"><span className="df-admin-status-dot" />{language === "id" ? "AMAN" : "SECURE"}</Badge>
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
-            <Button variant="danger" size="sm" loading={signingOut} onClick={signOut}>{language === "id" ? "Keluar" : "Sign out"}</Button>
+            <Button variant="secondary" size="sm" onClick={toggleTheme} disabled={!themeReady} aria-label={language === "id" ? `Ubah ke tema ${theme === "dark" ? "terang" : "gelap"}` : `Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={language === "id" ? "Ubah tema tampilan" : "Change appearance theme"}>{theme === "dark" ? "☀ Light" : "☾ Dark"}</Button>
+            <Button variant="danger" size="sm" loading={signingOut} onClick={() => setSignOutConfirmOpen(true)}>{language === "id" ? "Keluar" : "Sign out"}</Button>
           </div>
         </div>
 
@@ -139,6 +144,16 @@ export default function AdminShell({ children }) {
         </nav>
 
         {logoutError && <p className="df-admin-global-error" role="alert">{logoutError}</p>}
+        <ConfirmDialog
+          open={signOutConfirmOpen}
+          onClose={() => { if (!signingOut) setSignOutConfirmOpen(false); }}
+          onConfirm={signOut}
+          title={language === "id" ? "Konfirmasi Keluar" : "Confirm Sign Out"}
+          description={language === "id" ? "Apakah kamu yakin ingin keluar dari Admin Dashboard?" : "Are you sure you want to sign out of the Admin Dashboard?"}
+          confirmLabel={language === "id" ? "Ya, Keluar" : "Yes, Sign Out"}
+          cancelLabel={language === "id" ? "Tidak" : "Cancel"}
+          loading={signingOut}
+        />
         <div id="df-admin-main" className="df-admin-main">{children}</div>
         <footer className="df-admin-footer"><span>DAJJAL FAMILY ADMIN</span><span>{language === "id" ? "Pusat kendali ekosistem" : "Ecosystem control center"}</span></footer>
       </div>
