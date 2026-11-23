@@ -198,6 +198,8 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
         awaitingInteractionRef.current = false;
         setPlaying(true);
         setMessage("");
+        // Release the play-request guard before the cosmetic fade-in so Pause remains immediately responsive.
+        playInFlightRef.current = false;
         await fadeVolume(getTargetVolume(), 900);
         return true;
       }).catch(() => {
