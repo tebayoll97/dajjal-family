@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const copy = {
@@ -87,8 +87,7 @@ export default function AdminDashboardPage() {
   const { language } = useLanguage();
   const t = copy[language] || copy.en;
 
-  const [admin, setAdmin] = useState(null);
-  const [checking, setChecking] = useState(true);
+  const { admin } = useAdminAuth();
   const [loggingOut, setLoggingOut] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [error, setError] = useState("");
