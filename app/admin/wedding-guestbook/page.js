@@ -210,7 +210,7 @@ export default function AdminWeddingGuestbookPage() {
 
         <header className="my-7">
           <p className="text-[10px] font-extrabold tracking-[.22em] text-[var(--df-primary)]">DAJJAL FAMILY · WEDDING MANAGEMENT</p>
-          <h1 className="mt-2 text-2xl font-black sm:text-3xl">GUESTBOOK <span className="text-pink-300">MANAGEMENT</span></h1>
+          <h1 className="mt-2 text-2xl font-black sm:text-3xl">{tx("MANAJEMEN GUESTBOOK","GUESTBOOK MANAGEMENT")}</h1>
           <p className="mt-2 text-sm text-[var(--df-text-secondary)]">{tx("Kelola dan hapus ucapan pada undangan Anak Dajjal &amp; Malika.","Review and manage messages on the Anak Dajjal &amp; Malika invitation.")}</p>
         </header>
 
@@ -248,7 +248,7 @@ export default function AdminWeddingGuestbookPage() {
                     EDIT
                   </button>
                   <button type="button" onClick={() => setConfirmEntry(entry)} disabled={Boolean(deletingId)} className="min-h-11 min-w-24 rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] px-4 py-2 text-xs font-extrabold text-[var(--df-danger)] hover:opacity-90 disabled:opacity-50">
-                    HAPUS
+                    {tx("HAPUS","DELETE")}
                   </button>
                 </div>
               </div>
