@@ -4,16 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 export default function AdminWeddingEventPage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { session } = useAdminAuth();
   const id = language === "id";
   const tx = useCallback((indonesian, english) => id ? indonesian : english, [id]);
-  const [token, setToken] = useState("");
-  const [checking, setChecking] = useState(true);
+  const token = session?.access_token || "";
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [eventDate, setEventDate] = useState("");
@@ -96,7 +96,7 @@ export default function AdminWeddingEventPage() {
     }
   }
 
-  if (checking) return <main className="min-h-screen grid place-items-center bg-[var(--df-bg)] text-[var(--df-text-secondary)] admin-small">{tx("MEMVERIFIKASI ADMIN...", "VERIFYING ADMIN...")}</main>;
+
 
   return (
     <main className="min-h-screen bg-[var(--df-bg)] px-4 py-5 text-[var(--df-text)] sm:px-6 sm:py-7">
