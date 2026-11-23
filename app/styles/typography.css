@@ -49,3 +49,8 @@
 /* Compact administrative typography utility. */
 .admin-small{font-family:var(--df-font-sans);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
 .admin-meta{font-family:var(--df-font-sans);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-medium);line-height:1.4}
+
+
+/* Responsive semantic type roles: compact mobile, spacious wide displays. */
+.ui-text-mobile-small{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+.ui-text-display-wide{font-size:var(--df-type-display-wide);line-height:var(--df-leading-tight);letter-spacing:-.045em}
