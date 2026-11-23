@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const translations = {
@@ -279,12 +280,7 @@ export default function AdminPlayersPage() {
           return;
         }
 
-        const response = await fetch("/api/admin/me", {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          cache: "no-store",
-        });
+        const response = await verifyAdminSession(session);
 
         const result = await response.json();
 
