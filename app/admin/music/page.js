@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./music.css";
 
@@ -63,7 +64,7 @@ export default function AdminMusicCatalogPage() {
         if (error) throw error;
         if (!data?.session) { router.replace("/admin/login"); return; }
         const session = data.session;
-        const verify = await fetch("/api/admin/me", { headers: { Authorization: `Bearer ${session.access_token}` }, cache: "no-store" });
+        const verify = await verifyAdminSession(session);
         if (!verify.ok) { router.replace("/admin/login"); return; }
         if (active) setToken(session.access_token);
       } catch {
