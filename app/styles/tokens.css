@@ -158,3 +158,18 @@
 }
 
 /* Existing legacy token names remain available during gradual migration. */
+
+
+/* Verification state semantic roles — mapped to the active global preset. */
+:root {
+  --df-verification-surface: var(--df-surface);
+  --df-verification-raised: var(--df-surface-raised);
+  --df-verification-border: var(--df-border-strong);
+  --df-verification-accent: var(--df-primary);
+  --df-verification-progress: var(--df-primary);
+  --df-verification-success: var(--df-success);
+  --df-verification-error: var(--df-danger);
+  --df-verification-motion: var(--df-duration-normal);
+  --df-type-display-wide: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);
+  --df-type-mobile-small: var(--df-type-admin-small-size);
+}
