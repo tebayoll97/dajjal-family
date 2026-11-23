@@ -1,6 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  async headers() {
+    const privateNoStore = [
+      { key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" },
+      { key: "Pragma", value: "no-cache" },
+    ];
+
+    return [
+      {
+        source: "/api/admin/:path*",
+        headers: privateNoStore,
+      },
+      {
+        source: "/api/storage/google/:path*",
+        headers: privateNoStore,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
