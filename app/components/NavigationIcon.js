@@ -8,7 +8,8 @@ export default function NavigationIcon({ name, className = "" }) {
  blog:<><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5M8 12h8M8 16h8"/></>,
  products:<><path d="M4 8h16l-1.5 12h-13z"/><path d="M9 8a3 3 0 0 1 6 0"/><path d="M9 12v2M15 12v2"/></>,
  universe:<><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></>,
- message:<><path d="M20.5 11.5a8 8 0 0 1-8 8H6l-3 2v-7.5a8 8 0 1 1 17.5-2.5Z"/><path d="M8 10.5h8M8 14h5"/></>
+ message:<><path d="M20.5 11.5a8 8 0 0 1-8 8H6l-3 2v-7.5a8 8 0 1 1 17.5-2.5Z"/><path d="M8 10.5h8M8 14h5"/></>,
+ media:<><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5z"/><path d="m10 9 5 3-5 3z"/><path d="M8 2.8h8M8 21.2h8"/></>
  };
  return <svg {...common}>{paths[name]||paths.blog}</svg>;
 }
