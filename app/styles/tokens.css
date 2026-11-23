@@ -169,7 +169,8 @@
   --df-verification-progress: var(--df-primary);
   --df-verification-success: var(--df-success);
   --df-verification-error: var(--df-danger);
-  --df-verification-motion: var(--df-duration-normal);
+  --df-verification-motion: var(--df-motion-standard);
+  --df-verification-duration: 1.4s;
   --df-type-display-wide: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);
   --df-type-mobile-small: var(--df-type-admin-small-size);
 }
