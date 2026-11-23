@@ -75,7 +75,7 @@ const messages = {
 
 export default function AdminStoragePage() {
   const router = useRouter();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const t = messages[language] || messages.id;
   const [checking, setChecking] = useState(true);
   const [token, setToken] = useState("");
@@ -98,7 +98,7 @@ export default function AdminStoragePage() {
     const params = new URLSearchParams(window.location.search);
     const result = params.get("google_drive");
     if (result) {
-      const text = messages.id[result] || messages.en[result] || messages.id.error;
+      const text = messages[language]?.[result] || messages.id[result] || messages.en[result] || messages.id.error;
       setNotice(text);
       window.history.replaceState({}, "", window.location.pathname);
     }
