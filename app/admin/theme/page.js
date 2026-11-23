@@ -3,12 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { getThemeTokens } from "@/app/theme/themeTokens";
 import { THEME_REGISTRY } from "@/app/theme/themeRegistry";
-import { Alert, Badge, Button, Card, ConfirmDialog, PageHeader, VerificationState } from "@/app/components/ui";
+import { Alert, Badge, Button, Card, ConfirmDialog, PageHeader } from "@/app/components/ui";
 
 const copy = {
   en: {
@@ -56,14 +55,13 @@ const GLOBAL_PRESETS = ["tecno", "dajjal-veylora"];
 export default function AdminThemePage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { status: authStatus, admin, session } = useAdminAuth();
   const t = copy[language] || copy.en;
-  const [checking, setChecking] = useState(true);
-  const [admin, setAdmin] = useState(null);
   const [error, setError] = useState("");
   const [mode, setMode] = useState("dark");
   const [draftPreset, setDraftPreset] = useState("tecno");
   const [activePreset, setActivePreset] = useState("tecno");
-  const [accessToken, setAccessToken] = useState("");
+  const accessToken = session?.access_token || "";
   const [publishing, setPublishing] = useState(false);
   const [publishStatus, setPublishStatus] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -148,14 +146,13 @@ export default function AdminThemePage() {
     "--df-accent": tokens["--df-accent"],
   };
 
-  if (checking) return <div className="df-theme-manager__verification"><VerificationState variant="admin" /></div>;
-  if (!admin) return <main className="df-theme-manager"><Card className="df-theme-manager__denied"><Badge variant="danger">{t.denied}</Badge><h1 className="ui-heading-h2">{t.denied}</h1><Alert variant="danger">{error || t.error}</Alert><Button onClick={() => router.replace("/admin/login")}>ADMIN LOGIN</Button></Card></main>;
 
   return (
     <main className="df-theme-manager">
       <div className="df-theme-manager__inner">
         <Link href="/admin" className="ui-link ui-link-subtle">{t.back}</Link>
         <PageHeader eyebrow="DAJJAL FAMILY · ADMIN CONTROL" title={t.title} description={t.subtitle} />
+        {error && <Alert variant="danger" title={t.error}>{error}</Alert>}
         <div className="df-theme-manager__layout">
           <Card className="df-theme-manager__preview">
             <div className="df-theme-manager__section-head"><div><Badge variant="info">{t.previewBadge}</Badge><h2 className="ui-heading-h3">{t.preview}</h2><p className="ui-section-description">{t.previewNote}</p></div></div>
