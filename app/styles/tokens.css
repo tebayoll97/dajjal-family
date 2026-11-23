@@ -66,6 +66,13 @@
   --df-type-caption-size: var(--df-text-xs);
   --df-type-caption-leading: 1.45;
 
+  /* Compact administrative typography roles. */
+  --df-type-admin-body-size: .875rem;
+  --df-type-admin-small-size: .75rem;
+  --df-type-admin-meta-size: .6875rem;
+  --df-type-admin-heading-size: clamp(1.25rem, 1.05rem + .65vw, 1.75rem);
+  --df-admin-small: var(--df-type-admin-small-size);
+
   /* Shared form-control typography roles. */
   --df-type-control-size: var(--df-text-base);
   --df-type-control-leading: var(--df-leading-normal);
