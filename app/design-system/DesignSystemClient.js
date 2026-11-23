@@ -113,7 +113,7 @@ export default function DesignSystemClient() {
           <Card className="ui-stack" style={{ padding: "var(--df-space-5)" }}>
             <h1 className="ui-heading-h1">Page heading H1</h1><h2 className="ui-heading-h2">Section heading H2</h2><h3 className="ui-heading-h3">Subsection heading H3</h3><h4 className="ui-heading-h4">Component heading H4</h4>
             <p className="ui-prose">Body copy is designed for sustained reading. The reading measure is intentionally limited so long paragraphs remain comfortable on desktop and mobile screens.</p>
-            <p className="ui-caption">Caption · supporting metadata · 14px</p><p className="ui-gradient-text" style={{ fontWeight: 800 }}>One Family. Many Possibilities.</p>
+            <p className="ui-caption">Caption · supporting metadata · 14px</p><p className="admin-small">Admin small · compact interface text · 12px</p><p className="admin-meta">Admin metadata · 11px</p><p className="ui-gradient-text" style={{ fontWeight: 800 }}>One Family. Many Possibilities.</p>
           </Card>
         </Section>
 
