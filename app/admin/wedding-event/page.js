@@ -21,29 +21,7 @@ export default function AdminWeddingEventPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        const session = data?.session;
-        if (!session) { router.replace("/admin/login"); return; }
-        const response = await verifyAdminSession(session);
-        if (!response.ok) {
-          await supabaseAdminClient.auth.signOut();
-          router.replace("/admin/login");
-          return;
-        }
-        if (active) setToken(session.access_token);
-      } catch (err) {
-        if (active) setError(err.message || tx("Tidak dapat memverifikasi admin.", "Unable to verify administrator access."));
-      } finally {
-        if (active) setChecking(false);
-      }
-    })();
-    return () => { active = false; };
-  }, [router, tx]);
+
 
   useEffect(() => {
     if (!token) return;
