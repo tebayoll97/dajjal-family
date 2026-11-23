@@ -96,3 +96,24 @@
 
 #df-admin-shell .df-admin-current-route{margin:0;color:var(--df-text);font-size:var(--df-type-admin-small-size);font-weight:750}
 #df-admin-shell .df-admin-main > main > .relative > header{display:none}
+
+/* Legacy utility compatibility: all administrative status and surface classes resolve through semantic tokens. */
+#df-admin-shell .df-admin-main [class*="bg-purple-600"]{background:var(--df-primary)!important}
+#df-admin-shell .df-admin-main [class*="bg-purple-500/"],#df-admin-shell .df-admin-main [class*="bg-purple-400/"]{background:var(--df-primary-soft)!important}
+#df-admin-shell .df-admin-main [class*="border-purple-"],#df-admin-shell .df-admin-main [class*="border-white/"],#df-admin-shell .df-admin-main [class*="border-black/"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-purple-"]{color:var(--df-primary)!important}
+#df-admin-shell .df-admin-main [class*="bg-amber-"],#df-admin-shell .df-admin-main [class*="bg-yellow-"],#df-admin-shell .df-admin-main [class*="bg-green-"],#df-admin-shell .df-admin-main [class*="bg-emerald-"],#df-admin-shell .df-admin-main [class*="bg-cyan-"],#df-admin-shell .df-admin-main [class*="bg-blue-"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="text-amber-"],#df-admin-shell .df-admin-main [class*="text-yellow-"]{color:var(--df-warning)!important}
+#df-admin-shell .df-admin-main [class*="text-green-"],#df-admin-shell .df-admin-main [class*="text-emerald-"]{color:var(--df-success)!important}
+#df-admin-shell .df-admin-main [class*="text-cyan-"],#df-admin-shell .df-admin-main [class*="text-blue-"]{color:var(--df-accent)!important}
+#df-admin-shell .df-admin-main [class*="border-amber-"],#df-admin-shell .df-admin-main [class*="border-yellow-"],#df-admin-shell .df-admin-main [class*="border-green-"],#df-admin-shell .df-admin-main [class*="border-emerald-"],#df-admin-shell .df-admin-main [class*="border-cyan-"],#df-admin-shell .df-admin-main [class*="border-blue-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="bg-red-500/"],#df-admin-shell .df-admin-main [class*="bg-red-400/"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="bg-red-600"]{background:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="text-red-"]{color:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="border-red-"]{border-color:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="bg-black/20"],#df-admin-shell .df-admin-main [class*="bg-black/25"],#df-admin-shell .df-admin-main [class*="bg-black/30"],#df-admin-shell .df-admin-main [class*="bg-white/5"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="bg-black/75"]{background:color-mix(in srgb,var(--df-bg) 88%,transparent)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-300"],#df-admin-shell .df-admin-main [class*="text-gray-400"]{color:var(--df-text-secondary)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-500"],#df-admin-shell .df-admin-main [class*="text-gray-600"]{color:var(--df-text-muted)!important}
+#df-admin-shell .df-admin-main .text-xs,#df-admin-shell .df-admin-main .admin-small{font-size:var(--df-type-admin-small-size)}
+#df-admin-shell .df-admin-main small{font-size:var(--df-type-admin-meta-size)}
