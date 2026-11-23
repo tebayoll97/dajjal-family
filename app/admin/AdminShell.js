@@ -118,7 +118,7 @@ export default function AdminShell({ children }) {
           ))}
         </nav>
         <div className="df-admin-sidebar-foot">
-          <Badge variant="success">{language === "id" ? "Sesi admin aktif" : "Admin session active"}</Badge>
+          <Badge>{language === "id" ? "Area admin terproteksi" : "Protected admin workspace"}</Badge>
           <span>DAJJAL FAMILY · 2026</span>
         </div>
       </aside>
@@ -130,7 +130,7 @@ export default function AdminShell({ children }) {
             {path === "/admin" ? <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} /> : <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
-            <Badge variant="success"><span className="df-admin-status-dot" />{language === "id" ? "AMAN" : "SECURE"}</Badge>
+            <Badge variant="info">{language === "id" ? "ADMIN" : "ADMIN AREA"}</Badge>
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
             <Button variant="secondary" size="sm" onClick={toggleTheme} disabled={!themeReady} aria-label={language === "id" ? `Ubah ke tema ${theme === "dark" ? "terang" : "gelap"}` : `Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={language === "id" ? "Ubah tema tampilan" : "Change appearance theme"}>{theme === "dark" ? "☀ Light" : "☾ Dark"}</Button>
             <Button variant="danger" size="sm" loading={signingOut} onClick={() => setSignOutConfirmOpen(true)}>{language === "id" ? "Keluar" : "Sign out"}</Button>
