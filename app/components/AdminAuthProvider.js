@@ -43,6 +43,7 @@ export function AdminAuthProvider({ children }) {
   }, [router]);
 
   const retry = useCallback(async () => {
+    verifyAttempt.current += 1;
     setAuth((current) => ({ ...current, status: "checking", error: "" }));
     const { data, error } = await supabaseAdminClient.auth.getSession();
     if (error) {
