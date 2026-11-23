@@ -156,7 +156,7 @@ export default function AdminDashboardPage() {
 
   if (checking) {
     return (
-      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-purple-200">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-[var(--df-primary)]">
         <div className="relative flex h-16 w-16 items-center justify-center">
           <div className="absolute inset-0 rounded-full border border-purple-500/20" />
           <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-purple-400 border-r-cyan-400 animate-spin" />
@@ -174,7 +174,7 @@ export default function AdminDashboardPage() {
           <div className="text-4xl">🔒</div>
           <h1 className="ui-title mt-4">{t.denied}</h1>
           <p className="text-sm text-red-300 mt-3">{error}</p>
-          <Link href="/admin/login" className="ui-interactive inline-flex mt-6 rounded-xl bg-purple-600 hover:bg-purple-500 px-6 py-3 font-bold text-sm">
+          <Link href="/admin/login" className="ui-interactive inline-flex mt-6 rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary-hover)] px-6 py-3 font-bold text-sm">
             {t.login}
           </Link>
         </div>
@@ -197,8 +197,8 @@ export default function AdminDashboardPage() {
     { href: null, icon: "📊", number: "09", title: t.statistics, description: t.statisticsDesc, available: false },
   ];
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-8 sm:px-6 sm:py-12">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-purple-600/10 blur-[100px]" />
+    <main className="relative min-h-screen overflow-hidden bg-[var(--df-bg)] text-[var(--df-text)] px-4 py-6 sm:px-6 sm:py-8">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-[var(--df-primary-soft)] blur-[100px]" />
       <div className="relative mx-auto max-w-6xl">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -220,12 +220,12 @@ export default function AdminDashboardPage() {
 
         <section className="ui-gradient-frame ui-card mt-8 rounded-2xl p-4 sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-purple-400/25 bg-purple-500/15 text-2xl">♛</div>
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] text-2xl">♛</div>
             <div className="min-w-0 flex-1">
               <p className="ui-eyebrow mb-1">{t.admin}</p>
               <p className="break-all font-semibold text-white">{admin.email}</p>
             </div>
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-[10px] font-extrabold tracking-wider text-emerald-300">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-3 py-2 text-[10px] font-extrabold tracking-wider text-[var(--df-success)]">
               <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
               {t.secure}
             </div>
@@ -250,17 +250,17 @@ export default function AdminDashboardPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] text-2xl">
                       {module.icon}
                     </div>
-                    <span className="font-mono text-xs tracking-widest text-gray-600">{module.number}</span>
+                    <span className="font-mono text-xs tracking-widest text-[var(--df-text-muted)]">{module.number}</span>
                   </div>
                   <div className="relative mt-7">
                     <h3 className="text-lg font-extrabold tracking-tight">{module.title}</h3>
                     <p className="mt-2 min-h-[3.2rem] text-sm leading-relaxed text-[var(--df-text-secondary)]">{module.description}</p>
                   </div>
-                  <div className="relative mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+                  <div className="relative mt-6 flex items-center justify-between border-t border-[var(--df-border)] pt-4">
                     <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-primary)]" : "text-[10px] font-extrabold tracking-[0.16em] text-gray-500"}>
                       {module.available ? t.open : t.coming}
                     </span>
-                    <span className={module.available ? "text-lg text-cyan-300 transition-transform group-hover:translate-x-1" : "text-gray-600"} aria-hidden="true">
+                    <span className={module.available ? "text-lg text-[var(--df-accent)] transition-transform group-hover:translate-x-1" : "text-gray-600"} aria-hidden="true">
                       {module.available ? "→" : "· · ·"}
                     </span>
                   </div>
@@ -282,7 +282,7 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        <footer className="mt-12 border-t border-white/5 pt-5 text-center text-[10px] font-semibold tracking-[0.18em] text-gray-600">
+        <footer className="mt-12 border-t border-[var(--df-border)] pt-5 text-center text-[10px] font-semibold tracking-[0.18em] text-gray-600">
           {t.footer} · 2026
         </footer>
       </div>
@@ -295,13 +295,13 @@ export default function AdminDashboardPage() {
           }}
         >
           <div role="dialog" aria-modal="true" aria-labelledby="admin-logout-title" className="ui-popup ui-gradient-frame ui-card w-full max-w-sm rounded-3xl p-6 sm:p-7">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-red-400/20 bg-red-500/10 text-2xl">↗</div>
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] text-2xl">↗</div>
             <h2 id="admin-logout-title" className="ui-section-title mt-5 text-center">{t.logoutTitle}</h2>
-            <p className="mt-3 text-center text-sm leading-relaxed text-gray-400">{t.logoutMessage}</p>
+            <p className="mt-3 text-center text-sm leading-relaxed text-[var(--df-text-secondary)]">{t.logoutMessage}</p>
             {error && <p role="alert" className="mt-4 text-center text-xs text-red-300">{error}</p>}
             <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <button type="button" onClick={() => setShowLogoutModal(false)} disabled={loggingOut} className="ui-interactive rounded-xl border border-purple-400/25 bg-purple-500/10 px-4 py-3 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">{t.cancel}</button>
-              <button type="button" onClick={handleLogout} disabled={loggingOut} className="ui-interactive rounded-xl bg-red-600 px-4 py-3 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-50">{loggingOut ? t.loggingOut : t.confirm}</button>
+              <button type="button" onClick={() => setShowLogoutModal(false)} disabled={loggingOut} className="ui-interactive rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-3 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">{t.cancel}</button>
+              <button type="button" onClick={handleLogout} disabled={loggingOut} className="ui-interactive rounded-xl bg-[var(--df-danger)] px-4 py-3 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-50">{loggingOut ? t.loggingOut : t.confirm}</button>
             </div>
             {loggingOut && <p className="mt-5 animate-pulse text-center text-[10px] font-bold tracking-widest text-purple-300">{t.loggingOut}</p>}
           </div>
