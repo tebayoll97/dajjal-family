@@ -652,3 +652,11 @@ Canonical specification: Akashic Record dajjal-family/core/global_typography.md.
 - Karaoke API/UI remain bilingual through LanguageProvider. Lyrics requests remain no-store; no database schema, media object, or music catalog records are changed.
 - The reusable KaraokeLyrics export is documented in Component Workbench and Component Catalog. Its live interaction requires a published track ID and active HTMLAudioElement.
 - Build, deployment, and real-device playback QA are separate gates. Verify small Android, larger phone, tablet, desktop, ID/EN, Escape/browser-back, close while playing, track end, replay, long-title marquee, and font slider. Never claim device audio QA without performing it.
+
+
+### 25.1 Source and release checkpoint — 2026-11-24
+
+- Latest music/Karaoke source commit on `main`: `4eaaba6c4874747cbec21605674424520be65551`.
+- Source scope includes the public Music playback request/fade sequencing, Karaoke body portal and close behavior, lyric size/title/progress UI, Couple playback toggle responsiveness, semantic foundation CSS additions, and Design System inventory documentation.
+- Vercel production deployment API returned HTTP 402 `api-deployments-free-per-day` (retry-after 24 hours). The connected environment did not provide a usable local Vercel CLI fallback with a checked-out project source. Do not claim the latest source is deployed or build-verified until Vercel permits a deployment and the exact commit reaches READY.
+- Browser/device playback QA remains pending. Source changes are committed; runtime behavior must still be verified on Android and desktop after release.
