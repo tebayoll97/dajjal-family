@@ -122,7 +122,7 @@ export default function AdminShell({ children }) {
         <div role="banner" className="df-admin-topbar">
           <div className="df-admin-topbar-copy">
             <span className="df-admin-overline">DAJJAL FAMILY / ADMIN</span>
-            <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} />
+            {path === "/admin" ? <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} /> : <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
             <Badge variant="success"><span className="df-admin-status-dot" />{language === "id" ? "AMAN" : "SECURE"}</Badge>
