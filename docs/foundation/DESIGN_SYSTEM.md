@@ -576,3 +576,28 @@ New standard web pages must use the Design System as their source of reusable UI
 - Add tokens; do not remove or rename existing semantic tokens during routine component work.
 - Verify all four global preset/mode combinations, ID/EN, Mobile Compact UI, keyboard/focus, reduced motion and responsive behavior.
 - This contract applies to new standard pages. Existing pages are not part of a blanket migration. Couple, Wedding and immersive Games retain their approved isolation boundaries.
+
+
+# 16. SESSION VERIFICATION EXPERIENCE
+
+The shared `VerificationState` component provides a consistent bilingual presentation for Admin and User session checks.
+
+Required variants and states:
+- Admin: identity and administrator access verification.
+- User: account session verification.
+- Checking, verified, error/denied, and expired states.
+- Full composition for page gates and compact composition for account/navigation affordances.
+
+Semantic token roles:
+- `--df-verification-surface`
+- `--df-verification-raised`
+- `--df-verification-border`
+- `--df-verification-accent`
+- `--df-verification-progress`
+- `--df-verification-success`
+- `--df-verification-error`
+- `--df-verification-motion`
+
+These roles are aliases to the active global semantic theme tokens. They must not create a separate Admin/User palette. The component uses the four global foundation stylesheets and is demonstrated through the live Design System Workbench.
+
+The Admin workspace uses a persistent shared auth provider to avoid repeating the administrator verification request during client-side submenu navigation. This UI optimization never replaces server-side authorization: protected API routes must continue to verify every bearer token and administrator permission independently. User-facing verification remains tied to the existing Supabase Auth session and must not infer access from client profile metadata.
