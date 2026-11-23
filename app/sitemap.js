@@ -15,6 +15,7 @@ const publicRoutes = [
   "/help",
   "/music",
   "/df",
+  "/df/couple",
   "/df/wedding-anak-dajjal",
 ];
 
