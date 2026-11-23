@@ -578,3 +578,28 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - Page-level data fetching, validation, CRUD, confirmations, and authorization remain owned by the existing route modules.
 - The shell uses Global Theme Preset semantic tokens and must be checked in TECNO Light/Dark and Dajjal × Veylora Light/Dark.
 - Mobile Compact UI keeps controls touch-usable, reduces decorative whitespace, supports horizontal navigation scrolling, and respects reduced-motion preferences.
+
+
+## VerificationState — Admin and User Session Experience
+
+- **Export:** `VerificationState` from `app/components/ui`.
+- **Source:** `app/components/ui/VerificationState.js`.
+- **Purpose:** consistent bilingual presentation for account/session verification, with distinct Admin and User context.
+- **API:** `VerificationState({ variant = "user", status = "checking", compact = false, title, description, onRetry, className })`.
+- **Variants:** `admin` and `user`.
+- **States:** `checking`, `verified`, `error`, `denied`, and `expired`.
+- **Semantic tokens:** `--df-verification-surface`, `--df-verification-raised`, `--df-verification-border`, `--df-verification-accent`, `--df-verification-progress`, `--df-verification-success`, `--df-verification-error`, and `--df-verification-motion`.
+- **Foundation integration:** token aliases in `tokens.css`; type roles in `typography.css`; composition in `layout.css`; visual and state behavior in `components.css`.
+- **Accessibility:** localized Indonesian/English labels, live status/alert announcement, `aria-busy`, visible text in addition to status color, reduced-motion support, and keyboard-operable retry action.
+- **Responsive contract:** full verification card on larger screens; compact inline form for account/navigation contexts. Touch retry target uses the shared minimum touch token.
+- **Theme contract:** semantic aliases resolve through the active Global Theme Preset; no verification-specific palette is hardcoded.
+- **Limits:** this component is presentation only. It does not authenticate users, validate tokens, or authorize requests.
+
+## AdminAuthProvider — shared admin workspace session
+
+- **Source:** `app/components/AdminAuthProvider.js`; mounted by `app/admin/AdminShell.js`.
+- **Purpose:** verify administrator access once when entering the persistent admin workspace and expose the verified session/admin profile to child pages.
+- **API:** `useAdminAuth()` returns `status`, `session`, `admin`, `error`, and `retry`.
+- **Behavior:** handles initial session resolution, sign-in, token refresh, user update, sign-out, retry, and stale verification response protection.
+- **Security boundary:** UI context is not an authorization authority. Every privileged API endpoint continues to validate its own bearer token and admin permissions server-side. Do not remove `verifyAdmin`, RLS, or route-level validation.
+- **Scope:** Admin Login is outside the protected workspace provider so a signed-out user can still access the login form.
