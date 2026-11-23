@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const PAGE_SIZE = 50;
@@ -42,10 +42,10 @@ function attendanceLabel(value, language = "id") {
 export default function AdminWeddingGuestbookPage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { session } = useAdminAuth();
   const id = language === "id";
   const tx = (indonesian, english) => id ? indonesian : english;
-  const [checking, setChecking] = useState(true);
-  const [adminToken, setAdminToken] = useState("");
+  const adminToken = session?.access_token || "";
   const [entries, setEntries] = useState([]);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ page: 1, limit: PAGE_SIZE, total: 0, totalPages: 0 });
