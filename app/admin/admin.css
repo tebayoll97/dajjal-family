@@ -125,3 +125,35 @@
 #df-admin-shell .df-admin-main [class*="border-pink-"]{border-color:var(--df-border)!important}
 #df-admin-shell .df-admin-main [class*="text-pink-"]{color:var(--df-primary)!important}
 #df-admin-shell .df-admin-main .text-white[class*="bg-purple-"],#df-admin-shell .df-admin-main .text-white[class*="bg-pink-"],#df-admin-shell .df-admin-main .text-white[class*="bg-red-"],#df-admin-shell .df-admin-main .text-white[class*="bg-amber-"],#df-admin-shell .df-admin-main .text-white[class*="bg-cyan-"],#df-admin-shell .df-admin-main .text-white[class*="bg-blue-"],#df-admin-shell .df-admin-main .text-white[class*="bg-green-"]{color:var(--df-on-primary)!important}
+
+
+/* Theme Manager — reusable cards/actions with active Global Theme semantic tokens only. */
+.df-theme-manager{width:min(100%,var(--df-admin-content-width));margin-inline:auto;padding:var(--df-space-2);color:var(--df-text);font-family:var(--df-font-sans)}
+.df-theme-manager__inner{display:grid;gap:var(--df-space-5);min-width:0}
+.df-theme-manager__verification{min-height:55svh;display:grid;place-items:center;padding:var(--df-space-4)}
+.df-theme-manager__layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(17rem,.75fr);gap:var(--df-space-4);align-items:start}
+.df-theme-manager__preview,.df-theme-manager__status,.df-theme-manager__catalog,.df-theme-manager__notice,.df-theme-manager__governance{display:grid;gap:var(--df-space-4);min-width:0;padding:var(--df-space-4)}
+.df-theme-manager__section-head h2{margin:var(--df-space-3) 0 0}
+.df-theme-manager__side{display:grid;gap:var(--df-space-4);min-width:0}
+.df-theme-manager__label{margin:0;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-extrabold);letter-spacing:.12em;text-transform:uppercase}
+.df-theme-manager__live-preview{min-width:0;overflow:hidden;padding:var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-xl);background:var(--df-bg);color:var(--df-text)}
+.df-theme-manager__preview-top{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);padding-bottom:var(--df-space-3);border-bottom:1px solid var(--df-border)}
+.df-theme-manager__preview-body{display:grid;gap:var(--df-space-3);padding-block:var(--df-space-6)}
+.df-theme-manager__preview-body .ui-heading-h2{color:var(--df-text)}
+.df-theme-manager__preview-body .ui-section-description{color:var(--df-text-secondary)}
+.df-theme-manager__sample-primary,.df-theme-manager__sample-secondary{display:inline-flex;min-height:var(--df-touch-target-min);align-items:center;padding:var(--df-space-2) var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-md);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-bold)}
+.df-theme-manager__sample-primary{border-color:var(--df-primary);background:var(--df-primary);color:var(--df-on-primary)}
+.df-theme-manager__sample-secondary{background:var(--df-surface);color:var(--df-text)}
+.df-theme-manager__preset-list{display:grid;gap:var(--df-space-2)}
+.df-theme-manager__preset{display:grid;gap:var(--df-space-2);width:100%;min-width:0;padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);text-align:left;cursor:pointer;transition:border-color var(--df-duration-fast),background var(--df-duration-fast)}
+.df-theme-manager__preset:hover{border-color:var(--df-primary);background:var(--df-primary-soft)}
+.df-theme-manager__preset:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.df-theme-manager__preset.is-selected{border-color:var(--df-primary);background:var(--df-primary-soft)}
+.df-theme-manager__preset-head{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-2);flex-wrap:wrap}
+.df-theme-manager__preset-description{color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);line-height:var(--df-leading-relaxed)}
+.df-theme-manager__notice p,.df-theme-manager__governance p{margin:0;color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);line-height:var(--df-leading-relaxed)}
+.df-theme-manager__publish-status{color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-semibold)}
+.df-theme-manager__footer{padding-block:var(--df-space-4);border-top:1px solid var(--df-border);color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-bold);letter-spacing:.12em;text-align:center}
+.df-theme-manager__denied{display:grid;gap:var(--df-space-4);max-width:32rem;margin:10vh auto;padding:var(--df-space-6)}
+@media(max-width:760px){.df-theme-manager__layout{grid-template-columns:minmax(0,1fr)}.df-theme-manager__preview,.df-theme-manager__status,.df-theme-manager__catalog,.df-theme-manager__notice,.df-theme-manager__governance{padding:var(--df-space-3)}.df-theme-manager__preview-body{padding-block:var(--df-space-4)}}
+@media(prefers-reduced-motion:reduce){.df-theme-manager__preset{transition:none}}
