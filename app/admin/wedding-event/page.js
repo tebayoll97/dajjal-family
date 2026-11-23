@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
@@ -10,7 +10,7 @@ export default function AdminWeddingEventPage() {
   const router = useRouter();
   const { language } = useLanguage();
   const id = language === "id";
-  const tx = (indonesian, english) => id ? indonesian : english;
+  const tx = useCallback((indonesian, english) => id ? indonesian : english, [id]);
   const [token, setToken] = useState("");
   const [checking, setChecking] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ export default function AdminWeddingEventPage() {
       }
     })();
     return () => { active = false; };
-  }, [router]);
+  }, [router, tx]);
 
   useEffect(() => {
     if (!token) return;
@@ -66,10 +66,10 @@ export default function AdminWeddingEventPage() {
         setEventDate(result.event_date || "");
         setEventTime(result.event_time || "");
       }
-    }).catch(err => { if (active) setError(err.message || "Gagal memuat waktu acara."); })
+    }).catch(err => { if (active) setError(err.message || tx("Gagal memuat waktu acara.", "Unable to load event time.")); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [token, router]);
+  }, [token, router, tx]);
 
   async function saveEventTime(event) {
     event.preventDefault();
