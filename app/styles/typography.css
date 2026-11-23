@@ -54,3 +54,5 @@
 /* Responsive semantic type roles: compact mobile, spacious wide displays. */
 .ui-text-mobile-small{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
 .ui-text-display-wide{font-size:var(--df-type-display-wide);line-height:var(--df-leading-tight);letter-spacing:-.045em}
+
+.ui-text-karaoke-mobile{font-size:var(--df-type-karaoke-lyric-mobile);line-height:var(--df-leading-tight)}.ui-text-karaoke-wide{font-size:var(--df-type-karaoke-lyric-wide);line-height:var(--df-leading-tight);letter-spacing:-.035em}
