@@ -157,3 +157,5 @@
 .df-theme-manager__denied{display:grid;gap:var(--df-space-4);max-width:32rem;margin:10vh auto;padding:var(--df-space-6)}
 @media(max-width:760px){.df-theme-manager__layout{grid-template-columns:minmax(0,1fr)}.df-theme-manager__preview,.df-theme-manager__status,.df-theme-manager__catalog,.df-theme-manager__notice,.df-theme-manager__governance{padding:var(--df-space-3)}.df-theme-manager__preview-body{padding-block:var(--df-space-4)}}
 @media(prefers-reduced-motion:reduce){.df-theme-manager__preset{transition:none}}
+
+#df-admin-shell .df-admin-auth-gate{min-height:55svh;display:grid;place-items:center;padding:var(--df-space-4)}
