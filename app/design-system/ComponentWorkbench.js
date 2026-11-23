@@ -5,7 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField,
-  Accordion, BottomNavigation, ConfirmDialog, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip,
+  Accordion, BottomNavigation, ConfirmDialog, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -52,6 +52,7 @@ export default function ComponentWorkbench() {
     ["Breadcrumbs", "Breadcrumbs", <Breadcrumbs key="crumbs" items={[{label:"Home",href:"#"},{label:"Library",href:"#"},{label:"Current page"}]} />],
     ["Tabs", "Tabs", <Tabs key="tabs" value={tab} onChange={setTab} tabs={[{value:"overview",label:"Overview",content:<p>Overview panel content.</p>},{value:"details",label:"Details",content:<p>Details panel content.</p>}]} />],
     ["DropdownMenu", "DropdownMenu", <div key="dropdown" className={styles.stack}><DropdownMenu label="Open options"><button type="button" className="ui-dropdown-item" onClick={() => setMenuAction("Edit selected")}>Edit item</button><button type="button" className="ui-dropdown-item" onClick={() => setMenuAction("Details selected")}>View details</button></DropdownMenu>{menuAction ? <small>{menuAction}</small> : null}</div>],
+    ["VerificationState", "VerificationState · admin / user", <div key="verification" className={styles.stack}><VerificationState variant="admin" /><VerificationState variant="user" compact /></div>],
     ["Skeleton", "Skeleton", <div key="skeleton" className={styles.stack}><Skeleton variant="text" width="72%" /><Skeleton variant="rect" height="2.5rem" /><Skeleton variant="circle" /></div>],
     ["EmptyState", "EmptyState", <EmptyState key="empty" title="No saved items" description="An empty state with a clear next step." action={<Button size="sm" onClick={() => setItemAdded(true)}>{itemAdded ? "Item added" : "Add item"}</Button>} />],
     ["ErrorState", "ErrorState", <div key="error" className={styles.stack}><ErrorState title="Preview error" description="A recoverable error state." onRetry={() => setRetryCount((count) => count + 1)} /><small>Retry activations: {retryCount}</small></div>],
@@ -74,7 +75,7 @@ export default function ComponentWorkbench() {
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>30 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>31 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
