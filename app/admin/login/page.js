@@ -116,21 +116,21 @@ export default function AdminLoginPage() {
 
   if (checking) {
     return (
-      <main className="min-h-[75vh] bg-[#080711] flex items-center justify-center text-purple-300">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] flex items-center justify-center text-[var(--df-primary)]">
         {isID ? "Memeriksa sesi..." : "Checking session..."}
       </main>
     );
   }
 
   return (
-    <main className="min-h-[80vh] bg-[#080711] text-white px-5 py-12 flex items-center justify-center">
+    <main className="min-h-[80vh] bg-[#080711] text-[var(--df-text)] px-5 py-12 flex items-center justify-center">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center ui-card">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center ui-card">
             <span className="text-3xl">♛</span>
           </div>
 
-          <p className="text-purple-400 text-xs tracking-[0.3em] mt-6">
+          <p className="text-[var(--df-primary)] text-xs tracking-[0.3em] mt-6">
             DAJJAL FAMILY
           </p>
 
@@ -138,18 +138,18 @@ export default function AdminLoginPage() {
             ADMIN <span className="text-purple-400">PORTAL</span>
           </h1>
 
-          <p className="text-gray-500 text-sm mt-3">
+          <p className="text-[var(--df-text-muted)] text-sm mt-3">
             {isID
               ? "Masuk ke pusat kendali administrator."
               : "Sign in to the administrator control center."}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-purple-500/20 bg-[#151020] p-6 sm:p-8 ui-card">
+        <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-6 sm:p-8 ui-card">
           <div className="flex items-center gap-3 mb-6">
             <span className="text-green-400">●</span>
 
-            <p className="text-sm font-bold text-gray-300">
+            <p className="text-sm font-bold text-[var(--df-text-secondary)]">
               ADMINISTRATOR LOGIN
             </p>
           </div>
@@ -167,7 +167,7 @@ export default function AdminLoginPage() {
                 placeholder="admin@example.com"
                 autoComplete="username"
                 required
-                className="w-full rounded-xl border border-purple-500/20 bg-black/30 px-4 py-3 text-white outline-none focus:border-purple-500"
+                className="w-full rounded-xl border border-purple-500/20 bg-[var(--df-surface-raised)] px-4 py-3 text-white outline-none focus:border-[var(--df-focus)]"
               />
             </div>
 
@@ -196,7 +196,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-50 py-3.5 font-bold tracking-wider transition"
+              className="w-full rounded-xl bg-[var(--df-primary)] hover:opacity-90 disabled:opacity-50 py-3.5 font-bold tracking-wider transition"
             >
               {loading
                 ? isID
