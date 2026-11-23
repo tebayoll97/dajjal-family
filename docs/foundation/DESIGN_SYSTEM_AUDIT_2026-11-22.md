@@ -4,7 +4,7 @@
 **Audit date:** 2026-11-22  
 **Audit scope:** Repository source inspection — documentation, Design System route, semantic tokens, theme registry, shared UI primitives  
 **Authority:** MASTER_FOUNDATION.md v1.4 and DESIGN_SYSTEM.md v1.1  
-**Status:** Audit complete — implementation and browser validation not performed
+**Status:** Baseline audit complete — Admin Shell implementation started 2026-11-23; build and browser validation pending
 
 ---
 
@@ -260,3 +260,17 @@ No broad page redesign, production migration, database/auth change, or deploymen
 - `app/design-system/DesignSystemClient.module.css`.
 
 **Audit boundary:** This document records source inspection only. No application component, page, runtime configuration, database, authentication setting, or deployment was changed by the audit itself.
+
+
+## Addendum — Admin Shell implementation — 2026-11-23
+
+The audit findings about the lack of a dedicated Admin Shell and compact admin typography now have an initial source implementation:
+
+- `app/admin/AdminShell.js` composes the shared PageHeader, Button, and Badge primitives into the authenticated admin workspace navigation and topbar.
+- `app/admin/admin.css` defines desktop grouped navigation, tablet/mobile compact navigation, token-driven surfaces, focus treatment, and reduced-motion behavior.
+- `app/styles/tokens.css` and `app/styles/typography.css` define the admin body/small/meta typography roles. The Design System typography preview includes `admin-small` and `admin-meta`.
+- `RouteChrome` routes admin URLs through the Admin Shell instead of the public website shell.
+- `app/admin/layout.js` adds route-aware ID/EN metadata, localized canonicals, noindex, and the Dajjal Family fallback Open Graph icon. The private admin layout is dynamic and non-revalidated.
+- Wedding Event, Wedding Gallery, Guestbook, Central Storage, and Admin Login now use the shared LanguageProvider. The Admin Shell owns the shared locale control.
+
+This is an implementation addendum, not a QA sign-off. The deployment build, visual comparison across four theme combinations, mobile/tablet/desktop browser checks, and CRUD regression tests remain required.
