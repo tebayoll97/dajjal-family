@@ -56,3 +56,5 @@
 .df-verification{display:flex;align-items:center;gap:var(--df-space-4);width:min(100%,38rem);min-width:0;margin-inline:auto;padding:clamp(var(--df-space-4),3vw,var(--df-space-8));border:1px solid var(--df-verification-border);border-radius:var(--df-radius-xl);background:var(--df-verification-surface);box-shadow:var(--df-shadow-md)}
 .df-verification__copy{display:grid;gap:var(--df-space-2);min-width:0;flex:1}
 .df-verification--compact{width:auto;margin:0;padding:var(--df-space-2);border:0;border-radius:var(--df-radius-md);background:transparent;box-shadow:none;gap:var(--df-space-2)}
+
+.ui-viewport-overlay{position:fixed;inset:0;z-index:calc(var(--df-z-overlay) + 20);width:100%;height:100vh;height:100dvh;overflow:hidden;overscroll-behavior:contain}
