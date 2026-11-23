@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link as UiLink } from "@/app/components/ui";
-import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { getThemeTokens } from "@/app/theme/themeTokens";
@@ -53,7 +52,6 @@ const copy = {
 const GLOBAL_PRESETS = ["tecno", "dajjal-veylora"];
 
 export default function AdminThemePage() {
-  const router = useRouter();
   const { language } = useLanguage();
   const { status: authStatus, admin, session } = useAdminAuth();
   const t = copy[language] || copy.en;
@@ -66,47 +64,23 @@ export default function AdminThemePage() {
   const [publishStatus, setPublishStatus] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+
   useEffect(() => {
+    if (authStatus !== "verified" || !accessToken) return;
     let active = true;
-    (async () => {
-      try {
-        const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        const session = data?.session;
-        if (!session) { router.replace("/admin/login"); return; }
-        const response = await verifyAdminSession(session);
+    fetch("/api/admin/theme", { headers: { Authorization: "Bearer " + accessToken }, cache: "no-store" })
+      .then(async (response) => {
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          if (response.status === 401 || response.status === 403) {
-            await supabaseAdminClient.auth.signOut();
-            router.replace("/admin/login");
-            return;
-          }
-          throw new Error(result.error || t.error);
+        if (!response.ok) throw new Error(result.error || t.error);
+        if (active && GLOBAL_PRESETS.includes(result.activeThemePreset)) {
+          setActivePreset(result.activeThemePreset);
+          setDraftPreset(result.activeThemePreset);
         }
-        if (!result.admin) throw new Error(t.error);
-        if (active) {
-          setAdmin(result.admin);
-          setAccessToken(session.access_token);
-        }
-        const themeResponse = await fetch("/api/admin/theme", {
-          headers: { Authorization: "Bearer " + session.access_token },
-          cache: "no-store",
-        });
-        const themeResult = await themeResponse.json().catch(() => ({}));
-        if (!themeResponse.ok) throw new Error(themeResult.error || t.error);
-        if (active && GLOBAL_PRESETS.includes(themeResult.activeThemePreset)) {
-          setActivePreset(themeResult.activeThemePreset);
-          setDraftPreset(themeResult.activeThemePreset);
-        }
-      } catch (e) {
-        if (active) setError(e.message || t.error);
-      } finally {
-        if (active) setChecking(false);
-      }
-    })();
+      })
+      .catch((e) => { if (active) setError(e.message || t.error); });
     return () => { active = false; };
-  }, [router, t.error]);
+  }, [authStatus, accessToken, t.error]);
+
 
   const publishPreset = async () => {
     if (publishing || draftPreset === activePreset) return;
