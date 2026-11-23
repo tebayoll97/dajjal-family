@@ -6,6 +6,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import GlobalSidebar from "./GlobalSidebar";
 import { LoginModalProvider } from "./LoginModalProvider";
+import AdminShell from "@/app/admin/AdminShell";
 
 export default function RouteChrome({ children }) {
   const pathname = stripLocalePrefix(usePathname() || "/");
@@ -13,7 +14,9 @@ export default function RouteChrome({ children }) {
   const isLogin = pathname === "/login";
 
   let content;
-  if (isImmersiveGame) {
+  if (pathname.startsWith("/admin")) {
+    content = <AdminShell>{children}</AdminShell>;
+  } else if (isImmersiveGame) {
     content = <div className="df-immersive-route">{children}</div>;
   } else if (isLogin) {
     content = (
