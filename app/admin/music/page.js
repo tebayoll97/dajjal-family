@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./music.css";
 
@@ -45,9 +45,9 @@ function formatBytes(value) {
 export default function AdminMusicCatalogPage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { session } = useAdminAuth();
+  const token = session?.access_token || "";
   const t = copy[language] || copy.id;
-  const [token, setToken] = useState("");
-  const [checking, setChecking] = useState(true);
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
@@ -99,7 +99,7 @@ export default function AdminMusicCatalogPage() {
   useEffect(() => { if (token) loadCatalog(); }, [token, loadCatalog]);
   const genres = useMemo(() => [...new Set(items.map((item) => item.genre).filter(Boolean))].sort(), [items]);
 
-  if (checking) return <main className="music-page"><div className="music-state">{t.loading}</div></main>;
+
 
   return (
     <main className="music-page">
