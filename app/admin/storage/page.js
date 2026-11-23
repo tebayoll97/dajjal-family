@@ -95,43 +95,15 @@ export default function AdminStoragePage() {
     setStatus(result);
   }, [t.error]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const result = params.get("google_drive");
-    if (result) {
-      const text = messages[language]?.[result] || messages.id[result] || messages.en[result] || messages.id.error;
-      setNotice(text);
-      window.history.replaceState({}, "", window.location.pathname);
-    }
 
+ 
+  useEffect(() => {
+    if (!token) return;
     let active = true;
-    (async () => {
-      try {
-        const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        const session = data?.session;
-        if (!session) { router.replace("/admin/login"); return; }
-        const verify = await verifyAdminSession(session);
-        const verifyResult = await verify.json().catch(() => ({}));
-        if (!verify.ok || !verifyResult.admin) {
-          if (verify.status === 401 || verify.status === 403) {
-            await supabaseAdminClient.auth.signOut();
-            router.replace("/admin/login");
-            return;
-          }
-          throw new Error(verifyResult.error || messages.id.error);
-        }
-        if (!active) return;
-        setToken(session.access_token);
-        await loadStatus(session.access_token);
-      } catch (error) {
-        if (active) setNotice(error.message || messages.id.error);
-      } finally {
-        if (active) setChecking(false);
-      }
-    })();
+    loadStatus(token).catch((error) => { if (active) setNotice(error.message || t.error); });
     return () => { active = false; };
-  }, [router, language, loadStatus]);
+  }, [token, loadStatus]);
+
 
   async function connectDrive() {
     if (busy || !token) return;
