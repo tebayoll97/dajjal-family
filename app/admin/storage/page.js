@@ -102,7 +102,7 @@ export default function AdminStoragePage() {
     let active = true;
     loadStatus(token).catch((error) => { if (active) setNotice(error.message || t.error); });
     return () => { active = false; };
-  }, [token, loadStatus]);
+  }, [token, loadStatus, t.error]);
 
 
   async function connectDrive() {
