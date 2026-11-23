@@ -26,8 +26,6 @@ const copy = {
     storage: "Central Storage",
     storageDesc: "Connect Google Drive and manage the platform storage provider.",
     music: "Music Library",
-    couple: "Kelola Couple Profile",
-    coupleDesc: "Kelola halaman Couple Profile publik dan status publikasinya.",
     couple: "Couple Profiles",
     coupleDesc: "Manage public Couple Profile pages and their publication status.",
     musicDesc: "Upload, organize, preview, and publish the music catalog.",
@@ -64,6 +62,8 @@ const copy = {
     storage: "Penyimpanan Terpusat",
     storageDesc: "Hubungkan Google Drive dan kelola penyimpanan platform.",
     music: "Music Library",
+    couple: "Kelola Couple Profile",
+    coupleDesc: "Kelola halaman Couple Profile publik dan status publikasinya.",
     musicDesc: "Upload, susun, preview, dan kelola katalog musik.",
     open: "BUKA MENU",
     coming: "SEGERA HADIR",
@@ -156,9 +156,9 @@ export default function AdminDashboardPage() {
 
   if (checking) {
     return (
-      <main className="min-h-[75vh] bg-[#080711] flex flex-col items-center justify-center gap-5 px-5 text-purple-200">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-[var(--df-text-secondary)]">
         <div className="relative flex h-16 w-16 items-center justify-center">
-          <div className="absolute inset-0 rounded-full border border-purple-500/20" />
+          <div className="absolute inset-0 rounded-full border border-[var(--df-border)]" />
           <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-purple-400 border-r-cyan-400 animate-spin" />
           <span className="text-2xl">♛</span>
         </div>
@@ -185,77 +185,57 @@ export default function AdminDashboardPage() {
   if (!admin) return null;
 
   const modules = [
-    { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true, accent: "from-violet-500/20 via-fuchsia-500/5" },
-    { href: "/admin/music", icon: "♫", number: "02", title: t.music, description: t.musicDesc, available: true },
-    { href: "/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },
+    { href: "/admin/contact-center", icon: "✉️", number: "00from-violet-500/20 via-fuchsia-500/5" },
+    { href: "/admin/music", icon: "♫", number: "01/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },
     {
       href: "/admin/players",
       icon: "👥",
-      number: "01",
-      title: t.players,
-      description: t.playersDesc,
-      available: true,
-      accent: "from-blue-500/20 via-indigo-500/5",
+      number: "02from-blue-500/20 via-indigo-500/5",
     },
     {
       href: "/admin/wedding-gallery",
       icon: "💒",
-      number: "08",
-      title: t.gallery,
-      description: t.galleryDesc,
-      available: true,
-      accent: "from-pink-500/20 via-rose-500/5",
+      number: "04from-pink-500/20 via-rose-500/5",
     },
     {
       href: "/admin/wedding-event",
       icon: "🗓️",
-      number: "09",
-      title: language === "id" ? "Waktu Acara Undangan" : "Wedding Event Time",
+      number: "05id" ? "Waktu Acara Undangan" : "Wedding Event Time",
       description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.",
       available: true,
-      accent: "from-amber-500/20 via-orange-500/5",
+
     },
     {
       href: "/admin/wedding-guestbook",
       icon: "💬",
-      number: "04",
-      title: language === "id" ? "Ucapan Guestbook" : "Guestbook Messages",
+      number: "06id" ? "Ucapan Guestbook" : "Guestbook Messages",
       description: language === "id" ? "Lihat dan hapus pesan pada undangan pernikahan." : "Review and delete wedding invitation guestbook messages.",
       available: true,
-      accent: "from-emerald-500/20 via-teal-500/5",
+
     },
     {
       href: "/admin/theme",
       icon: "🎨",
-      number: "05",
-      title: language === "id" ? "Pengelola Tema" : "Theme Manager",
+      number: "07id" ? "Pengelola Tema" : "Theme Manager",
       description: language === "id" ? "Pratinjau mode tampilan dan katalog palet global." : "Preview appearance modes and the global palette catalog.",
       available: true,
-      accent: "from-purple-500/20 via-indigo-500/5",
+
     },
     {
       href: "/admin/storage",
       icon: "☁️",
-      number: "06",
-      title: t.storage,
-      description: t.storageDesc,
-      available: true,
-      accent: "from-cyan-500/20 via-blue-500/5",
+      number: "08from-cyan-500/20 via-blue-500/5",
     },
     {
       href: null,
       icon: "📊",
-      number: "07",
-      title: t.statistics,
-      description: t.statisticsDesc,
-      available: false,
-      accent: "from-cyan-500/15 via-blue-500/5",
+      number: "09from-cyan-500/15 via-blue-500/5",
     },
   ];
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-8 sm:px-6 sm:py-12">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-purple-600/10 blur-[100px]" />
+    <main className="relative min-h-screen overflow-hidden bg-[var(--df-bg)] text-[var(--df-text)] px-4 py-6 sm:px-6 sm:py-8">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-[var(--df-primary-soft)] blur-[100px]" />
       <div className="relative mx-auto max-w-6xl">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
