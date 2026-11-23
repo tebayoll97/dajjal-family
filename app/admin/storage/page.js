@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const messages = {
@@ -110,10 +111,7 @@ export default function AdminStoragePage() {
         if (sessionError) throw sessionError;
         const session = data?.session;
         if (!session) { router.replace("/admin/login"); return; }
-        const verify = await fetch("/api/admin/me", {
-          headers: { Authorization: "Bearer " + session.access_token },
-          cache: "no-store",
-        });
+        const verify = await verifyAdminSession(session);
         const verifyResult = await verify.json().catch(() => ({}));
         if (!verify.ok || !verifyResult.admin) {
           if (verify.status === 401 || verify.status === 403) {
