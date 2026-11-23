@@ -8,35 +8,46 @@ import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { getThemeTokens } from "@/app/theme/themeTokens";
 import { THEME_REGISTRY } from "@/app/theme/themeRegistry";
+import { Alert, Badge, Button, Card, ConfirmDialog, PageHeader, VerificationState } from "@/app/components/ui";
 
 const copy = {
   en: {
-    checking:"VERIFYING ADMIN ACCESS...", back:"BACK TO DASHBOARD", title:"THEME PRESET MANAGER",
+    back:"Back to dashboard", title:"Theme Preset Manager",
     subtitle:"Choose a named global identity, then inspect its Light and Dark appearance.",
-    preview:"PRESET PREVIEW", previewNote:"This is an isolated local preview. It never changes the visitor-facing website.",
-    mode:"PREVIEW MODE", dark:"Dark", light:"Light", catalog:"GLOBAL PRESET CATALOG",
-    active:"CURRENT VISITOR PRESET", current:"TECNO (temporary fallback)", selected:"DRAFT SELECTION",
-    select:"Select for preview", selectedLabel:"Selected for preview", tecnoDesc:"The existing Dajjal Family purple, indigo, and cyan visual identity.",
-    coupleDesc:"Azure blue and white in Light Mode; crimson red and black in Dark Mode, based on the Couple page identity.",
-    scope:"GLOBAL PRESET", protectedTitle:"PAGE-SCOPED & ISOLATED EXPERIENCES",
-    protectedNote:"Couple page styling remains page-scoped. Wedding and Games remain protected isolated experiences and are not global presets.",
-    governance:"PUBLISHING STATUS",
-    governanceNote:"Preview remains local until you explicitly publish. Publishing changes the global identity for standard website pages; Couple, Wedding, and Games retain their protected scopes.",
-    noPublish:"No visitor-facing changes have been published.", publish:"Publish selected preset", publishing:"Publishing...", confirmPublish:"Publish this preset to the entire website?", published:"Global preset published successfully.", publishError:"Unable to publish the preset.", denied:"Administrator access denied.", error:"Unable to verify administrator access.",
+    preview:"Preset preview", previewNote:"This isolated preview is local only and never changes the visitor-facing website.",
+    mode:"Preview mode", dark:"Dark", light:"Light", catalog:"Global preset catalog",
+    active:"Current visitor preset", selected:"Draft selection", select:"Select for preview",
+    selectedLabel:"Selected for preview", tecnoDesc:"The Dajjal Family purple, indigo, and cyan visual identity.",
+    coupleDesc:"Azure blue and white in Light Mode; crimson red and black in Dark Mode.",
+    protectedTitle:"Page-scoped & isolated experiences",
+    protectedNote:"Couple remains page-scoped. Wedding and Games remain protected isolated experiences.",
+    governance:"Publishing status",
+    governanceNote:"Publishing changes the global identity for standard website pages. Couple, Wedding, and Games retain their protected scopes.",
+    noPublish:"No visitor-facing changes have been published.",
+    publish:"Publish selected preset", publishing:"Publishing...", confirmTitle:"Publish global preset?",
+    confirmPublish:"This changes the global identity for standard website pages. Continue?",
+    published:"Global preset published successfully.", publishError:"Unable to publish the preset.",
+    denied:"Administrator access denied.", error:"Unable to verify administrator access.",
+    primary:"Primary action", secondary:"Secondary action", current:"ACTIVE", previewBadge:"LOCAL PREVIEW",
   },
   id: {
-    checking:"MEMVERIFIKASI AKSES ADMIN...", back:"KEMBALI KE DASHBOARD", title:"PENGELOLA PRESET TEMA",
-    subtitle:"Pilih identitas global bernama, lalu periksa tampilannya dalam mode Terang dan Gelap.",
-    preview:"PRATINJAU PRESET", previewNote:"Pratinjau ini terisolasi dan hanya berlaku lokal. Tema website pengunjung tidak berubah.",
-    mode:"MODE PRATINJAU", dark:"Gelap", light:"Terang", catalog:"KATALOG PRESET GLOBAL",
-    active:"PRESET PENGUNJUNG SAAT INI", current:"TECNO (fallback sementara)", selected:"PILIHAN DRAF",
-    select:"Pilih untuk pratinjau", selectedLabel:"Dipilih untuk pratinjau", tecnoDesc:"Identitas visual Dajjal Family yang sudah ada: ungu, indigo, dan cyan.",
-    coupleDesc:"Biru azure dan putih pada mode Terang; merah crimson dan hitam pada mode Gelap, mengikuti identitas halaman Couple.",
-    scope:"PRESET GLOBAL", protectedTitle:"PENGALAMAN KHUSUS & TERISOLASI",
-    protectedNote:"Styling halaman Couple tetap khusus halaman. Wedding dan Games tetap menjadi pengalaman terisolasi yang dilindungi, bukan preset global.",
-    governance:"STATUS PUBLIKASI",
-    governanceNote:"Pratinjau tetap lokal sampai kamu menerbitkannya secara eksplisit. Publikasi mengubah identitas global halaman standar; Couple, Wedding, dan Games tetap mempertahankan cakupan khususnya.",
-    noPublish:"Belum ada perubahan yang dipublikasikan ke pengunjung.", publish:"Terbitkan preset terpilih", publishing:"Menerbitkan...", confirmPublish:"Terbitkan preset ini ke seluruh website?", published:"Preset global berhasil diterbitkan.", publishError:"Preset tidak dapat diterbitkan.", denied:"Akses administrator ditolak.", error:"Tidak dapat memverifikasi akses administrator.",
+    back:"Kembali ke dashboard", title:"Pengelola Preset Tema",
+    subtitle:"Pilih identitas global, lalu periksa tampilannya dalam mode Terang dan Gelap.",
+    preview:"Pratinjau preset", previewNote:"Pratinjau terisolasi dan hanya berlaku lokal. Tema pengunjung tidak berubah.",
+    mode:"Mode pratinjau", dark:"Gelap", light:"Terang", catalog:"Katalog preset global",
+    active:"Preset pengunjung saat ini", selected:"Pilihan draf", select:"Pilih untuk pratinjau",
+    selectedLabel:"Dipilih untuk pratinjau", tecnoDesc:"Identitas visual Dajjal Family: ungu, indigo, dan cyan.",
+    coupleDesc:"Biru azure dan putih pada mode Terang; merah crimson dan hitam pada mode Gelap.",
+    protectedTitle:"Pengalaman khusus & terisolasi",
+    protectedNote:"Couple tetap memiliki styling khusus halaman. Wedding dan Games tetap menjadi pengalaman terisolasi yang dilindungi.",
+    governance:"Status publikasi",
+    governanceNote:"Publikasi mengubah identitas global halaman standar. Couple, Wedding, dan Games tetap mempertahankan cakupan khususnya.",
+    noPublish:"Belum ada perubahan yang dipublikasikan ke pengunjung.",
+    publish:"Terbitkan preset terpilih", publishing:"Menerbitkan...", confirmTitle:"Terbitkan preset global?",
+    confirmPublish:"Tindakan ini mengubah identitas global halaman standar. Lanjutkan?",
+    published:"Preset global berhasil diterbitkan.", publishError:"Preset tidak dapat diterbitkan.",
+    denied:"Akses administrator ditolak.", error:"Tidak dapat memverifikasi akses administrator.",
+    primary:"Aksi utama", secondary:"Aksi sekunder", current:"AKTIF", previewBadge:"PRATINJAU LOKAL",
   },
 };
 
@@ -55,6 +66,7 @@ export default function AdminThemePage() {
   const [accessToken, setAccessToken] = useState("");
   const [publishing, setPublishing] = useState(false);
   const [publishStatus, setPublishStatus] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -100,16 +112,13 @@ export default function AdminThemePage() {
 
   const publishPreset = async () => {
     if (publishing || draftPreset === activePreset) return;
-    if (!window.confirm(t.confirmPublish)) return;
+    setConfirmOpen(false);
     setPublishing(true);
     setPublishStatus("");
     try {
       const response = await fetch("/api/admin/theme", {
         method: "PATCH",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: "Bearer " + accessToken, "Content-Type": "application/json" },
         body: JSON.stringify({ activeThemePreset: draftPreset }),
       });
       const result = await response.json().catch(() => ({}));
@@ -128,103 +137,86 @@ export default function AdminThemePage() {
     background: tokens["--df-bg"],
     color: tokens["--df-text"],
     borderColor: tokens["--df-border"],
-    "--p-surface": tokens["--df-surface"],
-    "--p-raised": tokens["--df-surface-raised"],
-    "--p-secondary": tokens["--df-text-secondary"],
-    "--p-border": tokens["--df-border"],
-    "--p-primary": tokens["--df-primary"],
-    "--p-on-primary": tokens["--df-on-primary"],
-    "--p-accent": tokens["--df-accent"],
+    "--df-bg": tokens["--df-bg"],
+    "--df-surface": tokens["--df-surface"],
+    "--df-surface-raised": tokens["--df-surface-raised"],
+    "--df-text": tokens["--df-text"],
+    "--df-text-secondary": tokens["--df-text-secondary"],
+    "--df-border": tokens["--df-border"],
+    "--df-primary": tokens["--df-primary"],
+    "--df-on-primary": tokens["--df-on-primary"],
+    "--df-accent": tokens["--df-accent"],
   };
 
-  if (checking) return <main className="min-h-screen grid place-items-center bg-[#080711] text-purple-200">{t.checking}</main>;
-  if (!admin) return <main className="min-h-screen grid place-items-center bg-[#080711] px-5 text-center text-white"><div><h1 className="text-2xl font-black">{t.denied}</h1><p role="alert" className="mt-3 text-sm text-red-300">{error}</p><button onClick={() => router.replace("/admin/login")} className="mt-5 rounded-xl bg-purple-600 px-5 py-3 font-bold">ADMIN LOGIN</button></div></main>;
+  if (checking) return <div className="df-theme-manager__verification"><VerificationState variant="admin" /></div>;
+  if (!admin) return <main className="df-theme-manager"><Card className="df-theme-manager__denied"><Badge variant="danger">{t.denied}</Badge><h1 className="ui-heading-h2">{t.denied}</h1><Alert variant="danger">{error || t.error}</Alert><Button onClick={() => router.replace("/admin/login")}>ADMIN LOGIN</Button></Card></main>;
 
   return (
-    <main className="min-h-screen bg-[#080711] px-4 py-7 text-white sm:px-6 sm:py-10">
-      <div className="mx-auto max-w-6xl">
-        <Link href="/admin" className="inline-flex min-h-11 items-center rounded-xl border border-purple-400/25 bg-purple-500/10 px-4 py-2 text-xs font-bold text-purple-200">← {t.back}</Link>
-        <header className="my-7">
-          <p className="text-[10px] font-extrabold tracking-[.22em] text-cyan-300">DAJJAL FAMILY · ADMIN CONTROL</p>
-          <h1 className="mt-2 text-3xl font-black sm:text-4xl">{t.title}</h1>
-          <p className="mt-2 text-sm text-gray-400">{t.subtitle}</p>
-        </header>
-
-        <section className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,.75fr)]">
-          <div className="min-w-0 rounded-2xl border border-purple-500/20 bg-[#151020] p-4 sm:p-6">
-            <div className="text-[10px] font-extrabold tracking-[.2em] text-cyan-300">{t.preview}</div>
-            <p className="mt-1 text-xs text-gray-400">{t.previewNote}</p>
-            <div className="mt-4 flex gap-2" role="group" aria-label={t.mode}>
-              {["dark", "light"].map((value) => (
-                <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value)}
-                  className={mode === value ? "min-h-11 rounded-xl border border-purple-300 bg-purple-500/20 px-4 text-xs font-bold text-purple-100" : "min-h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-bold text-gray-300"}>
-                  {value === "dark" ? t.dark : t.light}
-                </button>
-              ))}
+    <main className="df-theme-manager">
+      <div className="df-theme-manager__inner">
+        <Link href="/admin" className="ui-link ui-link-subtle">{t.back}</Link>
+        <PageHeader eyebrow="DAJJAL FAMILY · ADMIN CONTROL" title={t.title} description={t.subtitle} />
+        <div className="df-theme-manager__layout">
+          <Card className="df-theme-manager__preview">
+            <div className="df-theme-manager__section-head"><div><Badge variant="info">{t.previewBadge}</Badge><h2 className="ui-heading-h3">{t.preview}</h2><p className="ui-section-description">{t.previewNote}</p></div></div>
+            <div className="ui-cluster" role="group" aria-label={t.mode}>
+              <Button size="sm" variant={mode === "dark" ? "primary" : "secondary"} aria-pressed={mode === "dark"} onClick={() => setMode("dark")}>{t.dark}</Button>
+              <Button size="sm" variant={mode === "light" ? "primary" : "secondary"} aria-pressed={mode === "light"} onClick={() => setMode("light")}>{t.light}</Button>
             </div>
-            <div className="mt-5 overflow-hidden rounded-2xl border p-4 sm:p-6" style={previewStyle}>
-              <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: "var(--p-border)" }}>
-                <strong>DAJJAL FAMILY</strong>
-                <span className="rounded-full px-3 py-1 text-[10px] font-bold" style={{ background: "var(--p-raised)" }}>{mode.toUpperCase()}</span>
-              </div>
-              <div className="py-9">
-                <p className="text-[10px] font-bold tracking-[.2em]" style={{ color: "var(--p-accent)" }}>ONE ECOSYSTEM · MANY POSSIBILITIES</p>
-                <h2 className="mt-3 text-2xl font-black sm:text-3xl">One Family. Many Possibilities.</h2>
-                <p className="mt-3 max-w-lg text-sm" style={{ color: "var(--p-secondary)" }}>Preview semantic surfaces, readable text, borders, and primary actions.</p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <span className="rounded-xl px-4 py-3 text-xs font-bold" style={{ background: "var(--p-primary)", color: "var(--p-on-primary)" }}>Primary action</span>
-                  <span className="rounded-xl border px-4 py-3 text-xs font-bold" style={{ borderColor: "var(--p-border)", background: "var(--p-surface)" }}>Secondary action</span>
+            <section className="df-theme-manager__live-preview" style={previewStyle}>
+              <div className="df-theme-manager__preview-top"><strong>DAJJAL FAMILY</strong><Badge>{mode.toUpperCase()}</Badge></div>
+              <div className="df-theme-manager__preview-body">
+                <p className="ui-eyebrow" style={{ color: "var(--df-accent)" }}>ONE ECOSYSTEM · MANY POSSIBILITIES</p>
+                <h2 className="ui-heading-h2">One Family. Many Possibilities.</h2>
+                <p className="ui-section-description">Preview semantic surfaces, readable text, borders, and primary actions.</p>
+                <div className="ui-cluster">
+                  <span className="df-theme-manager__sample-primary">{t.primary}</span>
+                  <span className="df-theme-manager__sample-secondary">{t.secondary}</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <aside className="space-y-4">
-            <section className="rounded-2xl border border-purple-500/20 bg-[#151020] p-4 sm:p-5">
-              <p className="text-[10px] font-extrabold tracking-[.18em] text-gray-500">{t.active}</p>
-              <p className="mt-2 text-sm font-bold text-cyan-200">{THEME_REGISTRY[activePreset]?.label || activePreset}</p>
-              <p className="mt-5 text-[10px] font-extrabold tracking-[.18em] text-gray-500">{t.selected}</p>
-              <p className="mt-2 text-sm font-bold">{THEME_REGISTRY[draftPreset].label}</p>
             </section>
-            <section className="rounded-2xl border border-purple-500/20 bg-[#151020] p-4 sm:p-5">
-              <h2 className="text-sm font-extrabold">{t.catalog}</h2>
-              <div className="mt-3 space-y-2">
+          </Card>
+
+          <aside className="df-theme-manager__side">
+            <Card className="df-theme-manager__status">
+              <p className="df-theme-manager__label">{t.active}</p>
+              <div className="ui-cluster"><Badge variant="success">{t.current}</Badge><strong>{THEME_REGISTRY[activePreset]?.label || activePreset}</strong></div>
+              <p className="df-theme-manager__label">{t.selected}</p>
+              <strong>{THEME_REGISTRY[draftPreset].label}</strong>
+            </Card>
+            <Card className="df-theme-manager__catalog">
+              <h2 className="ui-heading-h3">{t.catalog}</h2>
+              <div className="df-theme-manager__preset-list">
                 {GLOBAL_PRESETS.map((id) => {
                   const entry = THEME_REGISTRY[id];
                   const selected = draftPreset === id;
                   return (
-                    <button key={id} type="button" aria-pressed={selected} onClick={() => setDraftPreset(id)}
-                      className={selected ? "w-full rounded-xl border border-purple-300 bg-purple-500/15 p-3 text-left" : "w-full rounded-xl border border-white/10 bg-white/5 p-3 text-left hover:bg-white/10"}>
-                      <span className="flex items-center justify-between gap-2 text-sm font-bold">
-                        {entry.label}<span className="text-[9px] font-extrabold tracking-wider text-cyan-300">{selected ? t.selectedLabel : t.select}</span>
-                      </span>
-                      <span className="mt-2 block text-xs leading-relaxed text-gray-400">{id === "tecno" ? t.tecnoDesc : t.coupleDesc}</span>
+                    <button key={id} type="button" aria-pressed={selected} onClick={() => setDraftPreset(id)} className={selected ? "df-theme-manager__preset is-selected" : "df-theme-manager__preset"}>
+                      <span className="df-theme-manager__preset-head"><strong>{entry.label}</strong>{selected ? <Badge variant="success">{t.selectedLabel}</Badge> : <Badge>{t.select}</Badge>}</span>
+                      <span className="df-theme-manager__preset-description">{id === "tecno" ? t.tecnoDesc : t.coupleDesc}</span>
                     </button>
                   );
                 })}
               </div>
-            </section>
+            </Card>
           </aside>
-        </section>
+        </div>
 
-        <section className="mt-7 rounded-2xl border border-white/10 bg-[#151020] p-4 sm:p-5">
-          <p className="text-[10px] font-extrabold tracking-[.2em] text-cyan-300">{t.protectedTitle}</p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-400">{t.protectedNote}</p>
-        </section>
-
-        <section className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-500/5 p-4 sm:p-5">
-          <p className="text-[10px] font-extrabold tracking-[.2em] text-amber-300">{t.governance}</p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-300">{t.governanceNote}</p>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button type="button" onClick={publishPreset} disabled={publishing || draftPreset === activePreset}
-              className="min-h-11 rounded-xl bg-purple-600 px-5 py-3 text-xs font-extrabold text-white transition hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-45">
-              {publishing ? t.publishing : t.publish}
-            </button>
-            <span role="status" aria-live="polite" className="text-xs font-bold text-amber-100">{publishStatus || (draftPreset === activePreset ? t.noPublish : "")}</span>
+        <Card className="df-theme-manager__notice">
+          <h2 className="ui-heading-h3">{t.protectedTitle}</h2>
+          <p>{t.protectedNote}</p>
+        </Card>
+        <Card className="df-theme-manager__governance">
+          <Badge variant="warning">{t.governance}</Badge>
+          <p>{t.governanceNote}</p>
+          <div className="ui-cluster">
+            <Button loading={publishing} disabled={draftPreset === activePreset} onClick={() => setConfirmOpen(true)}>{publishing ? t.publishing : t.publish}</Button>
+            <span className="df-theme-manager__publish-status" role="status" aria-live="polite">{publishStatus || (draftPreset === activePreset ? t.noPublish : "")}</span>
           </div>
-        </section>
-        <footer className="mt-10 border-t border-white/10 pt-5 text-center text-[10px] font-bold tracking-[.18em] text-gray-600">DAJJAL FAMILY · THEME CONTROL · {admin.email}</footer>
+        </Card>
+        <footer className="df-theme-manager__footer">DAJJAL FAMILY · THEME CONTROL · {admin.email}</footer>
       </div>
+      <ConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={publishPreset} title={t.confirmTitle} description={t.confirmPublish} confirmLabel={t.publish} cancelLabel={language === "id" ? "Batal" : "Cancel"} loading={publishing} />
     </main>
   );
 }
