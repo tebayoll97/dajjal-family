@@ -30,3 +30,5 @@ export { ConfirmDialog } from "./ConfirmDialog";
 
 export { BottomNavigation } from "./BottomNavigation";
 export { KaraokeLyrics } from "./KaraokeLyrics";
+
+export { VerificationState } from "./VerificationState";
