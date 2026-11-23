@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import CoupleMusicPlayer from "@/app/components/CoupleMusicPlayer";
 import { coupleDriveImage, COUPLE_GALLERY_SLOTS } from "@/lib/coupleProfileDefaults";
 import CoupleImage from "@/app/components/CoupleImage";
+import CoupleCreatePromo from "@/app/components/CoupleCreatePromo";
+import CoupleBottomNavigation from "@/app/components/CoupleBottomNavigation";
 
 function splitRelationshipStart(value) {
   if (!value) return { date: "", time: "" };
@@ -580,6 +582,8 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </div>
         </section>
 
+        <CoupleCreatePromo />
+
         <section className="df-couple-story" id="df-couple-story" aria-labelledby="df-couple-story-title">
           {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("story")} aria-label={en ? "Edit story panel" : "Edit panel cerita"}><Pencil /></button>}
           <div className="df-couple-story-symbol" aria-hidden="true">♡</div>
@@ -597,13 +601,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
         </footer>
       </div>
 
-      <nav className="df-couple-bottom-nav" aria-label={en ? "Couple page navigation" : "Navigasi halaman Couple"}>
-        <a className="df-couple-bottom-nav-item" href="#df-couple-home"><span aria-hidden="true">⌂</span><span>{en ? "Home" : "Awal"}</span></a>
-        <a className="df-couple-bottom-nav-item" href="#df-couple-profile"><span aria-hidden="true">♡</span><span>{en ? "Profile" : "Profil"}</span></a>
-        <button className="df-couple-bottom-nav-music" type="button" onClick={() => window.dispatchEvent(new CustomEvent("df-couple-music-toggle"))} aria-label={musicPlaying ? "Pause music" : "Play music"} aria-pressed={musicPlaying}>{musicPlaying ? "Ⅱ" : "♫"}</button>
-        <a className="df-couple-bottom-nav-item" href="#df-couple-gallery"><span aria-hidden="true">▧</span><span>{en ? "Gallery" : "Galeri"}</span></a>
-        <a className="df-couple-bottom-nav-item" href="#df-couple-story"><span aria-hidden="true">▤</span><span>{en ? "Story" : "Kisah"}</span></a>
-      </nav>
+      <CoupleBottomNavigation locale={locale} musicPlaying={musicPlaying} />
 
       {editable && showResetConfirm && (
         <div className="df-couple-confirm-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowResetConfirm(false); }}>
