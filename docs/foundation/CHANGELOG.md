@@ -225,4 +225,5 @@
 - Rebuilt Theme Manager surfaces with shared Card, Button, Badge, Alert, ConfirmDialog, PageHeader, and Link primitives; replaced legacy hardcoded panel colors with semantic theme tokens.
 - Added full and compact User VerificationState usage to the login page, AccountEntry, and navigation profile.
 - No Supabase schema, RLS, policy, production data, or secret changes.
-- Status: source changes committed directly to `main`; production build, deployment, and browser QA still pending.
+- Build verification: `npm run build` passed on source commit `54d887e` in a Vercel sandbox using non-production placeholder Supabase environment values; compilation, lint/type validation, and all 36 static page generations succeeded. Existing non-blocking `<img>` and hook-dependency warnings remain elsewhere in the admin area.
+- Production deployment: blocked by Vercel API HTTP 402 `api-deployments-free-per-day` (24-hour retry window). The latest Production deployment remains on commit `3812ee5`; this batch is not yet live. Browser QA on the deployed build remains pending.
