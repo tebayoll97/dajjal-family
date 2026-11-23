@@ -156,9 +156,9 @@ export default function AdminDashboardPage() {
 
   if (checking) {
     return (
-      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-[var(--df-text-secondary)]">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] flex flex-col items-center justify-center gap-5 px-5 text-purple-200">
         <div className="relative flex h-16 w-16 items-center justify-center">
-          <div className="absolute inset-0 rounded-full border border-[var(--df-border)]" />
+          <div className="absolute inset-0 rounded-full border border-purple-500/20" />
           <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-purple-400 border-r-cyan-400 animate-spin" />
           <span className="text-2xl">♛</span>
         </div>
@@ -169,7 +169,7 @@ export default function AdminDashboardPage() {
 
   if (error && !admin) {
     return (
-      <main className="min-h-[75vh] bg-[var(--df-bg)] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
+      <main className="min-h-[75vh] bg-[#080711] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
         <div className="ui-gradient-frame ui-card rounded-2xl p-7 max-w-md w-full">
           <div className="text-4xl">🔒</div>
           <h1 className="ui-title mt-4">{t.denied}</h1>
@@ -185,57 +185,20 @@ export default function AdminDashboardPage() {
   if (!admin) return null;
 
   const modules = [
-    { href: "/admin/contact-center", icon: "✉️", number: "00from-violet-500/20 via-fuchsia-500/5" },
-    { href: "/admin/music", icon: "♫", number: "01/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },
-    {
-      href: "/admin/players",
-      icon: "👥",
-      number: "02from-blue-500/20 via-indigo-500/5",
-    },
-    {
-      href: "/admin/wedding-gallery",
-      icon: "💒",
-      number: "04from-pink-500/20 via-rose-500/5",
-    },
-    {
-      href: "/admin/wedding-event",
-      icon: "🗓️",
-      number: "05id" ? "Waktu Acara Undangan" : "Wedding Event Time",
-      description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.",
-      available: true,
-
-    },
-    {
-      href: "/admin/wedding-guestbook",
-      icon: "💬",
-      number: "06id" ? "Ucapan Guestbook" : "Guestbook Messages",
-      description: language === "id" ? "Lihat dan hapus pesan pada undangan pernikahan." : "Review and delete wedding invitation guestbook messages.",
-      available: true,
-
-    },
-    {
-      href: "/admin/theme",
-      icon: "🎨",
-      number: "07id" ? "Pengelola Tema" : "Theme Manager",
-      description: language === "id" ? "Pratinjau mode tampilan dan katalog palet global." : "Preview appearance modes and the global palette catalog.",
-      available: true,
-
-    },
-    {
-      href: "/admin/storage",
-      icon: "☁️",
-      number: "08from-cyan-500/20 via-blue-500/5",
-    },
-    {
-      href: null,
-      icon: "📊",
-      number: "09from-cyan-500/15 via-blue-500/5",
-    },
+    { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true },
+    { href: "/admin/players", icon: "👥", number: "01", title: t.players, description: t.playersDesc, available: true },
+    { href: "/admin/music", icon: "♫", number: "02", title: t.music, description: t.musicDesc, available: true },
+    { href: "/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },
+    { href: "/admin/wedding-gallery", icon: "💒", number: "04", title: t.gallery, description: t.galleryDesc, available: true },
+    { href: "/admin/wedding-event", icon: "🗓️", number: "05", title: language === "id" ? "Waktu Acara Undangan" : "Wedding Event Time", description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.", available: true },
+    { href: "/admin/wedding-guestbook", icon: "💬", number: "06", title: language === "id" ? "Ucapan Guestbook" : "Guestbook Messages", description: language === "id" ? "Lihat dan kelola pesan pada undangan pernikahan." : "Review and manage wedding invitation guestbook messages.", available: true },
+    { href: "/admin/theme", icon: "🎨", number: "07", title: language === "id" ? "Pengelola Tema" : "Theme Manager", description: language === "id" ? "Pratinjau mode tampilan dan katalog palet global." : "Preview appearance modes and the global palette catalog.", available: true },
+    { href: "/admin/storage", icon: "☁️", number: "08", title: t.storage, description: t.storageDesc, available: true },
+    { href: null, icon: "📊", number: "09", title: t.statistics, description: t.statisticsDesc, available: false },
   ];
-
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[var(--df-bg)] text-[var(--df-text)] px-4 py-6 sm:px-6 sm:py-8">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-[var(--df-primary-soft)] blur-[100px]" />
+    <main className="relative min-h-screen overflow-hidden bg-[#080711] text-white px-4 py-8 sm:px-6 sm:py-12">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[min(90vw,50rem)] -translate-x-1/2 rounded-full bg-purple-600/10 blur-[100px]" />
       <div className="relative mx-auto max-w-6xl">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -284,7 +247,7 @@ export default function AdminDashboardPage() {
                 <>
                   <div className="absolute inset-0 bg-[var(--df-primary-soft)] opacity-50" />
                   <div className="relative flex items-start justify-between gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-[var(--df-surface-raised)] text-[var(--df-primary)] text-2xl">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] text-2xl">
                       {module.icon}
                     </div>
                     <span className="font-mono text-xs tracking-widest text-gray-600">{module.number}</span>
@@ -293,7 +256,7 @@ export default function AdminDashboardPage() {
                     <h3 className="text-lg font-extrabold tracking-tight">{module.title}</h3>
                     <p className="mt-2 min-h-[3.2rem] text-sm leading-relaxed text-[var(--df-text-secondary)]">{module.description}</p>
                   </div>
-                  <div className="relative mt-6 flex items-center justify-between border-t border-[var(--df-border)] pt-4">
+                  <div className="relative mt-6 flex items-center justify-between border-t border-white/10 pt-4">
                     <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-primary)]" : "text-[10px] font-extrabold tracking-[0.16em] text-gray-500"}>
                       {module.available ? t.open : t.coming}
                     </span>
