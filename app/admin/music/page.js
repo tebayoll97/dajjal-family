@@ -56,25 +56,7 @@ export default function AdminMusicCatalogPage() {
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState("");
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const { data, error } = await supabaseAdminClient.auth.getSession();
-        if (error) throw error;
-        if (!data?.session) { router.replace("/admin/login"); return; }
-        const session = data.session;
-        const verify = await verifyAdminSession(session);
-        if (!verify.ok) { router.replace("/admin/login"); return; }
-        if (active) setToken(session.access_token);
-      } catch {
-        if (active) setNotice(t.failed);
-      } finally {
-        if (active) setChecking(false);
-      }
-    })();
-    return () => { active = false; };
-  }, [router, t.failed]);
+
 
   const loadCatalog = useCallback(async () => {
     if (!token) return;
