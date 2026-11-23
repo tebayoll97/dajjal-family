@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { useLanguage } from "@/app/components/LanguageProvider";
 
 export default function AdminWeddingEventPage() {
   const router = useRouter();
+  const { language } = useLanguage();
+  const id = language === "id";
+  const tx = (indonesian, english) => id ? indonesian : english;
   const [token, setToken] = useState("");
   const [checking, setChecking] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -35,7 +39,7 @@ export default function AdminWeddingEventPage() {
         }
         if (active) setToken(session.access_token);
       } catch (err) {
-        if (active) setError(err.message || "Tidak dapat memverifikasi admin.");
+        if (active) setError(err.message || tx("Tidak dapat memverifikasi admin.", "Unable to verify administrator access."));
       } finally {
         if (active) setChecking(false);
       }
@@ -57,7 +61,7 @@ export default function AdminWeddingEventPage() {
         router.replace("/admin/login");
         return;
       }
-      if (!response.ok) throw new Error(result.error || "Gagal memuat waktu acara.");
+      if (!response.ok) throw new Error(result.error || tx("Gagal memuat waktu acara.", "Unable to load event time."));
       if (active) {
         setEventDate(result.event_date || "");
         setEventTime(result.event_time || "");
@@ -83,10 +87,10 @@ export default function AdminWeddingEventPage() {
         router.replace("/admin/login");
         return;
       }
-      if (!response.ok) throw new Error(result.error || "Gagal menyimpan waktu acara.");
+      if (!response.ok) throw new Error(result.error || tx("Gagal menyimpan waktu acara.", "Unable to save event time."));
       setEventDate(result.event_date || "");
       setEventTime(result.event_time || "");
-      setNotice("Tanggal dan waktu acara berhasil diperbarui.");
+      setNotice(tx("Tanggal dan waktu acara berhasil diperbarui.", "Event date and time updated successfully."));
     } catch (err) {
       setError(err.message || "Gagal menyimpan waktu acara.");
     } finally {
@@ -94,30 +98,30 @@ export default function AdminWeddingEventPage() {
     }
   }
 
-  if (checking) return <main className="min-h-screen grid place-items-center bg-[#080711] text-purple-200">MEMVERIFIKASI ADMIN...</main>;
+  if (checking) return <main className="min-h-screen grid place-items-center bg-[var(--df-bg)] text-[var(--df-text-secondary)] admin-small">{tx("MEMVERIFIKASI ADMIN...", "VERIFYING ADMIN...")}</main>;
 
   return (
-    <main className="min-h-screen bg-[#080711] px-4 py-8 text-white sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-[var(--df-bg)] px-4 py-5 text-[var(--df-text)] sm:px-6 sm:py-7">
       <div className="mx-auto max-w-2xl">
-        <Link href="/admin" className="inline-flex min-h-11 items-center rounded-xl border border-purple-400/25 bg-purple-500/10 px-4 py-2 text-xs font-bold text-purple-200">← KEMBALI KE DASHBOARD</Link>
+        <Link href={`/${language}/admin`} className="inline-flex min-h-11 items-center rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-2 text-xs font-bold text-[var(--df-primary)]">← {tx("KEMBALI KE DASHBOARD", "BACK TO DASHBOARD")}</Link>
         <header className="my-7">
-          <p className="text-[10px] font-extrabold tracking-[.22em] text-amber-300">DAJJAL FAMILY · WEDDING MANAGEMENT</p>
-          <h1 className="mt-2 text-2xl font-black sm:text-3xl">PENGATURAN WAKTU ACARA</h1>
-          <p className="mt-2 text-sm text-gray-400">Atur tanggal dan jam resepsi. Perubahan ini juga memperbarui hitung mundur pada undangan publik.</p>
+          <p className="text-[10px] font-extrabold tracking-[.22em] text-[var(--df-primary)]">DAJJAL FAMILY · WEDDING MANAGEMENT</p>
+          <h1 className="mt-2 text-2xl font-black sm:text-3xl">{tx("PENGATURAN WAKTU ACARA", "EVENT TIME SETTINGS")}</h1>
+          <p className="mt-2 text-sm text-[var(--df-text-secondary)]">{tx("Atur tanggal dan jam resepsi. Perubahan ini juga memperbarui hitung mundur pada undangan publik.", "Set the reception date and time. Changes also update the countdown on the public invitation.")}</p>
         </header>
 
-        <section className="rounded-2xl border border-amber-400/20 bg-[#151020] p-4 sm:p-6">
-          {error && <p role="alert" className="mb-4 rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>}
-          {notice && <p role="status" className="mb-4 rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-3 text-sm text-emerald-200">{notice}</p>}
+        <section className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-4 sm:p-6">
+          {error && <p role="alert" className="mb-4 rounded-xl border border-[var(--df-danger)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-danger)]">{error}</p>}
+          {notice && <p role="status" className="mb-4 rounded-xl border border-[var(--df-success)] bg-[var(--df-surface-raised)] p-3 text-sm text-[var(--df-success)]">{notice}</p>}
           <form onSubmit={saveEventTime} className="space-y-5">
-            <label className="block text-sm font-bold text-gray-200">Tanggal acara
-              <input required type="date" value={eventDate} onChange={event => setEventDate(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-base text-white [color-scheme:dark]" />
+            <label className="block text-sm font-bold text-[var(--df-text)]">{tx("Tanggal acara", "Event date")}
+              <input required type="date" value={eventDate} onChange={event => setEventDate(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-base text-[var(--df-text)]" />
             </label>
-            <label className="block text-sm font-bold text-gray-200">Waktu acara (Waktu Server)
+            <label className="block text-sm font-bold text-gray-200">{tx("Waktu acara (Waktu Server)", "Event time (Server Time)")}
               <input required type="time" value={eventTime} onChange={event => setEventTime(event.target.value)} disabled={loading || saving} className="mt-2 min-h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-base text-white [color-scheme:dark]" />
             </label>
-            <p className="text-xs leading-relaxed text-gray-500">Jam yang disimpan digunakan oleh hitung mundur dan ditampilkan sebagai waktu server pada panel Rangkaian Acara.</p>
-            <button type="submit" disabled={loading || saving || !eventDate || !eventTime} className="min-h-12 w-full rounded-xl bg-amber-500 px-5 py-3 text-sm font-extrabold text-black hover:bg-amber-400 disabled:opacity-50">{saving ? "MENYIMPAN..." : loading ? "MEMUAT..." : "SIMPAN WAKTU ACARA"}</button>
+            <p className="text-xs leading-relaxed text-[var(--df-text-muted)]">{tx("Jam yang disimpan digunakan oleh hitung mundur dan ditampilkan sebagai waktu server pada panel Rangkaian Acara.", "The saved time drives the countdown and is displayed as server time in the Event Schedule panel.")}</p>
+            <button type="submit" disabled={loading || saving || !eventDate || !eventTime} className="min-h-12 w-full rounded-xl bg-[var(--df-primary)] px-5 py-3 text-sm font-extrabold text-[var(--df-on-primary)] hover:opacity-90 disabled:opacity-50">{saving ? tx("MENYIMPAN...", "SAVING...") : loading ? tx("MEMUAT...", "LOADING...") : tx("SIMPAN WAKTU ACARA", "SAVE EVENT TIME")}</button>
           </form>
         </section>
       </div>
