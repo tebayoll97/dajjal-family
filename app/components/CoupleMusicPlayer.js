@@ -343,7 +343,7 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     const audio = audioRef.current;
     if (!audio || playInFlightRef.current) return;
 
-    if (playingRef.current) {
+    if (!audio.paused && !audio.ended) {
       const requestId = ++playRequestRef.current;
       shouldPlayRef.current = false;
       playingRef.current = false;
