@@ -44,7 +44,7 @@ export default function AdminWeddingGuestbookPage() {
   const { language } = useLanguage();
   const { session } = useAdminAuth();
   const id = language === "id";
-  const tx = (indonesian, english) => id ? indonesian : english;
+  const tx = useCallback((indonesian, english) => id ? indonesian : english, [id]);
   const adminToken = session?.access_token || "";
   const [entries, setEntries] = useState([]);
   const [page, setPage] = useState(1);
