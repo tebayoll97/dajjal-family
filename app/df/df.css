@@ -156,3 +156,27 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
  .df-hero-actions{gap:.5rem;margin-top:1rem}
  .df-hero-actions .df-button{flex:1 1 0;min-width:0;padding:.65rem .7rem;font-size:.65rem}
 }
+
+
+/* Couple Profile CTA: same width as Explore, with a distinct semantic accent. */
+.df-hero-primary-stack {
+  display: flex;
+  width: min(100%, 17rem);
+  flex-direction: column;
+  gap: .5rem;
+}
+.df-hero-primary-stack .df-button { width: 100%; }
+.df-button-couple {
+  background: var(--df-surface-raised);
+  color: var(--df-text);
+  border-color: var(--df-accent);
+}
+.df-button-couple:hover {
+  background: var(--df-surface-overlay);
+  border-color: var(--df-accent);
+}
+.df-hero-actions { align-items: center; }
+@media (max-width: 560px) {
+  .df-hero-primary-stack { width: min(100%, 17rem); }
+  .df-hero-primary-stack .df-button { flex: 0 0 auto; }
+}
