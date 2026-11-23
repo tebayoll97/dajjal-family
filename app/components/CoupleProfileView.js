@@ -582,7 +582,7 @@ export default function CoupleProfileView({ profile, content, media = [], locale
           </div>
         </section>
 
-        <CoupleCreatePromo />
+        <CoupleCreatePromo profileSlug={profile?.slug} locale={locale} />
 
         <section className="df-couple-story" id="df-couple-story" aria-labelledby="df-couple-story-title">
           {editable && <button type="button" className="df-couple-pencil df-couple-batch-pencil" onClick={() => openBatchPanel("story")} aria-label={en ? "Edit story panel" : "Edit panel cerita"}><Pencil /></button>}
