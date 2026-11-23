@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const messages = {
@@ -77,9 +77,9 @@ const messages = {
 export default function AdminStoragePage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { session } = useAdminAuth();
   const t = messages[language] || messages.id;
-  const [checking, setChecking] = useState(true);
-  const [token, setToken] = useState("");
+  const token = session?.access_token || "";
   const [status, setStatus] = useState(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
@@ -184,7 +184,7 @@ export default function AdminStoragePage() {
     }
   }
 
-  if (checking) return <main className="min-h-screen grid place-items-center bg-[var(--df-bg)] text-[var(--df-text-secondary)]">{t.checking}</main>;
+
 
   return (
     <main className="min-h-screen bg-[var(--df-bg)] px-4 py-7 text-[var(--df-text)] sm:px-6 sm:py-10">
