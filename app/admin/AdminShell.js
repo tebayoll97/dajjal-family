@@ -119,7 +119,7 @@ export default function AdminShell({ children }) {
       </aside>
 
       <div className="df-admin-workspace">
-        <header className="df-admin-topbar">
+        <div role="banner" className="df-admin-topbar">
           <div className="df-admin-topbar-copy">
             <span className="df-admin-overline">DAJJAL FAMILY / ADMIN</span>
             <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} />
@@ -129,7 +129,7 @@ export default function AdminShell({ children }) {
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
             <Button variant="danger" size="sm" loading={signingOut} onClick={signOut}>{language === "id" ? "Keluar" : "Sign out"}</Button>
           </div>
-        </header>
+        </div>
 
         <nav className="df-admin-mobile-nav" aria-label={language === "id" ? "Menu admin" : "Admin menu"}>
           {groups.flatMap((group) => group.items).map((item) => {
