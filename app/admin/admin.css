@@ -93,3 +93,6 @@
 #df-admin-shell .df-admin-main>main .bg-black\\/20{background:var(--df-surface-raised)}
 #df-admin-shell .df-admin-main>main .border-white\\/15{border-color:var(--df-border-strong)}
 #df-admin-shell .df-admin-main>main .text-gray-300{color:var(--df-text-secondary)}
+
+#df-admin-shell .df-admin-current-route{margin:0;color:var(--df-text);font-size:var(--df-type-admin-small-size);font-weight:750}
+#df-admin-shell .df-admin-main > main > .relative > header{display:none}
