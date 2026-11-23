@@ -639,3 +639,16 @@ Canonical specification: Akashic Record dajjal-family/core/global_typography.md.
 - Scope: semantic typography/weight tokens, reusable semantic utility roles, Global Navigation Drawer typography, and desktop workspace sidebar typography.
 - Legacy/page-specific font declarations are not yet fully migrated; continue with consumer audits and incremental conversion.
 - Vercel deployment for this commit returned HTTP 402 `api-deployments-free-per-day`. Build, deployment, and live visual QA remain unverified. Do not claim production release until a matching deployment is READY and inspected.
+
+
+## 25. Music playback and Karaoke reliability — 2026-11-24
+
+- Music playback changes are scoped to CoupleMusicPlayer and public /music. Couple reference/profile pages retain their isolated visual identity; do not force them into global presets.
+- Couple playback decisions consult the media element actual paused/ended state alongside synchronized UI state. Keep one audio element per Couple player; never create overlapping playback sources.
+- Public Music playback uses request sequencing for play/track transitions and cancellation-safe volume fades. A stale fade callback must never pause or replace a newer track.
+- Karaoke renders through a document-body portal as a viewport-filling overlay. Escape, close, and browser back close only the overlay; they must not pause or reset audio.
+- When a track ends while Karaoke is open, playback stops and Karaoke remains open at final progress. The user may replay from the Karaoke control.
+- Karaoke transcript header presents LIRIK/LYRICS, active track title (marquee when long), and current/total lyric position. Font scaling works on mobile and desktop; do not override it with !important.
+- Karaoke API/UI remain bilingual through LanguageProvider. Lyrics requests remain no-store; no database schema, media object, or music catalog records are changed.
+- The reusable KaraokeLyrics export is documented in Component Workbench and Component Catalog. Its live interaction requires a published track ID and active HTMLAudioElement.
+- Build, deployment, and real-device playback QA are separate gates. Verify small Android, larger phone, tablet, desktop, ID/EN, Escape/browser-back, close while playing, track end, replay, long-title marquee, and font slider. Never claim device audio QA without performing it.
