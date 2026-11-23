@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { useTheme } from "@/app/components/ThemeProvider";
+import { AdminAuthProvider } from "@/app/components/AdminAuthProvider";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { stripLocalePrefix } from "@/lib/localePath";
 import { Badge, Button, ConfirmDialog, PageHeader } from "@/app/components/ui";
@@ -154,7 +155,7 @@ export default function AdminShell({ children }) {
           cancelLabel={language === "id" ? "Tidak" : "Cancel"}
           loading={signingOut}
         />
-        <div id="df-admin-main" className="df-admin-main">{children}</div>
+        <div id="df-admin-main" className="df-admin-main"><AdminAuthProvider>{children}</AdminAuthProvider></div>
         <footer className="df-admin-footer"><span>DAJJAL FAMILY ADMIN</span><span>{language === "id" ? "Pusat kendali ekosistem" : "Ecosystem control center"}</span></footer>
       </div>
     </div>
