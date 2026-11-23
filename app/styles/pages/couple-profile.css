@@ -1245,3 +1245,22 @@
 .df-couple-batch-music-preview small { text-align: left; }
 
 .df-couple-music-characteristics { margin:.35rem 0 0; color:var(--df-text-muted); font-size:.76rem; font-weight:750; letter-spacing:.04em; }
+
+
+/* Shared Couple bottom navigation — same full-width fixed composition as /music. */
+.df-couple-profile-page { padding-bottom: calc(var(--df-bottom-nav-height, 4.25rem) + var(--df-bottom-nav-center-rise, 1rem) + 2rem); }
+.df-couple-shared-bottom-nav {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: var(--df-space-2, .5rem) var(--df-space-3, .75rem);
+  padding-bottom: calc(var(--df-space-2, .5rem) + env(safe-area-inset-bottom, 0px));
+  border: 0;
+  border-top: 1px solid var(--df-border);
+  border-radius: 0;
+  transform: none;
+  box-shadow: 0 -8px 28px rgba(0,0,0,.12);
+}
+.df-couple-shared-bottom-nav .ui-bottom-navigation-center { margin-top: calc(-1 * var(--df-bottom-nav-center-rise, 1rem)); }
