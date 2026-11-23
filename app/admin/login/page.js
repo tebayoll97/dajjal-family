@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { VerificationState } from "@/app/components/ui";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -116,8 +117,8 @@ export default function AdminLoginPage() {
 
   if (checking) {
     return (
-      <main className="min-h-[75vh] bg-[var(--df-bg)] flex items-center justify-center text-[var(--df-primary)]">
-        {isID ? "Memeriksa sesi..." : "Checking session..."}
+      <main className="min-h-[75vh] bg-[var(--df-bg)] flex items-center justify-center px-4">
+        <VerificationState variant="admin" />
       </main>
     );
   }
