@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { getThemeTokens } from "@/app/theme/themeTokens";
 import { THEME_REGISTRY } from "@/app/theme/themeRegistry";
@@ -63,10 +64,7 @@ export default function AdminThemePage() {
         if (sessionError) throw sessionError;
         const session = data?.session;
         if (!session) { router.replace("/admin/login"); return; }
-        const response = await fetch("/api/admin/me", {
-          headers: { Authorization: "Bearer " + session.access_token },
-          cache: "no-store",
-        });
+        const response = await verifyAdminSession(session);
         const result = await response.json().catch(() => ({}));
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) {
