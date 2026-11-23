@@ -26,6 +26,10 @@ const copy = {
     storage: "Central Storage",
     storageDesc: "Connect Google Drive and manage the platform storage provider.",
     music: "Music Library",
+    couple: "Kelola Couple Profile",
+    coupleDesc: "Kelola halaman Couple Profile publik dan status publikasinya.",
+    couple: "Couple Profiles",
+    coupleDesc: "Manage public Couple Profile pages and their publication status.",
     musicDesc: "Upload, organize, preview, and publish the music catalog.",
     open: "OPEN MODULE",
     coming: "COMING SOON",
@@ -165,7 +169,7 @@ export default function AdminDashboardPage() {
 
   if (error && !admin) {
     return (
-      <main className="min-h-[75vh] bg-[#080711] text-white flex flex-col items-center justify-center px-5 text-center">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
         <div className="ui-gradient-frame ui-card rounded-2xl p-7 max-w-md w-full">
           <div className="text-4xl">🔒</div>
           <h1 className="ui-title mt-4">{t.denied}</h1>
@@ -182,7 +186,8 @@ export default function AdminDashboardPage() {
 
   const modules = [
     { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true, accent: "from-violet-500/20 via-fuchsia-500/5" },
-    { href: "/admin/music", icon: "♫", number: "06", title: t.music, description: t.musicDesc, available: true, accent: "from-purple-500/20 via-cyan-500/5" },
+    { href: "/admin/music", icon: "♫", number: "02", title: t.music, description: t.musicDesc, available: true },
+    { href: "/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },
     {
       href: "/admin/players",
       icon: "👥",
@@ -195,7 +200,7 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/wedding-gallery",
       icon: "💒",
-      number: "02",
+      number: "08",
       title: t.gallery,
       description: t.galleryDesc,
       available: true,
@@ -204,7 +209,7 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/wedding-event",
       icon: "🗓️",
-      number: "03",
+      number: "09",
       title: language === "id" ? "Waktu Acara Undangan" : "Wedding Event Time",
       description: language === "id" ? "Atur tanggal dan waktu hitung mundur serta resepsi." : "Set the invitation date, countdown, and reception time.",
       available: true,
@@ -254,7 +259,7 @@ export default function AdminDashboardPage() {
       <div className="relative mx-auto max-w-6xl">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="ui-eyebrow">DAJJAL FAMILY <span className="text-cyan-300">/ ADMIN CONTROL CENTER</span></p>
+            <p className="ui-eyebrow">DAJJAL FAMILY <span className="text-[var(--df-accent)]">/ ADMIN CONTROL CENTER</span></p>
             <h1 className="ui-title">
               {t.title} <span className="ui-gradient-text">{t.accent}</span>
             </h1>
@@ -290,26 +295,26 @@ export default function AdminDashboardPage() {
               <p className="ui-eyebrow mb-1">{t.quick}</p>
               <h2 className="ui-section-title">{t.management}</h2>
             </div>
-            <span className="text-[10px] font-bold tracking-[0.18em] text-gray-600">09 MODULES</span>
+            <span className="text-[10px] font-bold tracking-[0.18em] text-[var(--df-text-muted)]">10 MODULES</span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {modules.map((module) => {
               const content = (
                 <>
-                  <div className={`absolute inset-0 bg-gradient-to-br ${module.accent} to-transparent opacity-80`} />
+                  <div className="absolute inset-0 bg-[var(--df-primary-soft)] opacity-50" />
                   <div className="relative flex items-start justify-between gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/25 text-2xl">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-[var(--df-surface-raised)] text-[var(--df-primary)] text-2xl">
                       {module.icon}
                     </div>
                     <span className="font-mono text-xs tracking-widest text-gray-600">{module.number}</span>
                   </div>
                   <div className="relative mt-7">
                     <h3 className="text-lg font-extrabold tracking-tight">{module.title}</h3>
-                    <p className="mt-2 min-h-[3.2rem] text-sm leading-relaxed text-gray-400">{module.description}</p>
+                    <p className="mt-2 min-h-[3.2rem] text-sm leading-relaxed text-[var(--df-text-secondary)]">{module.description}</p>
                   </div>
-                  <div className="relative mt-6 flex items-center justify-between border-t border-white/10 pt-4">
-                    <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-purple-300" : "text-[10px] font-extrabold tracking-[0.16em] text-gray-500"}>
+                  <div className="relative mt-6 flex items-center justify-between border-t border-[var(--df-border)] pt-4">
+                    <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-primary)]" : "text-[10px] font-extrabold tracking-[0.16em] text-gray-500"}>
                       {module.available ? t.open : t.coming}
                     </span>
                     <span className={module.available ? "text-lg text-cyan-300 transition-transform group-hover:translate-x-1" : "text-gray-600"} aria-hidden="true">
@@ -319,14 +324,14 @@ export default function AdminDashboardPage() {
                 </>
               );
 
-              const className = "ui-interactive ui-card group relative flex min-h-[230px] flex-col overflow-hidden rounded-2xl border border-purple-500/20 bg-[#11101d] p-5 text-left shadow-lg shadow-black/10 hover:-translate-y-1 hover:border-purple-400/50 hover:shadow-purple-950/30 focus-visible:outline-none";
+              const className = "ui-interactive ui-card group relative flex min-h-[210px] flex-col overflow-hidden rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 text-left shadow-sm hover:-translate-y-1 hover:border-[var(--df-primary)] focus-visible:outline-none";
 
               return module.available ? (
-                <Link key={module.number} href={module.href} className={className}>
+                <Link key={module.href} href={`/${language === "en" ? "en" : "id"}${module.href}`} className={className}>
                   {content}
                 </Link>
               ) : (
-                <div key={module.number} aria-disabled="true" className={`${className} cursor-not-allowed opacity-65`}>
+                <div key={module.href || module.number} aria-disabled="true" className={`${className} cursor-not-allowed opacity-65`}>
                   {content}
                 </div>
               );
