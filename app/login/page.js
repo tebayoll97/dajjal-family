@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "../components/LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
+import { VerificationState } from "../components/ui";
 
 function isGoogleUser(user) {
   return user?.app_metadata?.provider === "google" ||
@@ -161,10 +162,7 @@ export default function LoginPage() {
   if (loading) {
     return (
       <main className="flex min-h-[calc(100svh-72px)] items-center justify-center bg-[var(--df-bg)] px-4 py-6">
-        <p className="flex items-center gap-2 text-sm text-[var(--df-text-secondary)]" role="status">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--df-border)] border-t-[var(--df-primary)]" />
-          {isID ? "Memeriksa sesi akun..." : "Checking account session..."}
-        </p>
+        <VerificationState variant="user" />
       </main>
     );
   }
