@@ -62,32 +62,7 @@ export default function AdminWeddingGuestbookPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const { data, error: sessionError } = await supabaseAdminClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        const session = data?.session;
-        if (!session) {
-          router.replace("/admin/login");
-          return;
-        }
-        const response = await verifyAdminSession(session);
-        if (!response.ok) {
-          await supabaseAdminClient.auth.signOut();
-          router.replace("/admin/login");
-          return;
-        }
-        if (active) setAdminToken(session.access_token);
-      } catch (err) {
-        if (active) setError(err.message || tx("Tidak dapat memverifikasi admin.", "Unable to verify administrator access."));
-      } finally {
-        if (active) setChecking(false);
-      }
-    })();
-    return () => { active = false; };
-  }, [router]);
+
 
   const loadEntries = useCallback(async (targetPage = page) => {
     if (!adminToken) return;
@@ -194,10 +169,6 @@ export default function AdminWeddingGuestbookPage() {
 
   const start = pagination.total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const end = Math.min(page * PAGE_SIZE, pagination.total);
-
-  if (checking) {
-    return <main className="min-h-screen bg-[var(--df-bg)] grid place-items-center px-4 text-sm font-bold tracking-widest text-[var(--df-text-secondary)]">{tx("MEMVERIFIKASI ADMIN...","VERIFYING ADMIN...")}</main>;
-  }
 
   return (
     <main className="min-h-screen bg-[var(--df-bg)] px-4 py-5 text-[var(--df-text)] sm:px-6 sm:py-7">
