@@ -13,6 +13,7 @@ const copy = {
     subtitle: "UNIVERSE",
     intro: "A home for our family, characters, games, stories, creative projects, and unforgettable moments. One family, endless stories.",
     explore: "EXPLORE PROJECTS",
+    createCoupleProfile: "CREATE COUPLE PROFILE",
     viewEvents: "VIEW EVENTS",
     events: "Family Events",
     eventsSub: "Special moments deserve their own place.",
@@ -39,6 +40,7 @@ const copy = {
     subtitle: "UNIVERSE",
     intro: "Rumah bagi keluarga, karakter, game, cerita, proyek kreatif, dan momen tak terlupakan. Satu keluarga, cerita tanpa batas.",
     explore: "JELAJAHI PROYEK",
+    createCoupleProfile: "BUAT PROFIL PASANGAN",
     viewEvents: "LIHAT ACARA",
     events: "Acara Keluarga",
     eventsSub: "Momen istimewa layak memiliki tempatnya sendiri.",
@@ -72,7 +74,10 @@ export default function DajjalFamilyHome() {
         <h1>{t.title}<span>{t.subtitle}</span></h1>
         <p className="df-hero-copy">{t.intro}</p>
         <div className="df-hero-actions">
-          <Link href="#projects" className="df-button">{t.explore}</Link>
+          <div className="df-hero-primary-stack">
+            <Link href="#projects" className="df-button">{t.explore}</Link>
+            <Link href={withLocalePrefix("/app/create-profile-couple", language)} className="df-button df-button-couple">{t.createCoupleProfile}</Link>
+          </div>
           <Link href="#events" className="df-button df-button-secondary">{t.viewEvents}</Link>
         </div>
       </section>
