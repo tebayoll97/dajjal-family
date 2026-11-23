@@ -106,18 +106,10 @@ export default function AdminThemePage() {
 
   const tokens = useMemo(() => getThemeTokens(draftPreset, mode), [draftPreset, mode]);
   const previewStyle = {
+    ...tokens,
     background: tokens["--df-bg"],
     color: tokens["--df-text"],
     borderColor: tokens["--df-border"],
-    "--df-bg": tokens["--df-bg"],
-    "--df-surface": tokens["--df-surface"],
-    "--df-surface-raised": tokens["--df-surface-raised"],
-    "--df-text": tokens["--df-text"],
-    "--df-text-secondary": tokens["--df-text-secondary"],
-    "--df-border": tokens["--df-border"],
-    "--df-primary": tokens["--df-primary"],
-    "--df-on-primary": tokens["--df-on-primary"],
-    "--df-accent": tokens["--df-accent"],
   };
 
 
