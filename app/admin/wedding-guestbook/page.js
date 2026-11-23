@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { verifyAdminSession } from "@/lib/adminClientSession";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const PAGE_SIZE = 50;
@@ -72,10 +73,7 @@ export default function AdminWeddingGuestbookPage() {
           router.replace("/admin/login");
           return;
         }
-        const response = await fetch("/api/admin/me", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-          cache: "no-store",
-        });
+        const response = await verifyAdminSession(session);
         if (!response.ok) {
           await supabaseAdminClient.auth.signOut();
           router.replace("/admin/login");
