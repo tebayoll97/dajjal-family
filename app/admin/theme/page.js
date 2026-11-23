@@ -165,7 +165,7 @@ export default function AdminThemePage() {
                     <Card as="button" interactive key={id} type="button" aria-pressed={selected} onClick={() => setDraftPreset(id)} className={selected ? "df-theme-manager__preset is-selected" : "df-theme-manager__preset"}>
                       <span className="df-theme-manager__preset-head"><strong>{entry.label}</strong>{selected ? <Badge variant="success">{t.selectedLabel}</Badge> : <Badge>{t.select}</Badge>}</span>
                       <span className="df-theme-manager__preset-description">{id === "tecno" ? t.tecnoDesc : t.coupleDesc}</span>
-                    </button>
+                    </Card>
                   );
                 })}
               </div>
