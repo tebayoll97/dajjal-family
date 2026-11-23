@@ -274,3 +274,8 @@ The audit findings about the lack of a dedicated Admin Shell and compact admin t
 - Wedding Event, Wedding Gallery, Guestbook, Central Storage, and Admin Login now use the shared LanguageProvider. The Admin Shell owns the shared locale control.
 
 This is an implementation addendum, not a QA sign-off. A production build passed in the Vercel sandbox with non-production placeholder Supabase environment values. The Vercel Production deployment API is currently blocked by HTTP 402 `api-deployments-free-per-day` with a 24-hour retry window. Visual comparison across four theme combinations, mobile/tablet/desktop browser checks, and CRUD regression tests remain required.
+
+
+## Follow-up implementation note — 2026-11-23
+
+The next implementation batch added the reusable `VerificationState` component and `AdminAuthProvider`, integrated the component into the Design System Workbench, and migrated the admin workspace pages to the shared session context. Theme Manager was rebuilt to use shared UI primitives and semantic tokens. These source changes are not considered production-verified until the build, deployment, and browser QA gates pass.
