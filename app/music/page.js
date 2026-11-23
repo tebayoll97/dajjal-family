@@ -74,6 +74,8 @@ export default function PublicMusicPage() {
   const playTrackRef = useRef(null);
   const shuffleQueueRef = useRef([]);
   const fadeFrameRef = useRef(0);
+  const fadeTokenRef = useRef(0);
+  const playRequestRef = useRef(0);
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -94,21 +96,24 @@ export default function PublicMusicPage() {
   const [page, setPage] = useState(1);
   const searchInputRef = useRef(null);
 
-  stateRef.current = { items, activeId, repeatMode, shuffle, volume, playing };
+  stateRef.current = { items, activeId, repeatMode, shuffle, volume, playing, karaokeOpen };
 
+  function cancelFade() {
+    fadeTokenRef.current += 1;
+    if (fadeFrameRef.current) cancelAnimationFrame(fadeFrameRef.current);
+    fadeFrameRef.current = 0;
+  }
   function fadeTo(target, onComplete, durationMs = 420) {
     const audio = audioRef.current;
     if (!audio) return;
-    cancelAnimationFrame(fadeFrameRef.current);
-    const start = audio.volume;
-    const end = Math.max(0, Math.min(1, target));
-    const started = performance.now();
+    cancelFade();
+    const token = fadeTokenRef.current, start = audio.volume, end = Math.max(0, Math.min(1, target)), started = performance.now();
     const tick = (now) => {
-      const progress = Math.min(1, (now - started) / durationMs);
-      const eased = progress * progress * (3 - 2 * progress);
+      if (token !== fadeTokenRef.current || audioRef.current !== audio) return;
+      const progress = Math.min(1, (now - started) / Math.max(1, durationMs)), eased = progress * progress * (3 - 2 * progress);
       audio.volume = start + (end - start) * eased;
       if (progress < 1) fadeFrameRef.current = requestAnimationFrame(tick);
-      else { audio.volume = end; onComplete?.(); }
+      else { fadeFrameRef.current = 0; audio.volume = end; onComplete?.(); }
     };
     fadeFrameRef.current = requestAnimationFrame(tick);
   }
@@ -129,44 +134,45 @@ export default function PublicMusicPage() {
   async function playTrack(item, { forceRestart = false } = {}) {
     const audio = audioRef.current;
     if (!audio || !item) return;
+    const requestId = ++playRequestRef.current;
+    cancelFade();
     if (stateRef.current.activeId === item.id && !forceRestart) {
-      if (audio.paused) {
+      if (audio.paused || audio.ended) {
         setNotice("");
         const target = stateRef.current.volume;
+        if (audio.ended) audio.currentTime = 0;
         audio.volume = 0;
         try {
           await audio.play();
-          setPlaying(true);
-          fadeTo(target);
-        } catch { audio.volume = target; setNotice(t.error); }
+          if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
+          setPlaying(true); fadeTo(target);
+        } catch {
+          if (requestId !== playRequestRef.current) return;
+          audio.volume = target; setPlaying(false); setNotice(t.error);
+        }
       } else {
-        fadeTo(0, () => { audio.pause(); audio.volume = stateRef.current.volume; });
+        fadeTo(0, () => {
+          if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
+          audio.pause(); audio.volume = stateRef.current.volume;
+        });
       }
       return;
     }
     const startNewTrack = async () => {
-      setActiveId(item.id);
-      setCurrentTime(0);
-      setDuration(Number(item.audio_duration_seconds) || 0);
-      setNotice("");
-      audio.src = "/api/music/" + encodeURIComponent(item.id) + "/stream";
-      audio.load();
-      audio.volume = 0;
+      if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
+      setActiveId(item.id); setCurrentTime(0); setDuration(Number(item.audio_duration_seconds) || 0); setNotice("");
+      audio.pause(); audio.src = "/api/music/" + encodeURIComponent(item.id) + "/stream"; audio.load(); audio.volume = 0;
       try {
         await audio.play();
-        setPlaying(true);
-        fadeTo(stateRef.current.volume);
+        if (requestId !== playRequestRef.current || audioRef.current !== audio) return;
+        setPlaying(true); fadeTo(stateRef.current.volume);
       } catch {
-        audio.volume = stateRef.current.volume;
-        setPlaying(false);
-        setNotice(t.error);
+        if (requestId !== playRequestRef.current) return;
+        audio.volume = stateRef.current.volume; setPlaying(false); setNotice(t.error);
       }
     };
-    if (!audio.paused && audio.currentTime > 0) fadeTo(0, startNewTrack);
-    else await startNewTrack();
-    if (stateRef.current.shuffle) {
-      shuffleQueueRef.current = shuffleQueueRef.current.filter((id) => id !== item.id);
-    }
+    if (!audio.paused && audio.currentTime > 0) fadeTo(0, startNewTrack); else await startNewTrack();
+    if (stateRef.current.shuffle) shuffleQueueRef.current = shuffleQueueRef.current.filter((id) => id !== item.id);
   }
 
   playTrackRef.current = playTrack;
@@ -224,6 +230,7 @@ export default function PublicMusicPage() {
     const onPause = () => setPlaying(false);
     const onEnded = () => {
       const current = stateRef.current;
+      if (current.karaokeOpen) { setPlaying(false); setCurrentTime(Number.isFinite(audio.duration) ? audio.duration : audio.currentTime || 0); return; }
       if (current.repeatMode === "song") {
         audio.currentTime = 0;
         audio.volume = 0;
@@ -273,7 +280,8 @@ export default function PublicMusicPage() {
   }, [volume, playing]);
 
   useEffect(() => () => {
-    cancelAnimationFrame(fadeFrameRef.current);
+    cancelFade();
+    playRequestRef.current += 1;
     if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute("src"); }
   }, []);
 
@@ -429,7 +437,7 @@ export default function PublicMusicPage() {
           </>
         )}
         <audio ref={audioRef} preload="none"/>
-        {karaokeOpen && activeTrack && <KaraokeLyrics trackId={activeTrack.id} audioRef={audioRef} language={language} onClose={() => setKaraokeOpen(false)} /> }
+        {karaokeOpen && activeTrack && <KaraokeLyrics trackId={activeTrack.id} trackTitle={activeTrack.title} audioRef={audioRef} language={language} onClose={() => setKaraokeOpen(false)} /> }
         {!loading && items.length > 0 && <BottomNavigation fixed ariaLabel={language === "en" ? "Music navigation" : "Navigasi musik"} items={[
           { key: "home", label: t.navHome, icon: <Icon name="home" size={21}/>, onClick: () => document.getElementById("music-public-home")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
           { key: "tracks", label: t.navTracks, icon: <Icon name="listMusic" size={21}/>, onClick: () => document.getElementById("music-public-playlist")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
