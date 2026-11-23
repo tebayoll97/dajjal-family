@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { Link as UiLink } from "@/app/components/ui";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
@@ -150,7 +150,7 @@ export default function AdminThemePage() {
   return (
     <main className="df-theme-manager">
       <div className="df-theme-manager__inner">
-        <Link href="/admin" className="ui-link ui-link-subtle">{t.back}</Link>
+        <UiLink href="/admin" className="ui-link-subtle">{t.back}</UiLink>
         <PageHeader eyebrow="DAJJAL FAMILY · ADMIN CONTROL" title={t.title} description={t.subtitle} />
         {error && <Alert variant="danger" title={t.error}>{error}</Alert>}
         <div className="df-theme-manager__layout">
@@ -188,7 +188,7 @@ export default function AdminThemePage() {
                   const entry = THEME_REGISTRY[id];
                   const selected = draftPreset === id;
                   return (
-                    <button key={id} type="button" aria-pressed={selected} onClick={() => setDraftPreset(id)} className={selected ? "df-theme-manager__preset is-selected" : "df-theme-manager__preset"}>
+                    <Card as="button" interactive key={id} type="button" aria-pressed={selected} onClick={() => setDraftPreset(id)} className={selected ? "df-theme-manager__preset is-selected" : "df-theme-manager__preset"}>
                       <span className="df-theme-manager__preset-head"><strong>{entry.label}</strong>{selected ? <Badge variant="success">{t.selectedLabel}</Badge> : <Badge>{t.select}</Badge>}</span>
                       <span className="df-theme-manager__preset-description">{id === "tecno" ? t.tecnoDesc : t.coupleDesc}</span>
                     </button>
