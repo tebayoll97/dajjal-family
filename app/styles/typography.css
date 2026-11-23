@@ -44,3 +44,8 @@
 /* Shared compact bottom navigation typography roles. */
 .ui-bottom-navigation-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-label-size);font-weight:var(--df-weight-semibold);line-height:1.15}
 .ui-bottom-navigation-center-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-center-label-size);font-weight:var(--df-weight-bold);line-height:1.1}
+
+
+/* Compact administrative typography utility. */
+.admin-small{font-family:var(--df-font-sans);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
+.admin-meta{font-family:var(--df-font-sans);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-medium);line-height:1.4}
