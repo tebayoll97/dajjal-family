@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import "./CoupleCreatePromo.css";
@@ -41,9 +42,9 @@ export default function CoupleCreatePromo() {
         <p>{en ? "Create a personal page to keep your story and favorite moments together." : "Buat halaman pribadi untuk menyimpan cerita dan momen spesial kalian bersama."}</p>
       </div>
       <div className="df-couple-create-promo-actions">
-        <a className="df-couple-create-promo-primary" href="/app/create-profile-couple">
+        <Link className="df-couple-create-promo-primary" href="/app/create-profile-couple">
           {en ? "Create Couple Profile" : "Buat Profil Pasangan"}
-        </a>
+        </Link>
         <button className="df-couple-create-promo-share" type="button" onClick={shareProfile}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg>
           {en ? "Share Profile" : "Bagikan Profil"}
