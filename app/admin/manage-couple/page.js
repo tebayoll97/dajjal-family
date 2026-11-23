@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { verifyAdminSession } from "@/lib/adminClientSession";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
 
 const COPY = {
@@ -71,10 +71,10 @@ const COPY = {
 export default function ManageCouplePage() {
   const router = useRouter();
   const { language } = useLanguage();
+  const { admin } = useAdminAuth();
   const locale = language === "en" ? "en" : "id";
   const t = COPY[locale];
-  const [checking, setChecking] = useState(true);
-  const [admin, setAdmin] = useState(false);
+
   const [profiles, setProfiles] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, total: 0, totalPages: 0 });
   const [loading, setLoading] = useState(false);
@@ -145,7 +145,6 @@ export default function ManageCouplePage() {
     finally { setDeleting(false); }
   }
 
-  if (checking) return <main className="df-manage-couple df-token-page"><p role="status">{t.checking}</p></main>;
   if (!admin) return <main className="df-manage-couple df-token-page"><section className="df-manage-couple__notice"><h1>{t.denied}</h1>{error && <p role="alert">{error}</p>}<button onClick={() => router.replace("/admin/login")}>ADMIN LOGIN</button></section></main>;
 
   const publishedCount = profiles.filter((profile) => profile.isPublished).length;
