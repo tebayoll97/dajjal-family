@@ -567,3 +567,14 @@ All components below are exported from `app/components/ui` and previewed using t
 - **Layout:** `fixed` enables edge-to-edge fixed positioning and safe-area padding. Consumers must reserve equivalent bottom space in page content.
 - **Limits:** component does not perform routing or business logic; consumers own callbacks and locale-specific labels.
 \n\n### KaraokeLyrics\n- **Source:** `app/components/ui/KaraokeLyrics.js`; exported from `app/components/ui`.\n- **Purpose:** full-screen synchronized lyrics overlay for the existing public Music audio element.\n- **API:** `KaraokeLyrics({ trackId, audioRef, language = "id", onClose })`. It fetches only the published public lyrics endpoint and does not create a second audio stream.\n- **Behavior:** active-line tracking follows native audio `timeupdate` and `seeked` events; transcript auto-scrolls within its own bounded region; font size is adjustable; Play/Pause controls the supplied audio element.\n- **Accessibility:** modal dialog semantics, Escape close, focus restoration, visible focus, labeled close/play controls, and reduced-motion-aware scrolling.\n- **Responsive contract:** locks the viewport to `100dvh`; only the transcript scrolls; safe-area insets and compact mobile controls are applied.\n- **Theming:** uses global semantic color, spacing, typography, radius, shadow, motion, and focus tokens.\n- **Limitations:** consumer supplies an already active audio element and localized language code; no lyrics editing or authorization is performed in this public component. Browser QA across all four presets and mobile landscape remains required.\n
+
+## Admin workspace composition — 2026-11-23
+
+The Admin Shell is an application-level composition, not a replacement for the reusable UI primitives. It consumes the shared `PageHeader`, `Button`, and `Badge` exports from `app/components/ui`, plus the global semantic typography roles `admin-small` and `admin-meta`.
+
+- The desktop workspace uses a persistent grouped navigation rail; mobile and tablet use a compact, horizontally scrollable navigation strip.
+- Route-aware active states and locale-prefixed links preserve the existing App Router paths.
+- The shell does not grant access. Each page and every privileged server endpoint must continue to verify the administrator session independently.
+- Page-level data fetching, validation, CRUD, confirmations, and authorization remain owned by the existing route modules.
+- The shell uses Global Theme Preset semantic tokens and must be checked in TECNO Light/Dark and Dajjal × Veylora Light/Dark.
+- Mobile Compact UI keeps controls touch-usable, reduces decorative whitespace, supports horizontal navigation scrolling, and respects reduced-motion preferences.
