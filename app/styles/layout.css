@@ -50,3 +50,9 @@
 .ui-bottom-navigation.is-fixed:has(.ui-bottom-navigation-center){padding-top:var(--df-bottom-nav-center-rise)}
 .ui-bottom-navigation.is-fixed:has(.ui-bottom-navigation-center)::before{content:"";position:absolute;z-index:0;top:calc(-1 * var(--df-bottom-nav-center-rise) + var(--df-bottom-nav-center-border));left:50%;width:calc(var(--df-bottom-nav-center-size) + var(--df-space-5));height:var(--df-bottom-nav-center-rise);transform:translateX(-50%);border-radius:var(--df-radius-pill) var(--df-radius-pill) 0 0;background:var(--df-surface-overlay);border-top:1px solid var(--df-border);}
 @media(min-width:768px){.ui-bottom-navigation.is-fixed{padding-inline:max(var(--df-space-6),calc((100vw - var(--df-content-width))/2));}}
+
+
+/* Reusable verification composition layout. */
+.df-verification{display:flex;align-items:center;gap:var(--df-space-4);width:min(100%,38rem);min-width:0;margin-inline:auto;padding:clamp(var(--df-space-4),3vw,var(--df-space-8));border:1px solid var(--df-verification-border);border-radius:var(--df-radius-xl);background:var(--df-verification-surface);box-shadow:var(--df-shadow-md)}
+.df-verification__copy{display:grid;gap:var(--df-space-2);min-width:0;flex:1}
+.df-verification--compact{width:auto;margin:0;padding:var(--df-space-2);border:0;border-radius:var(--df-radius-md);background:transparent;box-shadow:none;gap:var(--df-space-2)}
