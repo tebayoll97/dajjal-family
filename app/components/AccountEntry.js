@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
 import { withLocalePrefix } from "@/lib/localePath";
 import { useLoginModal } from "./LoginModalProvider";
+import { VerificationState } from "./ui";
 import { readUserProfileCache, writeUserProfileCache, clearUserProfileCache } from "@/lib/clientUserProfileCache";
 
 export default function AccountEntry() {
@@ -94,5 +95,5 @@ export default function AccountEntry() {
   if (status === "signed-in") {
     return <Link href={withLocalePrefix("/profile", language)} aria-label={isID ? "Buka profil" : "Open profile"} title={label} className={className}>{content}</Link>;
   }
-  return <button type="button" onClick={() => openLoginModal({ next: withLocalePrefix("/profile", language) })} aria-label={label} title={label} className={className}>{content}</button>;
+  return <button type="button" disabled={status === "checking"} onClick={() => openLoginModal({ next: withLocalePrefix("/profile", language) })} aria-label={label} title={label} className={className}>{content}</button>;
 }
