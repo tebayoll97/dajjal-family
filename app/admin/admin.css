@@ -117,3 +117,11 @@
 #df-admin-shell .df-admin-main [class*="text-gray-500"],#df-admin-shell .df-admin-main [class*="text-gray-600"]{color:var(--df-text-muted)!important}
 #df-admin-shell .df-admin-main .text-xs,#df-admin-shell .df-admin-main .admin-small{font-size:var(--df-type-admin-small-size)}
 #df-admin-shell .df-admin-main small{font-size:var(--df-type-admin-meta-size)}
+
+#df-admin-shell .df-admin-main [class*="bg-gray-"],#df-admin-shell .df-admin-main [class*="bg-slate-"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="border-gray-"],#df-admin-shell .df-admin-main [class*="border-slate-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-"],#df-admin-shell .df-admin-main [class*="text-slate-"]{color:var(--df-text-secondary)!important}
+#df-admin-shell .df-admin-main [class*="bg-pink-"]{background:var(--df-primary-soft)!important}
+#df-admin-shell .df-admin-main [class*="border-pink-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-pink-"]{color:var(--df-primary)!important}
+#df-admin-shell .df-admin-main .text-white[class*="bg-"]{color:var(--df-on-primary)!important}
