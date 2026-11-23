@@ -213,3 +213,16 @@
 - Added semantic-token compatibility styling for legacy admin utilities and made private admin layouts dynamic/non-revalidated.
 - No Supabase schema, RLS policy, production data, or game logic changes.
 - Status: source committed on `main` at `35ea911`. `npm run build` passes with non-production placeholder Supabase environment values. Production deployment is blocked by Vercel HTTP 402 `api-deployments-free-per-day` (24-hour retry); live visual and interactive QA remain pending.
+
+
+## 2026-11-23 — Shared verification experience and Theme Manager semantic migration
+
+- Added reusable bilingual `VerificationState` for Admin and User session verification, including checking, verified, error, denied, and expired states.
+- Added verification semantic token aliases and responsive typography roles to the global token foundation; added layout and component styles across the four global foundation CSS files.
+- Added the live VerificationState instance to the Design System Workbench and updated the component inventory progress to 31/31.
+- Added a persistent AdminAuthProvider to the Admin Shell. The dashboard, user management, music catalog, Couple Profile manager, Theme Manager, Central Storage, Wedding Event, Wedding Gallery, and Wedding Guestbook consume the shared verified admin session.
+- Kept each protected API's server-side bearer-token and administrator authorization checks intact. Fixed stale in-flight admin session cache invalidation for sign-in, sign-out, user update, and token refresh.
+- Rebuilt Theme Manager surfaces with shared Card, Button, Badge, Alert, ConfirmDialog, PageHeader, and Link primitives; replaced legacy hardcoded panel colors with semantic theme tokens.
+- Added full and compact User VerificationState usage to the login page, AccountEntry, and navigation profile.
+- No Supabase schema, RLS, policy, production data, or secret changes.
+- Status: source changes committed directly to `main`; production build, deployment, and browser QA still pending.
