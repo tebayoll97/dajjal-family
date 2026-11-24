@@ -530,7 +530,7 @@
 .df-manage-couple__modal button.is-danger{border-color:var(--df-danger);background:var(--df-danger);color:#fff}
 .df-manage-couple__modal button:disabled{opacity:.55;cursor:wait}
 @media(max-width:760px){
- .df-couple-gallery{padding:1rem .8rem 2.5rem}
+ .df-couple-gallery-page{padding:1rem .8rem 2.5rem}
  .df-couple-gallery__intro{margin-bottom:1rem}
  .df-couple-gallery__featured{grid-template-columns:minmax(0,1fr);border-radius:var(--df-radius-lg)}
  .df-couple-gallery__featured-art{min-height:10.5rem;aspect-ratio:16/8}
