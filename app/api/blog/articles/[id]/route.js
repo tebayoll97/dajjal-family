@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { revalidatePath } from "next/cache";
 import { verifyBlogUser, BLOG_PRIVATE_HEADERS, blogError, slugifyBlogTitle } from "@/lib/blog/auth";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +43,9 @@ export async function PATCH(request, { params }) {
   const { data, error } = await query.select(FIELDS).maybeSingle();
   if (error) return blogError(error.code === "23505" ? "That article URL is already in use." : "Unable to update the article.", error.code === "23505" ? 409 : 500);
   if (!data) return blogError("Article not found.", 404);
+  revalidatePath("/id/blog"); revalidatePath("/en/blog"); revalidatePath("/sitemap.xml");
+  if (data.slug_id) revalidatePath(`/id/blog/${data.slug_id}`);
+  if (data.slug_en) revalidatePath(`/en/blog/${data.slug_en}`);
   return Response.json({ success: true, article: data, owner: auth.isOwner }, { headers: BLOG_PRIVATE_HEADERS });
 }
 
@@ -49,10 +53,17 @@ export async function DELETE(request, { params }) {
   const auth = await verifyBlogUser(request, { approved: true });
   if (!auth.ok) return blogError(auth.error, auth.status);
   const { id } = await params;
+  let lookup = supabaseAdmin.from("df_blog_articles").select("slug_id,slug_en").eq("id", id);
+  if (!auth.isOwner) lookup = lookup.eq("contributor_id", auth.contributor.id);
+  const { data: existing } = await lookup.maybeSingle();
+  if (!existing) return blogError("Article not found.", 404);
   let query = supabaseAdmin.from("df_blog_articles").delete({ count: "exact" }).eq("id", id);
   if (!auth.isOwner) query = query.eq("contributor_id", auth.contributor.id);
   const { error, count } = await query;
   if (error) return blogError("Unable to delete the article.", 500);
   if (!count) return blogError("Article not found.", 404);
+  revalidatePath("/id/blog"); revalidatePath("/en/blog"); revalidatePath("/sitemap.xml");
+  if (existing.slug_id) revalidatePath(`/id/blog/${existing.slug_id}`);
+  if (existing.slug_en) revalidatePath(`/en/blog/${existing.slug_en}`);
   return Response.json({ success: true }, { headers: BLOG_PRIVATE_HEADERS });
 }
