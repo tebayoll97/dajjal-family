@@ -16,7 +16,9 @@ export async function POST(request) {
   const body = await request.json().catch(() => ({}));
   const note = typeof body.application_note === "string" ? body.application_note.trim().slice(0, 1200) : "";
   const metadata = auth.user.user_metadata || {};
-  const displayName = String(metadata.full_name || metadata.name || metadata.user_name || auth.user.email.split("@")[0]).trim().slice(0, 80);
+  const { data: playerProfile, error: playerProfileError } = await supabaseAdmin.from("players").select("nickname").eq("auth_user_id", auth.user.id).maybeSingle();
+  if (playerProfileError) return blogError("Unable to load your DAJJAL FAMILY profile.", 500);
+  const displayName = String(playerProfile?.nickname || metadata.full_name || metadata.name || metadata.user_name || auth.user.email.split("@")[0]).trim().slice(0, 80);
   if (!displayName) return blogError("Your account name is unavailable. Update your DAJJAL FAMILY profile first.", 422);
   if (auth.contributor?.status === "approved") return blogError("Your contributor account is already approved.", 409);
   if (auth.contributor?.status === "suspended") return blogError("Contributor access is suspended.", 403);

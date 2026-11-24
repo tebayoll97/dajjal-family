@@ -33,7 +33,7 @@ export default function BlogArticle({ article }) {
         </header>
         {article.cover_image_url ? (
           <Image className="df-blog-article-cover" src={article.cover_image_url} alt={article.title} width={1440} height={810} unoptimized priority />
-        ) : null}
+        ) : <Image className="df-blog-article-cover" src="/dajjalfamily_icon_192.png" alt="DAJJAL FAMILY" width={1440} height={810} unoptimized priority />}
         <Card className="df-blog-prose">
           <div className="ui-prose ui-text-editorial-body">
             {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}

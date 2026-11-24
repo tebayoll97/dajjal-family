@@ -102,7 +102,7 @@ export default function AuthorPortal({ mode = "apply" }) {
     const form=new FormData(event.currentTarget);
     const payload=Object.fromEntries(form.entries());
     payload.category_id=payload.category_id||null;
-    const status=payload.intent==="publish"?"published":"draft";delete payload.intent;
+    const status=event.nativeEvent.submitter?.value==="publish"?"published":"draft";delete payload.intent;
     const response=await fetch(editing?.id?`/api/blog/articles/${editing.id}`:"/api/blog/articles",{method:editing?.id?"PATCH":"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({...payload,status})});
     const result=await response.json().catch(()=>({}));
     if(!response.ok){setError(result.error||"Unable to save article.");setBusy(false);return;}
