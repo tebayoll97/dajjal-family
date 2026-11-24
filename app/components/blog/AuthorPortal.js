@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { Alert, Badge, Breadcrumbs, Button, Card, EmptyState, SectionHeader, TextField } from "@/app/components/ui";
 
@@ -11,6 +12,8 @@ export default function AuthorPortal({ mode = "apply" }) {
   const id = language === "id";
   const router = useRouter();
   const [session, setSession] = useState(null);
+  const [sessionSource, setSessionSource] = useState("member");
+  const [isOwner, setIsOwner] = useState(false);
   const [contributor, setContributor] = useState(null);
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -50,6 +53,7 @@ export default function AuthorPortal({ mode = "apply" }) {
     ]);
     const profile = await profileResponse.json().catch(()=>({}));
     setContributor(profile.contributor || null);
+    setIsOwner(profile.owner === true);
     if (profileResponse.ok && profile.contributor?.status === "approved") {
       const articleData = await articleResponse.json().catch(()=>({}));
       if (articleResponse.ok) setArticles(articleData.articles || []);
@@ -62,19 +66,31 @@ export default function AuthorPortal({ mode = "apply" }) {
 
   useEffect(() => {
     let alive = true;
-    supabase.auth.getSession().then(({data}) => {
+    async function initialize() {
+      const { data: adminData } = await supabaseAdminClient.auth.getSession();
+      const adminSession = adminData?.session;
+      if (adminSession?.access_token) {
+        const check = await fetch("/api/admin/me", { headers: { Authorization: `Bearer ${adminSession.access_token}` }, cache: "no-store" }).catch(() => null);
+        if (check?.ok) {
+          if (!alive) return;
+          setSessionSource("admin"); setSession(adminSession); setEmail(adminSession.user?.email || "");
+          await load(adminSession); return;
+        }
+      }
+      const { data } = await supabase.auth.getSession();
       if (!alive) return;
-      setSession(data.session);
-      setEmail(data.session?.user?.email || "");
-      load(data.session).catch(()=>setError(id?"Gagal memuat data akun.":"Unable to load account data."));
+      setSessionSource("member"); setSession(data.session); setEmail(data.session?.user?.email || "");
+      await load(data.session);
+    }
+    initialize().catch(() => { if (alive) { setError(id ? "Gagal memuat data akun." : "Unable to load account data."); setLoading(false); } });
+    const { data: adminListener } = supabaseAdminClient.auth.onAuthStateChange((_event, nextSession) => {
+      if (nextSession) {
+        setSessionSource("admin"); setSession(nextSession); setEmail(nextSession.user?.email || "");
+        if (alive) load(nextSession).catch(() => setError(id ? "Gagal memuat data akun." : "Unable to load account data."));
+      }
     });
-    const {data:{subscription}} = supabase.auth.onAuthStateChange((_event,nextSession) => {
-      setSession(nextSession);
-      setEmail(nextSession?.user?.email || "");
-      if (alive) load(nextSession).catch(()=>setError(id?"Gagal memuat data akun.":"Unable to load account data."));
-    });
-    return ()=>{alive=false;subscription.unsubscribe();};
-  }, [load,id]);
+    return () => { alive = false; adminListener.subscription.unsubscribe(); };
+  }, [load, id]);
 
   async function signIn(event) {
     event.preventDefault(); setBusy(true); setError("");
@@ -109,10 +125,10 @@ export default function AuthorPortal({ mode = "apply" }) {
     setEditing(null);setMessage(t.saved);await load(session);setBusy(false);
   }
 
-  async function signOut(){await supabase.auth.signOut();setSession(null);setContributor(null);setArticles([]);}
+  async function signOut(){if(sessionSource==="admin")await supabaseAdminClient.auth.signOut();else await supabase.auth.signOut();setSession(null);setContributor(null);setArticles([]);setIsOwner(false);}
 
   const crumbs=[{label:t.home,href:`/${language}`},{label:t.blog,href:`/${language}/blog`},{label:mode==="apply"?t.apply:t.dashboard}];
-  return <main className="ui-page df-blog-author"><Breadcrumbs items={crumbs}/><header className="ui-page-heading"><p className="ui-eyebrow">DAJJAL FAMILY / BLOG</p><h1 className="ui-heading-h1">{mode==="apply"?t.apply:t.dashboard}</h1><p className="ui-subtitle">{id?"Gunakan akun DAJJAL FAMILY yang sama untuk menjadi kontributor editorial.":"Use your existing DAJJAL FAMILY account to contribute to the editorial platform."}</p></header>
+  return <main className="ui-page df-blog-author"><Breadcrumbs items={crumbs}/><header className="ui-page-heading"><p className="ui-eyebrow">DAJJAL FAMILY / BLOG</p><h1 className="ui-heading-h1">{isOwner ? "Blog Owner — Tebayoll" : mode==="apply"?t.apply:t.dashboard}</h1><p className="ui-subtitle">{isOwner ? (id ? "Akses tertinggi editorial DAJJAL FAMILY. Kelola seluruh artikel dan publikasi." : "Highest DAJJAL FAMILY editorial access. Manage every article and publication.") : id?"Gunakan akun DAJJAL FAMILY yang sama untuk menjadi kontributor editorial.":"Use your existing DAJJAL FAMILY account to contribute to the editorial platform."}</p></header>
     {error?<Alert variant="danger" title={id?"Terjadi kendala":"Something went wrong"}>{error}</Alert>:null}
     {message?<Alert variant="success" title={id?"Berhasil":"Success"}>{message}</Alert>:null}
     {loading?<Card><p className="ui-text-mobile-small">{id?"Memuat akun…":"Loading account…"}</p></Card>:null}
@@ -121,7 +137,7 @@ export default function AuthorPortal({ mode = "apply" }) {
     {!loading&&session&&contributor&&mode==="apply"?<Card className="ui-stack"><Badge variant={contributor.status==="approved"?"success":contributor.status==="rejected"?"danger":"warning"}>{contributor.status==="approved"?t.approved:contributor.status==="suspended"?t.suspended:t.pending}</Badge><p className="ui-text-body">{contributor.display_name} · {contributor.email}</p>{contributor.status==="approved"?<Button onClick={()=>router.push(`/${language}/blog/author/dashboard`)}>{t.dashboard}</Button>:<p className="ui-caption">{id?"Kamu akan dapat mengakses dashboard setelah disetujui admin.":"The author dashboard becomes available after admin approval."}</p>}</Card>:null}
     {!loading&&session&&mode==="dashboard"&&!contributor?<EmptyState title={id?"Belum terdaftar sebagai penulis":"Not registered as an author"} description={id?"Ajukan pendaftaran terlebih dahulu.":"Submit an author application first."} action={<Button onClick={()=>router.push(`/${language}/blog/author/apply`)}>{t.apply}</Button>}/>:null}
     {!loading&&session&&mode==="dashboard"&&contributor&&contributor.status!=="approved"?<Card><Badge variant="warning">{contributor.status}</Badge><p>{id?"Akses dashboard menunggu persetujuan atau sedang dibatasi.":"Dashboard access is pending approval or restricted."}</p></Card>:null}
-    {!loading&&session&&mode==="dashboard"&&contributor?.status==="approved"?<section className="ui-stack"><div className="ui-section-heading"><SectionHeader title={id?"Artikel saya":"My articles"} description={id?"Simpan draft atau terbitkan artikel langsung.":"Save drafts or publish articles directly."}/><Button onClick={()=>setEditing({})}>{t.newArticle}</Button></div>
+    {!loading&&session&&mode==="dashboard"&&contributor?.status==="approved"?<section className="ui-stack"><div className="ui-section-heading"><SectionHeader title={isOwner ? (id ? "Semua Artikel" : "All Articles") : id?"Artikel saya":"My articles"} description={isOwner ? (id ? "Tebayoll dapat mengedit dan menerbitkan seluruh artikel kontributor." : "Tebayoll can edit and publish every contributor article.") : id?"Simpan draft atau terbitkan artikel langsung.":"Save drafts or publish articles directly."}/><Button onClick={()=>setEditing({})}>{t.newArticle}</Button></div>
       {editing!==null?<Card><form className="ui-stack" onSubmit={saveArticle}><TextField label={t.title} name="title_id" defaultValue={editing.title_id||""} required/><TextField label={t.titleEn} name="title_en" defaultValue={editing.title_en||""}/><TextField label={t.slug} name="slug_id" defaultValue={editing.slug_id||""}/><label className="ui-text-control-label">{t.category}<select className="ui-input ui-text-control" name="category_id" defaultValue={editing.category_id||""}><option value="">{id?"Pilih kategori":"Choose category"}</option>{categories.map(c=><option key={c.id} value={c.id}>{id?c.name_id:c.name_en||c.name_id}</option>)}</select></label><TextField as="textarea" label={t.excerpt} name="excerpt_id" defaultValue={editing.excerpt_id||""} rows={3}/><TextField as="textarea" label={t.content} name="content_id" defaultValue={editing.content_id||""} rows={12} required/><TextField as="textarea" label={id?"Isi artikel (Inggris)":"Article content (English)"} name="content_en" defaultValue={editing.content_en||""} rows={8}/><TextField label={t.cover} name="cover_image_url" defaultValue={editing.cover_image_url||""} type="url"/><div className="ui-cluster"><Button type="submit" name="intent" value="draft" disabled={busy}>{t.save}</Button><Button type="submit" name="intent" value="publish" disabled={busy}>{t.publish}</Button><Button type="button" variant="secondary" onClick={()=>setEditing(null)}>{id?"Batal":"Cancel"}</Button></div></form></Card>:null}
       {articles.length?articles.map(a=><Card key={a.id} className="ui-cluster"><div className="ui-stack" style={{flex:"1 1 14rem"}}><strong>{a.title_id}</strong><span className="ui-caption">{a.updated_at?new Date(a.updated_at).toLocaleString(id?"id-ID":"en-US"):""}</span><Badge variant={a.status==="published"?"success":"neutral"}>{a.status==="published"?t.published:t.draft}</Badge></div><Button size="sm" variant="secondary" onClick={()=>setEditing(a)}>{t.edit}</Button></Card>):<EmptyState title={t.noArticles}/>}
       <Button variant="ghost" onClick={signOut}>{t.logout}</Button>
