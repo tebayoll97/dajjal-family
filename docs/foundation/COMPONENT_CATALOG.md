@@ -614,3 +614,14 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - Geometry and spacing tokens are in `tokens.css`; label typography in `typography.css`; composition and responsive placement in `layout.css`; interaction and reduced-motion states in `components.css`.
 - The same production component must be shown in Design System Workbench. Wedding remains an intentionally isolated navigation implementation.
 - Validate 360px and narrower phones, larger phones, tablet, desktop, both global presets and modes, ID/EN, safe areas, focus visibility, reduced motion, and page-content clearance.
+
+ 
+## 8. Editorial component additions — 2026-11-24
+
+### EditorialByline
+- Source: `app/components/ui/EditorialByline.js`; export: `EditorialByline`.
+- API: `EditorialByline({ author, date, dateTime, readingTime, locale = "id", className = "" })`.
+- Purpose: shared article attribution and publication metadata for editorial cards and article pages.
+- Accessibility: publication date is exposed through a semantic `time` element; metadata is visible text and does not rely on color alone.
+- Responsive behavior: wraps metadata on narrow screens and uses the shared editorial metadata typography role.
+- Theme behavior: uses semantic editorial byline color and spacing tokens from the four global CSS foundations.

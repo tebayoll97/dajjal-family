@@ -59,3 +59,4 @@
 
 /* Editorial typography roles: compact metadata on mobile, wider reading scale on desktop. */
 .ui-text-editorial-meta{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);font-weight:var(--df-weight-medium)}.ui-text-editorial-body{font-size:var(--df-type-body-size);line-height:var(--df-leading-relaxed);color:var(--df-text-secondary)}@media(min-width:1024px){.ui-text-editorial-body{font-size:var(--df-text-lg)}}
+\n.ui-editorial-byline__author{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-semibold);color:var(--df-text-secondary)}.ui-editorial-byline__meta{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-medium);color:var(--df-editorial-meta-color)}\n

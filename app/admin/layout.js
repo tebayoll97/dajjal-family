@@ -5,7 +5,7 @@ const ORIGIN = "https://dajjalfamily.com";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 const routeMetadata = {
-  "/admin": { id: "Dashboard Admin", en: "Admin Dashboard", idDescription: "Pusat kendali privat untuk mengelola ekosistem Dajjal Family.", enDescription: "Private control center for managing the Dajjal Family ecosystem." },
+  "/admin/blog": { id: "Pengelolaan Blog", en: "Blog Management", idDescription: "Kelola pendaftaran penulis, kategori, dan artikel DAJJAL FAMILY Blog.", enDescription: "Manage DAJJAL FAMILY Blog author applications, categories, and articles." },\n  "/admin": { id: "Dashboard Admin", en: "Admin Dashboard", idDescription: "Pusat kendali privat untuk mengelola ekosistem Dajjal Family.", enDescription: "Private control center for managing the Dajjal Family ecosystem." },
   "/admin/players": { id: "Manajemen Pengguna", en: "User Management", idDescription: "Kelola akun, profil pemain, akses, dan aktivitas pengguna.", enDescription: "Manage user accounts, player profiles, access, and activity." },
   "/admin/contact-center": { id: "Contact Center", en: "Contact Center", idDescription: "Kelola percakapan dukungan dan notifikasi anggota.", enDescription: "Manage member support conversations and notifications." },
   "/admin/music": { id: "Music Library", en: "Music Library", idDescription: "Kelola katalog audio, metadata, publikasi, dan lirik.", enDescription: "Manage audio catalog, metadata, publication, and lyrics." },

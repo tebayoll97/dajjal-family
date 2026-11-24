@@ -14,3 +14,11 @@ revoke all on public.df_blog_categories,public.df_blog_contributors,public.df_bl
 grant select,insert,update,delete on public.df_blog_categories,public.df_blog_contributors,public.df_blog_articles to service_role;
 comment on table public.df_blog_contributors is 'Blog contributors linked to the existing DAJJAL FAMILY Auth identity; no password data stored.';
 comment on table public.df_blog_articles is 'Bilingual articles; approved contributors may save drafts or publish directly.';
+
+-- Public read-only media bucket. Uploads remain server-mediated through verified contributor endpoints.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('df-blog-media', 'df-blog-media', true, 8388608, array['image/jpeg','image/png','image/webp','image/gif'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
