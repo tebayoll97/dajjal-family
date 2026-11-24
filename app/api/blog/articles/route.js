@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { revalidatePath } from "next/cache";
 import { verifyBlogUser, BLOG_PRIVATE_HEADERS, blogError, slugifyBlogTitle } from "@/lib/blog/auth";
 
 export const dynamic = "force-dynamic";
@@ -52,5 +53,8 @@ export async function POST(request) {
     console.error("Blog article create failed:", error);
     return blogError(error.code === "23505" ? "That article URL is already in use." : "Unable to save the article.", error.code === "23505" ? 409 : 500);
   }
+  revalidatePath("/id/blog"); revalidatePath("/en/blog"); revalidatePath("/sitemap.xml");
+  if (data.slug_id) revalidatePath(`/id/blog/${data.slug_id}`);
+  if (data.slug_en) revalidatePath(`/en/blog/${data.slug_en}`);
   return Response.json({ success: true, article: data }, { status: 201, headers: BLOG_PRIVATE_HEADERS });
 }
