@@ -151,6 +151,9 @@ export default function CoupleMusicPlayer({ onPlaybackStateChange, content = {} 
     if (!playerTracks.length) return undefined;
     const audio = new Audio();
     audio.preload = "metadata";
+    // A selected catalog song is a single-track playlist: repeat it forever.
+    // The built-in two-song playlist advances and wraps in the ended handler.
+    audio.loop = playerTracks.length === 1;
     audio.volume = 0;
     audio.src = playerTracks[0].src;
     audio.load();
