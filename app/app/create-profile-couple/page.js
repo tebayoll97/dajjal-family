@@ -6,15 +6,15 @@ import {useLanguage} from "@/app/components/LanguageProvider";
 import { Skeleton } from "@/app/components/ui/Skeleton";
 export default function CreateCoupleProfilePage(){
  const router=useRouter(),{language}=useLanguage(),en=language==="en";
- const[maleNickname,setMaleNickname]=useState(""),[femaleNickname,setFemaleNickname]=useState(""),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[error,setError]=useState(""),[success,setSuccess]=useState(false);
- useEffect(()=>{let active=true;(async()=>{try{const{data:{session}}=await supabase.auth.getSession();if(!session){router.replace("/login?next=%2Fapp%2Fcreate-profile-couple");return;}const r=await fetch("/api/couple",{headers:{Authorization:`Bearer ${session.access_token}`},cache:"no-store"}),v=await r.json();if(r.status===401){router.replace("/login");return;}if(!r.ok)throw Error(v.error||"Unable to check profile.");if(v.profile?.slug){router.replace(`/app/create-profile-couple/${v.profile.slug}`);return;}}catch(e){if(active)setError(e.message)}finally{if(active)setLoading(false)}})();return()=>{active=false}},[router]);
+ const[maleNickname,setMaleNickname]=useState(""),[femaleNickname,setFemaleNickname]=useState(""),[checkState,setCheckState]=useState("checking"),[saving,setSaving]=useState(false),[error,setError]=useState(""),[success,setSuccess]=useState(false);
+ useEffect(()=>{let active=true;(async()=>{try{const{data:{session}}=await supabase.auth.getSession();if(!session){if(active)setCheckState("redirecting");router.replace("/login?next=%2Fapp%2Fcreate-profile-couple");return;}const r=await fetch("/api/couple",{headers:{Authorization:`Bearer ${session.access_token}`},cache:"no-store"});const v=await r.json();if(r.status===401){if(active)setCheckState("redirecting");router.replace("/login?next=%2Fapp%2Fcreate-profile-couple");return;}if(!r.ok)throw Error(v.error||"Unable to check profile.");if(v.profile?.slug){if(active)setCheckState("redirecting");router.replace(`/app/create-profile-couple/${v.profile.slug}`);return;}if(active)setCheckState("ready");}catch(e){if(active){setError(e.message||"Unable to check profile.");setCheckState("error");}}})();return()=>{active=false}},[router]);
  async function submit(e){e.preventDefault();if(saving)return;setSaving(true);setError("");try{const{data:{session}}=await supabase.auth.getSession();if(!session){router.replace("/login");return;}const r=await fetch("/api/couple",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({maleNickname,femaleNickname})}),v=await r.json();if(r.status===409&&v.profile?.slug){router.replace(`/app/create-profile-couple/${v.profile.slug}`);return;}if(!r.ok)throw Error(v.error||"Unable to create profile.");setSuccess(true);window.setTimeout(()=>router.replace(`/app/create-profile-couple/${v.profile.slug}`),2200)}catch(e){setError(e.message)}finally{setSaving(false)}}
- if(loading)return (
-  <main className="df-couple-create-page df-couple-create-checking" aria-busy="true">
+ if(checkState!=="ready")return (
+  <main className="df-couple-create-page df-couple-create-checking" aria-busy={checkState!=="error"}>
    <section className="df-couple-create-card">
     <p className="df-couple-create-eyebrow">DAJJAL FAMILY · COUPLE PROFILE</p>
-    <p className="df-couple-checking-status" role="status">{en?"Checking your account and Couple Profile…":"Memeriksa akun dan Couple Profile..."}</p>
-    <Skeleton width="78%" height="2rem"/>
+    <p className="df-couple-checking-status" role={checkState==="error"?"alert":"status"}>{checkState==="error"?(error||(en?"Unable to verify your Couple Profile.":"Tidak dapat memeriksa Couple Profile.")):checkState==="redirecting"?(en?"Opening your Couple Profile…":"Membuka Couple Profile…"):(en?"Checking your account and Couple Profile…":"Memeriksa akun dan Couple Profile...")}</p>
+    {checkState==="error"?<button type="button" onClick={()=>window.location.reload()}>{en?"Try again":"Coba lagi"}</button>:<><Skeleton width="78%" height="2rem"/>
     <Skeleton count={2}/>
     <div className="df-couple-checking-fields">
      <Skeleton width="7rem" height=".8rem"/>
@@ -22,7 +22,7 @@ export default function CreateCoupleProfilePage(){
      <Skeleton width="8rem" height=".8rem"/>
      <Skeleton variant="rect" height="2.9rem"/>
     </div>
-    <Skeleton variant="rect" height="2.9rem"/>
+    <Skeleton variant="rect" height="2.9rem"/></>}
    </section>
   </main>
  );
