@@ -58,13 +58,14 @@ export default function CoupleProfileEditorPage() {
   const [content, setContent] = useState(COUPLE_CONTENT_DEFAULTS[locale]);
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
   const load = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.replace("/login"); return; }
+    if (!session) { setRedirecting(true); router.replace("/login?next=" + encodeURIComponent("/app/create-profile-couple/" + slug)); return; }
     const [ownerResponse, response] = await Promise.all([
       fetch("/api/couple", {
         headers: { Authorization: `Bearer ${session.access_token}` },
@@ -74,15 +75,18 @@ export default function CoupleProfileEditorPage() {
     ]);
     const ownerData = await ownerResponse.json();
     if (ownerResponse.status === 401) {
+      setRedirecting(true);
       router.replace("/login?next=" + encodeURIComponent("/app/create-profile-couple/" + slug));
       return;
     }
-    if (ownerResponse.status === 404 || !ownerData.profile) {
+    if (ownerResponse.status === 404 || (ownerResponse.ok && !ownerData.profile)) {
+      setRedirecting(true);
       router.replace("/app/create-profile-couple");
       return;
     }
     if (!ownerResponse.ok) throw new Error(ownerData.error || "Unable to verify profile ownership.");
     if (ownerData.profile.slug !== slug) {
+      setRedirecting(true);
       router.replace("/app/create-profile-couple/" + ownerData.profile.slug);
       return;
     }
@@ -167,7 +171,7 @@ export default function CoupleProfileEditorPage() {
       setSaving(false);
     }
   }, [locale, slug]);
-  if (loading) return <CoupleEditorLoading locale={locale} />;
+  if (loading || redirecting) return <CoupleEditorLoading locale={locale} />;
   if (!profile) return <main className="df-couple-profile-page"><div className="df-couple-shell"><p>{error || "Couple Profile not found."}</p></div></main>;
 
   const publicUrl = typeof window !== "undefined" ? `${window.location.origin}/${locale}/couple/${slug}` : `/${locale}/couple/${slug}`;
