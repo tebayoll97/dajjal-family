@@ -64,3 +64,5 @@
 
 /* Editorial editor roles: compact controls on mobile and wide code reading on desktop. */
 .df-editorial-editor,.df-editorial-content{font-family:var(--df-font-sans)}.df-editorial-editor__head{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}.df-editorial-content{font-size:var(--df-type-body-size);line-height:var(--df-leading-relaxed)}.df-editorial-content h2{font-size:var(--df-text-xl);line-height:var(--df-leading-tight)}.df-editorial-content h3{font-size:var(--df-text-lg)}.df-editorial-content figcaption{font-size:var(--df-type-mobile-small);color:var(--df-text-muted)}.df-editorial-code figcaption{font-size:var(--df-type-mobile-small)}@media(min-width:1024px){.df-editorial-content{font-size:var(--df-text-lg)}}
+
+.ui-blog-article-navigation__heading{font-size:var(--df-text-base);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}.ui-blog-article-navigation__link,.ui-blog-article-navigation__category{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}.ui-blog-article-navigation__link time{font-size:var(--df-type-mobile-small)}
