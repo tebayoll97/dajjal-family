@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/adminAuth";
+import { BLOG_OWNER_USER_ID } from "@/lib/blog/auth";
 
 export const dynamic = "force-dynamic";
 const HEADERS = { "Cache-Control": "private, no-store, max-age=0, must-revalidate" };
@@ -9,7 +10,7 @@ export async function GET(request) {
   const auth = await verifyAdmin(request);
   if (!auth.authorized) return fail(auth.error, auth.status);
   const [contributors, articles, categories] = await Promise.all([
-    supabaseAdmin.from("df_blog_contributors").select("id,display_name,email,status,application_note,created_at,reviewed_at").order("created_at", { ascending: false }).limit(200),
+    supabaseAdmin.from("df_blog_contributors").select("id,account_user_id,display_name,email,status,application_note,created_at,reviewed_at").order("created_at", { ascending: false }).limit(200),
     supabaseAdmin.from("df_blog_articles").select("id,title_id,title_en,slug_id,status,published_at,updated_at,df_blog_contributors(display_name,email)").order("updated_at", { ascending: false }).limit(200),
     supabaseAdmin.from("df_blog_categories").select("id,slug,name_id,name_en,is_active,sort_order").order("sort_order", { ascending: true }),
   ]);
@@ -23,6 +24,8 @@ export async function PATCH(request) {
   if (!auth.authorized) return fail(auth.error, auth.status);
   const body = await request.json().catch(() => ({}));
   if (body.type === "contributor") {
+    const { data: target } = await supabaseAdmin.from("df_blog_contributors").select("account_user_id").eq("id", body.id).maybeSingle();
+    if (target?.account_user_id === BLOG_OWNER_USER_ID) return fail("The permanent Blog Owner role cannot be changed or suspended.", 403);
     if (!["approved","rejected","suspended","pending"].includes(body.status)) return fail("Invalid contributor status.");
     const { data, error } = await supabaseAdmin.from("df_blog_contributors").update({ status: body.status, reviewed_by: auth.user.id, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString() }).eq("id", body.id).select("id,status").maybeSingle();
     if (error || !data) return fail("Unable to update contributor status.", 500);
