@@ -2,7 +2,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { COUPLE_CONTENT_DEFAULTS, coupleDriveImage } from "@/lib/coupleProfileDefaults";
+import { COUPLE_CONTENT_DEFAULTS } from "@/lib/coupleProfileDefaults";
 import CoupleProfileView from "@/app/components/CoupleProfileView";
 
 export const dynamic = "force-dynamic";
@@ -73,14 +73,9 @@ export async function generateMetadata({ params }) {
     (locale === "en" ? `Explore the story of ${names}.` : `Kenali cerita ${names}.`);
   const path = `/${locale}/couple/${slug}`;
   const coverFileId = data.media.find((item) => item.slot_key === "cover")?.google_drive_file_id;
-  const fallbackImage = `${ORIGIN}/dajjalfamily_icon_192.png`;
-  const coverImage = coverFileId ? coupleDriveImage(coverFileId, 1200) : null;
-  // Put the profile cover first for social previews; include the brand mark as
-  // a crawler-compatible fallback when the remote cover cannot be rendered.
-  const socialImages = [
-    ...(coverImage ? [{ url: coverImage, width: 1200, height: 630, alt: `${names} — Couple Profile cover` }] : []),
-    { url: fallbackImage, width: 192, height: 192, alt: "Dajjal Family" },
-  ];
+  // The same-origin image endpoint fetches the current cover and returns the
+  // Dajjal Family logo automatically when the Drive image is unavailable.
+  const socialImageUrl = `${ORIGIN}/couple/${slug}/opengraph-image${coverFileId ? `?v=${encodeURIComponent(coverFileId)}` : ""}`;
 
   return {
     title,
@@ -98,13 +93,13 @@ export async function generateMetadata({ params }) {
       url: ORIGIN + path,
       siteName: "Dajjal Family",
       type: "website",
-      images: socialImages,
+      images: [{ url: socialImageUrl, width: 1200, height: 630, alt: `${names} — Couple Profile cover` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | Dajjal Family`,
       description,
-      images: coverImage ? [coverImage, fallbackImage] : [fallbackImage],
+      images: [socialImageUrl],
     },
     robots: { index: true, follow: true },
   };
