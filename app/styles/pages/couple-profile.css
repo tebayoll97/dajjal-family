@@ -10,6 +10,8 @@
   color:var(--df-text); background:var(--df-bg);
 }
 .df-couple-shell { width: min(100%, 76rem); margin-inline: auto; }
+/* Identity and Gallery use one identical, full-width panel frame. */
+.df-couple-content-panel { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
 .df-couple-hero {
   position: relative;
   isolation: isolate;
