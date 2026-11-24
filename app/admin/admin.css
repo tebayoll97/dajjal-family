@@ -1,0 +1,161 @@
+#df-admin-shell{--df-admin-content-width:92rem;min-height:100svh;display:grid;grid-template-columns:252px minmax(0,1fr);background:var(--df-bg);color:var(--df-text);font-family:var(--df-font-sans);font-size:var(--df-type-admin-body-size);line-height:var(--df-leading-normal)}
+#df-admin-shell *{box-sizing:border-box}
+#df-admin-shell a{color:inherit}
+#df-admin-shell .df-admin-skip{position:fixed;z-index:var(--df-z-overlay);top:8px;left:8px;transform:translateY(-160%);padding:10px 14px;border-radius:var(--df-radius-md);background:var(--df-primary);color:var(--df-on-primary);font-size:var(--df-admin-small)}
+#df-admin-shell .df-admin-skip:focus{transform:translateY(0)}
+#df-admin-shell .df-admin-sidebar{position:sticky;top:0;height:100svh;min-width:0;display:flex;flex-direction:column;padding:var(--df-space-5) var(--df-space-3);border-right:1px solid var(--df-border);background:var(--df-surface)}
+#df-admin-shell .df-admin-brand{display:flex;align-items:center;gap:12px;padding:8px 9px 22px;text-decoration:none;border-bottom:1px solid var(--df-border)}
+#df-admin-shell .df-admin-brand-mark{width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;border-radius:13px;background:var(--df-primary-soft);border:1px solid var(--df-border-strong);color:var(--df-primary);font-size:15px;font-weight:900;letter-spacing:-.05em}
+#df-admin-shell .df-admin-brand strong,#df-admin-shell .df-admin-brand small{display:block}
+#df-admin-shell .df-admin-brand strong{font-size:var(--df-text-sm);font-weight:850;letter-spacing:.07em}
+#df-admin-shell .df-admin-brand small{margin-top:3px;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:700;letter-spacing:.1em}
+#df-admin-shell .df-admin-sidebar-label{padding:22px 10px 8px;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:800;letter-spacing:.13em}
+#df-admin-shell .df-admin-nav{min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--df-border-strong) transparent}
+#df-admin-shell .df-admin-nav-group{margin:0 0 15px}
+#df-admin-shell .df-admin-nav-group h2{margin:0;padding:7px 10px;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+#df-admin-shell .df-admin-nav-link{position:relative;min-height:40px;display:flex;align-items:center;gap:10px;margin:2px 0;padding:8px 10px;border:1px solid transparent;border-radius:var(--df-radius-md);color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);font-weight:600;text-decoration:none;transition:background var(--df-duration-fast),color var(--df-duration-fast),border-color var(--df-duration-fast)}
+#df-admin-shell .df-admin-nav-link:hover{background:var(--df-surface-raised);color:var(--df-text)}
+#df-admin-shell .df-admin-nav-link.is-active{border-color:var(--df-border);background:var(--df-primary-soft);color:var(--df-text);font-weight:750}
+#df-admin-shell .df-admin-nav-icon{width:22px;flex:0 0 22px;text-align:center;color:var(--df-primary);font-size:17px}
+#df-admin-shell .df-admin-nav-active{width:5px;height:5px;margin-left:auto;border-radius:50%;background:var(--df-primary)}
+#df-admin-shell .df-admin-sidebar-foot{display:grid;gap:10px;margin-top:auto;padding:16px 8px 2px;border-top:1px solid var(--df-border)}
+#df-admin-shell .df-admin-sidebar-foot>span{color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);letter-spacing:.1em}
+#df-admin-shell .df-admin-workspace{min-width:0;display:flex;flex-direction:column}
+#df-admin-shell .df-admin-topbar{position:sticky;top:0;z-index:var(--df-z-dropdown);min-height:94px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px clamp(18px,3vw,42px);border-bottom:1px solid var(--df-border);background:color-mix(in srgb,var(--df-bg) 92%,transparent);backdrop-filter:blur(16px)}
+#df-admin-shell .df-admin-overline{display:block;margin-bottom:5px;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:800;letter-spacing:.13em}
+#df-admin-shell .df-admin-page-heading{margin:0}
+#df-admin-shell .df-admin-page-heading .ui-heading-h1{font-size:clamp(1.25rem,1.05rem + .65vw,1.75rem);letter-spacing:-.025em}
+#df-admin-shell .df-admin-page-heading .ui-subtitle{margin-top:3px;font-size:var(--df-type-admin-small-size);line-height:1.4}
+#df-admin-shell .df-admin-topbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:0 0 auto}
+#df-admin-shell .df-admin-status-dot{width:7px;height:7px;display:inline-block;margin-right:6px;border-radius:50%;background:var(--df-success)}
+#df-admin-shell .df-admin-mobile-nav{display:none}
+#df-admin-shell .df-admin-main{width:100%;min-width:0;flex:1;padding:clamp(14px,2.3vw,30px);color:var(--df-text)}
+#df-admin-shell .df-admin-main>main{min-height:0!important;max-width:var(--df-admin-content-width);margin-inline:auto;padding:0!important;background:transparent!important;color:var(--df-text)}
+#df-admin-shell .df-admin-main>main>div{min-width:0}
+#df-admin-shell .df-admin-main :is(h1,h2,h3,h4){text-wrap:balance}
+#df-admin-shell .df-admin-main :is(input,textarea,select){max-width:100%}
+#df-admin-shell .df-admin-main :is(button,a,input,textarea,select,[tabindex]):focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+#df-admin-shell .df-admin-main .music-page{min-height:0;padding:0;background:transparent}
+#df-admin-shell .df-admin-main .music-shell{max-width:var(--df-admin-content-width)}
+#df-admin-shell .df-admin-footer{display:flex;justify-content:space-between;gap:12px;padding:12px clamp(18px,3vw,42px);border-top:1px solid var(--df-border);color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);letter-spacing:.08em}
+#df-admin-shell .df-admin-global-error{margin:12px clamp(18px,3vw,42px) 0;padding:10px 12px;border:1px solid var(--df-danger);border-radius:var(--df-radius-md);color:var(--df-danger);font-size:var(--df-admin-small)}
+#df-admin-shell .df-admin-main [class*="bg-[#080711]"]{background:var(--df-bg)!important}
+#df-admin-shell .df-admin-main [class*="bg-[#15111f]"],#df-admin-shell .df-admin-main [class*="bg-[#11101d]"]{background:var(--df-surface)!important}
+#df-admin-shell .df-admin-main [class*="border-white/"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-400"],#df-admin-shell .df-admin-main [class*="text-gray-300"]{color:var(--df-text-secondary)}
+#df-admin-shell .df-admin-main [class*="text-gray-500"],#df-admin-shell .df-admin-main [class*="text-gray-600"]{color:var(--df-text-muted)}
+#df-admin-shell .df-admin-main [class*="text-white"]{color:var(--df-text)}
+#df-admin-shell .df-admin-main .text-white[class*="bg-purple-"],#df-admin-shell .df-admin-main .text-white[class*="bg-pink-"],#df-admin-shell .df-admin-main .text-white[class*="bg-red-"]{color:var(--df-on-primary)}
+#df-admin-shell .df-admin-main :is(.rounded-xl,.rounded-2xl,.rounded-lg)[class*="border"]{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main .ui-title{color:var(--df-text)}
+#df-admin-shell .df-admin-main .ui-section-subtitle{color:var(--df-text-secondary)}
+#df-admin-shell .df-admin-main .ui-card{background:var(--df-surface);border-color:var(--df-border)}
+#df-admin-shell .df-admin-main .df-token-page{background:transparent;color:var(--df-text)}
+#df-admin-shell .df-admin-main .df-manage-couple{padding:0}
+#df-admin-shell .df-admin-login-frame{min-height:100svh;display:grid;place-items:center;background:var(--df-bg);color:var(--df-text)}
+@media(max-width:1100px){#df-admin-shell{grid-template-columns:218px minmax(0,1fr)}#df-admin-shell .df-admin-sidebar{padding-inline:10px}#df-admin-shell .df-admin-topbar{padding-inline:20px}}
+@media(max-width:820px){#df-admin-shell{display:block}#df-admin-shell .df-admin-sidebar{display:none}#df-admin-shell .df-admin-topbar{position:relative;min-height:0;align-items:flex-start;padding:14px 15px;gap:10px}#df-admin-shell .df-admin-topbar-actions{gap:6px}#df-admin-shell .df-admin-topbar-actions .ui-button{min-height:38px;padding:7px 10px;font-size:var(--df-admin-small)}#df-admin-shell .df-admin-mobile-nav{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;border-bottom:1px solid var(--df-border);background:var(--df-surface);scrollbar-width:thin;overscroll-behavior-x:contain}#df-admin-shell .df-admin-mobile-nav a{min-height:38px;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;padding:7px 10px;border:1px solid transparent;border-radius:var(--df-radius-md);color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);font-weight:650;text-decoration:none;white-space:nowrap}#df-admin-shell .df-admin-mobile-nav a.is-active{border-color:var(--df-border);background:var(--df-primary-soft);color:var(--df-text)}#df-admin-shell .df-admin-main{padding:14px 14px 20px}#df-admin-shell .df-admin-footer{padding:10px 14px}}
+@media(max-width:520px){#df-admin-shell .df-admin-topbar{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}#df-admin-shell .df-admin-topbar-actions{justify-content:flex-start}#df-admin-shell .df-admin-topbar-actions .ui-badge{margin-right:auto}#df-admin-shell .df-admin-page-heading .ui-subtitle{max-width:34rem}#df-admin-shell .df-admin-main{padding:12px 10px 18px}#df-admin-shell .df-admin-footer{font-size:10px}}
+@media(prefers-reduced-motion:reduce){#df-admin-shell *{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+/* Dashboard content already has its own heading; the shared Admin Shell owns the page title. */
+#df-admin-shell .df-admin-main > main > .relative > header{display:none}
+#df-admin-shell .df-admin-main>main .ui-gradient-frame{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .bg-purple-600{background:var(--df-primary)}
+#df-admin-shell .df-admin-main>main .hover\:bg-purple-500:hover{background:var(--df-primary-hover)}
+#df-admin-shell .df-admin-main>main .text-red-300{color:var(--df-danger)}
+#df-admin-shell .df-admin-main>main .text-purple-200{color:var(--df-primary)}
+#df-admin-shell .df-admin-main>main .text-red-200{color:var(--df-danger)}
+#df-admin-shell .df-admin-main>main .border-red-400\/20{border-color:color-mix(in srgb,var(--df-danger) 30%,transparent)}
+#df-admin-shell .df-admin-main>main .bg-red-500\/10{background:color-mix(in srgb,var(--df-danger) 10%,var(--df-surface))}
+#df-admin-shell .df-admin-main>main .bg-red-600{background:var(--df-danger)}
+#df-admin-shell .df-admin-main>main .hover\:bg-red-500:hover{filter:brightness(1.08)}
+#df-admin-shell .df-admin-main>main .text-red-300{color:var(--df-danger)}
+#df-admin-shell .df-admin-main>main .text-white{color:var(--df-text)}
+#df-admin-shell .df-admin-main>main .bg-white\/5{background:var(--df-surface-raised)}
+#df-admin-shell .df-admin-main>main .border-white\/5{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .text-gray-500{color:var(--df-text-muted)}
+#df-admin-shell .df-admin-main>main .text-gray-400{color:var(--df-text-secondary)}
+#df-admin-shell .df-admin-main>main .text-gray-600{color:var(--df-text-muted)}
+#df-admin-shell .df-admin-main>main .text-purple-300{color:var(--df-primary)}
+#df-admin-shell .df-admin-main>main .text-cyan-300{color:var(--df-accent)}
+#df-admin-shell .df-admin-main>main .border-purple-500\/20{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .border-purple-400\/25{border-color:var(--df-border-strong)}
+#df-admin-shell .df-admin-main>main .bg-purple-500\/10{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .bg-purple-500\/15{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .bg-purple-600\/10{background:var(--df-primary-soft)}
+#df-admin-shell .df-admin-main>main .bg-pink-600{background:var(--df-primary)}
+#df-admin-shell .df-admin-main>main .text-pink-300{color:var(--df-primary)}
+#df-admin-shell .df-admin-main>main .border-pink-300\/20{border-color:var(--df-border)}
+#df-admin-shell .df-admin-main>main .bg-emerald-400\/10{background:color-mix(in srgb,var(--df-success) 10%,var(--df-surface))}
+#df-admin-shell .df-admin-main>main .text-emerald-300{color:var(--df-success)}
+#df-admin-shell .df-admin-main>main .bg-black\/75{background:color-mix(in srgb,var(--df-bg) 88%,transparent)}
+#df-admin-shell .df-admin-main>main .bg-black\/20{background:var(--df-surface-raised)}
+#df-admin-shell .df-admin-main>main .border-white\/15{border-color:var(--df-border-strong)}
+#df-admin-shell .df-admin-main>main .text-gray-300{color:var(--df-text-secondary)}
+
+#df-admin-shell .df-admin-current-route{margin:0;color:var(--df-text);font-size:var(--df-type-admin-small-size);font-weight:750}
+#df-admin-shell .df-admin-main > main > .relative > header{display:none}
+
+/* Legacy utility compatibility: all administrative status and surface classes resolve through semantic tokens. */
+#df-admin-shell .df-admin-main [class*="bg-purple-600"]{background:var(--df-primary)!important}
+#df-admin-shell .df-admin-main [class*="bg-purple-500/"],#df-admin-shell .df-admin-main [class*="bg-purple-400/"]{background:var(--df-primary-soft)!important}
+#df-admin-shell .df-admin-main [class*="border-purple-"],#df-admin-shell .df-admin-main [class*="border-white/"],#df-admin-shell .df-admin-main [class*="border-black/"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-purple-"]{color:var(--df-primary)!important}
+#df-admin-shell .df-admin-main [class*="bg-amber-"],#df-admin-shell .df-admin-main [class*="bg-yellow-"],#df-admin-shell .df-admin-main [class*="bg-green-"],#df-admin-shell .df-admin-main [class*="bg-emerald-"],#df-admin-shell .df-admin-main [class*="bg-cyan-"],#df-admin-shell .df-admin-main [class*="bg-blue-"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="text-amber-"],#df-admin-shell .df-admin-main [class*="text-yellow-"]{color:var(--df-warning)!important}
+#df-admin-shell .df-admin-main [class*="text-green-"],#df-admin-shell .df-admin-main [class*="text-emerald-"]{color:var(--df-success)!important}
+#df-admin-shell .df-admin-main [class*="text-cyan-"],#df-admin-shell .df-admin-main [class*="text-blue-"]{color:var(--df-accent)!important}
+#df-admin-shell .df-admin-main [class*="border-amber-"],#df-admin-shell .df-admin-main [class*="border-yellow-"],#df-admin-shell .df-admin-main [class*="border-green-"],#df-admin-shell .df-admin-main [class*="border-emerald-"],#df-admin-shell .df-admin-main [class*="border-cyan-"],#df-admin-shell .df-admin-main [class*="border-blue-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="bg-red-500/"],#df-admin-shell .df-admin-main [class*="bg-red-400/"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="bg-red-600"]{background:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="text-red-"]{color:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="border-red-"]{border-color:var(--df-danger)!important}
+#df-admin-shell .df-admin-main [class*="bg-black/20"],#df-admin-shell .df-admin-main [class*="bg-black/25"],#df-admin-shell .df-admin-main [class*="bg-black/30"],#df-admin-shell .df-admin-main [class*="bg-white/5"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="bg-black/75"]{background:color-mix(in srgb,var(--df-bg) 88%,transparent)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-300"],#df-admin-shell .df-admin-main [class*="text-gray-400"]{color:var(--df-text-secondary)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-500"],#df-admin-shell .df-admin-main [class*="text-gray-600"]{color:var(--df-text-muted)!important}
+#df-admin-shell .df-admin-main .text-xs,#df-admin-shell .df-admin-main .admin-small{font-size:var(--df-type-admin-small-size)}
+#df-admin-shell .df-admin-main small{font-size:var(--df-type-admin-meta-size)}
+
+#df-admin-shell .df-admin-main [class*="bg-gray-"],#df-admin-shell .df-admin-main [class*="bg-slate-"]{background:var(--df-surface-raised)!important}
+#df-admin-shell .df-admin-main [class*="border-gray-"],#df-admin-shell .df-admin-main [class*="border-slate-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-gray-"],#df-admin-shell .df-admin-main [class*="text-slate-"]{color:var(--df-text-secondary)!important}
+#df-admin-shell .df-admin-main [class*="bg-pink-"]{background:var(--df-primary-soft)!important}
+#df-admin-shell .df-admin-main [class*="border-pink-"]{border-color:var(--df-border)!important}
+#df-admin-shell .df-admin-main [class*="text-pink-"]{color:var(--df-primary)!important}
+#df-admin-shell .df-admin-main .text-white[class*="bg-purple-"],#df-admin-shell .df-admin-main .text-white[class*="bg-pink-"],#df-admin-shell .df-admin-main .text-white[class*="bg-red-"],#df-admin-shell .df-admin-main .text-white[class*="bg-amber-"],#df-admin-shell .df-admin-main .text-white[class*="bg-cyan-"],#df-admin-shell .df-admin-main .text-white[class*="bg-blue-"],#df-admin-shell .df-admin-main .text-white[class*="bg-green-"]{color:var(--df-on-primary)!important}
+
+
+/* Theme Manager — reusable cards/actions with active Global Theme semantic tokens only. */
+.df-theme-manager{width:min(100%,var(--df-admin-content-width));margin-inline:auto;padding:var(--df-space-2);color:var(--df-text);font-family:var(--df-font-sans)}
+.df-theme-manager__inner{display:grid;gap:var(--df-space-5);min-width:0}
+.df-theme-manager__verification{min-height:55svh;display:grid;place-items:center;padding:var(--df-space-4)}
+.df-theme-manager__layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(17rem,.75fr);gap:var(--df-space-4);align-items:start}
+.df-theme-manager__preview,.df-theme-manager__status,.df-theme-manager__catalog,.df-theme-manager__notice,.df-theme-manager__governance{display:grid;gap:var(--df-space-4);min-width:0;padding:var(--df-space-4)}
+.df-theme-manager__section-head h2{margin:var(--df-space-3) 0 0}
+.df-theme-manager__side{display:grid;gap:var(--df-space-4);min-width:0}
+.df-theme-manager__label{margin:0;color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-extrabold);letter-spacing:.12em;text-transform:uppercase}
+.df-theme-manager__live-preview{min-width:0;overflow:hidden;padding:var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-xl);background:var(--df-bg);color:var(--df-text)}
+.df-theme-manager__preview-top{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);padding-bottom:var(--df-space-3);border-bottom:1px solid var(--df-border)}
+.df-theme-manager__preview-body{display:grid;gap:var(--df-space-3);padding-block:var(--df-space-6)}
+.df-theme-manager__preview-body .ui-heading-h2{color:var(--df-text)}
+.df-theme-manager__preview-body .ui-section-description{color:var(--df-text-secondary)}
+.df-theme-manager__sample-primary,.df-theme-manager__sample-secondary{display:inline-flex;min-height:var(--df-touch-target-min);align-items:center;padding:var(--df-space-2) var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-md);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-bold)}
+.df-theme-manager__sample-primary{border-color:var(--df-primary);background:var(--df-primary);color:var(--df-on-primary)}
+.df-theme-manager__sample-secondary{background:var(--df-surface);color:var(--df-text)}
+.df-theme-manager__preset-list{display:grid;gap:var(--df-space-2)}
+.df-theme-manager__preset{display:grid;gap:var(--df-space-2);width:100%;min-width:0;padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);text-align:left;cursor:pointer;transition:border-color var(--df-duration-fast),background var(--df-duration-fast)}
+.df-theme-manager__preset:hover{border-color:var(--df-primary);background:var(--df-primary-soft)}
+.df-theme-manager__preset:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.df-theme-manager__preset.is-selected{border-color:var(--df-primary);background:var(--df-primary-soft)}
+.df-theme-manager__preset-head{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-2);flex-wrap:wrap}
+.df-theme-manager__preset-description{color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);line-height:var(--df-leading-relaxed)}
+.df-theme-manager__notice p,.df-theme-manager__governance p{margin:0;color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);line-height:var(--df-leading-relaxed)}
+.df-theme-manager__publish-status{color:var(--df-text-secondary);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-semibold)}
+.df-theme-manager__footer{padding-block:var(--df-space-4);border-top:1px solid var(--df-border);color:var(--df-text-muted);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-bold);letter-spacing:.12em;text-align:center}
+.df-theme-manager__denied{display:grid;gap:var(--df-space-4);max-width:32rem;margin:10vh auto;padding:var(--df-space-6)}
+@media(max-width:760px){.df-theme-manager__layout{grid-template-columns:minmax(0,1fr)}.df-theme-manager__preview,.df-theme-manager__status,.df-theme-manager__catalog,.df-theme-manager__notice,.df-theme-manager__governance{padding:var(--df-space-3)}.df-theme-manager__preview-body{padding-block:var(--df-space-4)}}
+@media(prefers-reduced-motion:reduce){.df-theme-manager__preset{transition:none}}
+
+#df-admin-shell .df-admin-auth-gate{min-height:55svh;display:grid;place-items:center;padding:var(--df-space-4)}

@@ -1,0 +1,208 @@
+/* Design tokens: the single source of truth for shared visual values. */
+:root {
+  color-scheme: dark;
+
+  /* Brand primitives */
+  --df-color-bg: #080711;
+  --df-color-surface: #151020;
+  --df-color-surface-raised: #1b1528;
+  --df-color-text: #f7f4ff;
+  --df-color-text-secondary: #c3b8d2;
+  --df-color-text-muted: #978da7;
+  --df-color-primary: #a855f7;
+  --df-color-secondary: #6366f1;
+  --df-color-cyan: #22d3ee;
+  --df-color-border: rgba(168,85,247,.20);
+  --df-gradient-brand: linear-gradient(115deg,#a855f7 0%,#6366f1 52%,#22d3ee 100%);
+  --df-gradient-glow: linear-gradient(90deg,transparent,#c084fc,#818cf8,transparent);
+
+  /* Semantic theme tokens — components should consume these. */
+  --df-bg: #080711;
+  --df-surface: #151020;
+  --df-surface-raised: #1b1528;
+  --df-surface-overlay: #241c34;
+  --df-text: #f7f4ff;
+  --df-text-secondary: #c3b8d2;
+  --df-text-muted: #978da7;
+  --df-border: rgba(195,184,210,.16);
+  --df-border-strong: rgba(195,184,210,.28);
+  --df-primary: #7e22ce;
+  --df-primary-hover: #9333ea;
+  --df-primary-soft: rgba(168,85,247,.14);
+  --df-secondary: #6366f1;
+  --df-accent: #22d3ee;
+  --df-focus: #c084fc;
+  --df-success: #22c55e;
+  --df-warning: #f59e0b;
+  --df-danger: #ef4444;
+  --df-info: #38bdf8;
+  --df-on-primary: #ffffff;
+
+  /* Typography */
+  --df-font-sans: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --df-font-mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  --df-text-xs: .75rem;
+  --df-text-sm: .875rem;
+  --df-text-base: 1rem;
+  --df-text-lg: 1.125rem;
+  --df-text-xl: 1.25rem;
+  --df-text-2xl: 1.5rem;
+  --df-text-3xl: 1.875rem;
+  --df-text-display: clamp(2.5rem, 1.5rem + 3vw, 3.5rem);
+  --df-leading-tight: 1.15;
+  --df-leading-normal: 1.5;
+  --df-leading-relaxed: 1.65;
+
+  /* Global Typography System — semantic roles, independent from color presets. */
+  --df-weight-regular: 400;
+  --df-weight-medium: 500;
+  --df-weight-semibold: 600;
+  --df-weight-bold: 700;
+  --df-weight-extrabold: 800;
+
+  --df-type-body-size: var(--df-text-base);
+  --df-type-body-leading: var(--df-leading-normal);
+  --df-type-heading-leading: var(--df-leading-tight);
+  --df-type-caption-size: var(--df-text-xs);
+  --df-type-caption-leading: 1.45;
+
+  /* Compact administrative typography roles. */
+  --df-type-admin-body-size: .875rem;
+  --df-type-admin-small-size: .75rem;
+  --df-type-admin-meta-size: .6875rem;
+  --df-type-admin-heading-size: clamp(1.25rem, 1.05rem + .65vw, 1.75rem);
+  --df-admin-small: var(--df-type-admin-small-size);
+
+  /* Shared form-control typography roles. */
+  --df-type-control-size: var(--df-text-base);
+  --df-type-control-leading: var(--df-leading-normal);
+  --df-type-control-label-size: var(--df-text-sm);
+  --df-type-control-label-leading: var(--df-leading-normal);
+
+  /* Shared navigation roles; Mobile Compact UI consumes these centrally. */
+  --df-type-nav-brand-size: .8125rem;
+  --df-type-nav-label-size: .9375rem;
+  --df-type-nav-submenu-size: .8125rem;
+  --df-type-nav-profile-size: .9375rem;
+  --df-type-nav-meta-size: .75rem;
+  --df-type-nav-section-size: .6875rem;
+  --df-type-nav-footer-size: .6875rem;
+  --df-type-nav-brand-leading: 1.25;
+  --df-type-nav-label-leading: 1.3;
+  --df-type-nav-submenu-leading: 1.35;
+  --df-type-nav-meta-leading: 1.4;
+
+  /* Compact desktop workspace sidebar uses a deliberate smaller role variant. */
+  --df-type-sidebar-label-size: .75rem;
+  --df-type-sidebar-submenu-size: .6875rem;
+  --df-type-sidebar-meta-size: .625rem;
+
+  /* Spacing: 4px base scale */
+  --df-space-1: .25rem;
+  --df-space-2: .5rem;
+  --df-space-3: .75rem;
+  --df-space-4: 1rem;
+  --df-space-5: 1.25rem;
+  --df-space-6: 1.5rem;
+  --df-space-8: 2rem;
+  --df-space-10: 2.5rem;
+  --df-space-12: 3rem;
+  --df-space-16: 4rem;
+  --df-space-20: 5rem;
+  --df-space-24: 6rem;
+
+  /* Shape and elevation */
+  --df-radius-sm: .5rem;
+  --df-radius-md: .75rem;
+  --df-radius-lg: 1rem;
+  --df-radius-xl: 1.25rem;
+  --df-radius-pill: 999px;
+  --df-shadow-sm: 0 2px 8px rgba(0,0,0,.12);
+  --df-shadow-md: 0 8px 24px rgba(0,0,0,.18);
+  --df-shadow-lg: 0 18px 48px rgba(0,0,0,.24);
+
+  /* Layout and motion */
+  --df-content-width: 76rem;
+  --df-reading-width: 46rem;
+  --df-motion-standard: cubic-bezier(.22,1,.36,1);
+  --df-duration-fast: 160ms;
+  --df-duration-normal: 220ms;
+  --df-duration-emphasis: 300ms;
+
+  /* Breakpoint references for documentation; CSS media queries use literal values. */
+  --df-breakpoint-mobile: 760px;
+  --df-breakpoint-tablet: 1024px;
+
+  /* Shared component contracts — dimensions, layering and interaction. */
+  --df-control-height-sm: 2.25rem;
+  --df-control-height-md: 2.75rem;
+  --df-control-height-lg: 3rem;
+  --df-touch-target-min: 2.75rem;
+  --df-icon-size-sm: 1rem;
+  --df-icon-size-md: 1.25rem;
+  --df-icon-size-lg: 1.5rem;
+  --df-focus-ring-width: 3px;
+  --df-focus-ring-offset: 2px;
+  --df-tooltip-max-width: 16rem;
+  --df-progress-track-size: .5rem;
+  --df-z-dropdown: 30;
+  --df-z-overlay: 1000;
+  /* Floating bottom dock — shared, edge-flush and geometry-locked. */
+  --df-bottom-nav-height: 4.65rem;
+  --df-bottom-nav-z-index: 120;
+  --df-bottom-nav-icon-size: 1.3rem;
+  --df-bottom-nav-label-size: .625rem;
+  --df-bottom-nav-label-leading: 1.1;
+  --df-bottom-nav-label-gap: .2rem;
+  --df-bottom-nav-item-height: 3rem;
+  --df-bottom-nav-padding-top: 1.05rem;
+  --df-bottom-nav-padding-x: .45rem;
+  --df-bottom-nav-padding-bottom: .45rem;
+  --df-bottom-nav-center-size: 4.5rem;
+  --df-bottom-nav-center-rise: 2.1rem;
+  --df-bottom-nav-center-border: .28rem;
+  --df-bottom-nav-center-label-size: .625rem;
+  --df-bottom-nav-center-gap: .15rem;
+  --df-bottom-nav-notch-gap: .3rem;
+  --df-bottom-nav-notch-width: calc(var(--df-bottom-nav-center-size) + (2 * var(--df-bottom-nav-center-border)) + 1rem);
+  --df-bottom-nav-notch-height: calc(var(--df-bottom-nav-center-rise) + var(--df-bottom-nav-notch-gap));
+  --df-bottom-nav-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 768px) {
+  :root {
+    --df-bottom-nav-height: 5rem;
+    --df-bottom-nav-icon-size: 1.45rem;
+    --df-bottom-nav-label-size: .7rem;
+    --df-bottom-nav-item-height: 3.35rem;
+    --df-bottom-nav-padding-top: 1.15rem;
+    --df-bottom-nav-center-size: 4.75rem;
+    --df-bottom-nav-center-rise: 2.25rem;
+    --df-bottom-nav-center-border: .32rem;
+  }
+}
+
+/* Existing legacy token names remain available during gradual migration. */
+
+
+/* Verification state semantic roles — mapped to the active global preset. */
+:root {
+  --df-verification-surface: var(--df-surface);
+  --df-verification-raised: var(--df-surface-raised);
+  --df-verification-border: var(--df-border-strong);
+  --df-verification-accent: var(--df-primary);
+  --df-verification-progress: var(--df-primary);
+  --df-verification-success: var(--df-success);
+  --df-verification-error: var(--df-danger);
+  --df-verification-motion: var(--df-motion-standard);
+  --df-verification-duration: 1.4s;
+  --df-type-display-wide: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);
+  --df-type-mobile-small: var(--df-type-admin-small-size);
+}
+
+/* Karaoke responsive lyric type roles; component scale remains user-adjustable. */
+:root{--df-type-karaoke-lyric-mobile:clamp(1.55rem,7.2vw,3.2rem);--df-type-karaoke-lyric-wide:clamp(1.8rem,5.8vw,4.6rem)}
+
+/* Blog semantic roles — all colors inherit the active global preset. */
+:root{--df-blog-card-surface:var(--df-surface);--df-blog-cover-surface:var(--df-surface-raised);--df-blog-byline-color:var(--df-text-muted);--df-blog-reading-width:var(--df-reading-width);--df-blog-grid-gap:var(--df-space-4)}
+
+:root{--df-editorial-byline-gap:var(--df-space-3);--df-editorial-meta-gap:var(--df-space-2);--df-editorial-meta-color:var(--df-text-muted)}

@@ -1,0 +1,20 @@
+/* Dajjal Family global stylesheet entry point.
+   Keep imports in this order: legacy compatibility, foundations, components, pages. */
+@import "./styles/legacy.css";
+@import "./styles/tokens.css";
+@import "./styles/reset.css";
+@import "./styles/typography.css";
+@import "./styles/layout.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";
+@import "./styles/pages/home.css";
+@import "./styles/theme.css";
+@import "./styles/pages/home-foundation.css";
+@import "./styles/site-chrome.css";
+@import "./styles/global-sidebar.css";
+@import "./styles/profile-foundation.css";
+@import "./styles/pages/couple.css";
+@import "./styles/pages/couple-profile.css";
+@import "./styles/pages/about-contact.css";
+@import "./styles/pages/contact-center.css";
+@import "./styles/pages/blog.css";
