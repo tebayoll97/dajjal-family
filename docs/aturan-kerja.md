@@ -233,3 +233,13 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Never weaken `verifyAdmin`, RLS, least privilege, or server-side validation to simplify the UI. No database schema, policy, or production data changes are included in this redesign.
 - Verification gate: build must be READY; then test all routes in ID/EN, all four global theme combinations, mobile/tablet/desktop, navigation/active states, sign-out/session expiry, all CRUD confirmations, empty/loading/error/success states, and protected API responses. Do not mark the redesign complete until these checks pass.
 - Current source implementation is committed to `main` at `35ea91164d1d9ec6201200fcbc5f45fe61884de4`. The production build (`npm run build`) passes in the Vercel sandbox when supplied non-production placeholder Supabase environment values; this verifies compilation, lint/type checks, and route generation, but does not verify production credentials or live data flows. Vercel deployment creation returned HTTP 402 `api-deployments-free-per-day` with a 24-hour retry window. No CLI fallback was available in the sandbox because no Vercel CLI or VERCEL_TOKEN was present. Production deployment and live visual/interactive QA remain pending; do not claim the site is updated.
+
+
+## Blog Owner permanen — keputusan pemilik 2026-11-24
+
+- Identitas Blog Owner tunggal dan permanen: **Tebayoll**, akun DAJJAL FAMILY `nurkholis.ixh@gmail.com`.
+- Blog Owner memiliki hak editorial tertinggi: mengelola seluruh artikel (draft, edit, publish, unpublish, delete), kategori, dan pengelolaan kontributor melalui area administrasi Blog.
+- Peran Blog Owner terpisah dari Blog Admin dan Kontributor biasa. Blog Owner juga berfungsi sebagai penulis utama dengan nama publikasi **Tebayoll**.
+- Peran ini tidak dapat diberikan, dipindahkan, diturunkan, atau ditangguhkan melalui UI maupun endpoint pengelolaan kontributor. Tidak boleh ada mekanisme promosi Owner dari panel admin biasa.
+- Otorisasi harus diverifikasi server-side menggunakan identitas Auth UUID tetap dan status keanggotaan admin yang tersimpan di database; jangan mengandalkan email dari browser, `user_metadata`, atau klaim yang dapat diedit pengguna.
+- Blog Owner menggunakan akun admin yang sudah ada dan sesi admin yang terpisah. Jangan mengubah tabel akun/player atau membuat akun duplikat.
