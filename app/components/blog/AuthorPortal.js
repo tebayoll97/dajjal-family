@@ -33,7 +33,7 @@ export default function AuthorPortal({ mode = "apply" }) {
     approved:id?"Penulis disetujui":"Author approved", suspended:id?"Akses penulis ditangguhkan":"Author access suspended",
     title:id?"Judul artikel (Indonesia)":"Article title (Indonesian)", titleEn:id?"Judul artikel (Inggris)":"Article title (English)",
     slug:id?"URL artikel (opsional)":"Article URL (optional)", category:id?"Kategori":"Category",
-    excerpt:id?"Ringkasan":"Excerpt", content:id?"Isi artikel (mendukung teks dan Markdown sederhana)":"Article content (plain text and simple Markdown)",
+    excerpt:id?"Ringkasan":"Excerpt", content:id?"Isi artikel (pisahkan paragraf dengan satu baris kosong)":"Article content (separate paragraphs with a blank line)",
     cover:id?"URL gambar sampul HTTPS":"HTTPS cover image URL", save:id?"Simpan Draft":"Save Draft",
     publish:id?"Terbitkan":"Publish", newArticle:id?"Artikel baru":"New article",
     noArticles:id?"Belum ada artikel. Mulai tulisan pertamamu.":"No articles yet. Start your first story.",
