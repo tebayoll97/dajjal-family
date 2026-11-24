@@ -243,3 +243,13 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Peran ini tidak dapat diberikan, dipindahkan, diturunkan, atau ditangguhkan melalui UI maupun endpoint pengelolaan kontributor. Tidak boleh ada mekanisme promosi Owner dari panel admin biasa.
 - Otorisasi harus diverifikasi server-side menggunakan identitas Auth UUID tetap dan status keanggotaan admin yang tersimpan di database; jangan mengandalkan email dari browser, `user_metadata`, atau klaim yang dapat diedit pengguna.
 - Blog Owner menggunakan akun admin yang sudah ada dan sesi admin yang terpisah. Jangan mengubah tabel akun/player atau membuat akun duplikat.
+
+
+## Blog — penerjemahan otomatis saat publikasi — PR1, 2026-11-24
+
+- Penulis hanya mengisi satu bahasa. Locale aktif dari LanguageProvider/header (`/id` atau `/en`) menjadi bahasa sumber ketika menyimpan atau menerbitkan; API memvalidasi `source_locale` terhadap allowlist `id`/`en`.
+- Saat Publish, backend memakai Gemini Developer API model `gemini-3.1-flash-lite` dan `GEMINI_API_KEY` server-side untuk menerjemahkan judul, ringkasan, isi, alt text cover, dan metadata SEO. Kedua versi disimpan pada kolom bilingual yang sudah ada; tidak ada perubahan schema database.
+- Draft hanya menyimpan teks sumber. Karena schema lama mewajibkan `title_id` dan `slug_id`, draft berbahasa Inggris memakai placeholder sumber pada kolom ID sampai dipublikasikan; artikel draft tidak tampil ke publik.
+- Kegagalan Gemini atau hasil tidak lengkap membatalkan publikasi; penulis menerima pesan dan dapat mencoba kembali. Key tidak pernah dikirim ke browser.
+- Ketika mengedit artikel, bahasa header menentukan versi yang diedit dan menjadi sumber pada publikasi ulang. Pengguna harus membuka editor melalui locale bahasa yang ingin dijadikan sumber.
+- Timeout provider 45 detik, JSON output, validasi tipe/panjang, dan error publik generik diterapkan. Tidak ada migration atau operasi database produksi pada implementasi kode ini.

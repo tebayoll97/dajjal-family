@@ -1,3 +1,0 @@
-export function StatCard({ label, value, description, trend, icon, className = "" }) {
-  return <article className={["ui-stat-card", className].filter(Boolean).join(" ")}><div className="ui-stat-card-head"><span className="ui-stat-label">{label}</span>{icon ? <span className="ui-stat-icon" aria-hidden="true">{icon}</span> : null}</div><strong className="ui-stat-value">{value}</strong>{(description || trend) ? <div className="ui-stat-foot">{description ? <span className="ui-stat-description">{description}</span> : null}{trend ? <span className="ui-stat-trend">{trend}</span> : null}</div> : null}</article>;
-}

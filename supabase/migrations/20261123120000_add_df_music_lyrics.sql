@@ -1,4 +1,0 @@
-alter table public.df_music_library add column if not exists lyrics jsonb not null default '[]'::jsonb, add column if not exists lyrics_status text not null default 'draft', add column if not exists lyrics_updated_at timestamptz, add column if not exists lyrics_updated_by uuid;
-alter table public.df_music_library add constraint df_music_library_lyrics_status_check check (lyrics_status in ('draft','published'));
-alter table public.df_music_library add constraint df_music_library_lyrics_array_check check (jsonb_typeof(lyrics) = 'array');
-create index if not exists df_music_library_published_lyrics_idx on public.df_music_library(id) where status='published' and lyrics_status='published';
