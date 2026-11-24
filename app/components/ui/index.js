@@ -32,4 +32,5 @@ export { BottomNavigation } from "./BottomNavigation";
 export { KaraokeLyrics } from "./KaraokeLyrics";
 
 export { VerificationState } from "./VerificationState";
-\nexport { EditorialByline } from "./EditorialByline";\n
+
+export { EditorialByline } from "./EditorialByline";

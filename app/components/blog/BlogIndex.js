@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";\nimport Image from "next/image";
+import Link from "next/link";
+import Image from "next/image";
 import {useMemo,useState} from "react";
 import {useLanguage} from "@/app/components/LanguageProvider";
 import {Badge,Breadcrumbs,Card,EmptyState,SearchField,SectionHeader,Button,EditorialByline} from "@/app/components/ui";

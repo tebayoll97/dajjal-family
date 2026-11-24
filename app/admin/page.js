@@ -130,7 +130,8 @@ export default function AdminDashboardPage() {
   if (!admin) return null;
 
   const modules = [
-    { href: "/admin/blog", icon: "✍️", number: "10", title: language === "id" ? "Blog Management" : "Blog Management", description: language === "id" ? "Kelola penulis, kategori, dan artikel editorial." : "Manage authors, categories, and editorial articles.", available: true },\n    { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true },
+    { href: "/admin/blog", icon: "✍️", number: "10", title: language === "id" ? "Blog Management" : "Blog Management", description: language === "id" ? "Kelola penulis, kategori, dan artikel editorial." : "Manage authors, categories, and editorial articles.", available: true },
+    { href: "/admin/contact-center", icon: "✉️", number: "00", title: t.contactCenter, description: t.contactCenterDesc, available: true },
     { href: "/admin/players", icon: "👥", number: "01", title: t.players, description: t.playersDesc, available: true },
     { href: "/admin/music", icon: "♫", number: "02", title: t.music, description: t.musicDesc, available: true },
     { href: "/admin/manage-couple", icon: "♡", number: "03", title: t.couple, description: t.coupleDesc, available: true },

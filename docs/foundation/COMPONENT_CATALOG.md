@@ -50,7 +50,8 @@ Status meanings:
 | Pagination | React shared component | `app/components/ui/Pagination.js` | Validate compact mobile behavior and accessible labels |
 | Table | React shared component | `app/components/ui/Table.js` | Validate narrow-screen overflow and table semantics |
 | Avatar | React shared component | `app/components/ui/Avatar.js` | Document fallback and alt-text behavior |
-| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Floating dock with centered concave notch, raised center action, icon-led compact presentation, safe-area placement, keyboard focus, active states, and page-scoped theme tokens |\n| KaraokeLyrics | React shared component | `app/components/ui/KaraokeLyrics.js` | Body-portal full-screen lyrics overlay; closing preserves playback, track title marquee, active-line progress and adjustable lyric scale; requires active audio element and published track ID |
+| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Floating dock with centered concave notch, raised center action, icon-led compact presentation, safe-area placement, keyboard focus, active states, and page-scoped theme tokens |
+| KaraokeLyrics | React shared component | `app/components/ui/KaraokeLyrics.js` | Body-portal full-screen lyrics overlay; closing preserves playback, track title marquee, active-line progress and adjustable lyric scale; requires active audio element and published track ID |
 | IconButton | CSS primitive only | `.ui-icon-button` in `app/styles/components.css`; used by Dialog | Consider React API only if repeated consumers justify it |
 | Link | Native/framework pattern | `next/link` is used by pages; locale routing is handled by existing locale utilities | Do not wrap blindly; define shared API only if it adds consistent locale/accessibility behavior |
 | ThemeToggle | Separate shared component | `app/components/ThemeToggle.js` | Keep existing provider integration; document separately from UI primitives |
@@ -566,7 +567,18 @@ All components below are exported from `app/components/ui` and previewed using t
 - **Accessibility:** every action is a named native button; current item exposes `aria-current`; active state exposes `aria-pressed`; visible keyboard focus and reduced-motion behavior are provided.
 - **Layout:** `fixed` enables edge-to-edge fixed positioning and safe-area padding. Consumers must reserve equivalent bottom space in page content.
 - **Limits:** component does not perform routing or business logic; consumers own callbacks and locale-specific labels.
-\n\n### KaraokeLyrics\n- **Source:** `app/components/ui/KaraokeLyrics.js`; exported from `app/components/ui`.\n- **Purpose:** full-screen synchronized lyrics overlay for the existing public Music audio element.\n- **API:** `KaraokeLyrics({ trackId, audioRef, language = "id", onClose })`. It fetches only the published public lyrics endpoint and does not create a second audio stream.\n- **Behavior:** active-line tracking follows native audio `timeupdate` and `seeked` events; transcript auto-scrolls within its own bounded region; font size is adjustable; Play/Pause controls the supplied audio element.\n- **Accessibility:** modal dialog semantics, Escape close, focus restoration, visible focus, labeled close/play controls, and reduced-motion-aware scrolling.\n- **Responsive contract:** locks the viewport to `100dvh`; only the transcript scrolls; safe-area insets and compact mobile controls are applied.\n- **Theming:** uses global semantic color, spacing, typography, radius, shadow, motion, and focus tokens.\n- **Limitations:** consumer supplies an already active audio element and localized language code; no lyrics editing or authorization is performed in this public component. Browser QA across all four presets and mobile landscape remains required.\n
+
+
+### KaraokeLyrics
+- **Source:** `app/components/ui/KaraokeLyrics.js`; exported from `app/components/ui`.
+- **Purpose:** full-screen synchronized lyrics overlay for the existing public Music audio element.
+- **API:** `KaraokeLyrics({ trackId, audioRef, language = "id", onClose })`. It fetches only the published public lyrics endpoint and does not create a second audio stream.
+- **Behavior:** active-line tracking follows native audio `timeupdate` and `seeked` events; transcript auto-scrolls within its own bounded region; font size is adjustable; Play/Pause controls the supplied audio element.
+- **Accessibility:** modal dialog semantics, Escape close, focus restoration, visible focus, labeled close/play controls, and reduced-motion-aware scrolling.
+- **Responsive contract:** locks the viewport to `100dvh`; only the transcript scrolls; safe-area insets and compact mobile controls are applied.
+- **Theming:** uses global semantic color, spacing, typography, radius, shadow, motion, and focus tokens.
+- **Limitations:** consumer supplies an already active audio element and localized language code; no lyrics editing or authorization is performed in this public component. Browser QA across all four presets and mobile landscape remains required.
+
 
 ## Admin workspace composition — 2026-11-23
 
