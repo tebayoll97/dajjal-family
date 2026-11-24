@@ -33,6 +33,12 @@
   margin-inline: 0;
   box-sizing: border-box;
 }
+.df-couple-profile-page .df-couple-gallery {
+  /* The shared theme also styles the standalone /df/gallery-couple page.
+     Keep this section free of page-level padding so its panel aligns to the shell. */
+  min-height: 0;
+  padding: 0;
+}
 .df-couple-profile-page .df-couple-gallery > .df-couple-content-panel {
   width: 100%;
   max-width: 100%;
