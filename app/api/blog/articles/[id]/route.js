@@ -18,14 +18,14 @@ export async function PATCH(request, { params }) {
   if (update.title_id && !body.slug_id) update.slug_id = slugifyBlogTitle(update.title_id);
   if (update.slug_id) update.slug_id = slugifyBlogTitle(update.slug_id);
   if (update.slug_en) update.slug_en = slugifyBlogTitle(update.slug_en) || null;
-  if (update.cover_image_url && !/^https:\\/\\//i.test(update.cover_image_url)) return blogError("Cover image must use HTTPS.", 422);
+  if (update.cover_image_url && !/^https:\/\//i.test(update.cover_image_url)) return blogError("Cover image must use HTTPS.", 422);
   if (update.category_id) {
     const { data: category } = await supabaseAdmin.from("df_blog_categories").select("id").eq("id", update.category_id).eq("is_active", true).maybeSingle();
     if (!category) return blogError("Choose an active Blog category.", 422);
   }
   if (update.content_id || update.content_en) {
     const contentForReading = String(update.content_id || update.content_en || "");
-    update.reading_minutes = Math.max(1, Math.ceil(contentForReading.split(/\\s+/).filter(Boolean).length / 220));
+    update.reading_minutes = Math.max(1, Math.ceil(contentForReading.split(/\s+/).filter(Boolean).length / 220));
   }
   if (body.status === "draft") update.status = "draft";
   if (body.status === "published") {
