@@ -201,3 +201,6 @@
 
 /* Karaoke responsive lyric type roles; component scale remains user-adjustable. */
 :root{--df-type-karaoke-lyric-mobile:clamp(1.55rem,7.2vw,3.2rem);--df-type-karaoke-lyric-wide:clamp(1.8rem,5.8vw,4.6rem)}
+
+/* Blog semantic roles — all colors inherit the active global preset. */
+:root{--df-blog-card-surface:var(--df-surface);--df-blog-cover-surface:var(--df-surface-raised);--df-blog-byline-color:var(--df-text-muted);--df-blog-reading-width:var(--df-reading-width);--df-blog-grid-gap:var(--df-space-4)}
