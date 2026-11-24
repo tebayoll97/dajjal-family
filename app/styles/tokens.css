@@ -206,3 +206,6 @@
 :root{--df-blog-card-surface:var(--df-surface);--df-blog-cover-surface:var(--df-surface-raised);--df-blog-byline-color:var(--df-text-muted);--df-blog-reading-width:var(--df-reading-width);--df-blog-grid-gap:var(--df-space-4)}
 
 :root{--df-editorial-byline-gap:var(--df-space-3);--df-editorial-meta-gap:var(--df-space-2);--df-editorial-meta-color:var(--df-text-muted)}
+
+/* Editorial engine semantic contracts — mapped to active global presets. */
+:root{--df-editorial-editor-surface:var(--df-surface);--df-editorial-editor-raised:var(--df-surface-raised);--df-editorial-editor-border:var(--df-border);--df-editorial-code-surface:var(--df-surface-overlay);--df-editorial-toolbar-gap:var(--df-space-2);--df-editorial-block-gap:var(--df-space-3);--df-editorial-editor-radius:var(--df-radius-lg);--df-editorial-code-radius:var(--df-radius-md);--df-editorial-mobile-gutter:var(--df-space-3);--df-editorial-wide-gutter:var(--df-space-5)}

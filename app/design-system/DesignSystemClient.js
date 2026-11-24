@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, TextField } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
+import EditorialEditor from "../components/blog/EditorialEditor";
+import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
 import ThemeToggle from "../components/ThemeToggle";
 import { DialogPreview } from "../components/ui/DialogPreview";
 import { ControlsPreview } from "../components/ui/ControlsPreview";
@@ -25,6 +27,7 @@ const sections = [
   ["13","INTERACTION STATES","states-heading","Hover, focus, active and disabled"],
   ["14","COMPONENT WORKBENCH","workbench-heading","Live previews of the shared React component inventory"],
   ["15","EDITORIAL & BLOG","editorial-heading","Editorial semantic tokens, byline, reading width and responsive content patterns"],
+  ["16","EDITORIAL ENGINE","editorial-engine-heading","Rich Text, Full HTML, structured blocks, safe rendering and bilingual translation boundaries"],
 ];
 
 const tokenColors = [
@@ -100,7 +103,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("16")}>16 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Editorial</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
@@ -217,6 +220,15 @@ export default function DesignSystemClient() {
               <div className="ui-editorial-grid"><article className="ui-card"><strong>Editorial card</strong><p className="ui-caption">Uses the shared surface and content spacing.</p></article><article className="ui-card"><strong>Reading layout</strong><p className="ui-caption">Uses semantic editorial width and type roles.</p></article><article className="ui-card"><strong>Responsive grid</strong><p className="ui-caption">Three columns on wide screens, two on tablet, one on mobile.</p></article></div>
             </div>
             <p className={styles.demoNote}>Token source: --df-blog-card-surface, --df-blog-cover-surface, --df-blog-byline-color, --df-blog-reading-width, --df-blog-grid-gap, --df-editorial-byline-gap, --df-editorial-meta-gap, and --df-editorial-meta-color. Components consume the active Global Theme Preset; no local palette is introduced.</p>
+          </div>
+        </Section>
+        <Section id="16" title="EDITORIAL ENGINE" headingId="editorial-engine-heading" description="Rich Text, restricted Full HTML, structured blocks and safe bilingual rendering" open={!!expanded["16"]} onToggle={() => toggle("16")}>
+          <div className={styles.demoCard}>
+            <p className={styles.demoLabel}>LIVE REUSABLE EDITORIAL EDITOR</p>
+            <EditorialEditor name="workbench-editorial-content" locale="id" defaultValue=""/>
+            <p className={styles.demoLabel}>SAFE PUBLIC RENDERER</p>
+            <div className="ui-editorial-reading"><EditorialContentRenderer locale="id" content={JSON.stringify({version:1,blocks:[{id:"demo-heading",type:"heading",level:2,text:"Contoh artikel DAJJAL FAMILY"},{id:"demo-p",type:"paragraph",text:"Konten ditampilkan sebagai blok bertipe. HTML mentah tidak dieksekusi."},{id:"demo-code",type:"code",language:"javascript",code:'const family = "DAJJAL FAMILY";\\nconsole.log(family);'},{id:"demo-button",type:"button",href:"https://dajjalfamily.com",label:"Kunjungi DAJJAL FAMILY"},{id:"demo-table",type:"table",headers:["Mode","Tujuan"],rows:[["Rich Text","Menulis visual"],["Full HTML","Markup terkontrol"]]}]})}/></div>
+            <p className={styles.demoNote}>Code blocks are excluded from Gemini translation. HTML source is parsed into validated blocks; scripts, event handlers, arbitrary styles, and arbitrary iframe markup are rejected. The same editor and renderer components are consumed by Blog author and public article routes.</p>
           </div>
         </Section>
       </div>

@@ -253,3 +253,13 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Kegagalan Gemini atau hasil tidak lengkap membatalkan publikasi; penulis menerima pesan dan dapat mencoba kembali. Key tidak pernah dikirim ke browser.
 - Ketika mengedit artikel, bahasa header menentukan versi yang diedit dan menjadi sumber pada publikasi ulang. Pengguna harus membuka editor melalui locale bahasa yang ingin dijadikan sumber.
 - Timeout provider 45 detik, JSON output, validasi tipe/panjang, dan error publik generik diterapkan. Tidak ada migration atau operasi database produksi pada implementasi kode ini.
+
+
+## Editorial Engine — 2026-11-24
+
+- Blog authoring uses a shared versioned Editorial Block document for Rich Text and restricted Full HTML modes.
+- New content is stored as versioned JSON in the existing `content_id` and `content_en` text columns; legacy plain text remains readable.
+- Gemini receives only server-selected human-readable fields and text segments. Code block contents, programming-language identifiers, URLs, provider IDs, and structural block metadata are not sent for translation.
+- Translation failure or validation failure blocks publication; both locale versions are written together by the article API.
+- Full HTML is an authoring input format, not executable website source. Scripts, event handlers, arbitrary styles, arbitrary iframe markup, unsafe URL schemes, and unsupported HTML elements are rejected. The renderer uses validated React blocks and never renders author HTML through `dangerouslySetInnerHTML`.
+- Shared `EditorialEditor` and `EditorialContentRenderer` are documented and previewed in Design System Workbench section 16. No production database migration is needed for the content format.

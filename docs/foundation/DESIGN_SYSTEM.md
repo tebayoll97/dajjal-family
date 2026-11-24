@@ -608,3 +608,20 @@ The Admin workspace uses a persistent shared auth provider to avoid repeating th
 ## Floating bottom dock — compact edge-flush pattern
 
 The shared BottomNavigation is a viewport-edge dock: full width, flush to the bottom, square lower corners, rounded upper corners, and a centered concave notch aligned to the raised circular action. Five equal grid columns preserve the exact center axis. Item and center-action labels are visible below their icons; consumers provide translated labels using the existing ID/EN language source. The dock uses semantic geometry/spacing tokens, compact typography roles, safe-area padding, keyboard focus, and reduced-motion behavior. The live Workbench preview must use the same production component. Wedding remains isolated.
+
+
+# 17. EDITORIAL ENGINE COMPONENT CONTRACT
+
+The Blog Editorial Engine uses one versioned structured-content model for both authoring modes.
+
+- Rich Text mode is the default block authoring experience.
+- Full HTML mode accepts a restricted HTML fragment and parses it into the same editorial block model.
+- Both modes share one validation, storage, translation, rendering, and publishing pipeline.
+- Supported blocks: paragraph, heading, quote, code, list, image, link, CTA button, table, YouTube embed, and divider.
+- Legacy plain-text article content remains readable; newly saved content uses versioned JSON in the existing text columns.
+- Code blocks are excluded from Gemini requests entirely. Translate only text fields selected by the server, then validate the resulting block document and preserve block IDs/order/types.
+- Never render author-supplied HTML with `dangerouslySetInnerHTML`. The public renderer maps validated block types to React elements.
+- Full HTML rejects scripts, styles, event handlers, arbitrary attributes, arbitrary iframe markup, unsafe URL schemes, and unsupported elements. YouTube embeds are rendered by the trusted renderer from a validated video ID.
+- Use the same reusable editor/renderer components in author pages and Design System Workbench.
+- Keep Mobile Compact UI, responsive code scrolling, accessible controls, semantic tokens, and four global theme combinations.
+- No database migration is required for versioned JSON content in existing `content_id` and `content_en` text columns.

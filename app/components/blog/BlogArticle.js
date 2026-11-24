@@ -4,12 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { Badge, Breadcrumbs, Card, EditorialByline } from "@/app/components/ui";
+import EditorialContentRenderer from "./EditorialContentRenderer";
 
 export default function BlogArticle({ article }) {
   const { language } = useLanguage();
   const isIndonesian = language === "id";
   const date = new Intl.DateTimeFormat(isIndonesian ? "id-ID" : "en-US", { dateStyle: "long" }).format(new Date(article.published_at));
-  const paragraphs = String(article.content || "").split(String.fromCharCode(10).repeat(2)).map((part) => part.trim()).filter(Boolean);
+
 
   return (
     <main className="ui-page df-blog-article">
@@ -35,9 +36,7 @@ export default function BlogArticle({ article }) {
           <Image className="df-blog-article-cover" src={article.cover_image_url} alt={article.title} width={1440} height={810} unoptimized priority />
         ) : <Image className="df-blog-article-cover" src="/dajjalfamily_icon_192.png" alt="DAJJAL FAMILY" width={1440} height={810} unoptimized priority />}
         <Card className="df-blog-prose">
-          <div className="ui-prose ui-text-editorial-body">
-            {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-          </div>
+          <div className="ui-prose ui-text-editorial-body"><EditorialContentRenderer content={article.content} locale={language}/></div>
         </Card>
         <Link className="ui-button ui-button-secondary" href={`/${language}/blog`}>
           ← {isIndonesian ? "Kembali ke Blog" : "Back to Blog"}
