@@ -8,7 +8,7 @@ const FIELDS = "id,contributor_id,category_id,status,slug_id,slug_en,title_id,ti
 export async function GET(request) {
   const auth = await verifyBlogUser(request, { approved: true });
   if (!auth.ok) return blogError(auth.error, auth.status);
-  let query = supabaseAdmin.from("df_blog_articles").select(FIELDS).order("updated_at", { ascending: false }).limit(auth.isOwner ? 500 : 100);
+  let query = supabaseAdmin.from("df_blog_articles").select(`${FIELDS},df_blog_contributors(display_name)`).order("updated_at", { ascending: false }).limit(auth.isOwner ? 500 : 100);
   if (!auth.isOwner) query = query.eq("contributor_id", auth.contributor.id);
   const { data, error } = await query;
   if (error) return blogError("Unable to load articles.", 500);
