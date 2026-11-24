@@ -24,7 +24,7 @@ export async function POST(request) {
   const slug = slugifyBlogTitle(body.slug_id || title);
   if (!slug) return blogError("A valid article slug is required.", 422);
   const status = body.status === "published" ? "published" : "draft";
-  const readingMinutes = Math.max(1, Math.ceil(content.split(/\\s+/).filter(Boolean).length / 220));
+  const readingMinutes = Math.max(1, Math.ceil(content.split(/\s+/).filter(Boolean).length / 220));
   const categoryId = typeof body.category_id === "string" && body.category_id ? body.category_id : null;
   if (categoryId) {
     const { data: category } = await supabaseAdmin.from("df_blog_categories").select("id").eq("id", categoryId).eq("is_active", true).maybeSingle();
@@ -37,7 +37,7 @@ export async function POST(request) {
     excerpt_id: String(body.excerpt_id || "").trim().slice(0, 360) || null,
     excerpt_en: String(body.excerpt_en || "").trim().slice(0, 360) || null,
     content_id: content, content_en: String(body.content_en || "").trim().slice(0, 60000) || null,
-    cover_image_url: typeof body.cover_image_url === "string" && /^https:\\/\\//i.test(body.cover_image_url) ? body.cover_image_url.slice(0, 2000) : null,
+    cover_image_url: typeof body.cover_image_url === "string" && /^https:\/\//i.test(body.cover_image_url) ? body.cover_image_url.slice(0, 2000) : null,
     cover_image_alt_id: String(body.cover_image_alt_id || "").trim().slice(0, 180) || null,
     cover_image_alt_en: String(body.cover_image_alt_en || "").trim().slice(0, 180) || null,
     meta_title_id: String(body.meta_title_id || "").trim().slice(0, 180) || null,
