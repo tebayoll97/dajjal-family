@@ -72,11 +72,21 @@ export default function CoupleProfileEditorPage() {
       }),
       fetch(`/api/couple/${slug}?locale=${locale}`, { cache: "no-store" }),
     ]);
-    const [ownerData, data] = await Promise.all([ownerResponse.json(), response.json()]);
-    if (!ownerResponse.ok || !ownerData.profile || ownerData.profile.slug !== slug) {
+    const ownerData = await ownerResponse.json();
+    if (ownerResponse.status === 401) {
+      router.replace("/login?next=" + encodeURIComponent("/app/create-profile-couple/" + slug));
+      return;
+    }
+    if (ownerResponse.status === 404 || !ownerData.profile) {
       router.replace("/app/create-profile-couple");
       return;
     }
+    if (!ownerResponse.ok) throw new Error(ownerData.error || "Unable to verify profile ownership.");
+    if (ownerData.profile.slug !== slug) {
+      router.replace("/app/create-profile-couple/" + ownerData.profile.slug);
+      return;
+    }
+    const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Unable to load Couple Profile.");
     setProfile(data.profile);
     setContent({ ...COUPLE_CONTENT_DEFAULTS[locale], ...(data.content?.content || {}) });
