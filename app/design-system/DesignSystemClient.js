@@ -24,6 +24,7 @@ const sections = [
   ["12","SURFACES & ELEVATION","surface-heading","Surfaces, borders, radius and shadows"],
   ["13","INTERACTION STATES","states-heading","Hover, focus, active and disabled"],
   ["14","COMPONENT WORKBENCH","workbench-heading","Live previews of the shared React component inventory"],
+  ["15","EDITORIAL & BLOG","editorial-heading","Editorial semantic tokens, byline, reading width and responsive content patterns"],
 ];
 
 const tokenColors = [
@@ -204,6 +205,19 @@ export default function DesignSystemClient() {
 
         <Section id="14" title="COMPONENT WORKBENCH" headingId="workbench-heading" description="Live previews of all shared React components" open={!!expanded["14"]} onToggle={() => toggle("14")}>
           <ComponentWorkbench />
+        </Section>
+
+        <Section id="15" title="EDITORIAL & BLOG" headingId="editorial-heading" description="Editorial semantic tokens, byline, reading width and responsive content patterns" open={!!expanded["15"]} onToggle={() => toggle("15")}>
+          <div className={styles.demoCard}>
+            <p className={styles.demoLabel}>EDITORIAL SEMANTIC CONTRACTS</p>
+            <div className="ui-editorial-reading ui-stack">
+              <h2 className="ui-heading-h2">A clear editorial hierarchy</h2>
+              <p className="ui-text-editorial-body">Editorial body copy uses the shared reading width and responsive typography roles. On mobile it remains compact; on wide displays it expands for comfortable long-form reading.</p>
+              <div className="ui-editorial-byline-component"><div className="ui-editorial-byline-component__meta"><span className="ui-text-editorial-meta">24 November 2026</span><span aria-hidden="true">·</span><span className="ui-text-editorial-meta">5 min read</span></div><strong className="ui-editorial-byline__author">Tebayoll</strong></div>
+              <div className="ui-editorial-grid"><article className="ui-card"><strong>Editorial card</strong><p className="ui-caption">Uses the shared surface and content spacing.</p></article><article className="ui-card"><strong>Reading layout</strong><p className="ui-caption">Uses semantic editorial width and type roles.</p></article><article className="ui-card"><strong>Responsive grid</strong><p className="ui-caption">Three columns on wide screens, two on tablet, one on mobile.</p></article></div>
+            </div>
+            <p className={styles.demoNote}>Token source: --df-blog-card-surface, --df-blog-cover-surface, --df-blog-byline-color, --df-blog-reading-width, --df-blog-grid-gap, --df-editorial-byline-gap, --df-editorial-meta-gap, and --df-editorial-meta-color. Components consume the active Global Theme Preset; no local palette is introduced.</p>
+          </div>
         </Section>
       </div>
 
