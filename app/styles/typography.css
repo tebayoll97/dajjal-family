@@ -41,7 +41,8 @@
 .ui-stat-trend{color:var(--df-success);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
 
 
-/* Shared compact bottom navigation typography roles. */
+/* Bottom dock labels remain available to assistive technology; the visual reference is icon-led. */
+.ui-bottom-navigation-label,.ui-bottom-navigation-center-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .ui-bottom-navigation-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-label-size);font-weight:var(--df-weight-semibold);line-height:1.15}
 .ui-bottom-navigation-center-label{font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-center-label-size);font-weight:var(--df-weight-bold);line-height:1.1}
 

@@ -464,8 +464,8 @@
 
 
 /* Music Public refinements — compact cover activity, paginated library and fixed edge navigation. */
-.music-public-page{padding-bottom:calc(var(--df-bottom-nav-height) + env(safe-area-inset-bottom,0px) + var(--df-space-5));}
-.music-public-header,.music-public-playlist{scroll-margin-top:var(--df-space-4);scroll-margin-bottom:calc(var(--df-bottom-nav-height) + env(safe-area-inset-bottom,0px) + var(--df-space-4));}
+.music-public-page{padding-bottom:calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + env(safe-area-inset-bottom,0px) + var(--df-space-5));}
+.music-public-header,.music-public-playlist{scroll-margin-top:var(--df-space-4);scroll-margin-bottom:calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + env(safe-area-inset-bottom,0px) + var(--df-space-4));}
 .music-public-cover-animation{
   position:absolute;z-index:2;right:auto;bottom:.7rem;left:.7rem;inset:auto;
   display:flex;width:2.7rem;height:1.55rem;align-items:center;justify-content:center;gap:3px;

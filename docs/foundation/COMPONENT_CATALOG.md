@@ -50,7 +50,7 @@ Status meanings:
 | Pagination | React shared component | `app/components/ui/Pagination.js` | Validate compact mobile behavior and accessible labels |
 | Table | React shared component | `app/components/ui/Table.js` | Validate narrow-screen overflow and table semantics |
 | Avatar | React shared component | `app/components/ui/Avatar.js` | Document fallback and alt-text behavior |
-| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Validate fixed safe-area placement, compact labels, and active/center actions |\n| KaraokeLyrics | React shared component | `app/components/ui/KaraokeLyrics.js` | Body-portal full-screen lyrics overlay; closing preserves playback, track title marquee, active-line progress and adjustable lyric scale; requires active audio element and published track ID |
+| BottomNavigation | React shared component | `app/components/ui/BottomNavigation.js` | Floating dock with centered concave notch, raised center action, icon-led compact presentation, safe-area placement, keyboard focus, active states, and page-scoped theme tokens |\n| KaraokeLyrics | React shared component | `app/components/ui/KaraokeLyrics.js` | Body-portal full-screen lyrics overlay; closing preserves playback, track title marquee, active-line progress and adjustable lyric scale; requires active audio element and published track ID |
 | IconButton | CSS primitive only | `.ui-icon-button` in `app/styles/components.css`; used by Dialog | Consider React API only if repeated consumers justify it |
 | Link | Native/framework pattern | `next/link` is used by pages; locale routing is handled by existing locale utilities | Do not wrap blindly; define shared API only if it adds consistent locale/accessibility behavior |
 | ThemeToggle | Separate shared component | `app/components/ThemeToggle.js` | Keep existing provider integration; document separately from UI primitives |
@@ -603,3 +603,14 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Behavior:** handles initial session resolution, sign-in, token refresh, user update, sign-out, retry, and stale verification response protection.
 - **Security boundary:** UI context is not an authorization authority. Every privileged API endpoint continues to validate its own bearer token and admin permissions server-side. Do not remove `verifyAdmin`, RLS, or route-level validation.
 - **Scope:** Admin Login is outside the protected workspace provider so a signed-out user can still access the login form.
+
+
+## 12. BottomNavigation — floating dock contract
+
+- The shared React component remains the only markup/API source for `/music`, `/df/couple`, `/couple/[slug]`, and `/app/create-profile-couple/[slug]` consumers.
+- The visual composition is an elevated floating dock with a centered concave notch and a raised primary action. Item labels remain in the DOM and accessible names remain explicit; labels are visually hidden to match the icon-led reference.
+- Geometry, safe-area offsets, icon sizing, center-action rise, and notch dimensions are semantic tokens in `app/styles/tokens.css`; typography roles are defined in `typography.css`; composition is in `layout.css`; states and interactions are in `components.css`.
+- The same production component is rendered in Design System Workbench. Workbench preview styles must not fork the production implementation.
+- Global Theme Preset pages consume the active preset tokens. Couple consumers may provide inherited page-scoped semantic values through `--df-bottom-nav-surface`, `--df-bottom-nav-cutout`, and `--df-bottom-nav-accent`; do not force Couple into the global preset engine.
+- Wedding remains an intentionally isolated navigation implementation and is not affected by shared BottomNavigation selectors.
+- Validate 360px and narrower phones, larger phones, tablet, desktop, both global presets and modes, ID/EN labels, safe areas, focus visibility, reduced motion, and non-overlap with page content.

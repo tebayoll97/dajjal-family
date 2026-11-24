@@ -297,6 +297,8 @@ Rules:
 - Menus must expose accessible names and states.
 - Language and theme controls must be easy to find.
 
+**Floating bottom dock pattern:** Shared bottom navigation uses a centered concave notch with a raised primary action, an icon-led compact presentation, safe-area-aware floating placement, and explicit accessible names. Geometry and behavior are driven by semantic tokens across the four global foundation CSS files. The same production component must be previewed in Design System Workbench. Couple may pass page-scoped semantic surface/accent tokens without being forced into the Global Theme Preset Engine; Wedding remains isolated.
+
 ## 8.5 Dialogs and overlays
 
 Rules:

@@ -1,3 +1,11 @@
+## 2026-11-24 — Shared floating bottom navigation
+
+- Redesigned the reusable BottomNavigation as a centered floating dock with a concave center notch and raised primary action, aligned to the supplied visual reference.
+- Added semantic geometry tokens and coordinated layout, typography, interaction, safe-area, responsive, and reduced-motion rules across the four global foundation CSS files.
+- Updated the Design System Workbench to preview the same production component with the icon-led reference composition.
+- Preserved page-specific Couple identity through inherited semantic surface/cutout/accent variables. Kept Wedding navigation isolated and unchanged.
+- Updated the Component Catalog and Design System documentation. No route, API, database, Auth, secret, or invitation behavior was changed.
+
 # Foundation Changelog
 
 ## v1.0 — Approved
