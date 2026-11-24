@@ -11,7 +11,7 @@ export async function GET(request) {
   if (!auth.authorized) return fail(auth.error, auth.status);
   const [contributors, articles, categories] = await Promise.all([
     supabaseAdmin.from("df_blog_contributors").select("id,account_user_id,display_name,email,status,application_note,created_at,reviewed_at").order("created_at", { ascending: false }).limit(200),
-    supabaseAdmin.from("df_blog_articles").select("id,title_id,title_en,slug_id,status,published_at,updated_at,df_blog_contributors(display_name,email)").order("updated_at", { ascending: false }).limit(200),
+    supabaseAdmin.from("df_blog_articles").select("id,title_id,title_en,slug_id,slug_en,status,published_at,updated_at,df_blog_contributors(display_name,email)").order("updated_at", { ascending: false }).limit(200),
     supabaseAdmin.from("df_blog_categories").select("id,slug,name_id,name_en,is_active,sort_order").order("sort_order", { ascending: true }),
   ]);
   const error = contributors.error || articles.error || categories.error;
