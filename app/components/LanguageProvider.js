@@ -20,7 +20,12 @@ export function LanguageProvider({ children, initialLanguage = "id" }) {
 
     // Article slugs are language-specific. Resolve the matching translation before switching locale.
     const blogSegments = pathWithoutLocale.split("/").filter(Boolean);
-    if (blogSegments[0] === "blog" && blogSegments[1] && currentLocale) {
+    if (
+      blogSegments.length === 2 &&
+      blogSegments[0] === "blog" &&
+      blogSegments[1] &&
+      currentLocale
+    ) {
       try {
         const params = new URLSearchParams({ slug: blogSegments[1], from: currentLocale, to: nextLanguage });
         const response = await fetch(`/api/blog/locale-alternate?${params.toString()}`, { cache: "no-store" });
