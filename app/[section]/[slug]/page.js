@@ -1,7 +1,7 @@
 import {notFound} from "next/navigation";
 import {headers} from "next/headers";
 import {BlogArticle} from "@/app/components/blog";
-import {getPublishedArticleBySlug} from "@/lib/blog/publicArticles";
+import {getPublishedArticleBySlug,getBlogArticleNavigationData} from "@/lib/blog/publicArticles";
 export const revalidate=120;
 export async function generateMetadata({params}){const{section,slug}=await params;if(section!=="blog")return{};const h=await headers();const locale=h.get("x-df-locale")==="en"?"en":"id";const a=await getPublishedArticleBySlug(slug,locale);if(!a)return{title:"Article not found",robots:{index:false,follow:false}};const title=(locale==="en"?a.meta_title_en:a.meta_title_id)||a.title;const description=(locale==="en"?a.meta_description_en:a.meta_description_id)||a.excerpt||"";const url=`https://dajjalfamily.com/${locale}/blog/${a.slug}`;const images=[{url:a.cover_image_url||"/dajjalfamily_icon_192.png",alt:a.title}];return{title,description,alternates:{canonical:url},openGraph:{title,description,url,siteName:"DAJJAL FAMILY",type:"article",publishedTime:a.published_at,authors:[a.author?.display_name||"DAJJAL FAMILY"],images},twitter:{card:"summary_large_image",title,description,images}};}
-export default async function SectionSlugPage({params}){const{section,slug}=await params;if(section!=="blog")notFound();const h=await headers();const locale=h.get("x-df-locale")==="en"?"en":"id";const article=await getPublishedArticleBySlug(slug,locale);if(!article)notFound();return <BlogArticle article={article}/>;}
+export default async function SectionSlugPage({params}){const{section,slug}=await params;if(section!=="blog")notFound();const h=await headers();const locale=h.get("x-df-locale")==="en"?"en":"id";const article=await getPublishedArticleBySlug(slug,locale);if(!article)notFound();const navigation=await getBlogArticleNavigationData(locale,article.id);return <BlogArticle article={article} navigation={navigation}/>;}
