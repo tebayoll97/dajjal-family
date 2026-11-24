@@ -483,7 +483,7 @@
 .music-public-pagination{width:100%;justify-content:center;gap:var(--df-space-2)}
 .music-public-pagination .ui-pagination-button{min-width:2.5rem;min-height:2.5rem}
 @media(max-width:640px){
-  .music-public-page{padding:.7rem 0 calc(var(--df-bottom-nav-height) + env(safe-area-inset-bottom,0px) + var(--df-space-3))}
+  .music-public-page{padding:.7rem 0 calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + var(--df-bottom-nav-safe-bottom) + var(--df-space-3))}
   .music-public-cover-animation{right:auto;bottom:.45rem;left:.45rem;width:2.4rem;height:1.4rem}
   .music-public-pagination-wrap{gap:.4rem;margin-top:.55rem;padding-top:.55rem}
   .music-public-pagination{gap:.2rem}

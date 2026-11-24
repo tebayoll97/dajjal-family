@@ -935,7 +935,7 @@
 
 
 /* Persistent Couple navigation — isolated from the global site shell. */
-.df-couple-page { padding-bottom: calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + var(--df-space-5) + env(safe-area-inset-bottom,0px)); }
+.df-couple-page { padding-bottom: calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + var(--df-space-5) + var(--df-bottom-nav-safe-bottom)); }
 .df-couple-bottom-nav {
   position: fixed;
   z-index: 120;
@@ -1003,7 +1003,7 @@
 .df-couple-bottom-nav :is(a, button):focus-visible { outline: 3px solid var(--df-focus); outline-offset: 3px; }
 #df-couple-home, #df-couple-profile, #df-couple-gallery, #df-couple-story { scroll-margin-top: 1.25rem; scroll-margin-bottom: 6.5rem; }
 @media (min-width: 900px) {
-  .df-couple-page { padding-bottom: 4rem; }
+  .df-couple-page { padding-bottom: calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + var(--df-space-5) + var(--df-bottom-nav-safe-bottom)); }
   .df-couple-bottom-nav { bottom: 1.25rem; }
 }
 @media (max-width: 380px) {

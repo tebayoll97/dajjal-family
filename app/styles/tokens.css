@@ -147,20 +147,39 @@
   --df-progress-track-size: .5rem;
   --df-z-dropdown: 30;
   --df-z-overlay: 1000;
-  /* Floating bottom dock — shared visual contract, responsive and safe-area aware. */
-  --df-bottom-nav-height: 4.75rem;
+  /* Floating bottom dock — shared, edge-flush and geometry-locked. */
+  --df-bottom-nav-height: 4.65rem;
   --df-bottom-nav-z-index: 120;
-  --df-bottom-nav-width: 42rem;
-  --df-bottom-nav-mobile-inset: .75rem;
-  --df-bottom-nav-offset: .65rem;
-  --df-bottom-nav-icon-size: 1.45rem;
-  --df-bottom-nav-label-size: var(--df-text-xs);
-  --df-bottom-nav-center-size: clamp(4.25rem, 10vw, 5.25rem);
-  --df-bottom-nav-center-rise: clamp(2.25rem, 5vw, 2.85rem);
-  --df-bottom-nav-center-border: .35rem;
+  --df-bottom-nav-icon-size: 1.3rem;
+  --df-bottom-nav-label-size: .625rem;
+  --df-bottom-nav-label-leading: 1.1;
+  --df-bottom-nav-label-gap: .2rem;
+  --df-bottom-nav-item-height: 3rem;
+  --df-bottom-nav-padding-top: 1.05rem;
+  --df-bottom-nav-padding-x: .45rem;
+  --df-bottom-nav-padding-bottom: .45rem;
+  --df-bottom-nav-center-size: 4.5rem;
+  --df-bottom-nav-center-rise: 2.1rem;
+  --df-bottom-nav-center-border: .28rem;
   --df-bottom-nav-center-label-size: .625rem;
-  --df-bottom-nav-notch-width: 7.5rem;
-  --df-bottom-nav-notch-height: 2.1rem;
+  --df-bottom-nav-center-gap: .15rem;
+  --df-bottom-nav-notch-gap: .3rem;
+  --df-bottom-nav-notch-width: calc(var(--df-bottom-nav-center-size) + (2 * var(--df-bottom-nav-center-border)) + 1rem);
+  --df-bottom-nav-notch-height: calc(var(--df-bottom-nav-center-rise) + var(--df-bottom-nav-notch-gap));
+  --df-bottom-nav-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 768px) {
+  :root {
+    --df-bottom-nav-height: 5rem;
+    --df-bottom-nav-icon-size: 1.45rem;
+    --df-bottom-nav-label-size: .7rem;
+    --df-bottom-nav-item-height: 3.35rem;
+    --df-bottom-nav-padding-top: 1.15rem;
+    --df-bottom-nav-center-size: 4.75rem;
+    --df-bottom-nav-center-rise: 2.25rem;
+    --df-bottom-nav-center-border: .32rem;
+  }
+}
 }
 
 /* Existing legacy token names remain available during gradual migration. */

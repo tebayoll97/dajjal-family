@@ -1283,7 +1283,7 @@
 
 
 /* Shared Couple bottom navigation — same full-width fixed composition as /music. */
-.df-couple-profile-page { padding-bottom: calc(var(--df-bottom-nav-height, 4.25rem) + var(--df-bottom-nav-center-rise, 1rem) + 2rem); }
+.df-couple-profile-page { padding-bottom: calc(var(--df-bottom-nav-height) + var(--df-bottom-nav-center-rise) + var(--df-space-5) + var(--df-bottom-nav-safe-bottom)); }
 .df-couple-shared-bottom-nav{
   --df-bottom-nav-surface:var(--couple-surface-raised,var(--df-surface-overlay));
   --df-bottom-nav-cutout:var(--couple-page-bg,var(--df-bg));

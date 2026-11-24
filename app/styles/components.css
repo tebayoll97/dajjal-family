@@ -183,8 +183,8 @@
 
 /* Floating bottom dock interaction and semantic states. */
 .ui-bottom-navigation{font-family:var(--df-font-sans)}
-.ui-bottom-navigation-item,.ui-bottom-navigation-center{border:0;background:transparent;color:var(--df-text-secondary);font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ui-bottom-navigation-item{border-radius:var(--df-radius-pill);transition:color var(--df-duration-fast),background-color var(--df-duration-fast),transform var(--df-duration-fast)}
+.ui-bottom-navigation-item,.ui-bottom-navigation-center{appearance:none;border:0;background:transparent;color:var(--df-text-secondary);font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ui-bottom-navigation-item{transition:color var(--df-duration-fast),background-color var(--df-duration-fast)}
 .ui-bottom-navigation-item:hover{background:var(--df-primary-soft)}
 .ui-bottom-navigation-item[aria-current="page"],.ui-bottom-navigation-item[aria-pressed="true"]{color:var(--df-bottom-nav-accent,var(--df-primary))}
 .ui-bottom-navigation-icon svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}

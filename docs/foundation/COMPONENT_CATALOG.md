@@ -605,12 +605,12 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Scope:** Admin Login is outside the protected workspace provider so a signed-out user can still access the login form.
 
 
-## 12. BottomNavigation — floating dock contract
+## 12. BottomNavigation — edge-flush compact dock contract
 
-- The shared React component remains the only markup/API source for `/music`, `/df/couple`, `/couple/[slug]`, and `/app/create-profile-couple/[slug]` consumers.
-- The visual composition is an elevated floating dock with a centered concave notch and a raised primary action. Item labels remain in the DOM and accessible names remain explicit; labels are visually hidden to match the icon-led reference.
-- Geometry, safe-area offsets, icon sizing, center-action rise, and notch dimensions are semantic tokens in `app/styles/tokens.css`; typography roles are defined in `typography.css`; composition is in `layout.css`; states and interactions are in `components.css`.
-- The same production component is rendered in Design System Workbench. Workbench preview styles must not fork the production implementation.
-- Global Theme Preset pages consume the active preset tokens. Couple consumers may provide inherited page-scoped semantic values through `--df-bottom-nav-surface`, `--df-bottom-nav-cutout`, and `--df-bottom-nav-accent`; do not force Couple into the global preset engine.
-- Wedding remains an intentionally isolated navigation implementation and is not affected by shared BottomNavigation selectors.
-- Validate 360px and narrower phones, larger phones, tablet, desktop, both global presets and modes, ID/EN labels, safe areas, focus visibility, reduced motion, and non-overlap with page content.
+- The shared React component is the single markup/API source for Music and Couple consumers; existing consumers supply localized ID/EN labels from their page translation/provider data.
+- Fixed navigation spans the viewport width and touches the bottom edge. Only its upper corners are rounded; bottom corners remain square. Safe-area inset is handled inside the dock.
+- Five equal grid columns place the center action on the exact horizontal midpoint. The notch width/height are derived from the center button size, border, rise, and gap tokens so the cutout and button stay aligned.
+- All four item labels and the center-action label are visibly rendered below their SVG icons. The component does not invent a second language dictionary; consumers remain responsible for localized labels and accessible navigation names.
+- Geometry and spacing tokens are in `tokens.css`; label typography in `typography.css`; composition and responsive placement in `layout.css`; interaction and reduced-motion states in `components.css`.
+- The same production component must be shown in Design System Workbench. Wedding remains an intentionally isolated navigation implementation.
+- Validate 360px and narrower phones, larger phones, tablet, desktop, both global presets and modes, ID/EN, safe areas, focus visibility, reduced motion, and page-content clearance.

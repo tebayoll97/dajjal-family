@@ -603,3 +603,8 @@ Semantic token roles:
 These roles are aliases to the active global semantic theme tokens. They must not create a separate Admin/User palette. The component uses the four global foundation stylesheets and is demonstrated through the live Design System Workbench.
 
 The Admin workspace uses a persistent shared auth provider to avoid repeating the administrator verification request during client-side submenu navigation. This UI optimization never replaces server-side authorization: protected API routes must continue to verify every bearer token and administrator permission independently. User-facing verification remains tied to the existing Supabase Auth session and must not infer access from client profile metadata.
+
+
+## Floating bottom dock — compact edge-flush pattern
+
+The shared BottomNavigation is a viewport-edge dock: full width, flush to the bottom, square lower corners, rounded upper corners, and a centered concave notch aligned to the raised circular action. Five equal grid columns preserve the exact center axis. Item and center-action labels are visible below their icons; consumers provide translated labels using the existing ID/EN language source. The dock uses semantic geometry/spacing tokens, compact typography roles, safe-area padding, keyboard focus, and reduced-motion behavior. The live Workbench preview must use the same production component. Wedding remains isolated.
