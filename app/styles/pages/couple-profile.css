@@ -12,6 +12,16 @@
 .df-couple-shell { width: min(100%, 76rem); margin-inline: auto; }
 /* Identity and Gallery use one identical, full-width panel frame. */
 .df-couple-content-panel { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+/* Match the reference /df/couple panel frame; gallery scope only. */
+.df-couple-profile-page .df-couple-gallery > .df-couple-content-panel {
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  border: 1px solid color-mix(in srgb, var(--couple-primary) 28%, var(--df-border));
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, var(--couple-surface-raised), var(--couple-surface));
+  box-shadow: var(--df-shadow-sm);
+}
+.df-couple-profile-page .df-couple-gallery > .df-couple-content-panel .df-couple-section-heading { margin-bottom: 1.25rem; }
+.df-couple-profile-page .df-couple-gallery > .df-couple-content-panel .df-couple-gallery-group > h3 { margin: 0 0 .8rem; color: var(--df-text); font-size: 1rem; font-weight: 850; }
 /* Keep the Gallery section aligned to the same shell edges as the other panels. */
 .df-couple-profile-page .df-couple-section,
 .df-couple-profile-page .df-couple-gallery {
