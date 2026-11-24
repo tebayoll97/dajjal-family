@@ -23,7 +23,7 @@ export async function POST(request) {
   const slug = slugifyBlogTitle(body.slug_id || title);
   if (!slug) return blogError("A valid article slug is required.", 422);
   const status = body.status === "published" ? "published" : "draft";
-  const readingMinutes = Math.max(1, Math.ceil(content.split(/\\s+/).filter(Boolean).length / 220));
+  const readingMinutes = Math.max(1, Math.ceil(content.split(/\s+/).filter(Boolean).length / 220));
   const categoryId = typeof body.category_id === "string" && body.category_id ? body.category_id : null;
   if (categoryId) {
     const { data: category } = await supabaseAdmin.from("df_blog_categories").select("id").eq("id", categoryId).eq("is_active", true).maybeSingle();

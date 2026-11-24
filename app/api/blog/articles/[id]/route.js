@@ -25,7 +25,7 @@ export async function PATCH(request, { params }) {
   }
   if (update.content_id || update.content_en) {
     const contentForReading = String(update.content_id || update.content_en || "");
-    update.reading_minutes = Math.max(1, Math.ceil(contentForReading.split(/\\s+/).filter(Boolean).length / 220));
+    update.reading_minutes = Math.max(1, Math.ceil(contentForReading.split(/\s+/).filter(Boolean).length / 220));
   }
   if (body.status === "draft") update.status = "draft";
   if (body.status === "published") {
