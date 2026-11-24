@@ -449,7 +449,7 @@
 
 
 /* Couple Gallery — compact, token-driven surfaces shared by ID/EN routes. */
-.df-couple-gallery,.df-manage-couple{
+.df-couple-gallery-page,.df-manage-couple{
   min-height:100svh;padding:clamp(1.25rem,3vw,2.75rem) 1rem 3rem;
   color:var(--df-text);background:var(--df-bg);font-family:var(--df-font-sans);
 }
@@ -466,7 +466,7 @@
 .df-couple-gallery__featured-body h2{margin:0;color:var(--df-text);font-size:clamp(1.35rem,3vw,2rem);font-weight:950;letter-spacing:-.035em}
 .df-couple-gallery__featured-body>p:not(.df-couple-gallery__eyebrow){margin:.5rem 0 1rem;color:var(--df-text-secondary);font-size:.85rem;line-height:1.6}
 .df-couple-gallery__actions{display:grid;width:min(100%,32rem);grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}.df-couple-gallery__action{display:inline-flex;min-width:0;min-height:2.9rem;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border:1px solid transparent;border-radius:var(--df-radius-md);font:inherit;font-size:.8rem;font-weight:850;line-height:1.25;letter-spacing:.02em;text-decoration:none;transition:filter var(--df-duration-fast),transform var(--df-duration-fast)}.df-couple-gallery__action-primary{background:var(--df-primary);color:var(--df-on-primary);box-shadow:0 .35rem 1rem color-mix(in srgb,var(--df-primary) 24%,transparent)}.df-couple-gallery__action-secondary{background:var(--df-secondary);color:var(--df-on-primary);box-shadow:0 .35rem 1rem color-mix(in srgb,var(--df-secondary) 24%,transparent)}.df-couple-gallery__action:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.df-couple-gallery__action:focus-visible,.df-couple-gallery a:focus-visible,.df-couple-gallery button:focus-visible,.df-manage-couple a:focus-visible,.df-manage-couple button:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
+.df-couple-gallery__action:focus-visible,.df-couple-gallery-page a:focus-visible,.df-couple-gallery-page button:focus-visible,.df-manage-couple a:focus-visible,.df-manage-couple button:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
 .df-couple-gallery__collection{margin-top:1.6rem}
 .df-couple-gallery__section-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:.8rem}
 .df-couple-gallery__section-head h2{margin:0;color:var(--df-text);font-size:1.15rem;font-weight:900}
