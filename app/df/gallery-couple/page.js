@@ -77,7 +77,7 @@ export default function CoupleGalleryPage() {
   useEffect(() => { loadGallery(1); }, [loadGallery]);
 
   return (
-    <main className="df-couple-gallery df-token-page">
+    <main className="df-couple-gallery-page df-token-page">
       <div className="df-couple-gallery__inner">
         <header className="df-couple-gallery__intro">
           <p className="df-couple-gallery__eyebrow">{t.eyebrow}</p>
