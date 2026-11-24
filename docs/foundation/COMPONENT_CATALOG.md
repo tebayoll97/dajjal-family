@@ -637,3 +637,14 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - Accessibility: publication date is exposed through a semantic `time` element; metadata is visible text and does not rely on color alone.
 - Responsive behavior: wraps metadata on narrow screens and uses the shared editorial metadata typography role.
 - Theme behavior: uses semantic editorial byline color and spacing tokens from the four global CSS foundations.
+
+
+## BlogArticleNavigation
+
+- **Export:** `BlogArticleNavigation` from `app/components/ui/BlogArticleNavigation.js`.
+- **Purpose:** Shared discovery rail for published Blog article pages. Renders up to three localized recent posts and active categories with published-article counts.
+- **Props:** `recentPosts` (array, capped at three by the component), `categories` (array of `{ id, slug, name, article_count }`), and `locale` (`id` or `en`). Data fetching and publication filtering remain server-side in `lib/blog/publicArticles.js`.
+- **Accessibility:** Semantic `aside`, headings, lists, localized link labels, and machine-readable publication dates. Links have visible focus styles.
+- **Responsive:** Sticky right rail on wide desktop; two compact panels at tablet/narrow desktop; stacked after article content on mobile. It never replaces or modifies the existing global website navigation.
+- **Tokens:** `--df-blog-sidebar-*` geometry roles, global surface/text/border/radius/spacing tokens, and editorial mobile-small typography roles across the four foundation CSS files.
+- **Workbench:** Included as a live production component preview in the Design System Component Workbench.
