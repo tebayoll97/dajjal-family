@@ -34,7 +34,7 @@ export async function PATCH(request) {
   if (body.type === "article") {
     if (!["published","draft","archived"].includes(body.status)) return fail("Invalid article status.");
     const update = { status: body.status, updated_at: new Date().toISOString() };
-    if (body.status === "published") update.published_at = new Date().toISOString();
+    if (body.status === "published") return fail("Publish this article from the Author Dashboard so Gemini can generate and validate both language versions.", 409);
     const { data, error } = await supabaseAdmin.from("df_blog_articles").update(update).eq("id", body.id).select("id,status,published_at").maybeSingle();
     if (error || !data) return fail("Unable to update article status.", 500);
     return Response.json({ success: true, item: data }, { headers: HEADERS });
