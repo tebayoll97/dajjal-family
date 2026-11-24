@@ -34,3 +34,5 @@ export { KaraokeLyrics } from "./KaraokeLyrics";
 export { VerificationState } from "./VerificationState";
 
 export { EditorialByline } from "./EditorialByline";
+
+export { BlogArticleNavigation } from "./BlogArticleNavigation";
