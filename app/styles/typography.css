@@ -96,3 +96,10 @@
 /* Responsive contributor card biography text. */
 .ui-contributor-card__role{margin:var(--df-space-1) 0 0;color:var(--df-text-secondary);font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);overflow-wrap:anywhere}
 @media(min-width:1024px){.ui-contributor-card__role{font-size:var(--df-text-sm)}}
+
+
+/* VerificationState typography roles. */
+.df-verification__eyebrow{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-extrabold);letter-spacing:.14em;line-height:var(--df-leading-normal)}
+.df-verification__title{font-size:var(--df-text-lg);font-weight:var(--df-weight-extrabold);line-height:var(--df-leading-tight);overflow-wrap:anywhere}
+.df-verification__description,.df-verification__detail{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-relaxed)}
+@media(min-width:1024px){.df-verification__title{font-size:var(--df-text-xl)}.df-verification__description,.df-verification__detail{font-size:var(--df-text-sm)}}
