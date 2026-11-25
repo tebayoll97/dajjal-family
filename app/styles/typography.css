@@ -74,3 +74,7 @@
 .ui-text-blog-meta{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);color:var(--df-text-muted)}
 @media(min-width:640px){.ui-text-blog-title{font-size:var(--df-text-lg)}.ui-text-blog-summary{font-size:var(--df-text-sm)}}
 @media(min-width:1280px){.ui-text-blog-title{font-size:var(--df-text-xl)}}
+
+
+/* Editorial metadata and author-link semantic typography roles. */
+.ui-text-editorial-meta{font-family:var(--df-font-sans);font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
