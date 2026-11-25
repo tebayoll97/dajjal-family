@@ -136,3 +136,13 @@
 /* Semantic workspace shell refinement. */
 .df-shell-drawer-brand strong{font-size:var(--df-type-nav-brand-size);line-height:var(--df-type-nav-brand-leading)}.df-shell-drawer-section{font-size:var(--df-type-nav-section-size);line-height:var(--df-type-nav-meta-leading)}.df-shell-drawer-nav a{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
 @media(max-width:760px){.df-shell-drawer-nav a{font-size:var(--df-workspace-nav-compact-font-size);line-height:var(--df-leading-normal)}.df-shell-drawer-foot .ui-button{font-size:var(--df-workspace-nav-compact-font-size)}}
+
+/* Admin shell typography: compact mobile controls, readable wide workspace headings. */
+#df-admin-shell .df-admin-nav-link{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+#df-admin-shell .df-admin-sidebar-label,#df-admin-shell .df-admin-nav-group h2{font-size:var(--df-type-nav-section-size);line-height:var(--df-type-nav-meta-leading)}
+#df-admin-shell .df-admin-main :is(.ui-heading-h1,.ui-heading-h2,.ui-heading-h3){text-wrap:balance}
+@media(max-width:820px){
+ #df-admin-shell .df-admin-nav-link{font-size:var(--df-admin-mobile-control-font);line-height:var(--df-leading-normal)}
+ #df-admin-shell .df-admin-topbar-actions .ui-button{font-size:var(--df-admin-mobile-control-font)}
+ #df-admin-shell .df-admin-current-route{font-size:var(--df-type-mobile-small)}
+}
