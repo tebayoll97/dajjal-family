@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Alert, Badge, Breadcrumbs, Button, Card, EmptyState, FeedbackDialog, PageHeader, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
+import { Badge, Breadcrumbs, Button, Card, EmptyState, FeedbackDialog, PageHeader, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
 import EditorialEditor from "@/app/components/blog/EditorialEditor";
 import ContributorProfileEditor from "@/app/components/blog/ContributorProfileEditor";
 
