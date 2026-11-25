@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Alert, Avatar, Button, Card, SectionHeader, TextField } from "@/app/components/ui";
+import { Alert, Avatar, Button, Card, Dialog, SectionHeader, TextField } from "@/app/components/ui";
 
 export default function ContributorProfileEditor({ contributor, accessToken, locale = "id", onSaved }) {
   const isEn = locale === "en";
@@ -11,7 +11,7 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [feedback, setFeedback] = useState(null);
   useEffect(() => {
     if (!file) { setPreview(""); return; }
     const url = URL.createObjectURL(file);
@@ -20,7 +20,7 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
   }, [file]);
 
   async function submit(event) {
-    event.preventDefault(); setBusy(true); setError(""); setSaved(false);
+    event.preventDefault(); setBusy(true); setError(""); setFeedback(null);
     try {
       const response = await fetch("/api/blog/contributors", {
         method: "PATCH",
@@ -29,8 +29,8 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan."));
-      onSaved?.(result.contributor); setSaved(true);
-    } catch (cause) { setError(cause.message || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan.")); }
+      onSaved?.(result.contributor); setFeedback({ type: "success", message: isEn ? "Your public profile has been updated." : "Profil publik berhasil diperbarui." });
+    } catch (cause) { setFeedback({ type: "error", message: cause.message || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan.") }); }
     finally { setBusy(false); }
   }
 
@@ -44,13 +44,13 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || (isEn ? "Avatar upload failed." : "Upload avatar gagal."));
-      onSaved?.({ ...contributor, ...result.contributor }); setFile(null); setSaved(true);
-    } catch (cause) { setError(cause.message || (isEn ? "Avatar upload failed." : "Upload avatar gagal.")); }
+      onSaved?.({ ...contributor, ...result.contributor }); setFile(null); setFeedback({ type: "success", message: isEn ? "Profile photo uploaded successfully." : "Foto profil berhasil diunggah." });
+    } catch (cause) { setFeedback({ type: "error", message: cause.message || (isEn ? "Avatar upload failed." : "Upload avatar gagal.") }); }
     finally { setUploading(false); }
   }
 
   return <Card className="ui-stack df-author-profile-editor">
-    <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} description={isEn ? "Your bio is translated automatically into the other language with Gemini." : "Bio akan diterjemahkan otomatis ke bahasa lainnya menggunakan Gemini."} />
+    <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} />
     {error ? <Alert variant="danger" title={isEn ? "Could not save" : "Gagal menyimpan"}>{error}</Alert> : null}
     {saved ? <Alert variant="success" title={isEn ? "Profile saved" : "Profil tersimpan"}>{isEn ? "Your public profile has been updated." : "Profil publik berhasil diperbarui."}</Alert> : null}
     <form className="ui-stack" onSubmit={submit}>
@@ -62,8 +62,17 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
           <div className="ui-cluster"><Button type="button" size="sm" disabled={!file || uploading || busy} loading={uploading} onClick={uploadAvatar}>{isEn ? "Upload photo" : "Upload foto"}</Button>{file ? <Button type="button" size="sm" variant="secondary" disabled={uploading} onClick={() => setFile(null)}>{isEn ? "Cancel" : "Batal"}</Button> : null}</div>
         </div>
       </div>
-      <TextField as="textarea" label={isEn ? "Biography" : "Bio penulis"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} helpText={isEn ? "Write in English. Gemini creates the Indonesian version automatically." : "Tulis dalam Bahasa Indonesia. Gemini membuat versi Bahasa Inggris secara otomatis."} />
+      <TextField as="textarea" label={isEn ? "Biography" : "Bio penulis"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} />
       <div className="ui-cluster"><Button type="submit" loading={busy} disabled={uploading}>{isEn ? "Save public profile" : "Simpan profil publik"}</Button></div>
     </form>
+    <Dialog
+      open={Boolean(feedback)}
+      onClose={() => setFeedback(null)}
+      title={feedback?.type === "error" ? (isEn ? "Action failed" : "Aksi gagal") : (isEn ? "Success" : "Berhasil")}
+      closeLabel={isEn ? "Close dialog" : "Tutup dialog"}
+      actions={<Button onClick={() => setFeedback(null)}>{isEn ? "Close" : "Tutup"}</Button>}
+    >
+      {feedback ? <Alert variant={feedback.type === "error" ? "danger" : "success"}>{feedback.message}</Alert> : null}
+    </Dialog>
   </Card>;
 }
