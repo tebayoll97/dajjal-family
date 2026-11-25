@@ -10,7 +10,6 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
   const [feedback, setFeedback] = useState(null);
   useEffect(() => {
     if (!file) { setPreview(""); return; }
@@ -20,7 +19,7 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
   }, [file]);
 
   async function submit(event) {
-    event.preventDefault(); setBusy(true); setError(""); setFeedback(null);
+    event.preventDefault(); setBusy(true); setFeedback(null);
     try {
       const response = await fetch("/api/blog/contributors", {
         method: "PATCH",
