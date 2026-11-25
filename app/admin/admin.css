@@ -254,7 +254,7 @@
 @media(prefers-reduced-motion:reduce){#df-admin-shell .df-admin-sidebar{transition:none}}
 
 /* Explicit split navigation modes: desktop rail and independent mobile overlay drawer. */
-#df-admin-shell .df-admin-desktop-drawer{display:flex;grid-column:1;grid-row:1;min-width:0;width:100%;z-index:var(--df-z-base)}
+#df-admin-shell .df-admin-desktop-drawer{display:flex;grid-column:1;grid-row:1;min-width:0;width:100%;z-index:var(--df-z-overlay)}
 #df-admin-shell .df-admin-mobile-drawer{display:none}
 #df-admin-shell .df-admin-workspace{grid-column:2;grid-row:1;min-width:0}
 #df-admin-shell .df-admin-topbar{min-width:0}
