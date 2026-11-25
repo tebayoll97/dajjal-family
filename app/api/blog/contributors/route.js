@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyBlogUser, BLOG_PRIVATE_HEADERS, blogError } from "@/lib/blog/auth";
+import { translateBlogFields } from "@/lib/blog/translation";
 
 export const dynamic = "force-dynamic";
 
@@ -44,14 +45,26 @@ export async function PATCH(request) {
   if (!auth.contributor?.id) return blogError("Contributor profile was not found.", 404);
   const body = await request.json().catch(() => ({}));
   const displayName = typeof body.display_name === "string" ? body.display_name.trim() : auth.contributor.display_name;
-  const bioId = typeof body.bio_id === "string" ? body.bio_id.trim() : (auth.contributor.bio_id || "");
-  const bioEn = typeof body.bio_en === "string" ? body.bio_en.trim() : (auth.contributor.bio_en || "");
-  const avatarUrl = typeof body.avatar_url === "string" ? body.avatar_url.trim() : (auth.contributor.avatar_url || "");
+  const bio = typeof body.bio === "string" ? body.bio.trim() : (auth.contributor.bio_id || auth.contributor.bio_en || "");
+  const sourceLocale = body.source_locale;
   if (!displayName || displayName.length > 80) return blogError("Display name must contain 1–80 characters.", 422);
-  if (bioId.length > 600 || bioEn.length > 600) return blogError("Biography must not exceed 600 characters per language.", 422);
-  if (avatarUrl && (!avatarUrl.toLowerCase().startsWith("https://") || avatarUrl.length > 2000)) return blogError("Avatar URL must be a valid HTTPS URL.", 422);
+  if (bio.length > 600) return blogError("Biography must not exceed 600 characters.", 422);
+  if (!["id", "en"].includes(sourceLocale)) return blogError("Refresh the page language and try again.", 422);
+  let bioId = auth.contributor.bio_id || "";
+  let bioEn = auth.contributor.bio_en || "";
+  try {
+    if (!bio) { bioId = ""; bioEn = ""; }
+    else {
+      const translated = await translateBlogFields({ bio }, sourceLocale);
+      if (sourceLocale === "id") { bioId = bio; bioEn = translated.bio; }
+      else { bioEn = bio; bioId = translated.bio; }
+    }
+  } catch (cause) {
+    const status = cause.message === "TRANSLATION_NOT_CONFIGURED" ? 503 : 502;
+    return blogError(status === 503 ? "Automatic translation is not configured. Contact the administrator." : "Gemini could not complete the biography translation. Nothing was saved; please try again.", status);
+  }
   const { data, error } = await supabaseAdmin.from("df_blog_contributors")
-    .update({ display_name: displayName, bio_id: bioId || null, bio_en: bioEn || null, avatar_url: avatarUrl || null, updated_at: new Date().toISOString() })
+    .update({ display_name: displayName, bio_id: bioId || null, bio_en: bioEn || null, updated_at: new Date().toISOString() })
     .eq("id", auth.contributor.id).eq("account_user_id", auth.user.id)
     .select("id,display_name,slug,email,status,bio_id,bio_en,avatar_url").single();
   if (error || !data) {
