@@ -227,3 +227,7 @@
 /* Author profile editor semantic roles. */
 :root{--df-author-profile-avatar-size:5rem;--df-author-profile-upload-gap:var(--df-space-4)}
 @media(min-width:768px){:root{--df-author-profile-avatar-size:5.5rem}}
+
+/* Author workspace semantic layout tokens. */
+:root{--df-author-workspace-gap:var(--df-space-6);--df-author-workspace-panel-padding:var(--df-space-5)}
+@media(max-width:639px){:root{--df-author-workspace-gap:var(--df-space-4);--df-author-workspace-panel-padding:var(--df-space-4)}}
