@@ -18,7 +18,7 @@ export default function BlogArticle({ article, navigation }) {
         { label: "Blog", href: `/${language}/blog` },
         { label: article.title },
       ]} />
-      <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={language} authorHref={article.author?.slug ? `/${language}/blog/author/${article.author.slug}` : undefined} className="df-blog-article-byline" />
+      <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={language} authorHref={article.author?.slug ? `/${language}/contributors/profile/${article.author.slug}` : undefined} className="df-blog-article-byline" />
       <div className="ui-blog-article-layout">
         <article className="ui-stack df-blog-article-content">
           <header className="ui-page-heading">
