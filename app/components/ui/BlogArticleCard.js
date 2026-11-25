@@ -25,7 +25,7 @@ export function BlogArticleCard({ article, locale = "id" }) {
           {categoryName ? <Badge>{categoryName}</Badge> : null}
           <h2 className="ui-blog-article-card__title ui-text-blog-title">{article.title}</h2>
           {article.excerpt ? <p className="ui-blog-article-card__summary ui-text-blog-summary">{article.excerpt}</p> : null}
-          <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={locale} className="ui-blog-article-card__byline" />
+          <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={locale} authorHref={article.author?.slug ? `/${locale}/blog/author/${article.author.slug}` : undefined} className="ui-blog-article-card__byline" />
         </div>
       </Link>
     </Card>
