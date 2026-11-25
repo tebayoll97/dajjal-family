@@ -38,7 +38,7 @@ export function VerificationState({ variant = "user", status = "checking", compa
         aria-atomic="true"
         aria-busy={status === "checking" || undefined}
       >
-        <span className="df-verification__mark" aria-hidden="true"><span>{icon}</span>{status === "checking" && <i />}</span>
+        <span className="df-verification__mark" aria-hidden="true">{status === "checking" ? <img className="df-verification__logo" src="/loading.png" alt="" /> : <span>{icon}</span>}{status === "checking" && <i />}</span>
         <span className="df-verification__title">{title || statusTitle}</span>
       </span>
     );
@@ -46,7 +46,7 @@ export function VerificationState({ variant = "user", status = "checking", compa
 
   return (
     <section className={["df-verification", `df-verification--${kind}`, `df-verification--${status}`, className].filter(Boolean).join(" ")} role={status === "error" || status === "denied" || status === "expired" ? "alert" : "status"} aria-live="polite" aria-atomic="true" aria-busy={status === "checking" || undefined}>
-      <div className="df-verification__mark" aria-hidden="true"><span>{icon}</span>{status === "checking" && <i />}</div>
+      <div className="df-verification__mark" aria-hidden="true">{status === "checking" ? <img className="df-verification__logo" src="/loading.png" alt="" /> : <span>{icon}</span>}{status === "checking" && <i />}</div>
       <div className="df-verification__copy">
         <p className="df-verification__eyebrow">{content.label}</p>
         <h2 className="df-verification__title">{title || statusTitle}</h2>
