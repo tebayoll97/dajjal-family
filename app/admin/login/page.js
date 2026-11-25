@@ -148,7 +148,7 @@ export default function AdminLoginPage() {
 
         <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-6 sm:p-8 ui-card">
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-green-400">●</span>
+            <span className="text-[var(--df-success)]">●</span>
 
             <p className="text-sm font-bold text-[var(--df-text-secondary)]">
               ADMINISTRATOR LOGIN
