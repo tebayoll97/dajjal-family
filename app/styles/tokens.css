@@ -306,3 +306,8 @@
  --df-type-wide-subheading:clamp(1.2rem,1rem + .6vw,1.55rem);
 }
 @media(max-width:760px){:root{--df-workspace-drawer-padding:var(--df-space-4);--df-workspace-panel-padding:var(--df-space-4);--df-workspace-panel-gap:var(--df-space-3)}}
+
+
+/* Semantic workspace shell refinement. */
+:root{--df-workspace-drawer-width:18rem;--df-workspace-drawer-mobile-width:min(88vw,21rem);--df-workspace-drawer-padding:var(--df-space-5);--df-workspace-drawer-backdrop:color-mix(in srgb,var(--df-color-bg) 68%,transparent);--df-workspace-nav-item-gap:var(--df-space-2);--df-workspace-nav-item-padding-block:var(--df-space-3);--df-workspace-nav-item-padding-inline:var(--df-space-3);--df-workspace-nav-desktop-min-width:18rem;--df-workspace-nav-compact-button-height:2.375rem;--df-workspace-nav-compact-font-size:.8125rem;--df-workspace-nav-compact-gap:var(--df-space-2)}
+@media(max-width:760px){:root{--df-workspace-drawer-padding:var(--df-space-4);--df-workspace-nav-item-padding-block:var(--df-space-2);--df-workspace-nav-item-padding-inline:var(--df-space-3)}}
