@@ -86,3 +86,8 @@
 /* Author profile helper copy follows compact mobile and readable desktop roles. */
 .ui-author-profile-editor .ui-field-help{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
 @media(min-width:1024px){.ui-author-profile-editor .ui-field-help{font-size:var(--df-text-sm)}}
+
+/* Contributor workspace type roles: compact mobile, wide-display title. */
+.ui-author-workspace .ui-heading-h1{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-tight)}
+@media(min-width:768px){.ui-author-workspace .ui-heading-h1{font-size:clamp(1.875rem,1.5rem + 1.2vw,2.5rem)}}
+@media(min-width:1280px){.ui-author-workspace .ui-heading-h1{font-size:var(--df-type-display-wide)}}
