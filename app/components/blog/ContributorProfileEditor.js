@@ -1,45 +1,69 @@
 "use client";
-import { useState } from "react";
-import { Alert, Button, Card, SectionHeader, TextField } from "@/app/components/ui";
+import { useEffect, useState } from "react";
+import { Alert, Avatar, Button, Card, SectionHeader, TextField } from "@/app/components/ui";
 
 export default function ContributorProfileEditor({ contributor, accessToken, locale = "id", onSaved }) {
   const isEn = locale === "en";
   const [name, setName] = useState(contributor?.display_name || "");
-  const [bioId, setBioId] = useState(contributor?.bio_id || "");
-  const [bioEn, setBioEn] = useState(contributor?.bio_en || "");
-  const [avatar, setAvatar] = useState(contributor?.avatar_url || "");
+  const [bio, setBio] = useState(contributor?.[isEn ? "bio_en" : "bio_id"] || contributor?.bio_id || contributor?.bio_en || "");
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    if (!file) { setPreview(""); return; }
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   async function submit(event) {
-    event.preventDefault();
-    setBusy(true); setError(""); setSaved(false);
+    event.preventDefault(); setBusy(true); setError(""); setSaved(false);
     try {
       const response = await fetch("/api/blog/contributors", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify({ display_name: name, bio_id: bioId, bio_en: bioEn, avatar_url: avatar }),
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + accessToken },
+        body: JSON.stringify({ display_name: name, bio, source_locale: locale }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan."));
-      onSaved?.(result.contributor);
-      setSaved(true);
-    } catch (cause) {
-      setError(cause.message || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan."));
-    } finally { setBusy(false); }
+      onSaved?.(result.contributor); setSaved(true);
+    } catch (cause) { setError(cause.message || (isEn ? "Unable to save profile." : "Profil tidak dapat disimpan.")); }
+    finally { setBusy(false); }
   }
 
-  return <Card className="ui-stack">
-    <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} description={isEn ? "This information appears on your public author page and contributor directory." : "Informasi ini tampil di halaman profil publik dan direktori kontributor."} />
+  async function uploadAvatar() {
+    if (!file || uploading || busy) return;
+    setUploading(true); setError(""); setSaved(false);
+    try {
+      const form = new FormData(); form.set("file", file);
+      const response = await fetch("/api/blog/contributors/avatar", {
+        method: "POST", headers: { Authorization: "Bearer " + accessToken }, body: form,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || (isEn ? "Avatar upload failed." : "Upload avatar gagal."));
+      onSaved?.({ ...contributor, ...result.contributor }); setFile(null); setSaved(true);
+    } catch (cause) { setError(cause.message || (isEn ? "Avatar upload failed." : "Upload avatar gagal.")); }
+    finally { setUploading(false); }
+  }
+
+  return <Card className="ui-stack df-author-profile-editor">
+    <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} description={isEn ? "Your bio is translated automatically into the other language with Gemini." : "Bio akan diterjemahkan otomatis ke bahasa lainnya menggunakan Gemini."} />
     {error ? <Alert variant="danger" title={isEn ? "Could not save" : "Gagal menyimpan"}>{error}</Alert> : null}
     {saved ? <Alert variant="success" title={isEn ? "Profile saved" : "Profil tersimpan"}>{isEn ? "Your public profile has been updated." : "Profil publik berhasil diperbarui."}</Alert> : null}
     <form className="ui-stack" onSubmit={submit}>
       <TextField label={isEn ? "Display name" : "Nama tampilan"} value={name} onChange={event => setName(event.target.value)} maxLength={80} required />
-      <TextField label={isEn ? "Avatar image URL (HTTPS)" : "URL foto profil (HTTPS)"} value={avatar} onChange={event => setAvatar(event.target.value)} type="url" maxLength={2000} helpText={isEn ? "Use a publicly accessible HTTPS image URL." : "Gunakan URL gambar HTTPS yang dapat diakses publik."} />
-      <TextField as="textarea" label="Bio — Bahasa Indonesia" value={bioId} onChange={event => setBioId(event.target.value)} rows={3} maxLength={600} />
-      <TextField as="textarea" label="Bio — English" value={bioEn} onChange={event => setBioEn(event.target.value)} rows={3} maxLength={600} />
-      <div className="ui-cluster"><Button type="submit" loading={busy}>{isEn ? "Save public profile" : "Simpan profil publik"}</Button></div>
+      <div className="ui-author-avatar-upload">
+        <Avatar src={preview || contributor?.avatar_url} name={name || contributor?.display_name || "Author"} size="xl" />
+        <div className="ui-stack-sm ui-author-avatar-upload__body">
+          <TextField label={isEn ? "Profile photo" : "Foto profil"} type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} helpText={isEn ? "JPG, PNG, or WEBP · maximum 8 MB. Uploaded to your Blog folder in Google Drive." : "JPG, PNG, atau WEBP · maksimal 8 MB. Disimpan ke folder Blog milikmu di Google Drive."} />
+          <div className="ui-cluster"><Button type="button" size="sm" disabled={!file || uploading || busy} loading={uploading} onClick={uploadAvatar}>{isEn ? "Upload photo" : "Upload foto"}</Button>{file ? <Button type="button" size="sm" variant="secondary" disabled={uploading} onClick={() => setFile(null)}>{isEn ? "Cancel" : "Batal"}</Button> : null}</div>
+        </div>
+      </div>
+      <TextField as="textarea" label={isEn ? "Biography" : "Bio penulis"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} helpText={isEn ? "Write in English. Gemini creates the Indonesian version automatically." : "Tulis dalam Bahasa Indonesia. Gemini membuat versi Bahasa Inggris secara otomatis."} />
+      <div className="ui-cluster"><Button type="submit" loading={busy} disabled={uploading}>{isEn ? "Save public profile" : "Simpan profil publik"}</Button></div>
     </form>
   </Card>;
 }
