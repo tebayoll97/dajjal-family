@@ -219,3 +219,7 @@
 
 /* Author byline semantic roles — mapped to the active global theme. */
 :root{--df-editorial-byline-label-color:var(--df-text-muted);--df-editorial-byline-author-color:var(--df-primary);--df-editorial-author-avatar-size:4.5rem}
+
+/* Author directory semantic roles. */
+:root{--df-author-card-gap:var(--df-space-4);--df-author-card-padding:var(--df-space-4);--df-author-card-radius:var(--df-radius-lg);--df-author-grid-gap:var(--df-space-4);--df-author-avatar-size:3.5rem}
+@media(min-width:768px){:root{--df-author-card-padding:var(--df-space-5);--df-author-avatar-size:4rem}}
