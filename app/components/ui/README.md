@@ -22,3 +22,7 @@ Use `SearchField` for reusable native search inputs. Provide a visible `label` o
 
 ### BottomNavigation
 Use `BottomNavigation` for compact fixed or inline navigation with up to four destinations and one centered primary action. Provide localized accessible labels and consumer-owned callbacks. When `fixed` is enabled, reserve bottom space in the page content and verify device safe areas.
+
+
+## AdminPanel
+Use `AdminPanel` for a semantic administrative content surface. It only provides the shared surface contract; data fetching, authorization, validation, and interaction state remain in the page. Supports an alternate semantic root through `as` and forwards native props.
