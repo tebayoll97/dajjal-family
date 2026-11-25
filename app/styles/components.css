@@ -277,3 +277,7 @@
   .df-blog-author .ui-card{padding:var(--df-space-4)}
   .df-blog-author .df-author-profile-editor{gap:var(--df-space-4)}
 }
+
+/* Shared feedback dialog content composition. */
+.ui-feedback-dialog{display:grid;justify-items:start;gap:var(--df-space-3);padding-block:var(--df-space-2)}
+.ui-feedback-dialog>.ui-text-body{margin:0;color:var(--df-text-secondary);overflow-wrap:anywhere}
