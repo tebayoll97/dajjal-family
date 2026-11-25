@@ -266,3 +266,23 @@
 @media(max-width:600px){
   :root{--df-profile-card-padding:var(--df-space-3);--df-editorial-demo-padding:var(--df-space-3);--df-editorial-content-padding:var(--df-space-3)}
 }
+
+
+/* Shared workspace navigation semantic geometry — mirrors the public drawer. */
+:root{
+  --df-workspace-nav-surface:var(--df-surface);
+  --df-workspace-nav-raised:var(--df-surface-raised);
+  --df-workspace-nav-border:var(--df-border);
+  --df-workspace-nav-active-bg:var(--df-primary-soft);
+  --df-workspace-nav-active-border:var(--df-border-strong);
+  --df-workspace-nav-active-color:var(--df-text);
+  --df-workspace-nav-icon:var(--df-primary);
+  --df-workspace-nav-radius:var(--df-radius-md);
+  --df-workspace-nav-item-gap:var(--df-space-1);
+  --df-workspace-nav-item-padding-block:var(--df-space-2);
+  --df-workspace-nav-item-padding-inline:var(--df-space-3);
+  --df-workspace-nav-group-gap:var(--df-space-5);
+  --df-workspace-nav-panel-padding:var(--df-space-4);
+  --df-workspace-nav-panel-shadow:var(--df-shadow-md);
+}
+@media(max-width:760px){:root{--df-workspace-nav-panel-padding:var(--df-space-3);--df-workspace-nav-item-padding-inline:var(--df-space-2)}}
