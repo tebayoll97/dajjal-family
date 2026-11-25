@@ -118,3 +118,16 @@
 .df-workspace-navigation-link{font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-nav-label-leading)}
 .df-workspace-navigation-group-title{font-size:var(--df-type-nav-section-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-meta-leading)}
 .df-workspace-navigation-identity{font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
+
+
+/* Workspace display typography roles: compact on mobile, wider on desktop. */
+.ui-text-mobile-small{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+.ui-text-display-wide{font-size:var(--df-type-wide-heading);line-height:var(--df-type-heading-leading);letter-spacing:-.035em}
+.df-shell-workspace-content .ui-heading-h1{font-size:var(--df-type-wide-heading)}
+.df-shell-workspace-content .ui-heading-h2{font-size:var(--df-type-wide-subheading)}
+.df-shell-workspace-content .ui-prose,.df-shell-workspace-content .ui-text-body{font-size:var(--df-type-body-size);line-height:var(--df-type-body-leading)}
+@media(max-width:760px){
+ .df-shell-workspace-content .ui-heading-h1{font-size:var(--df-type-mobile-heading)}
+ .df-shell-workspace-content .ui-heading-h2{font-size:var(--df-type-mobile-subheading)}
+ .df-shell-workspace-content .ui-prose,.df-shell-workspace-content .ui-text-body{font-size:var(--df-type-mobile-body)}
+}
