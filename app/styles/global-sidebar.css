@@ -103,3 +103,16 @@
 .df-global-sidebar-profile .df-navigation-profile-copy small{font-size:var(--df-type-sidebar-meta-size)}
 .df-global-sidebar-card>span,
 .df-global-sidebar-bottom>small{font-size:var(--df-type-sidebar-meta-size)}
+
+/* Account profile accordion and contextual contributor entry points. */
+.df-global-sidebar-profile .df-navigation-profile-card{width:100%;display:flex;align-items:center;gap:10px;text-align:left;font:inherit;cursor:pointer}
+.df-global-sidebar-profile .df-navigation-profile-card:hover,
+.df-global-sidebar-profile .df-navigation-profile-card[aria-expanded="true"]{border-color:var(--df-border-strong);background:var(--df-primary-soft)}
+.df-global-sidebar-profile .df-navigation-profile-arrow{margin-left:auto;transition:transform var(--df-duration-fast)}
+.df-global-sidebar-profile .df-navigation-profile-arrow.is-expanded{transform:rotate(180deg)}
+.df-navigation-profile-menu{display:none;margin-top:5px;padding:5px;border:1px solid var(--df-border);border-radius:10px;background:var(--df-surface-raised)}
+.df-navigation-profile-menu[data-expanded="true"]{display:grid;gap:3px}
+.df-navigation-profile-menu>a{min-height:36px;display:flex;align-items:center;gap:9px;padding:0 9px;border-radius:7px;color:var(--df-text-secondary);font-size:var(--df-type-sidebar-submenu-size);font-weight:var(--df-weight-semibold);text-decoration:none}
+.df-navigation-profile-menu>a:hover,.df-navigation-profile-menu>a[aria-current="page"]{background:var(--df-primary-soft);color:var(--df-text)}
+.df-navigation-profile-menu>a>span{width:16px;color:var(--df-primary);text-align:center}
+.df-navigation-profile-menu .df-navigation-profile-logout{margin-top:3px;padding:5px 5px 0;border-top:1px solid var(--df-border)}
