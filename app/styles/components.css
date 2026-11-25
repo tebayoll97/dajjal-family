@@ -263,3 +263,9 @@
 /* Reusable contributor identity card. */
 .ui-author-card{display:flex;min-width:0;flex-direction:column;gap:var(--df-author-card-gap);padding:var(--df-author-card-padding);border-radius:var(--df-author-card-radius);background:var(--df-surface)}.ui-author-card__identity{display:flex;align-items:center;gap:var(--df-space-3);min-width:0}.ui-author-card__copy{min-width:0;flex:1}.ui-author-card__copy .ui-heading-h3{margin:0;overflow-wrap:anywhere}.ui-author-card__identity .ui-avatar{width:var(--df-author-avatar-size);height:var(--df-author-avatar-size);flex:0 0 var(--df-author-avatar-size)}.ui-author-card__footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--df-space-2);padding-top:var(--df-space-3);border-top:1px solid var(--df-border)}.ui-author-card__footer .ui-link{min-height:var(--df-touch-target-min);display:inline-flex;align-items:center}
 @media(max-width:639px){.ui-author-card{gap:var(--df-space-3);padding:var(--df-space-3)}.ui-author-card__footer{padding-top:var(--df-space-2)}}
+
+/* Author profile editor consumes shared Avatar, TextField, Button and semantic geometry. */
+.df-author-profile-editor .ui-author-avatar-upload .ui-avatar{width:var(--df-author-profile-avatar-size);height:var(--df-author-profile-avatar-size);flex:0 0 var(--df-author-profile-avatar-size)}
+.df-author-profile-editor .ui-input[type=file]{padding:var(--df-space-2);font-size:var(--df-type-mobile-small)}
+.df-author-profile-editor .ui-input[type=file]::file-selector-button{min-height:var(--df-touch-target-min);margin-inline-end:var(--df-space-2);padding:var(--df-space-2) var(--df-space-3);border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);font:inherit}
+@media(min-width:1024px){.df-author-profile-editor .ui-input[type=file]{font-size:var(--df-text-sm)}}
