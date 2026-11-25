@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/adminAuth";
 import { BLOG_OWNER_USER_ID } from "@/lib/blog/auth";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 const HEADERS = { "Cache-Control": "private, no-store, max-age=0, must-revalidate" };
@@ -47,6 +48,7 @@ export async function PATCH(request) {
     const query = body.id ? supabaseAdmin.from("df_blog_categories").update(record).eq("id", body.id) : supabaseAdmin.from("df_blog_categories").insert(record);
     const { data, error } = await query.select("id,slug,name_id,name_en,is_active,sort_order").single();
     if (error) return fail(error.code === "23505" ? "Category slug already exists." : "Unable to save category.", error.code === "23505" ? 409 : 500);
+    revalidateTag("df-blog-public");
     return Response.json({ success: true, item: data }, { headers: HEADERS });
   }
   return fail("Unsupported Blog administration action.", 422);
@@ -59,5 +61,6 @@ export async function DELETE(request) {
   if (body.type !== "category" || !body.id) return fail("Invalid category deletion request.", 422);
   const { error } = await supabaseAdmin.from("df_blog_categories").delete().eq("id", body.id);
   if (error) return fail("Unable to delete category. Articles may still reference it.", 409);
+  revalidateTag("df-blog-public");
   return Response.json({ success: true }, { headers: HEADERS });
 }
