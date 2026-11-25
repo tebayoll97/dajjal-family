@@ -459,7 +459,7 @@ export default function AdminPlayersPage() {
           </div>
         </section>
 
-        {success && <div role="status" className="mt-4 rounded-xl border border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] px-4 py-3 text-sm text-emerald-200">{success}</div>}
+        {success && <div role="status" className="mt-4 rounded-xl border border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] px-4 py-3 text-sm text-[var(--df-success)]">{success}</div>}
 
         {/* SEARCH */}
         <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-5 ui-card">
