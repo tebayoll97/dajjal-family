@@ -259,3 +259,7 @@
 .ui-editorial-byline-component__author:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset);border-radius:var(--df-radius-sm)}
 .df-blog-author-profile .ui-avatar{width:var(--df-editorial-author-avatar-size);height:var(--df-editorial-author-avatar-size);flex:0 0 var(--df-editorial-author-avatar-size)}
 @media(max-width:639px){.df-blog-author-profile .ui-avatar{width:3.5rem;height:3.5rem;flex-basis:3.5rem}}
+
+/* Reusable contributor identity card. */
+.ui-author-card{display:flex;min-width:0;flex-direction:column;gap:var(--df-author-card-gap);padding:var(--df-author-card-padding);border-radius:var(--df-author-card-radius);background:var(--df-surface)}.ui-author-card__identity{display:flex;align-items:center;gap:var(--df-space-3);min-width:0}.ui-author-card__copy{min-width:0;flex:1}.ui-author-card__copy .ui-heading-h3{margin:0;overflow-wrap:anywhere}.ui-author-card__identity .ui-avatar{width:var(--df-author-avatar-size);height:var(--df-author-avatar-size);flex:0 0 var(--df-author-avatar-size)}.ui-author-card__footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--df-space-2);padding-top:var(--df-space-3);border-top:1px solid var(--df-border)}.ui-author-card__footer .ui-link{min-height:var(--df-touch-target-min);display:inline-flex;align-items:center}
+@media(max-width:639px){.ui-author-card{gap:var(--df-space-3);padding:var(--df-space-3)}.ui-author-card__footer{padding-top:var(--df-space-2)}}
