@@ -1,1 +1,16 @@
-export function EditorialByline({author,date,dateTime,readingTime,locale="id",className=""}){const label=locale==="en"?"min read":"menit baca";return <div className={["ui-editorial-byline-component",className].filter(Boolean).join(" ")}><span className="ui-editorial-byline__author ui-editorial-byline-component__author">{author||"DAJJAL FAMILY"}</span><div className="ui-editorial-byline-component__meta ui-editorial-byline__meta">{dateTime?<time dateTime={dateTime}>{date}</time>:<span>{date}</span>}{readingTime?<span>{readingTime} {label}</span>:null}</div></div>;}
+import Link from "next/link";
+
+export function EditorialByline({ author, date, dateTime, locale = "id", className = "", authorHref }) {
+  const isEn = locale === "en";
+  const authorName = author || "DAJJAL FAMILY";
+  const profileHref = authorHref || `/${locale}/blog/author/tebayoll`;
+  return (
+    <div className={["ui-editorial-byline-component", className].filter(Boolean).join(" ")}>
+      {dateTime ? <time className="ui-editorial-byline-component__date ui-text-editorial-meta" dateTime={dateTime}>{date}</time> : date ? <span className="ui-editorial-byline-component__date ui-text-editorial-meta">{date}</span> : null}
+      <span className="ui-editorial-byline-component__author-wrap">
+        <span className="ui-editorial-byline-component__label ui-text-editorial-meta">{isEn ? "By" : "Oleh"}:</span>
+        <Link className="ui-editorial-byline-component__author ui-text-editorial-meta" href={profileHref}>{authorName}</Link>
+      </span>
+    </div>
+  );
+}
