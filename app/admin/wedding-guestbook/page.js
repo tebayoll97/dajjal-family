@@ -206,7 +206,7 @@ export default function AdminWeddingGuestbookPage() {
                     <h2 className="break-words text-base font-extrabold">{entry.guest_name}</h2>
                     <span className="rounded-full border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-primary)]">Server {entry.server_name || "—"}</span>
                     <span className="rounded-full border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-accent)]">{attendanceLabel(entry.attendance, language)}</span>
-                    <span className={entry.is_approved ? "rounded-full bg-[var(--df-surface-raised)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-success)]" : "rounded-full bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold text-[var(--df-warning)]"}>{entry.is_approved ? tx("Tampil","Published") : tx("Belum disetujui","Pending approval")}</span>
+                    <span className={entry.is_approved ? "rounded-full bg-[var(--df-surface-raised)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-success)]" : "rounded-full bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] px-2.5 py-1 text-[10px] font-bold text-[var(--df-warning)]"}>{entry.is_approved ? tx("Tampil","Published") : tx("Belum disetujui","Pending approval")}</span>
                   </div>
                   <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-[var(--df-text-secondary)]">{entry.message}</p>
                   <time className="mt-3 block text-[11px] text-[var(--df-text-muted)]">{formatDate(entry.created_at, language)}</time>
@@ -261,13 +261,13 @@ export default function AdminWeddingGuestbookPage() {
                 <span className="mt-1 block text-[11px] font-normal text-[var(--df-text-muted)]">{editName.length}/16 {tx("karakter","characters")}</span>
               </label>
               <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Server (1–4 angka)","Server (1–4 digits)")}
-                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
+                <input required type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} value={editServer} onChange={event => setEditServer(event.target.value.replace(/\D/g, "").slice(0, 4))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-border-strong)]" />
               </label>
               <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Tanggal (DD/MM/YYYY)","Date (DD/MM/YYYY)")}
-                <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
+                <input required type="text" inputMode="numeric" placeholder="16/11/2026" value={editDate} onChange={event => setEditDate(event.target.value.slice(0, 10))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-border-strong)]" />
               </label>
               <label className="block text-xs font-bold text-[var(--df-text-secondary)]">{tx("Waktu (HH:mm, WIB)","Time (HH:mm, WIB)")}
-                <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-purple-400" />
+                <input required type="text" inputMode="numeric" placeholder="19:30" value={editTime} onChange={event => setEditTime(event.target.value.slice(0, 5))} className="mt-2 min-h-11 w-full rounded-xl border border-[var(--df-border-strong)] bg-[var(--df-surface-raised)] px-3 text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-border-strong)]" />
               </label>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button type="button" onClick={() => setEditingEntry(null)} disabled={savingEdit} className="min-h-11 rounded-xl border border-[var(--df-border-strong)] px-3 text-xs font-bold text-[var(--df-text)]">{tx("BATAL","CANCEL")}</button>
