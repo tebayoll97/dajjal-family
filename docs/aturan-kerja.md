@@ -275,3 +275,12 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - New reusable `AuthorCard` is exported from the shared UI index, uses semantic author tokens in all four foundation CSS files, and is previewed in Design System Workbench section 17.
 - Sitemap includes the directory and profiles with published content. Public metadata uses localized canonical/hreflang and contributor avatar when available, otherwise the DAJJAL FAMILY fallback image.
 - Migration `20261125120000_add_df_blog_contributor_profiles.sql` adds nullable bilingual bio and HTTPS avatar fields with length/URL constraints. It is additive and preserves existing contributor records.
+
+
+## Blog author slug — 2026-11-25
+
+- Public author profile URLs use the permanent `df_blog_contributors.slug` database field; application code must never derive author URLs from `display_name` at render time.
+- PostgreSQL assigns the slug automatically on contributor insert, normalizes it to lowercase ASCII kebab-case, and enforces uniqueness. If a name collides, the system adds a stable contributor-ID suffix.
+- Slugs are immutable after creation. Editing a display name must not silently change existing author URLs, canonical URLs, article bylines, or sitemap entries.
+- All author directory/profile/byline/metadata/sitemap data must read the database slug. Never ask contributors to type or manually manage their profile slug.
+- Migration: `20261125082922_add_system_generated_blog_author_slugs.sql`; applied to production Supabase project on 2026-11-25.
