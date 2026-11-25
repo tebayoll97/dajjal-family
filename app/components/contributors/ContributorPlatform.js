@@ -25,9 +25,10 @@ export default function ContributorPlatform({section="home"}){
   const response=await fetch("/api/contributors/session",{headers:{Authorization:"Bearer "+active.access_token},cache:"no-store"});
   const result=await response.json().catch(()=>({}));
   if(!response.ok){contributorSessionSnapshot=null;setSession(null);setContributor(null);setPermissions([]);setError(result.error||t.access);setLoading(false);return false;}
-  contributorSessionSnapshot={accessToken:active.access_token,contributor:result.contributor,permissions:result.permissions||[]};setSession(active);setClientKey(key);setContributor(result.contributor);setPermissions(result.permissions||[]);setEmail(result.contributor.email||active.user?.email||"");setError("");setLoading(false);return true;
+  contributorSessionSnapshot={accessToken:active.access_token,session:active,clientKey:key,contributor:result.contributor,permissions:result.permissions||[]};setSession(active);setClientKey(key);setContributor(result.contributor);setPermissions(result.permissions||[]);setEmail(result.contributor.email||active.user?.email||"");setError("");setLoading(false);return true;
  },[t.access]);
  useEffect(()=>{let live=true;(async()=>{
+  if(contributorSessionSnapshot?.session){await inspect(contributorSessionSnapshot.session,contributorSessionSnapshot.clientKey);return;}
   const admin=await supabaseAdminClient.auth.getSession();
   if(admin.data?.session){const ok=await inspect(admin.data.session,"admin");if(ok||!live)return;}
   const member=await supabase.auth.getSession();
