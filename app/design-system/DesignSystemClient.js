@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, TextField, EditorialByline, ContributorCard, Avatar } from "../components/ui";
+import { Alert, Badge, Button, Card, TextField, EditorialByline, ContributorCard, Avatar, AdminPanel } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
 import EditorialEditor from "../components/blog/EditorialEditor";
 import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
@@ -31,6 +31,7 @@ const sections = [
   ["17","CONTRIBUTOR PROFILES","contributor-directory-heading","Reusable public contributor identity cards and profile navigation"],
   ["18","CONTRIBUTOR PROFILE","contributor-profile-heading","Single-language bio translation and direct Drive avatar upload controls"],
   ["19","WORKSPACE DRAWERS & PANELS","workspace-drawer-heading","Shared admin and contributor left drawer, mobile compact navigation and balanced panel spacing"],
+  ["21","ADMIN PANEL COMPONENT","admin-panel-heading","Reusable semantic panel surface, compact typography and responsive layout"],
 ];
 
 const tokenColors = [
@@ -106,7 +107,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Contributors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button><button type="button" onClick={() => jump("19")}>19 <span>Workspace</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Contributors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button><button type="button" onClick={() => jump("19")}>19 <span>Workspace</span></button><button type="button" onClick={() => jump("21")}>21 <span>Admin Panel</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
@@ -282,6 +283,21 @@ export default function DesignSystemClient() {
           </div>
         </Section>
 
+
+        <Section id="21" title="ADMIN PANEL COMPONENT" headingId="admin-panel-heading" description="Reusable semantic panel surface for admin workspaces" open={!!expanded["21"]} onToggle={() => toggle("21")}>
+          <div className="ui-admin-panel-grid">
+            <AdminPanel className="ui-admin-panel-stack">
+              <h3 className="ui-admin-panel-title">Storage connection</h3>
+              <p className="ui-admin-panel-copy">Reusable panel surface with semantic border, surface, spacing and elevation tokens.</p>
+              <div className="ui-cluster"><Badge variant="success">Connected</Badge><Button size="sm">Manage</Button></div>
+            </AdminPanel>
+            <Card className="ui-admin-panel-stack">
+              <strong>Semantic contracts</strong>
+              <code>--df-admin-panel-padding</code><code>--df-admin-panel-gap</code><code>--df-admin-panel-radius</code><code>--df-admin-panel-surface</code>
+            </Card>
+          </div>
+          <p className={styles.demoNote}>AdminPanel is a presentation-only primitive. Authorization, data access, validation and state remain owned by each page. The production implementation is used by Admin Central Storage.</p>
+        </Section>
       <footer className={styles.footer}>Internal QA route · noindex · not a production approval.</footer>
       {showTop && <button type="button" className={styles.backTop} onClick={() => window.scrollTo({top:0,behavior:"smooth"})} aria-label="Back to top">↑ <span>TOP</span></button>}
     </main>
