@@ -247,3 +247,15 @@
 @media(max-width:379px){.ui-blog-article-card__media{width:var(--df-blog-mobile-thumb-small);min-width:var(--df-blog-mobile-thumb-small)}}
 
 @media(max-width:639px){.ui-blog-category-filter .ui-button{min-height:var(--df-touch-target-min)}}
+
+
+/* Editorial byline: date and linked author in a compact, accessible row. */
+.ui-editorial-byline-component{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:var(--df-editorial-byline-gap);min-width:0;color:var(--df-editorial-meta-color)}
+.ui-editorial-byline-component__date{color:var(--df-editorial-meta-color)}
+.ui-editorial-byline-component__author-wrap{display:inline-flex;align-items:center;flex-wrap:wrap;gap:var(--df-editorial-meta-gap);min-width:0}
+.ui-editorial-byline-component__label{color:var(--df-editorial-byline-label-color)}
+.ui-editorial-byline-component__author{display:inline-flex;align-items:center;min-height:var(--df-touch-target-min);color:var(--df-editorial-byline-author-color);font-weight:var(--df-weight-semibold);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:.2em;overflow-wrap:anywhere}
+.ui-editorial-byline-component__author:hover{text-decoration-color:currentColor}
+.ui-editorial-byline-component__author:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset);border-radius:var(--df-radius-sm)}
+.df-blog-author-profile .ui-avatar{width:var(--df-editorial-author-avatar-size);height:var(--df-editorial-author-avatar-size);flex:0 0 var(--df-editorial-author-avatar-size)}
+@media(max-width:639px){.df-blog-author-profile .ui-avatar{width:3.5rem;height:3.5rem;flex-basis:3.5rem}}
