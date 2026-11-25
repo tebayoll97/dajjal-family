@@ -31,6 +31,7 @@ const sections = [
   ["17","CONTRIBUTOR PROFILES","contributor-directory-heading","Reusable public contributor identity cards and profile navigation"],
   ["18","CONTRIBUTOR PROFILE","contributor-profile-heading","Single-language bio translation and direct Drive avatar upload controls"],
   ["19","WORKSPACE DRAWERS & PANELS","workspace-drawer-heading","Shared admin and contributor left drawer, mobile compact navigation and balanced panel spacing"],
+  ["20","ADMIN NAVIGATION MODES","admin-navigation-modes-heading","Separate desktop rail and mobile overlay drawer with one shared menu model"],
   ["21","ADMIN PANEL COMPONENT","admin-panel-heading","Reusable semantic panel surface, compact typography and responsive layout"],
 ];
 
@@ -107,7 +108,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Contributors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button><button type="button" onClick={() => jump("19")}>19 <span>Workspace</span></button><button type="button" onClick={() => jump("21")}>21 <span>Admin Panel</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Contributors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button><button type="button" onClick={() => jump("19")}>19 <span>Workspace</span></button><button type="button" onClick={() => jump("20")}>20 <span>Admin Nav</span></button><button type="button" onClick={() => jump("21")}>21 <span>Admin Panel</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
