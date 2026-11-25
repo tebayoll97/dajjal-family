@@ -161,13 +161,13 @@ function formatDate(date, language) {
 function accountStyle(type) {
   switch (type) {
     case "GUEST":
-      return "bg-amber-500/10 border-amber-500/30 text-amber-300";
+      return "bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] border-[var(--df-warning)] text-[var(--df-warning)]";
     case "GOOGLE":
-      return "bg-blue-500/10 border-blue-500/30 text-blue-300";
+      return "bg-[color:color-mix(in_srgb,var(--df-info)_10%,transparent)] border-[var(--df-info)] text-[var(--df-info)]";
     case "OTHER":
-      return "bg-purple-500/10 border-purple-500/30 text-purple-300";
+      return "bg-[var(--df-primary-soft)] border-[var(--df-border)] text-[var(--df-primary)]";
     default:
-      return "bg-gray-500/10 border-gray-500/30 text-gray-400";
+      return "bg-[var(--df-surface-raised)] border-[var(--df-border)] text-[var(--df-text-secondary)]";
   }
 }
 
@@ -352,14 +352,14 @@ export default function AdminPlayersPage() {
 
   if (!admin) {
     return (
-      <main className="min-h-screen bg-[#080711] text-white flex flex-col items-center justify-center px-5 text-center">
+      <main className="min-h-screen bg-[var(--df-bg)] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
         <div className="text-5xl">🔒</div>
         <h1 className="text-2xl font-black mt-5 ui-title">
           {t.accessDenied}
         </h1>
         <button
           onClick={() => router.replace("/admin/login")}
-          className="mt-6 rounded-xl bg-purple-600 px-6 py-3 font-bold"
+          className="mt-6 rounded-xl bg-[var(--df-primary)] px-6 py-3 font-bold"
         >
           ADMIN LOGIN
         </button>
@@ -368,7 +368,7 @@ export default function AdminPlayersPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#080711] text-white px-3 sm:px-4 py-4 sm:py-10">
+    <main className="min-h-screen bg-[var(--df-bg)] text-[var(--df-text)] px-3 sm:px-4 py-4 sm:py-10">
       <div className="max-w-6xl mx-auto">
 
         {/* HEADER */}
@@ -378,7 +378,7 @@ export default function AdminPlayersPage() {
 
             <h1 className="text-2xl sm:text-4xl font-black mt-2 sm:mt-3 ui-title">
               {t.title}{" "}
-              <span className="text-purple-400">
+              <span className="text-[var(--df-primary)]">
                 {t.titleAccent}
               </span>
             </h1>
@@ -391,7 +391,7 @@ export default function AdminPlayersPage() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => router.push("/admin")}
-              className="rounded-lg sm:rounded-xl border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold text-purple-300 transition"
+              className="rounded-lg sm:rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] hover:bg-[var(--df-primary-soft)] px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold text-[var(--df-primary)] transition"
             >
               ← {t.back}
             </button>
@@ -399,14 +399,14 @@ export default function AdminPlayersPage() {
         </header>
 
         {/* ADMIN INFO */}
-        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-purple-500/20 bg-[#151020] p-3 sm:p-5 ui-card">
+        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-5 ui-card">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-xl ui-card">
+            <div className="w-11 h-11 rounded-xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center text-xl ui-card">
               ♛
             </div>
 
             <div className="min-w-0">
-              <p className="text-[10px] text-purple-300 font-bold tracking-widest">
+              <p className="text-[10px] text-[var(--df-primary)] font-bold tracking-widest">
                 ADMINISTRATOR
               </p>
               <p className="text-sm font-bold break-all mt-1">
@@ -414,7 +414,7 @@ export default function AdminPlayersPage() {
               </p>
             </div>
 
-            <div className="ml-auto hidden sm:block text-[10px] text-green-400 font-bold">
+            <div className="ml-auto hidden sm:block text-[10px] text-[var(--df-success)] font-bold">
               ● SECURE ACCESS
             </div>
           </div>
@@ -422,47 +422,47 @@ export default function AdminPlayersPage() {
 
         {/* STATISTICS */}
         <section className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
-          <div className="rounded-xl sm:rounded-2xl border border-purple-500/20 bg-[#151020] p-2.5 sm:p-5 ui-card">
-            <p className="text-[10px] tracking-widest text-gray-400 font-bold">
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-text-secondary)] font-bold">
               {t.total}
             </p>
-            <p className="text-xl sm:text-3xl font-black text-white mt-2 sm:mt-3 tabular-nums">
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-text)] mt-2 sm:mt-3 tabular-nums">
               {pagination.total.toLocaleString()}
             </p>
-            <p className="text-[10px] text-gray-500 mt-2">
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
               {t.playerList}
             </p>
           </div>
 
-          <div className="rounded-xl sm:rounded-2xl border border-amber-500/20 bg-[#151020] p-2.5 sm:p-5 ui-card">
-            <p className="text-[10px] tracking-widest text-amber-300 font-bold">
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-warning)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-warning)] font-bold">
               {t.guest}
             </p>
-            <p className="text-xl sm:text-3xl font-black text-amber-300 mt-2 sm:mt-3 tabular-nums">
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-warning)] mt-2 sm:mt-3 tabular-nums">
               {guestCount}
             </p>
-            <p className="text-[10px] text-gray-500 mt-2">
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
               {t.account}
             </p>
           </div>
 
-          <div className="rounded-xl sm:rounded-2xl border border-blue-500/20 bg-[#151020] p-2.5 sm:p-5 ui-card">
-            <p className="text-[10px] tracking-widest text-blue-300 font-bold">
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-info)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-info)] font-bold">
               {t.google}
             </p>
-            <p className="text-xl sm:text-3xl font-black text-blue-300 mt-2 sm:mt-3 tabular-nums">
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-info)] mt-2 sm:mt-3 tabular-nums">
               {googleCount}
             </p>
-            <p className="text-[10px] text-gray-500 mt-2">
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
               {t.account}
             </p>
           </div>
         </section>
 
-        {success && <div role="status" className="mt-4 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">{success}</div>}
+        {success && <div role="status" className="mt-4 rounded-xl border border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] px-4 py-3 text-sm text-emerald-200">{success}</div>}
 
         {/* SEARCH */}
-        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-purple-500/20 bg-[#151020] p-3 sm:p-5 ui-card">
+        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-5 ui-card">
           <form
             onSubmit={handleSearch}
             className="flex flex-row gap-2 sm:gap-3"
@@ -472,13 +472,13 @@ export default function AdminPlayersPage() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={t.search}
-              className="flex-1 min-w-0 rounded-lg sm:rounded-xl border border-purple-500/20 bg-[#0B0913] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/15 transition placeholder:text-gray-600"
+              className="flex-1 min-w-0 rounded-lg sm:rounded-xl border border-[var(--df-border)] bg-[var(--df-bg)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-border-strong)] focus:ring-2 focus:ring-[var(--df-focus)]/15 transition placeholder:text-[var(--df-text-muted)]"
             />
 
             <button
               type="submit"
               disabled={loading}
-              className="shrink-0 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 px-3 sm:px-6 py-2.5 sm:py-3 text-[10px] sm:text-sm font-black tracking-wide transition shadow-lg shadow-purple-950/20"
+              className="shrink-0 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 px-3 sm:px-6 py-2.5 sm:py-3 text-[10px] sm:text-sm font-black tracking-wide transition shadow-lg shadow-[var(--df-shadow-md)]"
             >
               {t.searchButton}
             </button>
@@ -503,8 +503,8 @@ export default function AdminPlayersPage() {
                   onClick={() => handleFilterChange(item)}
                   className={`rounded-full border px-3 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black tracking-wider transition active:scale-[0.97] ${
                     active
-                      ? "bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/30"
-                      : "bg-[#0B0913] border-purple-500/20 text-gray-400 hover:border-purple-400/50 hover:text-white"
+                      ? "bg-[var(--df-primary)] border-[var(--df-border-strong)] text-[var(--df-text)] shadow-lg shadow-[var(--df-shadow-md)]"
+                      : "bg-[var(--df-bg)] border-[var(--df-border)] text-[var(--df-text-secondary)] hover:border-[var(--df-border-strong)] hover:text-[var(--df-text)]"
                   }`}
                 >
                   {labels[item]}
@@ -518,10 +518,10 @@ export default function AdminPlayersPage() {
         <section className="mt-5 sm:mt-8">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
-              <h2 className="text-sm font-black tracking-wider text-purple-300 ui-section-title">
+              <h2 className="text-sm font-black tracking-wider text-[var(--df-primary)] ui-section-title">
                 {t.playerList}
               </h2>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-[var(--df-text-muted)] mt-1">
                 {filteredPlayers.length} {t.found}
               </p>
             </div>
@@ -529,35 +529,35 @@ export default function AdminPlayersPage() {
             <button
               onClick={loadPlayers}
               disabled={loading}
-              className="rounded-lg border border-purple-500/25 bg-purple-500/10 hover:bg-purple-500/20 px-3 py-2 text-[10px] sm:text-xs font-bold text-purple-300 disabled:opacity-50 active:scale-[0.97] transition"
+              className="rounded-lg border border-[var(--df-border)] bg-[var(--df-primary-soft)] hover:bg-[var(--df-primary-soft)] px-3 py-2 text-[10px] sm:text-xs font-bold text-[var(--df-primary)] disabled:opacity-50 active:scale-[0.97] transition"
             >
               ↻ REFRESH
             </button>
           </div>
 
           {loading ? (
-            <div className="rounded-2xl border border-purple-500/20 bg-[#151020] min-h-64 flex flex-col items-center justify-center gap-3 sm:p-4 ui-card">
-              <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-400 rounded-full animate-spin" />
-              <p className="text-xs text-purple-300 font-bold tracking-widest animate-pulse">
+            <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] min-h-64 flex flex-col items-center justify-center gap-3 sm:p-4 ui-card">
+              <div className="w-10 h-10 border-4 border-[var(--df-border)] border-t-purple-400 rounded-full animate-spin" />
+              <p className="text-xs text-[var(--df-primary)] font-bold tracking-widest animate-pulse">
                 {t.loading}
               </p>
             </div>
           ) : error ? (
-            <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center ui-card">
+            <div className="rounded-2xl border border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_5%,transparent)] p-8 text-center ui-card">
               <div className="text-3xl">⚠️</div>
-              <p className="text-sm text-red-300 mt-3">{error}</p>
+              <p className="text-sm text-[var(--df-danger)] mt-3">{error}</p>
               <button
                 onClick={loadPlayers}
-                className="mt-5 rounded-xl bg-purple-600 hover:bg-purple-500 px-5 py-3 text-xs font-bold"
+                className="mt-5 rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary)] px-5 py-3 text-xs font-bold"
               >
                 {t.retry}
               </button>
             </div>
           ) : filteredPlayers.length === 0 ? (
-            <div className="rounded-2xl border border-purple-500/20 bg-[#151020] min-h-56 flex flex-col items-center justify-center text-center px-5 ui-card">
+            <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] min-h-56 flex flex-col items-center justify-center text-center px-5 ui-card">
               <div className="text-4xl">👥</div>
               <p className="font-bold mt-4">{t.noPlayers}</p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-[var(--df-text-muted)] mt-2">
                 {t.noResults}
               </p>
             </div>
@@ -570,10 +570,10 @@ export default function AdminPlayersPage() {
                   return (
                     <article
                       key={player.id}
-                      className={`overflow-hidden rounded-xl border bg-[#151020] transition-all duration-300 ui-card ${expanded ? "border-purple-400/40 shadow-lg shadow-purple-950/20" : "border-purple-500/20"}`}
+                      className={`overflow-hidden rounded-xl border bg-[var(--df-surface)] transition-all duration-300 ui-card ${expanded ? "border-[var(--df-border-strong)] shadow-lg shadow-[var(--df-shadow-md)]" : "border-[var(--df-border)]"}`}
                     >
                       <div className="flex items-center gap-2.5 p-3">
-                        <div className="w-11 h-11 shrink-0 rounded-xl border border-purple-500/25 bg-purple-600/10 flex items-center justify-center overflow-hidden">
+                        <div className="w-11 h-11 shrink-0 rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] flex items-center justify-center overflow-hidden">
                           {player.avatarUrl ? (
                             <Image src={player.avatarUrl} alt="" width={44} height={44} unoptimized className="w-full h-full object-cover" />
                           ) : (
@@ -582,13 +582,13 @@ export default function AdminPlayersPage() {
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <p className="font-extrabold text-sm text-white truncate">
+                          <p className="font-extrabold text-sm text-[var(--df-text)] truncate">
                             {player.nickname || "Unnamed Player"}
                           </p>
-                          <p className="text-[11px] text-gray-400 mt-0.5">
+                          <p className="text-[11px] text-[var(--df-text-secondary)] mt-0.5">
                             {player.authEmail || (player.hasAuthLink ? t.unknownLabel : t.authMissing)}
                           </p>
-                          <p className="text-[10px] text-gray-500 mt-0.5">{t.server} {player.serverNumber || "-"}</p>
+                          <p className="text-[10px] text-[var(--df-text-muted)] mt-0.5">{t.server} {player.serverNumber || "-"}</p>
                         </div>
 
                         <span className={`shrink-0 rounded-full border px-2 py-1 text-[9px] font-black ${accountStyle(player.accountType)}`}>
@@ -600,7 +600,7 @@ export default function AdminPlayersPage() {
                           aria-expanded={expanded}
                           aria-label={expanded ? t.collapse : t.expand}
                           onClick={() => setExpandedPlayerId(expanded ? null : player.id)}
-                          className={`w-8 h-8 shrink-0 rounded-lg border flex items-center justify-center text-purple-300 transition-all duration-300 ${expanded ? "rotate-180 border-purple-400/40 bg-purple-500/15" : "border-purple-500/20 bg-purple-500/5"}`}
+                          className={`w-8 h-8 shrink-0 rounded-lg border flex items-center justify-center text-[var(--df-primary)] transition-all duration-300 ${expanded ? "rotate-180 border-[var(--df-border-strong)] bg-[var(--df-primary-soft)]" : "border-[var(--df-border)] bg-[var(--df-primary-soft)]"}`}
                         >
                           <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4" aria-hidden="true">
                             <path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -609,44 +609,44 @@ export default function AdminPlayersPage() {
                       </div>
 
                       {expanded && (
-                        <div className="border-t border-purple-500/15 px-3 pb-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                          <p className="text-[9px] font-black tracking-[0.18em] text-purple-300 mb-2">
+                        <div className="border-t border-[var(--df-border)] px-3 pb-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                          <p className="text-[9px] font-black tracking-[0.18em] text-[var(--df-primary)] mb-2">
                             {t.details}
                           </p>
 
                           <div className="mb-2 rounded-lg bg-black/20 p-2.5 space-y-2">
-                            <div><p className="text-[9px] text-gray-500 font-bold">{t.email}</p><p className="text-xs text-white break-all mt-1">{player.authEmail || "—"}</p></div>
-                            <div><p className="text-[9px] text-gray-500 font-bold">{t.lastSignIn}</p><p className="text-xs text-white mt-1">{player.lastSignInAt ? formatDate(player.lastSignInAt, language) : t.never}</p></div>
+                            <div><p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.email}</p><p className="text-xs text-[var(--df-text)] break-all mt-1">{player.authEmail || "—"}</p></div>
+                            <div><p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.lastSignIn}</p><p className="text-xs text-[var(--df-text)] mt-1">{player.lastSignInAt ? formatDate(player.lastSignInAt, language) : t.never}</p></div>
                           </div>
                           <div className="grid grid-cols-3 gap-2 rounded-lg bg-black/20 p-2.5">
                             <div className="min-w-0">
-                              <p className="text-[9px] text-gray-500 font-bold">{t.points}</p>
-                              <p className="text-sm font-black text-purple-300 mt-1 tabular-nums">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.points}</p>
+                              <p className="text-sm font-black text-[var(--df-primary)] mt-1 tabular-nums">
                                 {(player.totalPoints || 0).toLocaleString()}
                               </p>
                             </div>
                             <div className="min-w-0">
-                              <p className="text-[9px] text-gray-500 font-bold">{t.games}</p>
-                              <p className="text-sm font-black text-white mt-1 tabular-nums">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.games}</p>
+                              <p className="text-sm font-black text-[var(--df-text)] mt-1 tabular-nums">
                                 {player.gamesPlayed || 0}
                               </p>
                             </div>
                             <div className="min-w-0">
-                              <p className="text-[9px] text-gray-500 font-bold">{t.joined}</p>
-                              <p className="text-[11px] font-bold text-white mt-1 leading-tight">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.joined}</p>
+                              <p className="text-[11px] font-bold text-[var(--df-text)] mt-1 leading-tight">
                                 {formatDate(player.createdAt, language)}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 mt-3">
-                            <span className={`text-[9px] font-black rounded-full px-2.5 py-1.5 border ${player.isBanned ? "border-red-500/30 bg-red-500/10 text-red-300" : "border-green-500/20 bg-green-500/10 text-green-300"}`}>
+                            <span className={`text-[9px] font-black rounded-full px-2.5 py-1.5 border ${player.isBanned ? "border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_10%,transparent)] text-[var(--df-danger)]" : "border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] text-[var(--df-success)]"}`}>
                               {player.isBanned ? t.banned : t.active}
                             </span>
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() => openPlayerAction(player, player.isBanned ? "unban" : "ban")}
-                                className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[10px] font-bold text-amber-300 active:scale-[0.98] transition"
+                                className="rounded-lg border border-[var(--df-warning)] bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] px-3 py-2 text-[10px] font-bold text-[var(--df-warning)] active:scale-[0.98] transition"
                               >
                                 {player.isBanned ? t.unban : t.ban}
                               </button>
@@ -661,10 +661,10 @@ export default function AdminPlayersPage() {
               </div>
 
               {/* DESKTOP TABLE */}
-              <div className="hidden md:block overflow-x-auto rounded-2xl border border-purple-500/20 bg-[#151020] ui-card">
+              <div className="hidden md:block overflow-x-auto rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] ui-card">
                 <table className="w-full text-left">
-                  <thead className="bg-purple-500/5 border-b border-purple-500/20">
-                    <tr className="text-[10px] text-purple-300 tracking-wider">
+                  <thead className="bg-[var(--df-primary-soft)] border-b border-[var(--df-border)]">
+                    <tr className="text-[10px] text-[var(--df-primary)] tracking-wider">
                       <th className="px-5 py-4">PLAYER</th>
                       <th className="px-4 py-4">{t.email}</th>
                       <th className="px-4 py-4">{t.account}</th>
@@ -682,11 +682,11 @@ export default function AdminPlayersPage() {
                     {filteredPlayers.map((player) => (
                       <tr
                         key={player.id}
-                        className="border-b border-purple-500/10 last:border-0 hover:bg-purple-500/5 transition"
+                        className="border-b border-[var(--df-border)] last:border-0 hover:bg-[var(--df-primary-soft)] transition"
                       >
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3 min-w-48">
-                            <div className="w-10 h-10 rounded-xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center overflow-hidden ui-card">
+                            <div className="w-10 h-10 rounded-xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center overflow-hidden ui-card">
                               {player.avatarUrl ? (
                                 <Image
                                   src={player.avatarUrl}
@@ -708,7 +708,7 @@ export default function AdminPlayersPage() {
                           </div>
                         </td>
 
-                        <td className="px-4 py-4 text-xs text-gray-300 break-all max-w-56">{player.authEmail || "—"}</td>
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)] break-all max-w-56">{player.authEmail || "—"}</td>
 
                         <td className="px-4 py-4">
                           <span
@@ -718,26 +718,26 @@ export default function AdminPlayersPage() {
                           </span>
                         </td>
 
-                        <td className="px-4 py-4 text-sm text-gray-300">
+                        <td className="px-4 py-4 text-sm text-[var(--df-text-secondary)]">
                           {player.serverNumber || "-"}
                         </td>
 
-                        <td className="px-4 py-4 text-sm font-black text-purple-300 tabular-nums">
+                        <td className="px-4 py-4 text-sm font-black text-[var(--df-primary)] tabular-nums">
                           {player.totalPoints.toLocaleString()}
                         </td>
 
-                        <td className="px-4 py-4 text-sm text-gray-300">
+                        <td className="px-4 py-4 text-sm text-[var(--df-text-secondary)]">
                           {player.gamesPlayed}
                         </td>
 
-                        <td className="px-4 py-4 text-xs text-gray-400">
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)]">
                           {formatDate(player.createdAt, language)}
                         </td>
-                        <td className="px-4 py-4 text-xs text-gray-400">
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)]">
                           {player.lastSignInAt ? formatDate(player.lastSignInAt, language) : t.never}
                         </td>
                         <td className="px-4 py-4">
-                          <span className={`text-[9px] font-black rounded-full px-2 py-1 border ${player.isBanned ? "border-red-500/30 bg-red-500/10 text-red-300" : "border-green-500/20 bg-green-500/10 text-green-300"}`}>
+                          <span className={`text-[9px] font-black rounded-full px-2 py-1 border ${player.isBanned ? "border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_10%,transparent)] text-[var(--df-danger)]" : "border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] text-[var(--df-success)]"}`}>
                             {player.isBanned ? t.banned : t.active}
                           </span>
                         </td>
@@ -745,7 +745,7 @@ export default function AdminPlayersPage() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => openPlayerAction(player, player.isBanned ? "unban" : "ban")}
-                              className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[10px] font-bold text-amber-300 whitespace-nowrap"
+                              className="rounded-lg border border-[var(--df-warning)] bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] px-3 py-2 text-[10px] font-bold text-[var(--df-warning)] whitespace-nowrap"
                             >
                               {player.isBanned ? t.unban : t.ban}
                             </button>
@@ -762,8 +762,8 @@ export default function AdminPlayersPage() {
 
           {/* PAGINATION */}
           {!loading && !error && pagination.totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-5 rounded-2xl border border-purple-500/20 bg-[#151020] p-3 sm:p-4 ui-card">
-              <p className="text-xs text-gray-400">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-5 rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-4 ui-card">
+              <p className="text-xs text-[var(--df-text-secondary)]">
                 {t.page} {page} {t.of} {pagination.totalPages}
               </p>
 
@@ -771,7 +771,7 @@ export default function AdminPlayersPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1 || loading}
-                  className="rounded-xl border border-purple-500/20 bg-[#0B0913] px-4 py-2 text-xs font-bold text-gray-300 disabled:opacity-30"
+                  className="rounded-xl border border-[var(--df-border)] bg-[var(--df-bg)] px-4 py-2 text-xs font-bold text-[var(--df-text-secondary)] disabled:opacity-30"
                 >
                   ← {t.previous}
                 </button>
@@ -785,7 +785,7 @@ export default function AdminPlayersPage() {
                   disabled={
                     page >= pagination.totalPages || loading
                   }
-                  className="rounded-xl bg-purple-600 hover:bg-purple-500 px-4 py-2 text-xs font-bold disabled:opacity-30"
+                  className="rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary)] px-4 py-2 text-xs font-bold disabled:opacity-30"
                 >
                   {t.next} →
                 </button>
@@ -794,7 +794,7 @@ export default function AdminPlayersPage() {
           )}
         </section>
 
-        <p className="text-center text-gray-600 text-[10px] mt-8 sm:mt-12 tracking-wider">
+        <p className="text-center text-[var(--df-text-muted)] text-[10px] mt-8 sm:mt-12 tracking-wider">
           {t.footer} · 2026
         </p>
 
@@ -804,31 +804,31 @@ export default function AdminPlayersPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="player-action-title"
-              className="w-full max-w-md rounded-2xl border border-purple-500/30 bg-[#151020] p-5 sm:p-6 shadow-2xl shadow-purple-950/40 ui-card"
+              className="w-full max-w-md rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 sm:p-6 shadow-2xl shadow-[var(--df-shadow-lg)] ui-card"
             >
               <div className="text-2xl mb-3">{actionType === "delete" ? "⚠️" : actionType === "ban" ? "🛡️" : "🔓"}</div>
-              <h2 id="player-action-title" className="text-lg font-black text-white ui-section-title">
+              <h2 id="player-action-title" className="text-lg font-black text-[var(--df-text)] ui-section-title">
                 {t.actionTitle}
               </h2>
-              <p className="text-sm font-bold text-purple-300 mt-2 break-words">
+              <p className="text-sm font-bold text-[var(--df-primary)] mt-2 break-words">
                 {actionTarget.nickname || "Unnamed Player"}
               </p>
-              <p className="text-sm text-gray-400 mt-3 leading-relaxed">
+              <p className="text-sm text-[var(--df-text-secondary)] mt-3 leading-relaxed">
                 {actionType === "delete" ? t.deleteConfirm : actionType === "ban" ? t.banConfirm : t.unbanConfirm}
               </p>
-              {error && <p className="text-xs text-red-300 mt-3">{error}</p>}
+              {error && <p className="text-xs text-[var(--df-danger)] mt-3">{error}</p>}
               <div className="flex gap-2 mt-6">
                 <button
                   onClick={() => { setActionTarget(null); setActionType(null); }}
                   disabled={actionLoading}
-                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs font-bold text-gray-300 disabled:opacity-50"
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs font-bold text-[var(--df-text-secondary)] disabled:opacity-50"
                 >
                   {t.cancel}
                 </button>
                 <button
                   onClick={confirmPlayerAction}
                   disabled={actionLoading}
-                  className={`flex-1 rounded-xl px-3 py-2.5 text-xs font-black disabled:opacity-50 ${actionType === "delete" ? "bg-red-600 hover:bg-red-500" : "bg-purple-600 hover:bg-purple-500"}`}
+                  className={`flex-1 rounded-xl px-3 py-2.5 text-xs font-black disabled:opacity-50 ${actionType === "delete" ? "bg-[var(--df-danger)] hover:bg-[var(--df-danger)]" : "bg-[var(--df-primary)] hover:bg-[var(--df-primary)]"}`}
                 >
                   {actionLoading ? t.processing : t.confirm}
                 </button>
