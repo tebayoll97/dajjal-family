@@ -97,3 +97,8 @@
 .ui-author-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-author-grid-gap);min-width:0}.ui-author-grid>*{min-width:0}
 @media(max-width:1023px){.ui-author-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:639px){.ui-author-grid{grid-template-columns:minmax(0,1fr);gap:var(--df-space-3)}}
+
+/* Reusable contributor avatar upload composition. */
+.ui-author-avatar-upload{display:flex;align-items:flex-start;gap:var(--df-author-profile-upload-gap);min-width:0}
+.ui-author-avatar-upload__body{flex:1 1 auto;min-width:0}
+@media(max-width:479px){.ui-author-avatar-upload{align-items:stretch;gap:var(--df-space-3)}}
