@@ -286,3 +286,23 @@
   --df-workspace-nav-panel-shadow:var(--df-shadow-md);
 }
 @media(max-width:760px){:root{--df-workspace-nav-panel-padding:var(--df-space-3);--df-workspace-nav-item-padding-inline:var(--df-space-2)}}
+
+
+/* Workspace drawer + balanced content panel contracts. */
+:root{
+ --df-workspace-drawer-width:16rem;
+ --df-workspace-drawer-mobile-width:min(86vw,20rem);
+ --df-workspace-drawer-padding:var(--df-space-5);
+ --df-workspace-content-gutter:clamp(var(--df-space-3),2.5vw,var(--df-space-6));
+ --df-workspace-content-max:88rem;
+ --df-workspace-panel-padding:clamp(var(--df-space-4),2vw,var(--df-space-6));
+ --df-workspace-panel-gap:var(--df-space-4);
+ --df-workspace-panel-radius:var(--df-radius-xl);
+ --df-workspace-drawer-backdrop:color-mix(in srgb,var(--df-color-bg) 66%,transparent);
+ --df-type-mobile-heading:clamp(1.25rem,5.4vw,1.65rem);
+ --df-type-mobile-subheading:clamp(1.05rem,4.3vw,1.25rem);
+ --df-type-mobile-body:clamp(.9375rem,3.8vw,1.05rem);
+ --df-type-wide-heading:clamp(1.65rem,1.2rem + 1.2vw,2.35rem);
+ --df-type-wide-subheading:clamp(1.2rem,1rem + .6vw,1.55rem);
+}
+@media(max-width:760px){:root{--df-workspace-drawer-padding:var(--df-space-4);--df-workspace-panel-padding:var(--df-space-4);--df-workspace-panel-gap:var(--df-space-3)}}
