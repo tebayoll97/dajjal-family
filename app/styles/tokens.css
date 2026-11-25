@@ -311,3 +311,16 @@
 /* Semantic workspace shell refinement. */
 :root{--df-workspace-drawer-width:18rem;--df-workspace-drawer-mobile-width:min(88vw,21rem);--df-workspace-drawer-padding:var(--df-space-5);--df-workspace-drawer-backdrop:color-mix(in srgb,var(--df-color-bg) 68%,transparent);--df-workspace-nav-item-gap:var(--df-space-2);--df-workspace-nav-item-padding-block:var(--df-space-3);--df-workspace-nav-item-padding-inline:var(--df-space-3);--df-workspace-nav-desktop-min-width:18rem;--df-workspace-nav-compact-button-height:2.375rem;--df-workspace-nav-compact-font-size:.8125rem;--df-workspace-nav-compact-gap:var(--df-space-2)}
 @media(max-width:760px){:root{--df-workspace-drawer-padding:var(--df-space-4);--df-workspace-nav-item-padding-block:var(--df-space-2);--df-workspace-nav-item-padding-inline:var(--df-space-3)}}
+
+/* Admin navigation split-mode and compact control tokens. */
+:root{
+ --df-admin-drawer-desktop-width:19rem;
+ --df-admin-drawer-mobile-width:min(88vw,22rem);
+ --df-admin-drawer-overlay:var(--df-workspace-drawer-backdrop);
+ --df-admin-nav-panel-gap:var(--df-space-3);
+ --df-admin-nav-group-padding:var(--df-space-3);
+ --df-admin-mobile-control-height:2.5rem;
+ --df-admin-mobile-control-font:var(--df-type-mobile-small);
+ --df-admin-panel-padding:var(--df-workspace-panel-padding);
+}
+@media(max-width:820px){:root{--df-admin-panel-padding:var(--df-space-3);--df-admin-nav-group-padding:var(--df-space-2)}}
