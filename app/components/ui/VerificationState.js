@@ -29,15 +29,30 @@ export function VerificationState({ variant = "user", status = "checking", compa
   const statusTitle = status === "verified" ? copy.verified : status === "expired" ? copy.expired : status === "error" || status === "denied" ? copy.failed : content.title;
   const icon = status === "verified" ? "✓" : status === "error" || status === "denied" || status === "expired" ? "!" : kind === "admin" ? "◆" : "●";
 
+  if (compact) {
+    return (
+      <span
+        className={["df-verification", `df-verification--${kind}`, "df-verification--compact", `df-verification--${status}`, className].filter(Boolean).join(" ")}
+        role={status === "error" || status === "denied" || status === "expired" ? "alert" : "status"}
+        aria-live="polite"
+        aria-atomic="true"
+        aria-busy={status === "checking" || undefined}
+      >
+        <span className="df-verification__mark" aria-hidden="true"><span>{icon}</span>{status === "checking" && <i />}</span>
+        <span className="df-verification__title">{title || statusTitle}</span>
+      </span>
+    );
+  }
+
   return (
-    <section className={["df-verification", `df-verification--${kind}`, compact ? "df-verification--compact" : "", `df-verification--${status}`, className].filter(Boolean).join(" ")} role={status === "error" || status === "denied" || status === "expired" ? "alert" : "status"} aria-live="polite" aria-atomic="true" aria-busy={status === "checking" || undefined}>
+    <section className={["df-verification", `df-verification--${kind}`, `df-verification--${status}`, className].filter(Boolean).join(" ")} role={status === "error" || status === "denied" || status === "expired" ? "alert" : "status"} aria-live="polite" aria-atomic="true" aria-busy={status === "checking" || undefined}>
       <div className="df-verification__mark" aria-hidden="true"><span>{icon}</span>{status === "checking" && <i />}</div>
       <div className="df-verification__copy">
         <p className="df-verification__eyebrow">{content.label}</p>
         <h2 className="df-verification__title">{title || statusTitle}</h2>
-        {!compact && <p className="df-verification__description">{description || (status === "checking" ? content.description : status === "verified" ? copy.verified : content.description)}</p>}
+        <p className="df-verification__description">{description || (status === "checking" ? content.description : status === "verified" ? copy.verified : content.description)}</p>
         {status === "checking" && <div className="df-verification__progress" aria-label={content.label}><span /></div>}
-        {status === "checking" && !compact && <p className="df-verification__detail">{content.detail}</p>}
+        {status === "checking" && <p className="df-verification__detail">{content.detail}</p>}
         {(status === "error" || status === "denied" || status === "expired") && onRetry && <button type="button" className="df-verification__retry" onClick={onRetry}>{copy.retry}</button>}
       </div>
     </section>
