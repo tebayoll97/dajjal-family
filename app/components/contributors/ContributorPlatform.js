@@ -73,8 +73,8 @@ export default function ContributorPlatform({section="home"}){
   {section==="blog"?(has("blog.access")?<AuthorPortal mode="dashboard"/>:<EmptyState title={t.noPermission}/>):null}
   {section==="tasks"?<section className="ui-stack"><SectionHeader title={t.tasks} description={t.taskIntro}/>{tasks.length?tasks.map(task=><Card key={task.id} className="ui-stack"><div className="ui-cluster"><Badge>{task.module_key}</Badge><Badge variant={task.priority==="urgent"||task.priority==="high"?"warning":"neutral"}>{task.priority}</Badge><Badge>{task.status}</Badge></div><h2 className="ui-heading-h3">{task.title}</h2>{task.description?<p className="ui-text-body">{task.description}</p>:null}{task.due_at?<p className="ui-caption ui-text-mobile-small">{isEn?"Due":"Tenggat"}: {new Date(task.due_at).toLocaleString(language)}</p>:null}</Card>):<EmptyState title={t.tasksEmpty} description={t.taskIntro}/>}</section>:null}
   {section==="security"?<Card className="ui-stack"><SectionHeader title={t.security}/><p className="ui-text-body">{isEn?"Your account is protected by DAJJAL FAMILY authentication. Use a unique password and never share it.":"Akun dilindungi autentikasi DAJJAL FAMILY. Gunakan password unik dan jangan pernah membagikannya."}</p><Button variant="secondary" onClick={()=>setSignOutOpen(true)}>{t.signOut}</Button></Card>:null}
-  </>}</>:null}
-  </div></div>
+  </>}
+  </div></div></>:null}
   <ConfirmDialog open={signOutOpen} onClose={()=>{if(!busy)setSignOutOpen(false);}} onConfirm={signOut} title={isEn?"Confirm sign out":"Konfirmasi Keluar"} description={isEn?"Are you sure you want to sign out of your contributor workspace?":"Apakah kamu yakin ingin keluar dari ruang kerja kontributor?"} confirmLabel={isEn?"Yes, sign out":"Ya, Keluar"} cancelLabel={isEn?"Stay here":"Batal"} loading={busy}/>
   <FeedbackDialog open={Boolean(error||message)} onClose={()=>{setError("");setMessage("");}} title={error?(isEn?"Action failed":"Aksi gagal"):(isEn?"Success":"Berhasil")} message={error||message} variant={error?"danger":"success"} closeLabel={isEn?"Close":"Tutup"}/>
  </main>;
