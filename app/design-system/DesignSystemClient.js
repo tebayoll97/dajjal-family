@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, TextField } from "../components/ui";
+import { Alert, Badge, Button, Card, TextField, EditorialByline } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
 import EditorialEditor from "../components/blog/EditorialEditor";
 import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
@@ -216,7 +216,7 @@ export default function DesignSystemClient() {
             <div className="ui-editorial-reading ui-stack">
               <h2 className="ui-heading-h2">A clear editorial hierarchy</h2>
               <p className="ui-text-editorial-body">Editorial body copy uses the shared reading width and responsive typography roles. On mobile it remains compact; on wide displays it expands for comfortable long-form reading.</p>
-              <div className="ui-editorial-byline-component"><div className="ui-editorial-byline-component__meta"><span className="ui-text-editorial-meta">24 November 2026</span><span aria-hidden="true">·</span><span className="ui-text-editorial-meta">5 min read</span></div><strong className="ui-editorial-byline__author">Tebayoll</strong></div>
+              <EditorialByline author="Tebayoll" date="25 November 2026" dateTime="2026-11-25" locale="en" />
               <div className="ui-editorial-grid"><article className="ui-card"><strong>Editorial card</strong><p className="ui-caption">Uses the shared surface and content spacing.</p></article><article className="ui-card"><strong>Reading layout</strong><p className="ui-caption">Uses semantic editorial width and type roles.</p></article><article className="ui-card"><strong>Responsive grid</strong><p className="ui-caption">Three columns on wide screens, two on tablet, one on mobile.</p></article></div>
             </div>
             <p className={styles.demoNote}>Token source: --df-blog-card-surface, --df-blog-cover-surface, --df-blog-byline-color, --df-blog-reading-width, --df-blog-grid-gap, --df-editorial-byline-gap, --df-editorial-meta-gap, and --df-editorial-meta-color. Components consume the active Global Theme Preset; no local palette is introduced.</p>
