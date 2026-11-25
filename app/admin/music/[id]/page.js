@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useCallback,useEffect,useState} from "react";
 import Link from "next/link";
 import {useParams,useRouter} from "next/navigation";
 import {supabaseAdminClient} from "@/lib/supabaseAdminClient";
@@ -11,8 +11,8 @@ export default function MusicDetailPage(){
  const [title,setTitle]=useState(""),[artist,setArtist]=useState(""),[genre,setGenre]=useState(""),[description,setDescription]=useState(""),[mood,setMood]=useState(""),[tags,setTags]=useState(""),[lang,setLang]=useState(""),[holder,setHolder]=useState(""),[source,setSource]=useState(""),[notes,setNotes]=useState("");
  const [replacement,setReplacement]=useState(null),[replacementDuration,setReplacementDuration]=useState(0),[cover,setCover]=useState(null),[progress,setProgress]=useState(0);
  const [previewUrl,setPreviewUrl]=useState(""),[previewLoading,setPreviewLoading]=useState(false),[previewError,setPreviewError]=useState("");
- useEffect(()=>{(async()=>{const {data}=await supabaseAdminClient.auth.getSession();if(!data?.session){router.replace("/admin/login");return;}const t=data.session.access_token;setToken(t);const auth=await fetch("/api/admin/me",{headers:{Authorization:"Bearer "+t},cache:"no-store"});if(!auth.ok){router.replace("/admin/login");return;}await load(t);})();},[id]);
- async function load(t=token){if(!t)return;const res=await fetch("/api/admin/music/"+id,{headers:{Authorization:"Bearer "+t},cache:"no-store"});const data=await res.json();if(!res.ok){setNotice(data.error||"Unable to load track.");return;}const x=data.item;setItem(x);setTitle(x.title||"");setArtist(x.artist||"");setGenre(x.genre||"");setDescription(x.description||"");setMood(x.mood||"");setTags((x.tags||[]).join(", "));setLang(x.language||"");setHolder(x.rights_holder||"");setSource(x.rights_source||"");setNotes(x.rights_license_notes||"");}
+ useEffect(()=>{(async()=>{const {data}=await supabaseAdminClient.auth.getSession();if(!data?.session){router.replace("/admin/login");return;}const t=data.session.access_token;setToken(t);const auth=await fetch("/api/admin/me",{headers:{Authorization:"Bearer "+t},cache:"no-store"});if(!auth.ok){router.replace("/admin/login");return;}await load(t);})();},[id, load, router]);
+ const load = useCallback(async (t = token) => {if(!t)return;const res=await fetch("/api/admin/music/"+id,{headers:{Authorization:"Bearer "+t},cache:"no-store"});const data=await res.json();if(!res.ok){setNotice(data.error||"Unable to load track.");return;}const x=data.item;setItem(x);setTitle(x.title||"");setArtist(x.artist||"");setGenre(x.genre||"");setDescription(x.description||"");setMood(x.mood||"");setTags((x.tags||[]).join(", "));setLang(x.language||"");setHolder(x.rights_holder||"");setSource(x.rights_source||"");setNotes(x.rights_license_notes||"");}, [id, token]);
  useEffect(()=>{
   if(!token||!id)return;
   const controller=new AbortController();let objectUrl="";
