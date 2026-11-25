@@ -269,6 +269,19 @@ export default function DesignSystemClient() {
           </div>
         </Section>
 
+        <Section id="20" title="ADMIN NAVIGATION MODES" headingId="admin-navigation-modes-heading" description="Separate desktop rail and mobile overlay drawer with one shared menu model" open={!!expanded["20"]} onToggle={() => toggle("20")}>
+          <div className={styles.demoCard}>
+            <p className={styles.demoLabel}>ADMIN DRAWER SEMANTIC CONTRACTS</p>
+            <div className="ui-grid-2">
+              <Card className="ui-stack"><strong>Desktop navigation</strong><code>--df-admin-drawer-desktop-width</code><code>--df-workspace-drawer-padding</code><code>--df-workspace-nav-group-gap</code></Card>
+              <Card className="ui-stack"><strong>Mobile navigation</strong><code>--df-admin-drawer-mobile-width</code><code>--df-admin-drawer-overlay</code><code>--df-admin-mobile-control-height</code></Card>
+              <Card className="ui-stack"><strong>Panel rhythm</strong><code>--df-admin-panel-padding</code><code>--df-admin-nav-panel-gap</code><code>--df-admin-nav-group-padding</code></Card>
+              <Card className="ui-stack"><strong>Responsive behavior</strong><p className="ui-text-body">Desktop keeps a persistent left rail. Mobile uses an independent overlay drawer, explicit backdrop, and compact controls. Both render the same menu groups and route definitions.</p></Card>
+            </div>
+            <p className={styles.demoNote}>The mobile drawer is a distinct DOM surface from the desktop rail to prevent desktop display and sticky-position rules from suppressing mobile overlay behavior. All dimensions, colors, typography, spacing, and focus states use semantic global tokens.</p>
+          </div>
+        </Section>
+
       <footer className={styles.footer}>Internal QA route · noindex · not a production approval.</footer>
       {showTop && <button type="button" className={styles.backTop} onClick={() => window.scrollTo({top:0,behavior:"smooth"})} aria-label="Back to top">↑ <span>TOP</span></button>}
     </main>
