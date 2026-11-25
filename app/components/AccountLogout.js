@@ -88,6 +88,7 @@ export default function AccountLogout() {
           <LogoutIcon /><span>{checking ? t.checking : t.title}</span>
         </button>
       )}
+      {error && !showWarning && !showFinalConfirm && <p className="df-account-logout-error" role="alert">{error}</p>}
       <ConfirmDialog
         open={showWarning && isGuest}
         onClose={() => { if (!loading) setShowWarning(false); }}
