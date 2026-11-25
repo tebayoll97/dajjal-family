@@ -9,5 +9,5 @@ export async function generateMetadata() {
   return { title, description, robots: { index: false, follow: false }, alternates: { canonical: url }, openGraph: { title, description, url, siteName: "DAJJAL FAMILY", type: "website", images: [{ url: image, alt: "DAJJAL FAMILY" }] }, twitter: { card: "summary_large_image", title, description, images: [image] } };
 }
 
-import AdminBlogManager from "@/app/components/blog/AdminBlogManager";
-export default function AdminBlogPage(){return <AdminBlogManager/>;}
+import AdminBlogManager from "@/app/components/blog/AdminBlogManager";\nimport ContributorProvisioning from "@/app/components/contributors/ContributorProvisioning";
+export default function AdminBlogPage(){return <><ContributorProvisioning/><AdminBlogManager/></>;}

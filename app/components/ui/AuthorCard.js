@@ -5,7 +5,7 @@ import { Card } from "./Card";
 export function AuthorCard({ author, locale = "id" }) {
   const isEn = locale === "en";
   const name = author?.display_name || (isEn ? "DAJJAL FAMILY Contributor" : "Kontributor DAJJAL FAMILY");
-  const href = `/${locale}/blog/author/${author.slug}`;
+  const href = `/${locale}/contributors/profile/${author.slug}`;
   return (
     <Card className="ui-author-card">
       <div className="ui-author-card__identity">

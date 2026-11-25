@@ -1,12 +1,11 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { getPublishedBlogAuthors } from "@/lib/blog/publicArticles";
 
 export const revalidate = 300;
 
 const origin = "https://dajjalfamily.com";
 const locales = ["id", "en"];
 const publicRoutes = [
-  "", "/games", "/knowledge", "/blog", "/blog/author", "/digital-products", "/business",
+  "", "/games", "/knowledge", "/blog", "/contributors", "/digital-products", "/business",
   "/community", "/community-guidelines", "/about", "/contact", "/help",
   "/music", "/df", "/df/couple", "/df/wedding-anak-dajjal",
 ];
@@ -29,8 +28,9 @@ export default async function sitemap() {
 
   if (error) console.error("Blog sitemap query failed:", error);
 
-  const authors = await getPublishedBlogAuthors("id");
-  const authorProfiles = authors.flatMap((author) => locales.map((locale) => ({ url: `${origin}/${locale}/blog/author/${author.slug}`, changeFrequency: "monthly", priority: 0.45, alternates: { languages: { id: `${origin}/id/blog/author/${author.slug}`, en: `${origin}/en/blog/author/${author.slug}` } } })));
+  const { data: contributors, error: contributorError } = await supabaseAdmin.from("df_contributors").select("slug").eq("status", "active").eq("public_profile_enabled", true).limit(5000);
+  if (contributorError) console.error("Contributor sitemap query failed:", contributorError);
+  const authorProfiles = (contributors || []).flatMap((contributor) => locales.map((locale) => ({ url: `${origin}/${locale}/contributors/profile/${contributor.slug}`, changeFrequency: "monthly", priority: 0.45, alternates: { languages: { id: `${origin}/id/contributors/profile/${contributor.slug}`, en: `${origin}/en/contributors/profile/${contributor.slug}` } } })));
 
   const articles = (data || []).flatMap((article) => {
     const languages = {};

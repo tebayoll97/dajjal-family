@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request) {
   const auth = await verifyBlogUser(request);
   if (!auth.ok) return blogError(auth.error, auth.status);
-  return Response.json({ success: true, contributor: auth.contributor, owner: auth.isOwner, owner_name: auth.isOwner ? auth.ownerName : null }, { headers: BLOG_PRIVATE_HEADERS });
+  return Response.json({ success: true, contributor: { ...auth.contributor, status: auth.contributor.status === "active" ? "approved" : auth.contributor.status }, owner: auth.isOwner, owner_name: auth.isOwner ? auth.ownerName : null }, { headers: BLOG_PRIVATE_HEADERS });
 }
 
 export async function POST(request) {

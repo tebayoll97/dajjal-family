@@ -45,7 +45,7 @@ export async function POST(request) {
     uploaded = await uploadDriveFile({ accessToken, file: image, folderId: authorFolder.id, slot: slugifyBlogTitle(auth.contributor.display_name) || auth.contributor.slug });
     await makeDriveFilePubliclyReadable({ accessToken, fileId: uploaded.id });
     const avatarUrl = `https://drive.google.com/thumbnail?id=${encodeURIComponent(uploaded.id)}&sz=w512`;
-    const { data, error } = await supabaseAdmin.from("df_blog_contributors")
+    const { data, error } = await supabaseAdmin.from("df_contributors")
       .update({ avatar_url: avatarUrl, updated_at: new Date().toISOString() })
       .eq("id", auth.contributor.id).eq("account_user_id", auth.user.id)
       .select("id,display_name,slug,avatar_url").single();
@@ -54,8 +54,8 @@ export async function POST(request) {
       throw error || new Error("Unable to save avatar reference.");
     }
     revalidateTag("df-blog-public");
-    revalidatePath("/id/blog/author");
-    revalidatePath("/en/blog/author");
+    revalidatePath("/id/contributors/profile");
+    revalidatePath("/en/contributors/profile");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ success: true, contributor: data }, { status: 201, headers: BLOG_PRIVATE_HEADERS });
   } catch (error) {

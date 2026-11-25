@@ -2,6 +2,7 @@ const origin = "https://dajjalfamily.com";
 
 const privatePathPrefixes = [
   "/admin",
+  "/contributors/shell",
   "/profile",
   "/settings",
   "/login",

@@ -49,17 +49,17 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
   }
 
   return <Card className="ui-stack df-author-profile-editor">
-    <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} />
+    <SectionHeader title={isEn ? "Public contributor profile" : "Profil publik kontributor"} />
     <form className="ui-stack" onSubmit={submit}>
       <TextField label={isEn ? "Display name" : "Nama tampilan"} value={name} onChange={event => setName(event.target.value)} maxLength={80} required />
       <div className="ui-author-avatar-upload">
-        <Avatar src={preview || contributor?.avatar_url} name={name || contributor?.display_name || "Author"} size="xl" />
+        <Avatar src={preview || contributor?.avatar_url} name={name || contributor?.display_name || "Contributor"} size="xl" />
         <div className="ui-stack-sm ui-author-avatar-upload__body">
           <TextField label={isEn ? "Profile photo" : "Foto profil"} type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} helpText={isEn ? "JPG, PNG, or WEBP · maximum 4 MB." : "JPG, PNG, atau WEBP · maksimal 4 MB."} />
           <div className="ui-cluster"><Button type="button" size="sm" disabled={!file || uploading || busy} loading={uploading} onClick={uploadAvatar}>{isEn ? "Upload photo" : "Upload foto"}</Button>{file ? <Button type="button" size="sm" variant="secondary" disabled={uploading} onClick={() => setFile(null)}>{isEn ? "Cancel" : "Batal"}</Button> : null}</div>
         </div>
       </div>
-      <TextField as="textarea" label={isEn ? "Biography" : "Bio penulis"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} />
+      <TextField as="textarea" label={isEn ? "Biography" : "Bio kontributor"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} />
       <div className="ui-cluster"><Button type="submit" loading={busy} disabled={uploading}>{isEn ? "Save public profile" : "Simpan profil publik"}</Button></div>
     </form>
     <FeedbackDialog
