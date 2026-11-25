@@ -121,7 +121,7 @@
 
 
 /* Editorial & Blog workbench fills its panel instead of nesting a narrow reading gutter. */
-.df-design-editorial-demo{width:100%;min-width:0;box-sizing:border-box;padding:var(--df-editorial-demo-padding)}
+.df-design-editorial-demo.df-design-editorial-demo{width:100%;min-width:0;box-sizing:border-box;padding:var(--df-editorial-demo-padding)}
 .df-design-editorial-demo .ui-editorial-reading{width:100%;max-width:none;margin:0;min-width:0;padding:0}
 .df-design-editorial-demo .ui-editorial-grid{width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-blog-grid-gap)}
 .df-design-editorial-demo .ui-editorial-grid>.ui-card{min-width:0;padding:var(--df-editorial-content-padding)}
