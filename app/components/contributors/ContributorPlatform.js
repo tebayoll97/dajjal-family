@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
-import { Badge,Button,Card,EmptyState,FeedbackDialog,PageHeader,SectionHeader,TextField,VerificationState } from "@/app/components/ui";
+import { Badge,Button,Card,ConfirmDialog,EmptyState,FeedbackDialog,PageHeader,SectionHeader,TextField,VerificationState } from "@/app/components/ui";
 import AuthorPortal from "@/app/components/blog/AuthorPortal";
 import ContributorProfileEditor from "@/app/components/blog/ContributorProfileEditor";
 
@@ -15,7 +15,7 @@ const copy = {
 
 export default function ContributorPlatform({section="home"}){
  const {language}=useLanguage(), t=copy[language==="en"?"en":"id"], isEn=language==="en";
- const [session,setSession]=useState(null),[clientKey,setClientKey]=useState("member"),[contributor,setContributor]=useState(null),[permissions,setPermissions]=useState([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[newPassword,setNewPassword]=useState(""),[confirmPassword,setConfirmPassword]=useState(""),[error,setError]=useState(""),[message,setMessage]=useState(""),[tasks,setTasks]=useState([]);
+ const [session,setSession]=useState(null),[clientKey,setClientKey]=useState("member"),[contributor,setContributor]=useState(null),[permissions,setPermissions]=useState([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[newPassword,setNewPassword]=useState(""),[confirmPassword,setConfirmPassword]=useState(""),[error,setError]=useState(""),[message,setMessage]=useState(""),[tasks,setTasks]=useState([]),[drawerOpen,setDrawerOpen]=useState(false),[signOutOpen,setSignOutOpen]=useState(false);
  const client=clientKey==="admin"?supabaseAdminClient:supabase;
  const inspect=useCallback(async(active,key)=>{
   if(!active?.access_token){setLoading(false);return false;}
@@ -50,21 +50,32 @@ export default function ContributorPlatform({section="home"}){
   if(!response.ok){setError(body.error||"Unable to activate contributor account.");setBusy(false);return;}
   setContributor(c=>({...c,must_change_password:false}));setNewPassword("");setConfirmPassword("");setMessage(isEn?"Password updated. Your workspace is ready.":"Password berhasil diperbarui. Ruang kerja siap digunakan.");setBusy(false);
  }
- async function signOut(){await client.auth.signOut();setSession(null);setContributor(null);setPermissions([]);setPassword("");}
+ async function signOut(){if(busy)return;setBusy(true);const {error:signOutError}=await client.auth.signOut();if(signOutError){setError(signOutError.message);setBusy(false);return;}setSignOutOpen(false);setDrawerOpen(false);setSession(null);setContributor(null);setPermissions([]);setPassword("");setBusy(false);}
  useEffect(()=>{if(!session||section!=="tasks")return;let active=true;fetch("/api/contributors/tasks",{headers:{Authorization:"Bearer "+session.access_token},cache:"no-store"}).then(r=>r.json()).then(j=>{if(active&&j.success)setTasks(j.tasks||[]);}).catch(()=>{});return()=>{active=false;};},[session,section]);
  
  return <main className="ui-page ui-stack">
   <PageHeader eyebrow="DAJJAL FAMILY / CONTRIBUTOR SHELL" title={<span className="ui-text-display-wide">Contributor Shell</span>} description={t.intro}/>
   {loading?<Card><VerificationState variant="user" status="checking" compact title={t.loading}/></Card>:null}
   {!loading&&!session?<Card className="ui-stack"><SectionHeader title={t.login} description={t.access}/><form className="ui-stack" onSubmit={signIn}><TextField label={t.email} type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/><TextField label={t.password} type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/><Button type="submit" disabled={busy} loading={busy}>{t.signIn}</Button></form><Link className="ui-link" href={`/${language}/contributors`}>{isEn?"Learn about contributing":"Pelajari cara berkontribusi"}</Link></Card>:null}
-  {session&&contributor?<><nav className="df-workspace-navigation df-contributor-navigation" aria-label="Contributor navigation">{nav.filter(x=>x[3]).map(([key,href,label])=><Link key={key} href={`/${language}${href}`} className={`df-workspace-navigation-link${section===key?" is-active":""}`} aria-current={section===key?"page":undefined}><span className="df-workspace-navigation-icon" aria-hidden="true">{key==="home"?"⌂":key==="profile"?"◎":key==="blog"?"▤":key==="tasks"?"☷":"◇"}</span><span>{label}</span></Link>)}<span className="df-workspace-navigation-identity">{contributor.display_name}</span><Button size="sm" variant="danger" className="df-workspace-navigation-signout" onClick={signOut}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3m9-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg>{t.signOut}</Button></nav>
+  {session&&contributor?<><div className="df-shell-workspace">
+  <button type="button" className="df-shell-drawer-toggle" aria-expanded={drawerOpen} aria-controls="df-contributor-drawer" onClick={()=>setDrawerOpen(v=>!v)}><span aria-hidden="true">☰</span>{isEn?"Workspace menu":"Menu ruang kerja"}</button>
+  {drawerOpen?<button type="button" className="df-shell-drawer-backdrop" aria-label={isEn?"Close navigation":"Tutup navigasi"} onClick={()=>setDrawerOpen(false)}/>:null}
+  <aside id="df-contributor-drawer" className="df-shell-drawer df-contributor-drawer" data-open={drawerOpen}>
+   <Link href={`/${language}`} className="df-shell-drawer-brand"><span className="df-shell-drawer-mark">DF</span><span><strong>DAJJAL FAMILY</strong><small>CONTRIBUTOR WORKSPACE</small></span></Link>
+   <p className="df-shell-drawer-section">{isEn?"WORKSPACE":"RUANG KERJA"}</p>
+   <nav className="df-shell-drawer-nav" aria-label={isEn?"Contributor navigation":"Navigasi kontributor"}>{nav.filter(x=>x[3]).map(([key,href,label])=><Link key={key} href={`/${language}${href}`} onClick={()=>setDrawerOpen(false)} className={section===key?"is-active":""} aria-current={section===key?"page":undefined}><span aria-hidden="true">{key==="home"?"⌂":key==="profile"?"◎":key==="blog"?"▤":key==="tasks"?"☷":"◇"}</span>{label}</Link>)}</nav>
+   <div className="df-shell-drawer-foot"><span className="df-shell-drawer-identity">{contributor.display_name}</span><Button size="sm" variant="danger" className="df-shell-drawer-signout" onClick={()=>setSignOutOpen(true)}><span aria-hidden="true">↪</span>{t.signOut}</Button></div>
+  </aside>
+  <div className="df-shell-workspace-content">
   {contributor.must_change_password?<Card className="ui-stack"><Badge variant="warning">{isEn?"First sign-in security":"Keamanan login pertama"}</Badge><SectionHeader title={t.changeTitle} description={t.changeHint}/><form className="ui-stack" onSubmit={updatePassword}><TextField label={t.newPassword} type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} minLength={12} autoComplete="new-password" required/><TextField label={t.confirm} type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} minLength={12} autoComplete="new-password" required/><Button type="submit" loading={busy} disabled={busy}>{t.save}</Button></form></Card>:<>
   {section==="home"?<Card className="ui-stack"><Badge variant="success">{isEn?"Account active":"Akun aktif"}</Badge><SectionHeader title={t.welcome+" "+contributor.display_name} description={t.intro}/><div className="ui-cluster">{permissions.map(p=><Badge key={p}>{p}</Badge>)}</div><p className="ui-caption">{isEn?"Use the navigation above to open the modules assigned to your account.":"Gunakan navigasi di atas untuk membuka modul yang ditugaskan ke akunmu."}</p></Card>:null}
   {section==="profile"?<ContributorProfileEditor contributor={contributor} accessToken={session.access_token} locale={language} onSaved={setContributor}/>:null}
   {section==="blog"?(has("blog.access")?<AuthorPortal mode="dashboard"/>:<EmptyState title={t.noPermission}/>):null}
   {section==="tasks"?<section className="ui-stack"><SectionHeader title={t.tasks} description={t.taskIntro}/>{tasks.length?tasks.map(task=><Card key={task.id} className="ui-stack"><div className="ui-cluster"><Badge>{task.module_key}</Badge><Badge variant={task.priority==="urgent"||task.priority==="high"?"warning":"neutral"}>{task.priority}</Badge><Badge>{task.status}</Badge></div><h2 className="ui-heading-h3">{task.title}</h2>{task.description?<p className="ui-text-body">{task.description}</p>:null}{task.due_at?<p className="ui-caption ui-text-mobile-small">{isEn?"Due":"Tenggat"}: {new Date(task.due_at).toLocaleString(language)}</p>:null}</Card>):<EmptyState title={t.tasksEmpty} description={t.taskIntro}/>}</section>:null}
-  {section==="security"?<Card className="ui-stack"><SectionHeader title={t.security}/><p className="ui-text-body">{isEn?"Your account is protected by DAJJAL FAMILY authentication. Use a unique password and never share it.":"Akun dilindungi autentikasi DAJJAL FAMILY. Gunakan password unik dan jangan pernah membagikannya."}</p><Button variant="secondary" onClick={signOut}>{t.signOut}</Button></Card>:null}
+  {section==="security"?<Card className="ui-stack"><SectionHeader title={t.security}/><p className="ui-text-body">{isEn?"Your account is protected by DAJJAL FAMILY authentication. Use a unique password and never share it.":"Akun dilindungi autentikasi DAJJAL FAMILY. Gunakan password unik dan jangan pernah membagikannya."}</p><Button variant="secondary" onClick={()=>setSignOutOpen(true)}>{t.signOut}</Button></Card>:null}
   </>}</>:null}
+  </div></div>
+  <ConfirmDialog open={signOutOpen} onClose={()=>{if(!busy)setSignOutOpen(false);}} onConfirm={signOut} title={isEn?"Confirm sign out":"Konfirmasi Keluar"} description={isEn?"Are you sure you want to sign out of your contributor workspace?":"Apakah kamu yakin ingin keluar dari ruang kerja kontributor?"} confirmLabel={isEn?"Yes, sign out":"Ya, Keluar"} cancelLabel={isEn?"Stay here":"Batal"} loading={busy}/>
   <FeedbackDialog open={Boolean(error||message)} onClose={()=>{setError("");setMessage("");}} title={error?(isEn?"Action failed":"Aksi gagal"):(isEn?"Success":"Berhasil")} message={error||message} variant={error?"danger":"success"} closeLabel={isEn?"Close":"Tutup"}/>
  </main>;
 }
