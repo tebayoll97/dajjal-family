@@ -41,3 +41,5 @@ export { BlogArticleNavigation } from "./BlogArticleNavigation";
 export { BlogArticleCard } from "./BlogArticleCard";
 
 export { ContributorCard } from "./ContributorCard";
+
+export { AdminPanel } from "./AdminPanel";
