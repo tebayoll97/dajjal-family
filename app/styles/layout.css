@@ -118,3 +118,13 @@
 .ui-contributor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-contributor-grid-gap);min-width:0}.ui-contributor-grid>*{min-width:0}
 @media(max-width:1023px){.ui-contributor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:639px){.ui-contributor-grid{grid-template-columns:minmax(0,1fr);gap:var(--df-space-3)}}
+
+
+/* Editorial & Blog workbench fills its panel instead of nesting a narrow reading gutter. */
+.df-design-editorial-demo{width:100%;min-width:0;box-sizing:border-box;padding:var(--df-editorial-demo-padding)}
+.df-design-editorial-demo .ui-editorial-reading{width:100%;max-width:none;margin:0;min-width:0;padding:0}
+.df-design-editorial-demo .ui-editorial-grid{width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-blog-grid-gap)}
+.df-design-editorial-demo .ui-editorial-grid>.ui-card{min-width:0;padding:var(--df-editorial-content-padding)}
+.df-design-editorial-demo .ui-editorial-reading>.ui-text-editorial-body{max-width:none}
+@media(max-width:900px){.df-design-editorial-demo .ui-editorial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.df-design-editorial-demo .ui-editorial-grid{grid-template-columns:minmax(0,1fr)}}
