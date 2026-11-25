@@ -36,3 +36,26 @@ export async function POST(request) {
   }
   return Response.json({ success: true, contributor: data }, { status: 201, headers: BLOG_PRIVATE_HEADERS });
 }
+
+export async function PATCH(request) {
+  const auth = await verifyBlogUser(request, { approved: true });
+  if (!auth.ok) return blogError(auth.error, auth.status);
+  if (!auth.contributor?.id) return blogError("Contributor profile was not found.", 404);
+  const body = await request.json().catch(() => ({}));
+  const displayName = typeof body.display_name === "string" ? body.display_name.trim() : auth.contributor.display_name;
+  const bioId = typeof body.bio_id === "string" ? body.bio_id.trim() : (auth.contributor.bio_id || "");
+  const bioEn = typeof body.bio_en === "string" ? body.bio_en.trim() : (auth.contributor.bio_en || "");
+  const avatarUrl = typeof body.avatar_url === "string" ? body.avatar_url.trim() : (auth.contributor.avatar_url || "");
+  if (!displayName || displayName.length > 80) return blogError("Display name must contain 1–80 characters.", 422);
+  if (bioId.length > 600 || bioEn.length > 600) return blogError("Biography must not exceed 600 characters per language.", 422);
+  if (avatarUrl && (!/^https:\\/\\//i.test(avatarUrl) || avatarUrl.length > 2000)) return blogError("Avatar URL must be a valid HTTPS URL.", 422);
+  const { data, error } = await supabaseAdmin.from("df_blog_contributors")
+    .update({ display_name: displayName, bio_id: bioId || null, bio_en: bioEn || null, avatar_url: avatarUrl || null, updated_at: new Date().toISOString() })
+    .eq("id", auth.contributor.id).eq("account_user_id", auth.user.id)
+    .select("id,display_name,email,status,bio_id,bio_en,avatar_url").single();
+  if (error || !data) {
+    console.error("Contributor profile update failed:", error);
+    return blogError("Unable to save contributor profile.", 500);
+  }
+  return Response.json({ success: true, contributor: data }, { headers: BLOG_PRIVATE_HEADERS });
+}
