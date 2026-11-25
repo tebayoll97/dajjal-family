@@ -673,3 +673,12 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Tokens:** `--df-author-card-gap`, `--df-author-card-padding`, `--df-author-card-radius`, `--df-author-grid-gap`, and `--df-author-avatar-size`; responsive type role `.ui-author-card__role`.
 - **Accessibility/responsive:** Semantic heading and link, visible focus inherited from shared link styles, two-column tablet and one-column mobile directory layout, compact touch target.
 - **Workbench:** Live production component preview is available in Design System section 17.
+
+
+## Author Profile Editor — 2026-11-25
+- Consumer: contributor workspace /[locale]/author/me.
+- Composition: existing shared Card, SectionHeader, Avatar, TextField, Button, and Alert; no page-local replacement controls.
+- Behavior: one biography input in the active locale; server-side Gemini integration generates the paired locale before saving. Translation failure blocks the save.
+- Avatar: explicit staged file selection and upload action; JPG/PNG/WEBP up to 8 MB. Server verifies contributor ownership, file signature, and Google Drive connection. Files are placed in DAJJAL FAMILY STORAGE/BLOG/AUTHORS/[display name], named from the immutable author slug plus server timestamp/random suffix, and only the avatar file receives public reader permission.
+- Tokens: --df-author-profile-avatar-size and --df-author-profile-upload-gap; helper typography follows --df-type-mobile-small on mobile and --df-text-sm on wide displays.
+- Workbench: live composition/control guidance in Design System section 18.
