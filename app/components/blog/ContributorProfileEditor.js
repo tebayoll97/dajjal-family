@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Alert, Avatar, Button, Card, Dialog, SectionHeader, TextField } from "@/app/components/ui";
+import { Avatar, Button, Card, FeedbackDialog, SectionHeader, TextField } from "@/app/components/ui";
 
 export default function ContributorProfileEditor({ contributor, accessToken, locale = "id", onSaved }) {
   const isEn = locale === "en";
@@ -62,14 +62,13 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
       <TextField as="textarea" label={isEn ? "Biography" : "Bio penulis"} value={bio} onChange={event => setBio(event.target.value)} rows={4} maxLength={600} />
       <div className="ui-cluster"><Button type="submit" loading={busy} disabled={uploading}>{isEn ? "Save public profile" : "Simpan profil publik"}</Button></div>
     </form>
-    <Dialog
+    <FeedbackDialog
       open={Boolean(feedback)}
       onClose={() => setFeedback(null)}
       title={feedback?.type === "error" ? (isEn ? "Action failed" : "Aksi gagal") : (isEn ? "Success" : "Berhasil")}
-      closeLabel={isEn ? "Close dialog" : "Tutup dialog"}
-      actions={<Button onClick={() => setFeedback(null)}>{isEn ? "Close" : "Tutup"}</Button>}
-    >
-      {feedback ? <Alert variant={feedback.type === "error" ? "danger" : "success"}>{feedback.message}</Alert> : null}
-    </Dialog>
+      message={feedback?.message || ""}
+      variant={feedback?.type === "error" ? "danger" : "success"}
+      closeLabel={isEn ? "Close" : "Tutup"}
+    />
   </Card>;
 }
