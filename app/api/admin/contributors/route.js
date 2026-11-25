@@ -15,6 +15,7 @@ export async function POST(request){
  if(!displayName)return fail("Contributor display name is required.",422);
  const permissions=[...new Set((Array.isArray(body.permissions)?body.permissions:[]).filter(x=>ALLOWED.has(x)))];
  if(!permissions.length)return fail("Select at least one contributor permission.",422);
+ if(permissions.some(key=>key.startsWith("blog.article."))&&!permissions.includes("blog.access"))return fail("Blog article permissions require Blog Studio access.",422);
  const temporaryPassword=randomBytes(32).toString("base64url")+"aA1!";
  const {data:created,error:createError}=await supabaseAdmin.auth.admin.createUser({email,password:temporaryPassword,email_confirm:true,user_metadata:{full_name:displayName,account_type:"contributor"}});
  if(createError||!created?.user?.id)return fail(createError?.message||"Unable to create the authentication account.",createError?.status||500);
