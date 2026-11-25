@@ -408,3 +408,8 @@
 #df-admin-shell .df-admin-mobile-drawer .df-admin-nav{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
 #df-admin-shell .df-admin-mobile-drawer .df-admin-sidebar-foot{margin-top:auto}
 #df-admin-shell .df-admin-drawer-backdrop{cursor:pointer}
+
+/* Reusable AdminPanel surface; all visual values resolve through semantic tokens. */
+.ui-admin-panel{min-width:0;padding:var(--df-admin-panel-padding);border:1px solid var(--df-admin-panel-border);border-radius:var(--df-admin-panel-radius);background:var(--df-admin-panel-surface);box-shadow:var(--df-admin-panel-shadow)}
+.ui-admin-panel:focus-within{border-color:var(--df-border-strong)}
+.ui-admin-panel :is(input,textarea,select){max-width:100%}
