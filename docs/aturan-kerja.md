@@ -284,3 +284,7 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Slugs are immutable after creation. Editing a display name must not silently change existing author URLs, canonical URLs, article bylines, or sitemap entries.
 - All author directory/profile/byline/metadata/sitemap data must read the database slug. Never ask contributors to type or manually manage their profile slug.
 - Migration: `20261125082922_add_system_generated_blog_author_slugs.sql`; applied to production Supabase project on 2026-11-25.
+
+- Contributor registration must never accept a user-entered slug. The database trigger allocates the slug from the account display name, serializes allocations for the same normalized name with a transaction advisory lock, and appends a stable ID suffix on collision. The unique constraint remains the final guard against duplicates, including concurrent registrations.
+- Registration UI/API should return the database-assigned slug; never pre-check uniqueness only in the browser or rely on a client-side check as the integrity boundary.
+- Concurrency hardening migration: `20261125153300_serialize_blog_author_slug_allocation.sql`.
