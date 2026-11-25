@@ -661,3 +661,15 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Accessibility:** Semantic article, named link, meaningful cover alt text, visible keyboard focus, and no hover-only information.
 - **Theme and typography:** Consumes Blog semantic surface, spacing, shape, focus and mobile-small typography roles; no page-local palette.
 - **Workbench:** Live production component preview is included in Component Workbench.
+
+
+## AuthorCard — 2026-11-25
+
+- **Status:** React shared component; exported from `app/components/ui/index.js`.
+- **Source:** `app/components/ui/AuthorCard.js`; public directory consumer: `app/components/blog/BlogAuthorDirectory.js`.
+- **API:** `AuthorCard({ author, locale = "id" })`; requires `author.id`, `author.display_name`, `author.slug`, and optionally `author.article_count`.
+- **Purpose:** Consistent contributor identity card linking to a public author profile.
+- **Semantics:** Uses shared `Card`, `Avatar`, heading, caption, and link primitives. It does not fetch data or infer biography/credentials.
+- **Tokens:** `--df-author-card-gap`, `--df-author-card-padding`, `--df-author-card-radius`, `--df-author-grid-gap`, and `--df-author-avatar-size`; responsive type role `.ui-author-card__role`.
+- **Accessibility/responsive:** Semantic heading and link, visible focus inherited from shared link styles, two-column tablet and one-column mobile directory layout, compact touch target.
+- **Workbench:** Live production component preview is available in Design System section 17.
