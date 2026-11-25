@@ -9,7 +9,7 @@ export default function BlogAuthorProfile({ profile, locale = "id" }) {
       <Breadcrumbs items={[
         { label: isEn ? "Home" : "Beranda", href: `/${locale}` },
         { label: "Blog", href: `/${locale}/blog` },
-        { label: isEn ? "Author" : "Penulis", href: `/${locale}/blog/author/tebayoll` },
+        { label: isEn ? "Author" : "Penulis", href: `/${locale}/blog/author/${profile.author.slug}` },
         { label: name },
       ]} />
       <Card className="df-blog-author-profile">
