@@ -111,7 +111,7 @@ export default function NavigationProfileCard({ onNavigate }) {
   const signedIn = status === "signed-in";
   const title = identity.name || (signedIn ? t.profile : status === "checking" ? t.checking : t.guest);
   const initial = (identity.name || identity.email || "U").trim().charAt(0).toUpperCase();
-  const contributorRoute = contributorAccess === "approved" ? "/author/me" : "/blog/author/apply";
+  const contributorRoute = contributorAccess === "approved" ? "/author/me" : "/contributors";
 
   return (
     <div className={`df-navigation-profile-shell${signedIn ? " is-signed-in" : ""}`}>
