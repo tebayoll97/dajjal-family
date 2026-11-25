@@ -211,3 +211,7 @@
 :root{--df-editorial-editor-surface:var(--df-surface);--df-editorial-editor-raised:var(--df-surface-raised);--df-editorial-editor-border:var(--df-border);--df-editorial-code-surface:var(--df-surface-overlay);--df-editorial-toolbar-gap:var(--df-space-2);--df-editorial-block-gap:var(--df-space-3);--df-editorial-editor-radius:var(--df-radius-lg);--df-editorial-code-radius:var(--df-radius-md);--df-editorial-mobile-gutter:var(--df-space-3);--df-editorial-wide-gutter:var(--df-space-5)}
 
 :root{--df-blog-sidebar-width:19rem;--df-blog-sidebar-gap:var(--df-space-6);--df-blog-sidebar-sticky-offset:6rem;--df-blog-sidebar-item-gap:var(--df-space-3)}
+
+
+/* Blog listing compact layout roles — inherit the active global theme. */
+:root{--df-blog-index-gap:var(--df-space-3);--df-blog-card-padding:var(--df-space-4);--df-blog-mobile-thumb:6.5rem;--df-blog-mobile-thumb-small:5.5rem;--df-blog-filter-gap:var(--df-space-2);--df-blog-card-radius:var(--df-radius-lg)}

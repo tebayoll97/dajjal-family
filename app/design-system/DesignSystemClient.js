@@ -92,8 +92,8 @@ export default function DesignSystemClient() {
         <h1 className="ui-heading-h1">Design System</h1>
         <p className="ui-subtitle">A controlled lab for reviewing shared foundations and reusable interface components across themes and screen sizes.</p>
         <div className={styles.progress}>
-          <div className={styles.progressHead}><strong>Shared component inventory</strong><span>31 / 31 shared components</span></div>
-          <div className={styles.progressTrack} role="progressbar" aria-label="Shared React components inventoried" aria-valuemin="0" aria-valuemax="30" aria-valuenow="30"><span style={{ width: "100%" }} /></div>
+          <div className={styles.progressHead}><strong>Shared component inventory</strong><span>33 / 33 shared components</span></div>
+          <div className={styles.progressTrack} role="progressbar" aria-label="Shared React components inventoried" aria-valuemin="0" aria-valuemax="33" aria-valuenow="33"><span style={{ width: "100%" }} /></div>
           <small>All 31 shared React exports are inventoried. Workbench previews use the production component implementations; visual QA remains pending.</small>
         </div>
       </header>
@@ -103,7 +103,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("16")}>16 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Editorial</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>

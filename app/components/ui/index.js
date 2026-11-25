@@ -36,3 +36,5 @@ export { VerificationState } from "./VerificationState";
 export { EditorialByline } from "./EditorialByline";
 
 export { BlogArticleNavigation } from "./BlogArticleNavigation";
+
+export { BlogArticleCard } from "./BlogArticleCard";

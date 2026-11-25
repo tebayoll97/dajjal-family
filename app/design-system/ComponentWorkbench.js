@@ -5,7 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField,
-  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation,
+  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -71,13 +71,14 @@ export default function ComponentWorkbench() {
     ["ConfirmDialog", "ConfirmDialog", <div key="confirm-dialog"><Button variant="danger" onClick={() => setConfirmOpen(true)}>Open confirmation</Button><ConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={() => setConfirmOpen(false)} title="Confirm action" description="This demonstrates the shared confirmation pattern." confirmLabel="Confirm" cancelLabel="Cancel" /></div>],
     ["BottomNavigation", "BottomNavigation · Floating dock", <div key="bottom-navigation" className={styles.stack}><BottomNavigation ariaLabel="Component preview navigation" items={[{key:"home",label:"Home",icon:<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H14v-7h-4v7H3z"/></svg>,active:true,onClick:()=>{}},{key:"music",label:"Music",icon:<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>,onClick:()=>{}},{key:"favorites",label:"Favorites",icon:<svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5-8.8 10.2-8.8 10.2S3.2 13.8 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg>,onClick:()=>{}},{key:"search",label:"Search",icon:<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>,onClick:()=>{}}]} centerAction={{label:"Play",icon:<svg viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>,onClick:()=>{}}} /></div>],
     ["BlogArticleNavigation", "BlogArticleNavigation · Recent Posts + Categories", <BlogArticleNavigation key="blog-navigation" locale="en" recentPosts={[{id:"a",slug:"getting-started",title:"Getting Started with DAJJAL FAMILY",published_at:"2026-11-24"},{id:"b",slug:"community-guide",title:"Community Guide",published_at:"2026-11-22"},{id:"c",slug:"gaming-news",title:"Gaming News",published_at:"2026-11-20"}]} categories={[{id:"1",slug:"guides-tutorials",name:"Guides & Tutorials",article_count:12},{id:"2",slug:"gaming",name:"Gaming",article_count:8},{id:"3",slug:"community",name:"Community",article_count:4}]}/>],
+    ["BlogArticleCard", "BlogArticleCard · compact responsive editorial card", <BlogArticleCard key="blog-article-card" locale="en" article={{id:"preview",slug:"building-a-digital-universe",title:"Building a Digital Universe, One Useful Idea at a Time",excerpt:"A compact editorial card with localized category, summary and publication details.",cover_image_url:null,published_at:"2026-11-24",reading_minutes:5,category:{slug:"insights",name:"Insights"},author:{display_name:"DAJJAL FAMILY"}}}/>],
     ["KaraokeLyrics", "KaraokeLyrics · Portal overlay", <div key="karaoke" className={styles.stack}><strong>Production overlay · opened from Music Library</strong><small>Requires a published track ID and active HTMLAudioElement. Renders in document.body; Escape/Close preserves playback; transcript follows audio time; font scaling is controlled.</small><small>Full-screen responsive surface · safe-area aware · reduced-motion compatible.</small></div>],
   ];
 
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>32 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>33 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}

@@ -648,3 +648,16 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Responsive:** Sticky right rail on wide desktop; two compact panels at tablet/narrow desktop; stacked after article content on mobile. It never replaces or modifies the existing global website navigation.
 - **Tokens:** `--df-blog-sidebar-*` geometry roles, global surface/text/border/radius/spacing tokens, and editorial mobile-small typography roles across the four foundation CSS files.
 - **Workbench:** Included as a live production component preview in the Design System Component Workbench.
+
+
+## 9. Public Blog listing — 2026-11-25
+
+### BlogArticleCard
+- **Source:** `app/components/ui/BlogArticleCard.js`; export: `BlogArticleCard`.
+- **Purpose:** Reusable localized article card for public Blog listing surfaces.
+- **Props:** `article` (published article view model containing localized title/slug/excerpt, cover image/alt, publication time, reading time, category and author) and `locale` (`id` or `en`).
+- **Composition:** Shared `Card`, `Badge`, and `EditorialByline` with Next.js `Link` and `Image`; publication filtering and data access remain server-side.
+- **Responsive:** Compact horizontal media row on small mobile; two-column grid on tablet; three-column grid on wide desktop.
+- **Accessibility:** Semantic article, named link, meaningful cover alt text, visible keyboard focus, and no hover-only information.
+- **Theme and typography:** Consumes Blog semantic surface, spacing, shape, focus and mobile-small typography roles; no page-local palette.
+- **Workbench:** Live production component preview is included in Component Workbench.

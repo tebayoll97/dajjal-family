@@ -66,3 +66,11 @@
 .df-editorial-editor,.df-editorial-content{font-family:var(--df-font-sans)}.df-editorial-editor__head{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}.df-editorial-content{font-size:var(--df-type-body-size);line-height:var(--df-leading-relaxed)}.df-editorial-content h2{font-size:var(--df-text-xl);line-height:var(--df-leading-tight)}.df-editorial-content h3{font-size:var(--df-text-lg)}.df-editorial-content figcaption{font-size:var(--df-type-mobile-small);color:var(--df-text-muted)}.df-editorial-code figcaption{font-size:var(--df-type-mobile-small)}@media(min-width:1024px){.df-editorial-content{font-size:var(--df-text-lg)}}
 
 .ui-blog-article-navigation__heading{font-size:var(--df-text-base);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}.ui-blog-article-navigation__link,.ui-blog-article-navigation__category{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}.ui-blog-article-navigation__link time{font-size:var(--df-type-mobile-small)}
+
+
+/* Public Blog listing typography: compact mobile, wider titles on desktop. */
+.ui-text-blog-title{font-size:var(--df-text-base);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight);letter-spacing:-.015em;color:var(--df-text)}
+.ui-text-blog-summary{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal);color:var(--df-text-secondary)}
+.ui-text-blog-meta{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);color:var(--df-text-muted)}
+@media(min-width:640px){.ui-text-blog-title{font-size:var(--df-text-lg)}.ui-text-blog-summary{font-size:var(--df-text-sm)}}
+@media(min-width:1280px){.ui-text-blog-title{font-size:var(--df-text-xl)}}
