@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
@@ -151,7 +152,7 @@ export default function ManageCouplePage() {
           profiles.length === 0 ? <p className="df-manage-couple__empty">{t.empty}</p> :
           profiles.map((profile) => <article className="df-manage-couple__item" key={profile.id}>
             <div className="df-manage-couple__thumb">
-              {profile.coverUrl ? <img src={profile.coverUrl} alt="" loading="lazy" /> : <span aria-hidden="true">♡</span>}
+              {profile.coverUrl ? <Image src={profile.coverUrl} alt="" width={96} height={96} unoptimized loading="lazy" /> : <span aria-hidden="true">♡</span>}
             </div>
             <div className="df-manage-couple__details">
               <h2>{profile.maleNickname} <span>×</span> {profile.femaleNickname}</h2>
