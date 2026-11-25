@@ -269,3 +269,11 @@
 .df-author-profile-editor .ui-input[type=file]{padding:var(--df-space-2);font-size:var(--df-type-mobile-small)}
 .df-author-profile-editor .ui-input[type=file]::file-selector-button{min-height:var(--df-touch-target-min);margin-inline-end:var(--df-space-2);padding:var(--df-space-2) var(--df-space-3);border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text);font:inherit}
 @media(min-width:1024px){.df-author-profile-editor .ui-input[type=file]{font-size:var(--df-text-sm)}}
+
+/* Contributor workspace surfaces: readable inset spacing on every panel. */
+.df-blog-author .ui-card{padding:var(--df-space-5)}
+.df-blog-author .df-author-profile-editor{gap:var(--df-space-5)}
+@media(max-width:639px){
+  .df-blog-author .ui-card{padding:var(--df-space-4)}
+  .df-blog-author .df-author-profile-editor{gap:var(--df-space-4)}
+}
