@@ -244,3 +244,5 @@
 - Added Admin-only account provisioning with one-time temporary passwords, forced first-login password change, per-module permission grants, and password reset controls.
 - Updated Blog auth, article ownership relations, profile APIs, article bylines, sitemap, robots rules, and bilingual metadata to the new contributor registry.
 - Added reusable ContributorCard and semantic contributor tokens/layout/type styles across the four global foundation CSS layers; documented the preview in Design System.
+
+- Retired and dropped the legacy `df_blog_contributors` table and its slug trigger function after validating the transferred contributor and all Blog article foreign keys. Added covering indexes for new contributor actor/ownership foreign keys.

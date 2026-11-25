@@ -310,3 +310,5 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Only Admin provisions accounts. Temporary passwords are cryptographically random, shown once, shared privately, and changed on first login. Never store or re-display plaintext credentials.
 - Enforce permissions server-side for every module operation. Hiding a navigation item is not authorization.
 - Contact recruitment entry points use the existing official WhatsApp and Telegram channels on the Contact page; never invent replacement contact URLs.
+
+- Final data cleanup checkpoint (2026-11-25): after verifying all existing contributor IDs and article ownership, the legacy `df_blog_contributors` table and its slug trigger function were dropped. The active registry is `df_contributors` only.
