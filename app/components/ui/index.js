@@ -38,3 +38,5 @@ export { EditorialByline } from "./EditorialByline";
 export { BlogArticleNavigation } from "./BlogArticleNavigation";
 
 export { BlogArticleCard } from "./BlogArticleCard";
+
+export { AuthorCard } from "./AuthorCard";
