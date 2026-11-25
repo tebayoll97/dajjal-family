@@ -13,11 +13,11 @@ export default function BlogAuthorProfile({ profile, locale = "id" }) {
         { label: name },
       ]} />
       <Card className="df-blog-author-profile">
-        <Avatar name={name} size="xl" />
+        <Avatar name={name} src={profile.author.avatar_url || undefined} size="xl" />
         <div className="ui-stack-sm">
           <p className="ui-eyebrow">{isEn ? "BLOG AUTHOR" : "PENULIS BLOG"}</p>
           <h1 className="ui-heading-h1">{name}</h1>
-          <p className="ui-subtitle">{isEn ? "Editorial contributor at DAJJAL FAMILY, sharing stories, useful insights, and updates from our digital universe." : "Penulis DAJJAL FAMILY yang berbagi cerita, wawasan bermanfaat, dan kabar dari semesta digital kami."}</p>
+          <p className="ui-subtitle">{(isEn ? profile.author.bio_en || profile.author.bio_id : profile.author.bio_id || profile.author.bio_en) || (isEn ? "Editorial contributor at DAJJAL FAMILY." : "Kontributor editorial DAJJAL FAMILY.")}</p>
         </div>
       </Card>
       <section className="ui-stack df-blog-author-articles" aria-labelledby="author-articles-title">
