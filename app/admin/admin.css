@@ -222,3 +222,20 @@
 @media(max-width:820px){
   #df-admin-shell .df-admin-mobile-nav{scrollbar-width:thin;overscroll-behavior-x:contain}
 }
+
+
+/* Admin shell left drawer: same hierarchy and interaction language as the public sidebar. */
+#df-admin-shell .df-admin-sidebar.df-shell-drawer{position:sticky;top:var(--df-space-4);height:calc(100dvh - var(--df-space-8));min-height:34rem;margin:var(--df-space-4) 0 var(--df-space-4) var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-xl);box-shadow:var(--df-shadow-md);padding:var(--df-workspace-drawer-padding);background:var(--df-workspace-nav-surface)}
+#df-admin-shell .df-admin-nav-link{min-height:var(--df-touch-target-min);border-radius:var(--df-workspace-nav-radius);padding:var(--df-workspace-nav-item-padding-block) var(--df-workspace-nav-item-padding-inline)}
+#df-admin-shell .df-admin-nav-link.is-active{border-color:var(--df-workspace-nav-active-border);background:var(--df-workspace-nav-active-bg);color:var(--df-workspace-nav-active-color)}
+#df-admin-shell .df-admin-drawer-toggle{display:none}
+#df-admin-shell .df-admin-drawer-backdrop{display:none}
+@media(max-width:760px){
+ #df-admin-shell{display:block}
+ #df-admin-shell .df-admin-sidebar.df-shell-drawer{position:fixed;z-index:calc(var(--df-z-overlay) - 1);inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;margin:0;border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard)}
+ #df-admin-shell .df-admin-sidebar.df-shell-drawer[data-open="true"]{transform:translateX(0)}
+ #df-admin-shell .df-admin-drawer-toggle{display:inline-flex}
+ #df-admin-shell .df-admin-drawer-backdrop{display:block;position:fixed;inset:0;z-index:calc(var(--df-z-overlay) - 2);border:0;background:var(--df-workspace-drawer-backdrop)}
+ #df-admin-shell .df-admin-mobile-nav{display:none}
+ #df-admin-shell .df-admin-workspace{min-width:0}
+}
