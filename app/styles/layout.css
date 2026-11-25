@@ -128,3 +128,13 @@
 .df-design-editorial-demo .ui-editorial-reading>.ui-text-editorial-body{max-width:none}
 @media(max-width:900px){.df-design-editorial-demo .ui-editorial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.df-design-editorial-demo .ui-editorial-grid{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Reusable workspace navigation layout — same grouped rhythm as the site drawer. */
+.df-workspace-navigation{display:grid;align-content:start;gap:var(--df-workspace-nav-item-gap);min-width:0}
+.df-workspace-navigation-group{display:grid;gap:var(--df-workspace-nav-item-gap);min-width:0}
+.df-workspace-navigation-group-title{margin:0;padding:var(--df-space-2) var(--df-workspace-nav-item-padding-inline);color:var(--df-text-muted);letter-spacing:.14em;text-transform:uppercase}
+.df-workspace-navigation-link{min-width:0;min-height:var(--df-touch-target-min);display:flex;align-items:center;gap:var(--df-space-3);padding:var(--df-workspace-nav-item-padding-block) var(--df-workspace-nav-item-padding-inline);border:1px solid transparent;border-radius:var(--df-workspace-nav-radius);text-decoration:none}
+.df-workspace-navigation-icon{width:var(--df-icon-size-md);height:var(--df-icon-size-md);flex:0 0 var(--df-icon-size-md);display:grid;place-items:center}
+.df-workspace-navigation-identity{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:760px){.df-workspace-navigation--compact{display:flex;align-items:center;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}}
