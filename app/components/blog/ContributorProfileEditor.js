@@ -58,7 +58,7 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
       <div className="ui-author-avatar-upload">
         <Avatar src={preview || contributor?.avatar_url} name={name || contributor?.display_name || "Author"} size="xl" />
         <div className="ui-stack-sm ui-author-avatar-upload__body">
-          <TextField label={isEn ? "Profile photo" : "Foto profil"} type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} helpText={isEn ? "JPG, PNG, or WEBP · maximum 8 MB. Uploaded to your Blog folder in Google Drive." : "JPG, PNG, atau WEBP · maksimal 8 MB. Disimpan ke folder Blog milikmu di Google Drive."} />
+          <TextField label={isEn ? "Profile photo" : "Foto profil"} type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} helpText={isEn ? "JPG, PNG, or WEBP · maximum 4 MB. Uploaded to your Blog folder in Google Drive." : "JPG, PNG, atau WEBP · maksimal 4 MB. Disimpan ke folder Blog milikmu di Google Drive."} />
           <div className="ui-cluster"><Button type="button" size="sm" disabled={!file || uploading || busy} loading={uploading} onClick={uploadAvatar}>{isEn ? "Upload photo" : "Upload foto"}</Button>{file ? <Button type="button" size="sm" variant="secondary" disabled={uploading} onClick={() => setFile(null)}>{isEn ? "Cancel" : "Batal"}</Button> : null}</div>
         </div>
       </div>
