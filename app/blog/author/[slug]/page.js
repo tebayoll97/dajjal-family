@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
   const title = locale === "en" ? `${profile.author.display_name} — Blog Author` : `${profile.author.display_name} — Penulis Blog`;
   const description = locale === "en" ? `Read articles written by ${profile.author.display_name} for DAJJAL FAMILY.` : `Baca artikel yang ditulis oleh ${profile.author.display_name} untuk DAJJAL FAMILY.`;
   const url = `https://dajjalfamily.com/${locale}/blog/author/${profile.author.slug}`;
-  const image = "https://dajjalfamily.com/dajjalfamily_icon_192.png";
+  const image = profile.author.avatar_url || "https://dajjalfamily.com/dajjalfamily_icon_192.png";
   return {
     title, description,
     alternates: { canonical: url, languages: { id: `https://dajjalfamily.com/id/blog/author/${profile.author.slug}`, en: `https://dajjalfamily.com/en/blog/author/${profile.author.slug}` } },
