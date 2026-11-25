@@ -263,3 +263,15 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Translation failure or validation failure blocks publication; both locale versions are written together by the article API.
 - Full HTML is an authoring input format, not executable website source. Scripts, event handlers, arbitrary styles, arbitrary iframe markup, unsafe URL schemes, and unsupported HTML elements are rejected. The renderer uses validated React blocks and never renders author HTML through `dangerouslySetInnerHTML`.
 - Shared `EditorialEditor` and `EditorialContentRenderer` are documented and previewed in Design System Workbench section 16. No production database migration is needed for the content format.
+
+## Blog Author Directory & Contributor Workspace — 2026-11-25
+
+- Public directory routes: localized `/id/blog/author` and `/en/blog/author`; show only approved contributors who have at least one published article.
+- Public profile routes: localized `/id/blog/author/[slug]` and `/en/blog/author/[slug]`; the slug is derived from the contributor display name and articles are scoped to that contributor ID.
+- Private workspace route: localized `/id/author/me` and `/en/author/me`; it reuses the existing verified contributor dashboard and resolves identity from the bearer session. Never accept a contributor ID or slug from the browser as proof of ownership.
+- Contributor profile fields are `bio_id`, `bio_en`, and `avatar_url`, alongside the existing `display_name`. The profile update API must verify the session, approved status, and matching `account_user_id` before writing.
+- Public profile data is limited to display name, public bio, avatar URL, and published article metadata. Email, Auth IDs, application notes, and private drafts must never be exposed publicly.
+- Directory/profile queries are server-side and cached briefly with the existing Blog public cache tag. Private workspace/API responses remain `private, no-store`.
+- New reusable `AuthorCard` is exported from the shared UI index, uses semantic author tokens in all four foundation CSS files, and is previewed in Design System Workbench section 17.
+- Sitemap includes the directory and profiles with published content. Public metadata uses localized canonical/hreflang and contributor avatar when available, otherwise the DAJJAL FAMILY fallback image.
+- Migration `20261125120000_add_df_blog_contributor_profiles.sql` adds nullable bilingual bio and HTTPS avatar fields with length/URL constraints. It is additive and preserves existing contributor records.
