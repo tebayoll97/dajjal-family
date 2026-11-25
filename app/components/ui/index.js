@@ -27,6 +27,7 @@ export { StatCard } from "./StatCard";
 export { PageHeader } from "./PageHeader";
 export { SectionHeader } from "./SectionHeader";
 export { ConfirmDialog } from "./ConfirmDialog";
+export { FeedbackDialog } from "./FeedbackDialog";
 
 export { BottomNavigation } from "./BottomNavigation";
 export { KaraokeLyrics } from "./KaraokeLyrics";
