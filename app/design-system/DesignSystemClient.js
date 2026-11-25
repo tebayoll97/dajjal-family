@@ -213,7 +213,7 @@ export default function DesignSystemClient() {
         </Section>
 
         <Section id="15" title="EDITORIAL & BLOG" headingId="editorial-heading" description="Editorial semantic tokens, byline, reading width and responsive content patterns" open={!!expanded["15"]} onToggle={() => toggle("15")}>
-          <div className={styles.demoCard}>
+          <div className={`${styles.demoCard} df-design-editorial-demo`}>
             <p className={styles.demoLabel}>EDITORIAL SEMANTIC CONTRACTS</p>
             <div className="ui-editorial-reading ui-stack">
               <h2 className="ui-heading-h2">A clear editorial hierarchy</h2>
