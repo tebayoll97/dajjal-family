@@ -82,3 +82,7 @@
 /* Author directory typography roles. */
 .ui-author-card__role{margin:var(--df-space-1) 0 0;color:var(--df-text-muted);font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
 @media(min-width:1024px){.ui-author-card__role{font-size:var(--df-text-sm)}}
+
+/* Author profile helper copy follows compact mobile and readable desktop roles. */
+.ui-author-profile-editor .ui-field-help{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
+@media(min-width:1024px){.ui-author-profile-editor .ui-field-help{font-size:var(--df-text-sm)}}
