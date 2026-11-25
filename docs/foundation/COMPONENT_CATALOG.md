@@ -41,6 +41,7 @@ Status meanings:
 | RadioGroup | React shared component | `app/components/ui/RadioGroup.js` | Validate keyboard behavior and disabled options |
 | SwitchField | React shared component | `app/components/ui/SwitchField.js` | Keep distinct from generic checkbox semantics |
 | Dialog | React shared component | `app/components/ui/Dialog.js` | Browser QA for focus, Escape and close behavior |
+| FeedbackDialog | React shared component | `app/components/ui/FeedbackDialog.js`; composes shared Dialog, Button, and Badge for dismissible action feedback | Validate ID/EN status labels, focus/keyboard behavior, and all four theme combinations |
 | Breadcrumbs | React shared component | `app/components/ui/Breadcrumbs.js` | Document locale-aware href responsibility |
 | Tabs | React shared component | `app/components/ui/Tabs.js` | Validate complete keyboard and ARIA behavior |
 | DropdownMenu | React shared component | `app/components/ui/DropdownMenu.js` | Current implementation is disclosure-based; do not claim full application-menu keyboard behavior |
@@ -58,7 +59,7 @@ Status meanings:
 | Language switching | Provider/context exists; dedicated switcher not confirmed | `app/components/LanguageProvider.js`; navigation uses locale-aware routing | Search and document current header control before creating another switcher |
 | Tooltip | Not found in audited shared UI scope | No export or matching primitive identified | Defer until a concrete repeated use case exists |
 
-The 30 React exports above are the verified public surface of `app/components/ui/index.js`. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
+The `app/components/ui/index.js` entry point currently exports 36 React components. This table documents the audited component contracts in scope; the Design System Workbench previews the actual production implementations. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
 
 ## 3. CANONICAL TOKEN CONTRACT
 
