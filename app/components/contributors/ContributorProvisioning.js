@@ -7,9 +7,6 @@ const choices=[
  ["blog.article.create","Create articles","Membuat artikel"],
  ["blog.article.edit_own","Edit own articles","Mengedit artikel sendiri"],
  ["blog.article.publish","Publish articles","Menerbitkan artikel"],
- ["lyrics.access","Lyrics Studio access","Akses Lyrics Studio"],
- ["lyrics.timestamp.edit","Edit lyric timestamps","Mengedit timestamp lirik"],
- ["lyrics.timestamp.submit","Submit lyric changes","Mengirim perubahan lirik"]
 ];
 export default function ContributorProvisioning(){
  const {language}=useLanguage(),en=language==="en";

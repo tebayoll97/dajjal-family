@@ -14,11 +14,11 @@ export async function POST(request){
  const auth=await verifyAdmin(request);if(!auth.authorized)return fail(auth.error,auth.status);
  const body=await request.json().catch(()=>({}));
  const contributorId=String(body.contributor_id||""),moduleKey=String(body.module_key||""),title=String(body.title||"").trim().slice(0,180),description=String(body.description||"").trim().slice(0,5000),priority=String(body.priority||"normal");
- if(!contributorId||!["blog","lyrics","platform"].includes(moduleKey)||!title||!["low","normal","high","urgent"].includes(priority))return fail("Provide a contributor, module, task title, and valid priority.",422);
+ if(!contributorId||!["blog","platform"].includes(moduleKey)||!title||!["low","normal","high","urgent"].includes(priority))return fail("Provide a contributor, module, task title, and valid priority.",422);
  const {data:contributor,error:lookupError}=await supabaseAdmin.from("df_contributors").select("id,status").eq("id",contributorId).maybeSingle();
  if(lookupError||!contributor||contributor.status!=="active")return fail("Choose an active contributor.",404);
- if(moduleKey==="blog"||moduleKey==="lyrics"){
-  const required=moduleKey==="blog"?"blog.access":"lyrics.access";
+ if(moduleKey==="blog"){
+  const required="blog.access";
   const {data:grant,error:grantError}=await supabaseAdmin.from("df_contributor_permissions").select("id").eq("contributor_id",contributorId).eq("permission_key",required).eq("enabled",true).maybeSingle();
   if(grantError)return fail("Unable to verify module access.",500);
   if(!grant)return fail("The contributor does not have access to the selected module.",403);

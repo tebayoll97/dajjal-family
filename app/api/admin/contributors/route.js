@@ -6,7 +6,7 @@ export const runtime="nodejs";
 export const dynamic="force-dynamic";
 const HEADERS={"Cache-Control":"private, no-store, max-age=0, must-revalidate"};
 const fail=(error,status=400)=>Response.json({success:false,error},{status,headers:HEADERS});
-const ALLOWED=new Set(["blog.access","blog.article.create","blog.article.edit_own","blog.article.publish","lyrics.access","lyrics.timestamp.edit","lyrics.timestamp.submit","tasks.view"]);
+const ALLOWED=new Set(["blog.access","blog.article.create","blog.article.edit_own","blog.article.publish","tasks.view"]);
 export async function POST(request){
  const auth=await verifyAdmin(request);if(!auth.authorized)return fail(auth.error,auth.status);
  const body=await request.json().catch(()=>({}));
