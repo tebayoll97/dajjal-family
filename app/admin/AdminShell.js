@@ -20,6 +20,7 @@ const groups = [
     { href: "/admin/contact-center", icon: "✉", id: "Contact Center", en: "Contact Center" },
   ]},
   { id: "content", idLabel: "Konten", enLabel: "Content", items: [
+    { href: "/admin/blog", icon: "✎", id: "Pengelolaan Blog", en: "Blog Management" },
     { href: "/admin/music", icon: "♫", id: "Music Library", en: "Music Library" },
   ]},
   { id: "couple", idLabel: "Couple", enLabel: "Couple", items: [
@@ -39,6 +40,7 @@ const groups = [
 const titles = {
   "/admin": ["Dashboard Admin", "Admin Dashboard"],
   "/admin/players": ["Manajemen Pengguna", "User Management"],
+  "/admin/blog": ["Pengelolaan Blog", "Blog Management"],
   "/admin/contact-center": ["Contact Center", "Contact Center"],
   "/admin/music": ["Music Library", "Music Library"],
   "/admin/music/new": ["Tambah Musik", "Add Music"],
