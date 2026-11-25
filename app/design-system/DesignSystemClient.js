@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, TextField, EditorialByline, AuthorCard } from "../components/ui";
+import { Alert, Badge, Button, Card, TextField, EditorialByline, AuthorCard, Avatar } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
 import EditorialEditor from "../components/blog/EditorialEditor";
 import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
@@ -247,8 +247,8 @@ export default function DesignSystemClient() {
           <div className={styles.demoCard}>
             <p className={styles.demoLabel}>AUTHOR PROFILE CONTROL PRIMITIVES</p>
             <div className="ui-stack">
-              <AuthorCard author={{ id: "profile-preview", display_name: "Tebayoll", slug: "tebayoll", article_count: 2 }} locale="id" />
-              <TextField label="Biography · single source language" as="textarea" defaultValue="Penulis dan pengelola editorial DAJJAL FAMILY." rows={3} helpText="Gemini creates the paired locale on the server. Avatar files are uploaded directly to the contributor's Google Drive folder." />
+              <div className="ui-author-avatar-upload"><Avatar name="Tebayoll" size="xl" /><div className="ui-stack-sm ui-author-avatar-upload__body"><TextField label="Profile photo · JPG / PNG / WEBP" type="file" accept="image/jpeg,image/png,image/webp" /><Button type="button" size="sm" disabled>Upload photo · preview</Button></div></div>
+              <TextField label="Biography · single source language" as="textarea" defaultValue="Penulis dan pengelola editorial DAJJAL FAMILY." rows={3} helpText="Gemini creates the paired locale on the server. Avatar files are uploaded directly to the contributor Google Drive folder." />
             </div>
             <p className={styles.demoNote}>Production controls reuse Avatar, TextField, Button, Card, and Alert. The server translates the one entered bio through the existing Gemini API integration and stores the paired locale. Direct avatar uploads use the existing encrypted Google Drive connection and public-read permission on the image file only.</p>
           </div>
