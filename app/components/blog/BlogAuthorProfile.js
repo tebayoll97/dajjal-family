@@ -24,7 +24,7 @@ export default function BlogAuthorProfile({ profile, locale = "id" }) {
         <div className="ui-section-heading">
           <div className="ui-section-heading-copy">
             <h2 id="author-articles-title" className="ui-heading-h2">{isEn ? "Articles by" : "Artikel oleh"} {name}</h2>
-            <p className="ui-section-description">{profile.articles.length} {isEn ? "published articles" : "artikel diterbitkan"}</p>
+            <p className="ui-section-description">{profile.author.article_count || profile.articles.length} {isEn ? "published articles" : "artikel diterbitkan"}</p>
           </div>
           <Link className="ui-link" href={`/${locale}/blog`}>{isEn ? "All articles" : "Semua artikel"}</Link>
         </div>
