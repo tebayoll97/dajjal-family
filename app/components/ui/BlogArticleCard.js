@@ -18,7 +18,7 @@ export function BlogArticleCard({ article, locale = "id" }) {
       <Link href={`/${locale}/blog/${article.slug}`} className="ui-blog-article-card__link" aria-label={article.title}>
         <div className="ui-blog-article-card__media">
           {article.cover_image_url ? (
-            <Image src={article.cover_image_url} alt={imageAlt} fill sizes="(max-width: 639px) 6.5rem, (max-width: 1023px) 50vw, 33vw" unoptimized loading="lazy" />
+            <Image src={article.cover_image_url} alt={imageAlt} fill sizes="(max-width: 639px) 6.5rem, (max-width: 1023px) 50vw, 33vw" unoptimized={!article.cover_image_url?.includes("/storage/v1/object/public/df-blog-media/")} loading="lazy" />
           ) : <span className="ui-blog-article-card__fallback" aria-hidden="true">DAJJAL FAMILY</span>}
         </div>
         <div className="ui-blog-article-card__body">

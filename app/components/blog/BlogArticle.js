@@ -26,7 +26,7 @@ export default function BlogArticle({ article, navigation }) {
             {article.excerpt ? <p className="ui-subtitle">{article.excerpt}</p> : null}
             <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} readingTime={article.reading_minutes} locale={language} />
           </header>
-          <Image className="df-blog-article-cover" src={article.cover_image_url || "/dajjalfamily_icon_192.png"} alt={article.cover_image_alt || article.title || "DAJJAL FAMILY"} width={1440} height={810} unoptimized priority />
+          <Image className="df-blog-article-cover" src={article.cover_image_url || "/dajjalfamily_icon_192.png"} alt={article.cover_image_alt || article.title || "DAJJAL FAMILY"} width={1440} height={810} unoptimized={!article.cover_image_url?.includes("/storage/v1/object/public/df-blog-media/")} priority />
           <Card className="df-blog-prose">
             <div className="ui-prose ui-text-editorial-body"><EditorialContentRenderer content={article.content} locale={language}/></div>
           </Card>

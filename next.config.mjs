@@ -26,6 +26,12 @@ const nextConfig = {
         port: "",
         pathname: "/thumbnail",
       },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/df-blog-media/**",
+      },
     ],
     // Couple Profile images use new Google Drive File IDs when replaced.
     // Seven days balances repeat-visit speed with predictable refresh behavior.
