@@ -288,3 +288,12 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Contributor registration must never accept a user-entered slug. The database trigger allocates the slug from the account display name, serializes allocations for the same normalized name with a transaction advisory lock, and appends a stable ID suffix on collision. The unique constraint remains the final guard against duplicates, including concurrent registrations.
 - Registration UI/API should return the database-assigned slug; never pre-check uniqueness only in the browser or rely on a client-side check as the integrity boundary.
 - Concurrency hardening migration: `20261125153300_serialize_blog_author_slug_allocation.sql`.
+
+
+## Blog contributor profile — single bio and Drive avatar upload — 2026-11-25
+- Contributor profile editor accepts one biography in the active /id or /en locale. Server-side Gemini gemini-3.1-flash-lite translates the paired locale using the existing GEMINI_API_KEY; translation failure prevents saving. Never send the API key to the browser.
+- Avatar upload is direct from the contributor device to the existing server-mediated Google Drive connection. Verify approved contributor session and ownership, JPG/PNG/WEBP signature, and an 8 MB maximum.
+- Store under DAJJAL FAMILY STORAGE/BLOG/AUTHORS/[display name]. Server names each file from the permanent contributor slug plus UTC timestamp and cryptographic random suffix; never trust device filenames.
+- Only the uploaded avatar file receives anyone:reader permission so public author cards/profiles can display it. Never make the folder or other Drive files public. Persist the Drive thumbnail URL in the existing avatar_url; do not add a second Drive connection or duplicate avatar store.
+- Preserve existing avatar files when replacing a profile photo; do not delete prior Drive files automatically. Private upload/API responses are private, no-store.
+- The profile editor reuses shared Avatar, TextField, Button, Card, SectionHeader, and Alert; semantic profile geometry is defined in all four foundation CSS files and demonstrated in Design System Workbench section 18. Mobile helper text uses --df-type-mobile-small; wide display helper text uses --df-text-sm.
