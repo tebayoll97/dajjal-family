@@ -146,3 +146,8 @@
  #df-admin-shell .df-admin-topbar-actions .ui-button{font-size:var(--df-admin-mobile-control-font)}
  #df-admin-shell .df-admin-current-route{font-size:var(--df-type-mobile-small)}
 }
+
+/* Admin panel typography roles — compact on mobile, fluid on wider screens. */
+.ui-admin-panel-title{margin:0;color:var(--df-text);font-size:var(--df-type-wide-subheading,1.125rem);font-weight:800;line-height:1.25;text-wrap:balance}
+.ui-admin-panel-copy{margin:0;color:var(--df-text-secondary);font-size:var(--df-type-mobile-small,.8125rem);line-height:1.55}
+@media(min-width:768px){.ui-admin-panel-copy{font-size:var(--df-type-admin-small-size,.875rem)}}
