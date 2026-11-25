@@ -223,3 +223,7 @@
 /* Author directory semantic roles. */
 :root{--df-author-card-gap:var(--df-space-4);--df-author-card-padding:var(--df-space-4);--df-author-card-radius:var(--df-radius-lg);--df-author-grid-gap:var(--df-space-4);--df-author-avatar-size:3.5rem}
 @media(min-width:768px){:root{--df-author-card-padding:var(--df-space-5);--df-author-avatar-size:4rem}}
+
+/* Author profile editor semantic roles. */
+:root{--df-author-profile-avatar-size:5rem;--df-author-profile-upload-gap:var(--df-space-4)}
+@media(min-width:768px){:root{--df-author-profile-avatar-size:5.5rem}}
