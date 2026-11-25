@@ -21,7 +21,7 @@ export default function BlogAuthorDirectory({ authors = [], locale = "id" }) {
       </header>
       {authors.length ? <section className="ui-author-grid" aria-label={isEn ? "Published contributors" : "Kontributor aktif"}>
         {authors.map((author) => <AuthorCard key={author.id} author={author} locale={locale} />)}
-      </section> : <EmptyState title={isEn ? "No contributors to show yet" : "Belum ada kontributor"} description={isEn ? "Approved contributors will appear here after publishing an article." : "Kontributor yang telah disetujui akan tampil di sini setelah menerbitkan artikel."} action={<a className="ui-button ui-button-primary" href={`/${locale}/author/apply`}>{isEn ? "Apply to contribute" : "Daftar sebagai kontributor"}</a>} />}
+      </section> : <EmptyState title={isEn ? "No contributors to show yet" : "Belum ada kontributor"} description={isEn ? "Approved contributors will appear here after publishing an article." : "Kontributor yang telah disetujui akan tampil di sini setelah menerbitkan artikel."} action={<a className="ui-button ui-button-primary" href={`/${locale}/blog/author/apply`}>{isEn ? "Apply to contribute" : "Daftar sebagai kontributor"}</a>} />}
     </main>
   );
 }
