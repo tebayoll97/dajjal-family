@@ -366,3 +366,12 @@
 @media(prefers-reduced-motion:reduce){
   .df-navigation-profile-avatar::before,.df-navigation-profile-marquee-viewport.is-overflowing .df-navigation-profile-marquee-track{animation:none}
 }
+
+
+/* Reusable workspace navigation surfaces and interactive states. */
+.df-workspace-navigation-link{color:var(--df-text-secondary);background:transparent;transition:background var(--df-duration-fast),border-color var(--df-duration-fast),color var(--df-duration-fast),transform var(--df-duration-fast)}
+.df-workspace-navigation-link:hover,.df-workspace-navigation-link[aria-current="page"],.df-workspace-navigation-link.is-active{border-color:var(--df-workspace-nav-active-border);background:var(--df-workspace-nav-active-bg);color:var(--df-workspace-nav-active-color)}
+.df-workspace-navigation-link:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.df-workspace-navigation-icon{color:var(--df-workspace-nav-icon)}
+.df-workspace-navigation-signout svg{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(prefers-reduced-motion:reduce){.df-workspace-navigation-link{transition:none}}
