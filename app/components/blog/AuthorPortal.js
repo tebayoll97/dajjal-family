@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Alert, Badge, Breadcrumbs, Button, Card, Dialog, EmptyState, PageHeader, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
+import { Alert, Badge, Breadcrumbs, Button, Card, EmptyState, FeedbackDialog, PageHeader, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
 import EditorialEditor from "@/app/components/blog/EditorialEditor";
 import ContributorProfileEditor from "@/app/components/blog/ContributorProfileEditor";
 
@@ -131,17 +131,16 @@ export default function AuthorPortal({ mode = "apply" }) {
   async function signOut(){if(sessionSource==="admin")await supabaseAdminClient.auth.signOut();else await supabase.auth.signOut();setSession(null);setContributor(null);setArticles([]);setIsOwner(false);}
 
   const crumbs=[{label:t.home,href:`/${language}`},{label:t.blog,href:`/${language}/blog`},{label:mode==="apply"?t.apply:t.dashboard}];
-  return <main className="ui-page df-blog-author ui-stack"><PageHeader eyebrow="DAJJAL FAMILY / BLOG" title={isOwner ? "Blog Owner — Tebayoll" : mode==="apply" ? t.apply : t.dashboard} description={mode==="dashboard" ? (id ? "Kelola profil publik dan seluruh pekerjaan editorial di satu tempat." : "Manage your public profile and editorial work in one place.") : (id ? "Gunakan akun DAJJAL FAMILY untuk mengajukan diri sebagai kontributor." : "Use your DAJJAL FAMILY account to apply as a contributor.")} meta={isOwner ? <Badge variant="success">PERMANENT OWNER · TEBAYOLL</Badge> : null} /><Breadcrumbs items={crumbs}/>
+  return <main className="ui-page df-blog-author ui-stack ui-author-workspace"><PageHeader eyebrow="DAJJAL FAMILY / BLOG" title={isOwner ? "Blog Owner — Tebayoll" : mode==="apply" ? t.apply : t.dashboard} description={mode==="dashboard" ? (id ? "Kelola profil publik dan seluruh pekerjaan editorial di satu tempat." : "Manage your public profile and editorial work in one place.") : (id ? "Gunakan akun DAJJAL FAMILY untuk mengajukan diri sebagai kontributor." : "Use your DAJJAL FAMILY account to apply as a contributor.")} meta={isOwner ? <Badge variant="success">PERMANENT OWNER · TEBAYOLL</Badge> : null} /><Breadcrumbs items={crumbs}/>
     {loading?<Card className="ui-stack"><VerificationState variant="user" status="checking" compact title={id ? "Memeriksa sesi akun…" : "Checking account session…"} /></Card>:null}
-    <Dialog
+    <FeedbackDialog
       open={Boolean(error || message)}
       onClose={() => { setError(""); setMessage(""); }}
       title={error ? (id ? "Terjadi kendala" : "Something went wrong") : (id ? "Berhasil" : "Success")}
-      closeLabel={id ? "Tutup dialog" : "Close dialog"}
-      actions={<Button onClick={() => { setError(""); setMessage(""); }}>{id ? "Tutup" : "Close"}</Button>}
-    >
-      {error ? <Alert variant="danger">{error}</Alert> : message ? <Alert variant="success">{message}</Alert> : null}
-    </Dialog>
+      message={error || message}
+      variant={error ? "danger" : "success"}
+      closeLabel={id ? "Tutup" : "Close"}
+    />
     {!loading&&!session?<Card className="ui-stack"><SectionHeader title={t.login} description={id?"Masuk dengan email dan password akun DAJJAL FAMILY.":"Sign in with your DAJJAL FAMILY account email and password."}/><form className="ui-stack" onSubmit={signIn}><TextField label={t.email} type="email" value={email} onChange={e=>setEmail(e.target.value)} required/><TextField label={t.password} type="password" value={password} onChange={e=>setPassword(e.target.value)} required/><Button type="submit" disabled={busy}>{busy?(id?"Memproses…":"Working…"):t.login}</Button></form><p className="ui-caption">{id?"Belum memiliki sesi akun? Masuk melalui":"Need an account session? Sign in through"} <Link href={`/${language}/login?redirect=%2F${language}%2Fblog%2Fauthor%2Fapply`} className="ui-link">DAJJAL FAMILY</Link>.</p></Card>:null}
     {!loading&&session&&mode==="apply"&&!contributor?<Card className="ui-stack"><Badge variant="info">{id?"Akun terhubung":"Account connected"}</Badge><p className="ui-text-body"><strong>{session.user.user_metadata?.full_name||session.user.user_metadata?.name||session.user.email}</strong><br/><span className="ui-caption">{session.user.email}</span></p><form className="ui-stack" onSubmit={apply}><TextField label={t.password} type="password" value={password} onChange={e=>setPassword(e.target.value)} minLength={8} required helpText={id?"Password ini menambahkan metode login email/password pada akun yang sama.":"This adds email/password sign-in to the same account."}/><TextField label={t.confirm} type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} minLength={8} required/><TextField as="textarea" label={t.applyNote} value={note} onChange={e=>setNote(e.target.value)} rows={4}/><Button type="submit" disabled={busy}>{busy?(id?"Mengirim…":"Submitting…"):t.submit}</Button></form></Card>:null}
     {!loading&&session&&contributor&&mode==="apply"?<Card className="ui-stack"><Badge variant={contributor.status==="approved"?"success":contributor.status==="rejected"?"danger":"warning"}>{contributor.status==="approved"?t.approved:contributor.status==="suspended"?t.suspended:t.pending}</Badge><p className="ui-text-body">{contributor.display_name} · {contributor.email}</p>{contributor.status==="approved"?<Button onClick={()=>router.push(`/${language}/author/me`)}>{t.dashboard}</Button>:<p className="ui-caption">{id?"Kamu akan dapat mengakses dashboard setelah disetujui admin.":"The author dashboard becomes available after admin approval."}</p>}</Card>:null}
