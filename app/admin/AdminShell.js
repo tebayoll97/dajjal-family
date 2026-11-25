@@ -97,7 +97,7 @@ export default function AdminShell({ children }) {
   return (
     <div id="df-admin-shell" className="df-admin-shell">
       <a className="df-admin-skip" href="#df-admin-main">{language === "id" ? "Lewati navigasi" : "Skip navigation"}</a>
-      <aside id="df-admin-drawer" className="df-admin-sidebar df-shell-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"}>
+      <aside id="df-admin-desktop-drawer" className="df-admin-sidebar df-shell-drawer df-admin-desktop-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"}>
         <Link href={localized("/admin")} className="df-admin-brand">
           <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
@@ -126,6 +126,26 @@ export default function AdminShell({ children }) {
         </div>
       </aside>
 
+      <aside id="df-admin-mobile-drawer" className="df-admin-sidebar df-shell-drawer df-admin-mobile-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"} aria-hidden={!drawerOpen}>
+        <Link href={localized("/admin")} className="df-admin-brand" onClick={() => setDrawerOpen(false)}>
+          <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
+          <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
+        </Link>
+        <div className="df-admin-sidebar-label">{language === "id" ? "MENU UTAMA" : "MAIN MENU"}</div>
+        <nav className="df-admin-nav" aria-label={language === "id" ? "Menu utama admin" : "Admin main menu"}>
+          {groups.map((group) => (
+            <section className="df-admin-nav-group" key={group.id} aria-label={language === "id" ? group.idLabel : group.enLabel}>
+              <h2>{language === "id" ? group.idLabel : group.enLabel}</h2>
+              {group.items.map((item) => {
+                const active = path === item.href || (item.href !== "/admin" && path.startsWith(item.href + "/"));
+                return <Link key={item.href} href={localized(item.href)} onClick={() => setDrawerOpen(false)} className={active ? "df-admin-nav-link is-active" : "df-admin-nav-link"} aria-current={active ? "page" : undefined}><span className="df-admin-nav-icon" aria-hidden="true">{item.icon}</span><span>{language === "id" ? item.id : item.en}</span>{active && <span className="df-admin-nav-active" aria-hidden="true" />}</Link>;
+              })}
+            </section>
+          ))}
+        </nav>
+        <div className="df-admin-sidebar-foot"><Badge>{language === "id" ? "Area admin terproteksi" : "Protected admin workspace"}</Badge><span>DAJJAL FAMILY · 2026</span></div>
+      </aside>
+
       <div className="df-admin-workspace">
         <div role="banner" className="df-admin-topbar">
           <div className="df-admin-topbar-copy">
@@ -133,7 +153,7 @@ export default function AdminShell({ children }) {
             {path === "/admin" ? <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} /> : <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
-            <Button className="df-admin-drawer-toggle" variant="secondary" size="sm" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</Button>
+            <Button className="df-admin-drawer-toggle" variant="secondary" size="sm" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-mobile-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</Button>
             <Badge variant="info">{language === "id" ? "ADMIN" : "ADMIN AREA"}</Badge>
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
             <Button variant="secondary" size="sm" onClick={toggleTheme} disabled={!themeReady} aria-label={language === "id" ? `Ubah ke tema ${theme === "dark" ? "terang" : "gelap"}` : `Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={language === "id" ? "Ubah tema tampilan" : "Change appearance theme"}>{theme === "dark" ? "☀ Light" : "☾ Dark"}</Button>
@@ -142,12 +162,7 @@ export default function AdminShell({ children }) {
         </div>
 
         {drawerOpen && <button type="button" className="df-admin-drawer-backdrop" aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"} onClick={() => setDrawerOpen(false)} />}
-        <nav className="df-admin-mobile-nav" aria-label={language === "id" ? "Menu admin" : "Admin menu"}>
-          {groups.flatMap((group) => group.items).map((item) => {
-            const active = path === item.href || (item.href !== "/admin" && path.startsWith(item.href + "/"));
-            return <Link key={item.href} href={localized(item.href)} className={active ? "is-active" : ""} aria-current={active ? "page" : undefined}><span aria-hidden="true">{item.icon}</span><span>{language === "id" ? item.id : item.en}</span></Link>;
-          })}
-        </nav>
+
 
         {logoutError && <p className="df-admin-global-error" role="alert">{logoutError}</p>}
         <ConfirmDialog
