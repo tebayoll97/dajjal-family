@@ -29,6 +29,7 @@ const sections = [
   ["15","EDITORIAL & BLOG","editorial-heading","Editorial semantic tokens, byline, reading width and responsive content patterns"],
   ["16","EDITORIAL ENGINE","editorial-engine-heading","Rich Text, Full HTML, structured blocks, safe rendering and bilingual translation boundaries"],
   ["17","AUTHOR DIRECTORY","author-directory-heading","Reusable contributor cards and responsive public directory pattern"],
+  ["18","AUTHOR PROFILE","author-profile-heading","Single-language bio translation and direct Drive avatar upload controls"],
 ];
 
 const tokenColors = [
@@ -104,7 +105,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Authors</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Authors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
@@ -240,6 +241,16 @@ export default function DesignSystemClient() {
               <AuthorCard author={{ id: "preview-author", display_name: "Example Contributor", slug: "example-contributor", article_count: 12 }} locale="en" />
             </div>
             <p className={styles.demoNote}>The same AuthorCard component is used by the public /blog/author directory. Geometry, spacing, avatar size, and type roles are semantic tokens shared through the four foundation CSS files. The directory only displays approved contributors with published articles.</p>
+          </div>
+        </Section>
+        <Section id="18" title="AUTHOR PROFILE" headingId="author-profile-heading" description="Reusable author identity, compact upload control and one-field bilingual bio workflow" open={!!expanded["18"]} onToggle={() => toggle("18")}>
+          <div className={styles.demoCard}>
+            <p className={styles.demoLabel}>AUTHOR PROFILE CONTROL PRIMITIVES</p>
+            <div className="ui-stack">
+              <AuthorCard author={{ id: "profile-preview", display_name: "Tebayoll", slug: "tebayoll", article_count: 2 }} locale="id" />
+              <TextField label="Biography · single source language" as="textarea" defaultValue="Penulis dan pengelola editorial DAJJAL FAMILY." rows={3} helpText="Gemini creates the paired locale on the server. Avatar files are uploaded directly to the contributor's Google Drive folder." />
+            </div>
+            <p className={styles.demoNote}>Production controls reuse Avatar, TextField, Button, Card, and Alert. The server translates the one entered bio through the existing Gemini API integration and stores the paired locale. Direct avatar uploads use the existing encrypted Google Drive connection and public-read permission on the image file only.</p>
           </div>
         </Section>
       </div>
