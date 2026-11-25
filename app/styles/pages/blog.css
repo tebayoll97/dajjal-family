@@ -22,3 +22,11 @@
   .df-author-avatar-upload__body{width:100%}
   .df-blog-author .ui-section-heading{align-items:stretch}
 }
+
+/* Contributor workspace: panel rhythm, text separation and Mobile Compact UI. */
+.ui-author-workspace .ui-page-heading{gap:var(--df-space-3)}
+.ui-author-workspace .ui-page-heading .ui-subtitle{margin-block:var(--df-space-2) 0}
+.ui-author-workspace .df-author-profile-editor form{gap:var(--df-space-4)}
+.ui-author-workspace .df-author-profile-editor .ui-section-heading{margin:0 0 var(--df-space-3)}
+.ui-author-workspace .ui-author-avatar-upload{align-items:center;gap:var(--df-space-4)}
+@media(max-width:639px){.ui-author-workspace .ui-author-avatar-upload{align-items:flex-start;flex-direction:column}.ui-author-workspace .ui-section-heading{align-items:stretch}}
