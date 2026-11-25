@@ -35,7 +35,7 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
 
   async function uploadAvatar() {
     if (!file || uploading || busy) return;
-    setUploading(true); setError(""); setSaved(false);
+    setUploading(true); setFeedback(null);
     try {
       const form = new FormData(); form.set("file", file);
       const response = await fetch("/api/blog/contributors/avatar", {
@@ -50,8 +50,6 @@ export default function ContributorProfileEditor({ contributor, accessToken, loc
 
   return <Card className="ui-stack df-author-profile-editor">
     <SectionHeader title={isEn ? "Public author profile" : "Profil penulis publik"} />
-    {error ? <Alert variant="danger" title={isEn ? "Could not save" : "Gagal menyimpan"}>{error}</Alert> : null}
-    {saved ? <Alert variant="success" title={isEn ? "Profile saved" : "Profil tersimpan"}>{isEn ? "Your public profile has been updated." : "Profil publik berhasil diperbarui."}</Alert> : null}
     <form className="ui-stack" onSubmit={submit}>
       <TextField label={isEn ? "Display name" : "Nama tampilan"} value={name} onChange={event => setName(event.target.value)} maxLength={80} required />
       <div className="ui-author-avatar-upload">
