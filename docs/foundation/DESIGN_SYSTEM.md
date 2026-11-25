@@ -625,3 +625,12 @@ The Blog Editorial Engine uses one versioned structured-content model for both a
 - Use the same reusable editor/renderer components in author pages and Design System Workbench.
 - Keep Mobile Compact UI, responsive code scrolling, accessible controls, semantic tokens, and four global theme combinations.
 - No database migration is required for versioned JSON content in existing `content_id` and `content_en` text columns.
+
+
+# 18. AUTHOR DIRECTORY COMPONENT PATTERN
+
+- Public contributor directories use the shared `AuthorCard` React component and `.ui-author-grid` layout primitive.
+- `AuthorCard` composes shared `Card`, `Avatar`, typography, and link primitives; feature consumers supply only approved public contributor data.
+- Author identity surfaces consume `--df-author-*` semantic geometry tokens and `.ui-author-card__role` responsive typography. Token values are coordinated through `tokens.css`, `typography.css`, `layout.css`, and `components.css`.
+- The responsive directory uses three columns on wide desktop, two on tablet, and one compact column on mobile. Interactive links retain visible focus and touch-sized targets.
+- The production AuthorCard is previewed in Design System Workbench section 17. Do not create a page-local card variant for contributor listings.
