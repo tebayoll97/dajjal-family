@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyBlogUser, BLOG_PRIVATE_HEADERS, blogError } from "@/lib/blog/auth";
 
 export const dynamic = "force-dynamic";
@@ -57,5 +58,9 @@ export async function PATCH(request) {
     console.error("Contributor profile update failed:", error);
     return blogError("Unable to save contributor profile.", 500);
   }
+  revalidateTag("df-blog-public");
+  revalidatePath("/id/blog/author");
+  revalidatePath("/en/blog/author");
+  revalidatePath("/sitemap.xml");
   return Response.json({ success: true, contributor: data }, { headers: BLOG_PRIVATE_HEADERS });
 }
