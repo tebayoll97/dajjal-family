@@ -37,3 +37,19 @@ export async function POST(request){
  await supabaseAdmin.from("df_contributor_activity_logs").insert({contributor_id:contributor.id,actor_user_id:auth.user.id,module_key:"contributors",action_key:"account_created",details:{permissions}});
  return Response.json({success:true,contributor,permissions,temporary_password:temporaryPassword,password_notice:"This password is shown once. Copy it now and send it privately; it is not stored in plaintext."},{status:201,headers:HEADERS});
 }
+export async function PATCH(request){
+ const auth=await verifyAdmin(request);if(!auth.authorized)return fail(auth.error,auth.status);
+ const body=await request.json().catch(()=>({}));
+ if(body.action!=="reset_password"||typeof body.id!=="string")return fail("Unsupported contributor action.",422);
+ const {data:contributor,error:lookupError}=await supabaseAdmin.from("df_contributors").select("id,account_user_id,display_name,email,status").eq("id",body.id).maybeSingle();
+ if(lookupError||!contributor)return fail("Contributor not found.",404);
+ if(contributor.account_user_id===BLOG_OWNER_USER_ID)return fail("The permanent Blog Owner password cannot be reset from this panel.",403);
+ if(contributor.status==="suspended"||contributor.status==="inactive")return fail("Activate the contributor account before resetting its password.",409);
+ const temporaryPassword=randomBytes(32).toString("base64url")+"aA1!";
+ const {error:passwordError}=await supabaseAdmin.auth.admin.updateUserById(contributor.account_user_id,{password:temporaryPassword});
+ if(passwordError)return fail("Unable to reset contributor password.",passwordError.status||500);
+ const {error:updateError}=await supabaseAdmin.from("df_contributors").update({must_change_password:true,updated_at:new Date().toISOString()}).eq("id",contributor.id);
+ if(updateError)return fail("Password was reset, but the first-login requirement could not be saved. Contact support.",500);
+ await supabaseAdmin.from("df_contributor_activity_logs").insert({contributor_id:contributor.id,actor_user_id:auth.user.id,module_key:"account",action_key:"temporary_password_reset"});
+ return Response.json({success:true,contributor:{id:contributor.id,display_name:contributor.display_name,email:contributor.email},temporary_password:temporaryPassword,password_notice:"This password is shown once. Copy it now and send it privately; it is not stored in plaintext."},{headers:HEADERS});
+}

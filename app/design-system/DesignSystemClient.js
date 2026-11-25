@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, TextField, EditorialByline, AuthorCard, Avatar } from "../components/ui";
+import { Alert, Badge, Button, Card, TextField, EditorialByline, ContributorCard, Avatar } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
 import EditorialEditor from "../components/blog/EditorialEditor";
 import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
@@ -28,8 +28,8 @@ const sections = [
   ["14","COMPONENT WORKBENCH","workbench-heading","Live previews of the shared React component inventory"],
   ["15","EDITORIAL & BLOG","editorial-heading","Editorial semantic tokens, byline, reading width and responsive content patterns"],
   ["16","EDITORIAL ENGINE","editorial-engine-heading","Rich Text, Full HTML, structured blocks, safe rendering and bilingual translation boundaries"],
-  ["17","AUTHOR DIRECTORY","author-directory-heading","Reusable contributor cards and responsive public directory pattern"],
-  ["18","AUTHOR PROFILE","author-profile-heading","Single-language bio translation and direct Drive avatar upload controls"],
+  ["17","CONTRIBUTOR PROFILES","contributor-directory-heading","Reusable public contributor identity cards and profile navigation"],
+  ["18","CONTRIBUTOR PROFILE","contributor-profile-heading","Single-language bio translation and direct Drive avatar upload controls"],
 ];
 
 const tokenColors = [
@@ -105,7 +105,7 @@ export default function DesignSystemClient() {
         <div className={styles.navGroups}>
           <button type="button" onClick={() => jump("01")}>01–08 <span>Existing</span></button>
           <button type="button" onClick={() => jump("09")}>09–13 <span>Foundation</span></button>
-          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Authors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button>
+          <button type="button" onClick={() => jump("14")}>14 <span>Workbench</span></button><button type="button" onClick={() => jump("15")}>15 <span>Editorial</span></button><button type="button" onClick={() => jump("16")}>16 <span>Engine</span></button><button type="button" onClick={() => jump("17")}>17 <span>Contributors</span></button><button type="button" onClick={() => jump("18")}>18 <span>Profile</span></button>
           <button type="button" onClick={openAll}>Open all</button>
           <button type="button" onClick={closeAll}>Close all</button>
         </div>
@@ -234,18 +234,18 @@ export default function DesignSystemClient() {
             <p className={styles.demoNote}>Code blocks are excluded from Gemini translation. HTML source is parsed into validated blocks; scripts, event handlers, arbitrary styles, and arbitrary iframe markup are rejected. The same editor and renderer components are consumed by Blog author and public article routes.</p>
           </div>
         </Section>
-        <Section id="17" title="AUTHOR DIRECTORY" headingId="author-directory-heading" description="Reusable contributor card, public identity, article count and responsive grid" open={!!expanded["17"]} onToggle={() => toggle("17")}>
+        <Section id="17" title="CONTRIBUTOR PROFILES" headingId="contributor-directory-heading" description="Reusable contributor identity card and public profile navigation" open={!!expanded["17"]} onToggle={() => toggle("17")}>
           <div className={styles.demoCard}>
             <p className={styles.demoLabel}>LIVE PRODUCTION AUTHOR CARD</p>
             <div className="ui-author-grid">
-              <AuthorCard author={{ id: "preview-author", display_name: "Example Contributor", slug: "example-contributor", article_count: 12 }} locale="en" />
+              <ContributorCard contributor={{ id: "preview-contributor", display_name: "Example Contributor", slug: "example-contributor", article_count: 12 }} locale="en" />
             </div>
-            <p className={styles.demoNote}>The same AuthorCard component is used by the public /blog/author directory. Geometry, spacing, avatar size, and type roles are semantic tokens shared through the four foundation CSS files. The directory only displays approved contributors with published articles.</p>
+            <p className={styles.demoNote}>The ContributorCard component links to /contributors/profile/[slug]. Geometry, spacing, avatar size, and type roles use semantic tokens and shared UI primitives.</p>
           </div>
         </Section>
-        <Section id="18" title="AUTHOR PROFILE" headingId="author-profile-heading" description="Reusable author identity, compact upload control and one-field bilingual bio workflow" open={!!expanded["18"]} onToggle={() => toggle("18")}>
+        <Section id="18" title="CONTRIBUTOR PROFILE" headingId="contributor-profile-heading" description="Reusable author identity, compact upload control and one-field bilingual bio workflow" open={!!expanded["18"]} onToggle={() => toggle("18")}>
           <div className={styles.demoCard}>
-            <p className={styles.demoLabel}>AUTHOR PROFILE CONTROL PRIMITIVES</p>
+            <p className={styles.demoLabel}>CONTRIBUTOR PROFILE CONTROL PRIMITIVES</p>
             <div className="ui-stack">
               <div className="ui-author-avatar-upload"><Avatar name="Tebayoll" size="xl" /><div className="ui-stack-sm ui-author-avatar-upload__body"><TextField label="Profile photo · JPG / PNG / WEBP" type="file" accept="image/jpeg,image/png,image/webp" /><Button type="button" size="sm" disabled>Upload photo · preview</Button></div></div>
               <TextField label="Biography · single source language" as="textarea" defaultValue="Penulis dan pengelola editorial DAJJAL FAMILY." rows={3} helpText="Gemini creates the paired locale on the server. Avatar files are uploaded directly to the contributor Google Drive folder." />

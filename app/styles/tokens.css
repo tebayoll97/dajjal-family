@@ -231,3 +231,8 @@
 /* Author workspace semantic layout tokens. */
 :root{--df-author-workspace-gap:var(--df-space-6);--df-author-workspace-panel-padding:var(--df-space-5)}
 @media(max-width:639px){:root{--df-author-workspace-gap:var(--df-space-4);--df-author-workspace-panel-padding:var(--df-space-4)}}
+
+
+/* Contributor identity card semantic roles. */
+:root{--df-contributor-card-gap:var(--df-space-4);--df-contributor-card-padding:var(--df-space-4);--df-contributor-card-radius:var(--df-radius-lg);--df-contributor-grid-gap:var(--df-space-4);--df-contributor-avatar-size:3.5rem}
+@media(min-width:768px){:root{--df-contributor-card-padding:var(--df-space-5);--df-contributor-avatar-size:4rem}}

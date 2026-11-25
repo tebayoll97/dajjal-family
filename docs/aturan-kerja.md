@@ -297,3 +297,16 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Only the uploaded avatar file receives anyone:reader permission so public author cards/profiles can display it. Never make the folder or other Drive files public. Persist the Drive thumbnail URL in the existing avatar_url; do not add a second Drive connection or duplicate avatar store.
 - Preserve existing avatar files when replacing a profile photo; do not delete prior Drive files automatically. Private upload/API responses are private, no-store.
 - The profile editor reuses shared Avatar, TextField, Button, Card, SectionHeader, and Alert; semantic profile geometry is defined in all four foundation CSS files and demonstrated in Design System Workbench section 18. Mobile helper text uses --df-type-mobile-small; wide display helper text uses --df-text-sm.
+
+
+## Contributor Platform v2 — 2026-11-25
+
+- Canonical public entry: localized `/id/contributors` and `/en/contributors` for contribution information only. No public self-registration or application endpoint.
+- Contributor Shell: `/contributors/shell`; private subroutes are `/contributors/shell/profile`, `/contributors/shell/blog`, `/contributors/shell/tasks`, and `/contributors/shell/security`.
+- Public profile route: `/contributors/profile/[slug]`. Profile slugs are permanent database values, never derived during rendering.
+- Retired routes: `/author/me`, `/blog/author`, `/blog/author/[slug]`, `/blog/author/apply`, `/blog/author/dashboard`, and the legacy `/contributors` application implementation. Do not add redirects; this website has no audience migration requirement.
+- Supabase identity is centralized in `df_contributors`. Module permissions are in `df_contributor_permissions`; assigned work is in `df_contributor_tasks`; audit events are in `df_contributor_activity_logs`. All tables use RLS and deny direct anon/authenticated table access; server routes use the service role after verifying Supabase Auth and Admin membership.
+- Blog article ownership is linked to `df_contributors.id`. Existing contributor UUIDs and all article IDs/content are preserved during transfer from `df_blog_contributors`.
+- Only Admin provisions accounts. Temporary passwords are cryptographically random, shown once, shared privately, and changed on first login. Never store or re-display plaintext credentials.
+- Enforce permissions server-side for every module operation. Hiding a navigation item is not authorization.
+- Contact recruitment entry points use the existing official WhatsApp and Telegram channels on the Contact page; never invent replacement contact URLs.

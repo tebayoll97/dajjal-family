@@ -664,22 +664,31 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Workbench:** Live production component preview is included in Component Workbench.
 
 
-## AuthorCard — 2026-11-25
+## ContributorCard — 2026-11-25
 
 - **Status:** React shared component; exported from `app/components/ui/index.js`.
-- **Source:** `app/components/ui/AuthorCard.js`; public directory consumer: `app/components/blog/BlogAuthorDirectory.js`.
-- **API:** `AuthorCard({ author, locale = "id" })`; requires `author.id`, `author.display_name`, `author.slug`, and optionally `author.article_count`.
+- **Source:** `app/components/ui/ContributorCard.js`; public directory consumer: `app/components/blog/BlogAuthorDirectory.js`.
+- **API:** `ContributorCard({ author, locale = "id" })`; requires `author.id`, `author.display_name`, `author.slug`, and optionally `author.article_count`.
 - **Purpose:** Consistent contributor identity card linking to a public author profile.
 - **Semantics:** Uses shared `Card`, `Avatar`, heading, caption, and link primitives. It does not fetch data or infer biography/credentials.
-- **Tokens:** `--df-author-card-gap`, `--df-author-card-padding`, `--df-author-card-radius`, `--df-author-grid-gap`, and `--df-author-avatar-size`; responsive type role `.ui-author-card__role`.
+- **Tokens:** `--df-contributor-card-gap`, `--df-contributor-card-padding`, `--df-contributor-card-radius`, `--df-contributor-grid-gap`, and `--df-contributor-avatar-size`; responsive type role `.ui-author-card__role`.
 - **Accessibility/responsive:** Semantic heading and link, visible focus inherited from shared link styles, two-column tablet and one-column mobile directory layout, compact touch target.
 - **Workbench:** Live production component preview is available in Design System section 17.
 
 
-## Author Profile Editor — 2026-11-25
-- Consumer: contributor workspace /[locale]/author/me.
+## Contributor Profile Editor — 2026-11-25
+- Consumer: contributor workspace /[locale]/contributors/shell/profile.
 - Composition: existing shared Card, SectionHeader, Avatar, TextField, Button, and Alert; no page-local replacement controls.
 - Behavior: one biography input in the active locale; server-side Gemini integration generates the paired locale before saving. Translation failure blocks the save.
 - Avatar: explicit staged file selection and upload action; JPG/PNG/WEBP up to 8 MB. Server verifies contributor ownership, file signature, and Google Drive connection. Files are placed in DAJJAL FAMILY STORAGE/BLOG/AUTHORS/[display name], named from the immutable author slug plus server timestamp/random suffix, and only the avatar file receives public reader permission.
 - Tokens: --df-author-profile-avatar-size and --df-author-profile-upload-gap; helper typography follows --df-type-mobile-small on mobile and --df-text-sm on wide displays.
 - Workbench: live composition/control guidance in Design System section 18.
+
+
+## Contributor Shell — 2026-11-25
+
+- Private workspace routes: `/contributors/shell`, `/contributors/shell/profile`, `/contributors/shell/blog`, `/contributors/shell/tasks`, and `/contributors/shell/security`.
+- Public profiles use `/contributors/profile/[slug]`; `/contributors` is an invitation-only contribution information page and does not accept public applications.
+- `ContributorPlatform` composes the existing shared PageHeader, Card, Button, Badge, TextField, CheckboxField, FeedbackDialog, and ContributorProfileEditor. Authorization is always checked by server APIs; navigation visibility is not an authorization boundary.
+- First sign-in password changes are enforced server-side. Temporary credentials are returned to Admin once and never stored in plaintext or re-displayed from the contributor list.
+- ContributorCard uses semantic `--df-contributor-*` tokens and the shared responsive typography/layout/component layers in tokens.css, typography.css, layout.css, and components.css.

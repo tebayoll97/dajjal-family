@@ -112,3 +112,9 @@
 .ui-author-workspace .ui-stack{gap:var(--df-space-4)}
 .ui-author-workspace .ui-author-verification-card{padding:var(--df-space-3)}
 @media(max-width:639px){.ui-author-workspace .ui-section-heading{align-items:stretch}.ui-author-workspace .ui-author-avatar-upload{align-items:flex-start;flex-direction:column}}
+
+
+/* Responsive grid for public contributor cards. */
+.ui-contributor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-contributor-grid-gap);min-width:0}.ui-contributor-grid>*{min-width:0}
+@media(max-width:1023px){.ui-contributor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:639px){.ui-contributor-grid{grid-template-columns:minmax(0,1fr);gap:var(--df-space-3)}}

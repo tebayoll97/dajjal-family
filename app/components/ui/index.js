@@ -40,4 +40,4 @@ export { BlogArticleNavigation } from "./BlogArticleNavigation";
 
 export { BlogArticleCard } from "./BlogArticleCard";
 
-export { AuthorCard } from "./AuthorCard";
+export { ContributorCard } from "./ContributorCard";

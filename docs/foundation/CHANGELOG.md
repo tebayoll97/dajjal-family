@@ -235,3 +235,12 @@
 - No Supabase schema, RLS, policy, production data, or secret changes.
 - Build verification: `npm run build` passed on source commit `54d887e` in a Vercel sandbox using non-production placeholder Supabase environment values; compilation, lint/type validation, and all 36 static page generations succeeded. Existing non-blocking `<img>` and hook-dependency warnings remain elsewhere in the admin area.
 - Production deployment: blocked by Vercel API HTTP 402 `api-deployments-free-per-day` (24-hour retry window). The latest Production deployment remains on commit `3812ee5`; this batch is not yet live. Browser QA on the deployed build remains pending.
+
+
+## 2026-11-25 — Contributor Platform foundation
+
+- Added the centralized contributor identity, module permission, task, and activity-log tables in Supabase. Migrated the existing contributor using the same UUID and transferred Blog article ownership without changing article content.
+- Replaced legacy author routes with `/contributors`, `/contributors/shell/*`, and `/contributors/profile/[slug]`; removed legacy Author pages without redirects.
+- Added Admin-only account provisioning with one-time temporary passwords, forced first-login password change, per-module permission grants, and password reset controls.
+- Updated Blog auth, article ownership relations, profile APIs, article bylines, sitemap, robots rules, and bilingual metadata to the new contributor registry.
+- Added reusable ContributorCard and semantic contributor tokens/layout/type styles across the four global foundation CSS layers; documented the preview in Design System.
