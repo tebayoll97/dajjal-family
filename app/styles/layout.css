@@ -156,3 +156,17 @@
  .df-shell-drawer-toggle{display:inline-flex;align-items:center;justify-content:center;gap:var(--df-space-2);min-height:var(--df-touch-target-min);margin:var(--df-space-3) var(--df-workspace-content-gutter);padding-inline:var(--df-space-4);border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text);font:inherit;font-weight:var(--df-weight-semibold)}
  .df-shell-drawer-backdrop{display:block;position:fixed;inset:0;z-index:calc(var(--df-z-overlay) - 2);border:0;background:var(--df-workspace-drawer-backdrop)}
 }
+
+
+/* Contributor landing cards: controlled page gutter + explicit internal breathing room. */
+.ui-page>section.ui-grid-2>.ui-card,
+.ui-page>section.ui-stack>.ui-card,
+.ui-page>.ui-card{
+ padding:var(--df-workspace-panel-padding);
+ gap:var(--df-workspace-panel-gap);
+ min-width:0;
+}
+.ui-page>section.ui-grid-2>.ui-card>.ui-heading-h2,
+.ui-page>.ui-card>.ui-heading-h2{margin-block:var(--df-space-2);text-transform:capitalize}
+.ui-page>section.ui-grid-2>.ui-card>.ui-prose,
+.ui-page>.ui-card>.ui-prose{margin:0;max-width:var(--df-reading-width)}
