@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Alert, Badge, Breadcrumbs, Button, Card, Dialog, EmptyState, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
+import { Alert, Badge, Breadcrumbs, Button, Card, Dialog, EmptyState, PageHeader, SectionHeader, TextField, VerificationState } from "@/app/components/ui";
 import EditorialEditor from "@/app/components/blog/EditorialEditor";
 import ContributorProfileEditor from "@/app/components/blog/ContributorProfileEditor";
 
@@ -131,7 +131,7 @@ export default function AuthorPortal({ mode = "apply" }) {
   async function signOut(){if(sessionSource==="admin")await supabaseAdminClient.auth.signOut();else await supabase.auth.signOut();setSession(null);setContributor(null);setArticles([]);setIsOwner(false);}
 
   const crumbs=[{label:t.home,href:`/${language}`},{label:t.blog,href:`/${language}/blog`},{label:mode==="apply"?t.apply:t.dashboard}];
-  return <main className="ui-page df-blog-author ui-stack"><Breadcrumbs items={crumbs}/><header className="ui-page-heading"><p className="ui-eyebrow">DAJJAL FAMILY / BLOG</p><h1 className="ui-heading-h1">{isOwner ? "Blog Owner — Tebayoll" : mode==="apply"?t.apply:t.dashboard}</h1>{isOwner?<Badge variant="success">PERMANENT OWNER · TEBAYOLL</Badge>:null}<p className="ui-subtitle">{isOwner ? (id ? "Akses tertinggi editorial DAJJAL FAMILY. Kelola seluruh artikel dan publikasi." : "Highest DAJJAL FAMILY editorial access. Manage every article and publication.") : id?"Gunakan akun DAJJAL FAMILY yang sama untuk menjadi kontributor editorial.":"Use your existing DAJJAL FAMILY account to contribute to the editorial platform."}</p></header>
+  return <main className="ui-page df-blog-author ui-stack"><PageHeader eyebrow="DAJJAL FAMILY / BLOG" title={isOwner ? "Blog Owner — Tebayoll" : mode==="apply" ? t.apply : t.dashboard} description={mode==="dashboard" ? (id ? "Kelola profil publik dan seluruh pekerjaan editorial di satu tempat." : "Manage your public profile and editorial work in one place.") : (id ? "Gunakan akun DAJJAL FAMILY untuk mengajukan diri sebagai kontributor." : "Use your DAJJAL FAMILY account to apply as a contributor.")} meta={isOwner ? <Badge variant="success">PERMANENT OWNER · TEBAYOLL</Badge> : null} /><Breadcrumbs items={crumbs}/>
     {loading?<Card className="ui-stack"><VerificationState variant="user" status="checking" compact title={id ? "Memeriksa sesi akun…" : "Checking account session…"} /></Card>:null}
     <Dialog
       open={Boolean(error || message)}
