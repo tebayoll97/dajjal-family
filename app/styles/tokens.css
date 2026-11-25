@@ -241,3 +241,28 @@
 /* VerificationState semantic visual tokens. */
 :root{--df-verification-logo-size:2.1rem;--df-verification-logo-size-compact:1rem;--df-verification-mark-size:3.75rem;--df-verification-mark-size-mobile:3rem;--df-verification-mark-gap:var(--df-space-4);--df-verification-copy-gap:var(--df-space-2);--df-verification-panel-padding:clamp(var(--df-space-4),3vw,var(--df-space-8));--df-verification-panel-radius:var(--df-radius-xl)}
 @media(max-width:600px){:root{--df-verification-mark-size:var(--df-verification-mark-size-mobile);--df-verification-mark-gap:var(--df-space-3);--df-verification-panel-padding:var(--df-space-4)}}
+
+
+/* Drawer profile and editorial panel semantic tokens. */
+:root{
+  --df-profile-card-bg:var(--df-surface-raised);
+  --df-profile-card-bg-active:var(--df-primary-soft);
+  --df-profile-card-border:var(--df-border-strong);
+  --df-profile-card-radius:var(--df-radius-lg);
+  --df-profile-card-padding:var(--df-space-3);
+  --df-profile-card-gap:var(--df-space-3);
+  --df-profile-avatar-size:2.75rem;
+  --df-profile-avatar-ring:2px;
+  --df-profile-avatar-ring-speed:7s;
+  --df-profile-name-color:var(--df-text);
+  --df-profile-email-color:var(--df-text-muted);
+  --df-profile-icon-color:var(--df-primary);
+  --df-profile-signout-bg:color-mix(in srgb,var(--df-danger) 10%,var(--df-surface));
+  --df-profile-signout-border:color-mix(in srgb,var(--df-danger) 35%,var(--df-border));
+  --df-profile-signout-color:var(--df-danger);
+  --df-editorial-demo-padding:var(--df-space-5);
+  --df-editorial-content-padding:var(--df-space-4);
+}
+@media(max-width:600px){
+  :root{--df-profile-card-padding:var(--df-space-3);--df-editorial-demo-padding:var(--df-space-3);--df-editorial-content-padding:var(--df-space-3)}
+}
