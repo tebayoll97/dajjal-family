@@ -45,9 +45,7 @@ export default function ContributorPlatform({section="home"}){
   await inspect(result.data.session,key);setPassword("");setBusy(false);
  }
  async function updatePassword(e){e.preventDefault();setError("");setMessage("");if(newPassword.length<12){setError(isEn?"Use at least 12 characters.":"Gunakan minimal 12 karakter.");return;}if(newPassword!==confirmPassword){setError(isEn?"Passwords do not match.":"Konfirmasi password tidak cocok.");return;}setBusy(true);
-  const result=await client.auth.updateUser({password:newPassword});
-  if(result.error){setError(result.error.message);setBusy(false);return;}
-  const response=await fetch("/api/contributors/password-complete",{method:"POST",headers:{Authorization:"Bearer "+session.access_token}});
+  const response=await fetch("/api/contributors/password-complete",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+session.access_token},body:JSON.stringify({password:newPassword})});
   const body=await response.json().catch(()=>({}));
   if(!response.ok){setError(body.error||"Unable to activate contributor account.");setBusy(false);return;}
   setContributor(c=>({...c,must_change_password:false}));setNewPassword("");setConfirmPassword("");setMessage(isEn?"Password updated. Your workspace is ready.":"Password berhasil diperbarui. Ruang kerja siap digunakan.");setBusy(false);
