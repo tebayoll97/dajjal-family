@@ -181,7 +181,7 @@ export default function AdminStoragePage() {
 
         <AdminPanel className="ui-admin-panel-stack">
           <div className="flex flex-wrap items-center gap-3">
-            <span className={"inline-flex h-3 w-3 rounded-full " + (status?.connected ? "bg-emerald-400" : "bg-amber-400")} />
+            <span className={"inline-flex h-3 w-3 rounded-full " + (status?.connected ? "bg-[var(--df-success)]" : "bg-[var(--df-warning)]")} />
             <h2 className="text-lg font-extrabold">{status?.connected ? t.connected : t.disconnected}</h2>
           </div>
           {status?.connected ? (
@@ -198,7 +198,7 @@ export default function AdminStoragePage() {
           ) : (
             <p className="mt-3 text-sm leading-relaxed text-[var(--df-text-secondary)]">{t.connectNote}</p>
           )}
-          <button type="button" onClick={connectDrive} disabled={busy || !token} className="mt-6 min-h-12 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-sm font-extrabold text-white hover:opacity-90 disabled:opacity-50">
+          <button type="button" onClick={connectDrive} disabled={busy || !token} className="mt-6 min-h-12 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-sm font-extrabold text-[var(--df-text)] hover:opacity-90 disabled:opacity-50">
             {busy ? t.connecting : status?.connected ? t.reconnect : t.connect}
           </button>
         </AdminPanel>
@@ -207,9 +207,9 @@ export default function AdminStoragePage() {
           <AdminPanel className="mt-5 ui-admin-panel-stack">
             <h2 className="text-lg font-extrabold">{t.uploadTitle}</h2>
             <p className="mt-2 text-sm text-[var(--df-text-secondary)]">{t.uploadNote}</p>
-            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,audio/mpeg,audio/mp4,audio/aac,audio/ogg,audio/wav" onChange={(event) => setFile(event.target.files?.[0] || null)} className="mt-5 block w-full text-sm text-[var(--df-text-secondary)] file:mr-3 file:min-h-11 file:rounded-lg file:border-0 file:bg-[var(--df-primary)] file:px-4 file:font-bold file:text-white" />
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,audio/mpeg,audio/mp4,audio/aac,audio/ogg,audio/wav" onChange={(event) => setFile(event.target.files?.[0] || null)} className="mt-5 block w-full text-sm text-[var(--df-text-secondary)] file:mr-3 file:min-h-11 file:rounded-lg file:border-0 file:bg-[var(--df-primary)] file:px-4 file:font-bold file:text-[var(--df-text)]" />
             {file && <p className="mt-2 break-all text-xs text-[var(--df-text-secondary)]">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</p>}
-            <button type="button" onClick={uploadFile} disabled={busy || !file} className="mt-4 min-h-11 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-xs font-extrabold text-white hover:opacity-90 disabled:opacity-50">{busy ? t.uploading : t.upload}</button>
+            <button type="button" onClick={uploadFile} disabled={busy || !file} className="mt-4 min-h-11 rounded-xl bg-[var(--df-primary)] px-5 py-3 text-xs font-extrabold text-[var(--df-text)] hover:opacity-90 disabled:opacity-50">{busy ? t.uploading : t.upload}</button>
           </AdminPanel>
         )}
         <footer className="mt-10 border-t border-[var(--df-border)] pt-5 text-center text-[10px] font-bold tracking-[.18em] text-[var(--df-text-muted)]">DAJJAL FAMILY · CENTRAL STORAGE</footer>
