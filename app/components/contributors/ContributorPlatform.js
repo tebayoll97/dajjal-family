@@ -31,14 +31,14 @@ export default function ContributorPlatform({section="home"}){
   if(live){if(member.data?.session)await inspect(member.data.session,"member");else setLoading(false);}
  })().catch(()=>{if(live){setError(t.access);setLoading(false);}});
  return()=>{live=false;};},[inspect,t.access]);
- const has=(key)=>permissions.includes(key);
+ const has=useCallback((key)=>permissions.includes(key),[permissions]);
  const nav=useMemo(()=>[
   ["home","/contributors/shell",t.home,true],
   ["profile","/contributors/shell/profile",t.profile,true],
   ["blog","/contributors/shell/blog",t.blog,has("blog.access")],
   ["tasks","/contributors/shell/tasks",t.tasks,true],
   ["security","/contributors/shell/security",t.security,true]
- ],[t,permissions]);
+ ],[t,has]);
  async function signIn(e){e.preventDefault();setBusy(true);setError("");let result=await supabase.auth.signInWithPassword({email:email.trim(),password});let key="member";
   if(result.error){result=await supabaseAdminClient.auth.signInWithPassword({email:email.trim(),password});key="admin";}
   if(result.error){setError(result.error.message);setBusy(false);return;}
