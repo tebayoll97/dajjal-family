@@ -30,7 +30,7 @@ export async function POST(request) {
   };
   const { data, error } = await supabaseAdmin.from("df_blog_contributors")
     .upsert(record, { onConflict: "account_user_id" })
-    .select("id,display_name,email,status,created_at").single();
+    .select("id,display_name,slug,email,status,created_at").single();
   if (error) {
     console.error("Blog contributor application failed:", error);
     return blogError("Unable to submit your contributor application.", 500);
@@ -53,7 +53,7 @@ export async function PATCH(request) {
   const { data, error } = await supabaseAdmin.from("df_blog_contributors")
     .update({ display_name: displayName, bio_id: bioId || null, bio_en: bioEn || null, avatar_url: avatarUrl || null, updated_at: new Date().toISOString() })
     .eq("id", auth.contributor.id).eq("account_user_id", auth.user.id)
-    .select("id,display_name,email,status,bio_id,bio_en,avatar_url").single();
+    .select("id,display_name,slug,email,status,bio_id,bio_en,avatar_url").single();
   if (error || !data) {
     console.error("Contributor profile update failed:", error);
     return blogError("Unable to save contributor profile.", 500);
