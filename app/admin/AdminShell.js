@@ -66,6 +66,7 @@ export default function AdminShell({ children }) {
   const { language, setLanguage } = useLanguage();
   const { theme, toggleTheme, ready: themeReady } = useTheme();
   const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   const isLogin = path === "/admin/login";
@@ -96,7 +97,7 @@ export default function AdminShell({ children }) {
   return (
     <div id="df-admin-shell" className="df-admin-shell">
       <a className="df-admin-skip" href="#df-admin-main">{language === "id" ? "Lewati navigasi" : "Skip navigation"}</a>
-      <aside className="df-admin-sidebar" aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"}>
+      <aside id="df-admin-drawer" className="df-admin-sidebar df-shell-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"}>
         <Link href={localized("/admin")} className="df-admin-brand">
           <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
@@ -109,7 +110,7 @@ export default function AdminShell({ children }) {
               {group.items.map((item) => {
                 const active = path === item.href || (item.href !== "/admin" && path.startsWith(item.href + "/"));
                 return (
-                  <Link key={item.href} href={localized(item.href)} className={active ? "df-admin-nav-link is-active" : "df-admin-nav-link"} aria-current={active ? "page" : undefined}>
+                  <Link key={item.href} href={localized(item.href)} onClick={() => setDrawerOpen(false)} className={active ? "df-admin-nav-link is-active" : "df-admin-nav-link"} aria-current={active ? "page" : undefined}>
                     <span className="df-admin-nav-icon" aria-hidden="true">{item.icon}</span>
                     <span>{language === "id" ? item.id : item.en}</span>
                     {active && <span className="df-admin-nav-active" aria-hidden="true" />}
@@ -132,6 +133,7 @@ export default function AdminShell({ children }) {
             {path === "/admin" ? <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} /> : <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
+            <Button className="df-admin-drawer-toggle" variant="secondary" size="sm" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</Button>
             <Badge variant="info">{language === "id" ? "ADMIN" : "ADMIN AREA"}</Badge>
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
             <Button variant="secondary" size="sm" onClick={toggleTheme} disabled={!themeReady} aria-label={language === "id" ? `Ubah ke tema ${theme === "dark" ? "terang" : "gelap"}` : `Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={language === "id" ? "Ubah tema tampilan" : "Change appearance theme"}>{theme === "dark" ? "☀ Light" : "☾ Dark"}</Button>
@@ -139,6 +141,7 @@ export default function AdminShell({ children }) {
           </div>
         </div>
 
+        {drawerOpen && <button type="button" className="df-admin-drawer-backdrop" aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"} onClick={() => setDrawerOpen(false)} />}
         <nav className="df-admin-mobile-nav" aria-label={language === "id" ? "Menu admin" : "Admin menu"}>
           {groups.flatMap((group) => group.items).map((item) => {
             const active = path === item.href || (item.href !== "/admin" && path.startsWith(item.href + "/"));
