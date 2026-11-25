@@ -223,15 +223,7 @@ export default function DesignSystemClient() {
             <p className={styles.demoNote}>Token source: --df-blog-card-surface, --df-blog-cover-surface, --df-blog-byline-color, --df-blog-reading-width, --df-blog-grid-gap, --df-editorial-byline-gap, --df-editorial-meta-gap, and --df-editorial-meta-color. Components consume the active Global Theme Preset; no local palette is introduced.</p>
           </div>
         </Section>
-        <Section id="17" title="AUTHOR DIRECTORY" headingId="author-directory-heading" description="Reusable contributor card, public identity, article count and responsive grid" open={!!expanded["17"]} onToggle={() => toggle("17")}>
-          <div className={styles.demoCard}>
-            <p className={styles.demoLabel}>LIVE PRODUCTION AUTHOR CARD</p>
-            <div className="ui-author-grid">
-              <AuthorCard author={{ id: "preview-author", display_name: "Example Contributor", slug: "example-contributor", article_count: 12 }} locale="en" />
-            </div>
-            <p className={styles.demoNote}>The same AuthorCard component is used by the public /blog/author directory. Geometry, spacing, avatar size, and type roles are semantic tokens shared through the four foundation CSS files. The directory only displays approved contributors with published articles.</p>
-          </div>
-        </Section>
+
         <Section id="16" title="EDITORIAL ENGINE" headingId="editorial-engine-heading" description="Rich Text, restricted Full HTML, structured blocks and safe bilingual rendering" open={!!expanded["16"]} onToggle={() => toggle("16")}>
           <div className={styles.demoCard}>
             <p className={styles.demoLabel}>LIVE REUSABLE EDITORIAL EDITOR</p>
@@ -239,6 +231,15 @@ export default function DesignSystemClient() {
             <p className={styles.demoLabel}>SAFE PUBLIC RENDERER</p>
             <div className="ui-editorial-reading"><EditorialContentRenderer locale="id" content={JSON.stringify({version:1,blocks:[{id:"demo-heading",type:"heading",level:2,text:"Contoh artikel DAJJAL FAMILY"},{id:"demo-p",type:"paragraph",text:"Konten ditampilkan sebagai blok bertipe. HTML mentah tidak dieksekusi."},{id:"demo-code",type:"code",language:"javascript",code:'const family = "DAJJAL FAMILY";\\nconsole.log(family);'},{id:"demo-button",type:"button",href:"https://dajjalfamily.com",label:"Kunjungi DAJJAL FAMILY"},{id:"demo-table",type:"table",headers:["Mode","Tujuan"],rows:[["Rich Text","Menulis visual"],["Full HTML","Markup terkontrol"]]}]})}/></div>
             <p className={styles.demoNote}>Code blocks are excluded from Gemini translation. HTML source is parsed into validated blocks; scripts, event handlers, arbitrary styles, and arbitrary iframe markup are rejected. The same editor and renderer components are consumed by Blog author and public article routes.</p>
+          </div>
+        </Section>
+        <Section id="17" title="AUTHOR DIRECTORY" headingId="author-directory-heading" description="Reusable contributor card, public identity, article count and responsive grid" open={!!expanded["17"]} onToggle={() => toggle("17")}>
+          <div className={styles.demoCard}>
+            <p className={styles.demoLabel}>LIVE PRODUCTION AUTHOR CARD</p>
+            <div className="ui-author-grid">
+              <AuthorCard author={{ id: "preview-author", display_name: "Example Contributor", slug: "example-contributor", article_count: 12 }} locale="en" />
+            </div>
+            <p className={styles.demoNote}>The same AuthorCard component is used by the public /blog/author directory. Geometry, spacing, avatar size, and type roles are semantic tokens shared through the four foundation CSS files. The directory only displays approved contributors with published articles.</p>
           </div>
         </Section>
       </div>
