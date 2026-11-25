@@ -375,3 +375,24 @@
 .df-workspace-navigation-icon{color:var(--df-workspace-nav-icon)}
 .df-workspace-navigation-signout svg{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(prefers-reduced-motion:reduce){.df-workspace-navigation-link{transition:none}}
+
+
+/* Shared left drawer component styling for admin and contributor workspaces. */
+.df-shell-drawer{position:sticky;top:var(--df-space-4);height:calc(100dvh - var(--df-space-8));min-height:34rem;display:flex;flex-direction:column;gap:var(--df-space-3);padding:var(--df-workspace-drawer-padding);border:1px solid var(--df-workspace-nav-border);border-radius:var(--df-workspace-panel-radius);background:var(--df-workspace-nav-surface);box-shadow:var(--df-workspace-nav-panel-shadow);color:var(--df-text);overflow:auto}
+.df-shell-drawer-brand{display:flex;align-items:center;gap:var(--df-space-3);padding-bottom:var(--df-space-4);border-bottom:1px solid var(--df-border);color:inherit;text-decoration:none}
+.df-shell-drawer-mark{width:2.65rem;height:2.65rem;display:grid;place-items:center;flex:0 0 auto;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-lg);background:var(--df-primary-soft);color:var(--df-primary);font-weight:var(--df-weight-extrabold)}
+.df-shell-drawer-brand strong,.df-shell-drawer-brand small{display:block}
+.df-shell-drawer-brand strong{font-size:var(--df-type-nav-brand-size);letter-spacing:.08em}
+.df-shell-drawer-brand small{margin-top:3px;color:var(--df-text-muted);font-size:var(--df-type-nav-meta-size);letter-spacing:.08em}
+.df-shell-drawer-section{margin:var(--df-space-3) 0 var(--df-space-1);color:var(--df-text-muted);font-size:var(--df-type-nav-section-size);font-weight:var(--df-weight-bold);letter-spacing:.15em}
+.df-shell-drawer-nav{display:grid;gap:var(--df-workspace-nav-item-gap)}
+.df-shell-drawer-nav a{min-height:var(--df-touch-target-min);display:flex;align-items:center;gap:var(--df-space-3);padding:var(--df-workspace-nav-item-padding-block) var(--df-workspace-nav-item-padding-inline);border:1px solid transparent;border-radius:var(--df-workspace-nav-radius);color:var(--df-text-secondary);font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-semibold);text-decoration:none;transition:background var(--df-duration-fast),border-color var(--df-duration-fast),color var(--df-duration-fast)}
+.df-shell-drawer-nav a>span:first-child{width:1.35rem;flex:0 0 auto;color:var(--df-workspace-nav-icon);font-size:1.15rem;text-align:center}
+.df-shell-drawer-nav a:hover,.df-shell-drawer-nav a.is-active{border-color:var(--df-workspace-nav-active-border);background:var(--df-workspace-nav-active-bg);color:var(--df-workspace-nav-active-color)}
+.df-shell-drawer-foot{display:grid;gap:var(--df-space-3);margin-top:auto;padding-top:var(--df-space-4);border-top:1px solid var(--df-border)}
+.df-shell-drawer-identity{overflow-wrap:anywhere;color:var(--df-text-muted);font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-semibold)}
+.df-shell-drawer-signout{width:100%;justify-content:center;gap:var(--df-space-2)}
+@media(max-width:760px){
+ .df-shell-drawer{position:fixed;z-index:calc(var(--df-z-overlay) - 1);inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard)}
+ .df-shell-drawer[data-open="true"]{transform:translateX(0)}
+}
