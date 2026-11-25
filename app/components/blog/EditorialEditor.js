@@ -1,14 +1,14 @@
 "use client";
 import {useMemo,useState} from "react";
-import {Alert,Badge,Button,TextField,CheckboxField} from "@/app/components/ui";
+import {Alert,Badge,Button,TextField,CheckboxField,Dialog} from "@/app/components/ui";
 import {emptyEditorial,normalizeEditorial,editorialToHtml,parseEditorialHtml} from "@/lib/blog/editorialContent";
 import EditorialContentRenderer from "./EditorialContentRenderer";
 const TYPES=[["paragraph","Paragraph"],["heading","Heading"],["quote","Quote"],["code","Code block"],["list","List"],["link","Link"],["button","Button"],["image","Image"],["table","Table"],["embed","YouTube"],["divider","Divider"]];
 const LANGS=["text","html","css","javascript","typescript","json","jsx","tsx","python","sql","bash","yaml","markdown"];
 export default function EditorialEditor({name="content",defaultValue="",locale="id",required=true,sessionToken=""}){
  const id=locale==="id";const initial=useMemo(()=>{try{return normalizeEditorial(defaultValue)}catch{return emptyEditorial()}},[defaultValue]);
- const [mode,setMode]=useState("rich"),[doc,setDoc]=useState(initial),[html,setHtml]=useState(()=>editorialToHtml(initial)),[error,setError]=useState(""),[showPreview,setShowPreview]=useState(false),[uploading,setUploading]=useState(false),[uploadMessage,setUploadMessage]=useState("");
- async function uploadImage(index,file){if(!file||!sessionToken)return;setUploading(true);setUploadMessage("");const form=new FormData();form.append("file",file);try{const response=await fetch("/api/blog/media",{method:"POST",headers:{Authorization:`Bearer ${sessionToken}`},body:form});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||"Upload failed.");update(index,{src:result.url});setUploadMessage(id?"Gambar berhasil diunggah.":"Image uploaded.");}catch(e){setUploadMessage("Upload failed: "+(e.message||"Please retry."));}finally{setUploading(false);}}
+ const [mode,setMode]=useState("rich"),[doc,setDoc]=useState(initial),[html,setHtml]=useState(()=>editorialToHtml(initial)),[error,setError]=useState(""),[showPreview,setShowPreview]=useState(false),[uploading,setUploading]=useState(false),[uploadMessage,setUploadMessage]=useState(null);
+ async function uploadImage(index,file){if(!file||!sessionToken)return;setUploading(true);setUploadMessage("");const form=new FormData();form.append("file",file);try{const response=await fetch("/api/blog/media",{method:"POST",headers:{Authorization:`Bearer ${sessionToken}`},body:form});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||"Upload failed.");update(index,{src:result.url});setUploadMessage({type:"success",message:id?"Gambar berhasil diunggah.":"Image uploaded."});}catch(e){setUploadMessage({type:"error",message:(id?"Upload gagal: ":"Upload failed: ")+(e.message||"Please retry.")});}finally{setUploading(false);}}
  const update=(index,patch)=>setDoc(current=>({...current,blocks:current.blocks.map((b,i)=>i===index?{...b,...patch}:b)}));
  const add=(type)=>{const base={id:"b_"+Math.random().toString(36).slice(2,10),type};const next=type==="heading"?{...base,level:2,text:""}:type==="code"?{...base,language:"javascript",code:""}:type==="list"?{...base,ordered:false,items:[""]}:type==="image"?{...base,src:"",alt:"",caption:""}:type==="table"?{...base,headers:["Column 1","Column 2"],rows:[["",""]]}:type==="button"||type==="link"?{...base,href:"https://",label:""}:type==="embed"?{...base,url:"https://youtu.be/"}:type==="divider"?base:{...base,text:""};setDoc(c=>({...c,blocks:[...c.blocks,next]}));};
  const serialized=mode==="html"?html:JSON.stringify(doc);
@@ -30,7 +30,10 @@ export default function EditorialEditor({name="content",defaultValue="",locale="
    </article>)}
    {!doc.blocks.length?<p className="ui-caption">{id?"Belum ada blok. Tambahkan blok untuk mulai menulis.":"No blocks yet. Add a block to start writing."}</p>:null}
   </div>}
-  {error?<Alert variant="info">{error}</Alert>:null}{uploadMessage?<Alert variant={uploadMessage.includes("failed")||uploadMessage.includes("gagal")?"danger":"success"}>{uploadMessage}</Alert>:null}
+  {error?<Alert variant="info">{error}</Alert>:null}
+  <Dialog open={Boolean(uploadMessage)} onClose={()=>setUploadMessage(null)} title={uploadMessage?.type==="error"?(id?"Upload gagal":"Upload failed"):(id?"Berhasil":"Success")} closeLabel={id?"Tutup dialog":"Close dialog"} actions={<Button onClick={()=>setUploadMessage(null)}>{id?"Tutup":"Close"}</Button>}>
+   {uploadMessage?<Alert variant={uploadMessage.type==="error"?"danger":"success"}>{uploadMessage.message}</Alert>:null}
+  </Dialog>
   <input type="hidden" name={name} value={serialized}/>
  </section>;
 }
