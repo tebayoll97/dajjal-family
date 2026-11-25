@@ -102,3 +102,13 @@
 .ui-author-avatar-upload{display:flex;align-items:flex-start;gap:var(--df-author-profile-upload-gap);min-width:0}
 .ui-author-avatar-upload__body{flex:1 1 auto;min-width:0}
 @media(max-width:479px){.ui-author-avatar-upload{align-items:stretch;gap:var(--df-space-3)}}
+
+/* Author workspace shared layout rhythm and panel spacing. */
+.ui-author-workspace{gap:var(--df-author-workspace-gap);padding-block:var(--df-space-4) var(--df-space-12)}
+.ui-author-workspace>.ui-card,.ui-author-workspace .df-author-profile-editor{padding:var(--df-author-workspace-panel-padding)}
+.ui-author-workspace .ui-page-heading{gap:var(--df-space-3)}
+.ui-author-workspace .ui-section-heading{gap:var(--df-space-4)}
+.ui-author-workspace .ui-section-heading-copy{display:grid;gap:var(--df-space-2)}
+.ui-author-workspace .ui-stack{gap:var(--df-space-4)}
+.ui-author-workspace .ui-author-verification-card{padding:var(--df-space-3)}
+@media(max-width:639px){.ui-author-workspace .ui-section-heading{align-items:stretch}.ui-author-workspace .ui-author-avatar-upload{align-items:flex-start;flex-direction:column}}
