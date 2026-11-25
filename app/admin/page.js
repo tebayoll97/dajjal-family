@@ -114,11 +114,11 @@ export default function AdminDashboardPage() {
 
   if (error && !admin) {
     return (
-      <main className="min-h-[75vh] bg-[#080711] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
+      <main className="min-h-[75vh] bg-[var(--df-bg)] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
         <div className="ui-gradient-frame ui-card rounded-2xl p-7 max-w-md w-full">
           <div className="text-4xl">🔒</div>
           <h1 className="ui-title mt-4">{t.denied}</h1>
-          <p className="text-sm text-red-300 mt-3">{error}</p>
+          <p className="text-sm text-[var(--df-danger)] mt-3">{error}</p>
           <Link href="/admin/login" className="ui-interactive inline-flex mt-6 rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary-hover)] px-6 py-3 font-bold text-sm">
             {t.login}
           </Link>
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
             type="button"
             onClick={() => setShowLogoutModal(true)}
             disabled={loggingOut}
-            className="ui-interactive inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-red-400/25 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-200 hover:border-red-400/50 hover:bg-red-500/15 disabled:opacity-50"
+            className="ui-interactive inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_10%,transparent)] px-5 py-3 text-sm font-bold text-[var(--df-danger)] hover:border-[var(--df-danger)] hover:bg-[color:color-mix(in_srgb,var(--df-danger)_15%,transparent)] disabled:opacity-50"
           >
             <span>↗</span>{t.logout}
           </button>
@@ -169,10 +169,10 @@ export default function AdminDashboardPage() {
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] text-2xl">♛</div>
             <div className="min-w-0 flex-1">
               <p className="ui-eyebrow mb-1">{t.admin}</p>
-              <p className="break-all font-semibold text-white">{admin.email}</p>
+              <p className="break-all font-semibold text-[var(--df-text)]">{admin.email}</p>
             </div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--df-border)] bg-[var(--df-surface-raised)] px-3 py-2 text-[10px] font-extrabold tracking-wider text-[var(--df-success)]">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+              <span className="h-2 w-2 rounded-full bg-[var(--df-success)] shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
               {t.secure}
             </div>
           </div>
@@ -203,10 +203,10 @@ export default function AdminDashboardPage() {
                     <p className="mt-2 min-h-[3.2rem] text-sm leading-relaxed text-[var(--df-text-secondary)]">{module.description}</p>
                   </div>
                   <div className="relative mt-6 flex items-center justify-between border-t border-[var(--df-border)] pt-4">
-                    <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-primary)]" : "text-[10px] font-extrabold tracking-[0.16em] text-gray-500"}>
+                    <span className={module.available ? "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-primary)]" : "text-[10px] font-extrabold tracking-[0.16em] text-[var(--df-text-muted)]"}>
                       {module.available ? t.open : t.coming}
                     </span>
-                    <span className={module.available ? "text-lg text-[var(--df-accent)] transition-transform group-hover:translate-x-1" : "text-gray-600"} aria-hidden="true">
+                    <span className={module.available ? "text-lg text-[var(--df-accent)] transition-transform group-hover:translate-x-1" : "text-[var(--df-text-muted)]"} aria-hidden="true">
                       {module.available ? "→" : "· · ·"}
                     </span>
                   </div>
@@ -228,7 +228,7 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        <footer className="mt-12 border-t border-[var(--df-border)] pt-5 text-center text-[10px] font-semibold tracking-[0.18em] text-gray-600">
+        <footer className="mt-12 border-t border-[var(--df-border)] pt-5 text-center text-[10px] font-semibold tracking-[0.18em] text-[var(--df-text-muted)]">
           {t.footer} · 2026
         </footer>
       </div>
@@ -244,12 +244,12 @@ export default function AdminDashboardPage() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface-raised)] text-2xl">↗</div>
             <h2 id="admin-logout-title" className="ui-section-title mt-5 text-center">{t.logoutTitle}</h2>
             <p className="mt-3 text-center text-sm leading-relaxed text-[var(--df-text-secondary)]">{t.logoutMessage}</p>
-            {error && <p role="alert" className="mt-4 text-center text-xs text-red-300">{error}</p>}
+            {error && <p role="alert" className="mt-4 text-center text-xs text-[var(--df-danger)]">{error}</p>}
             <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <button type="button" onClick={() => setShowLogoutModal(false)} disabled={loggingOut} className="ui-interactive rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-3 text-xs font-extrabold text-purple-200 hover:bg-purple-500/20 disabled:opacity-50">{t.cancel}</button>
-              <button type="button" onClick={handleLogout} disabled={loggingOut} className="ui-interactive rounded-xl bg-[var(--df-danger)] px-4 py-3 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-50">{loggingOut ? t.loggingOut : t.confirm}</button>
+              <button type="button" onClick={() => setShowLogoutModal(false)} disabled={loggingOut} className="ui-interactive rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] px-4 py-3 text-xs font-extrabold text-[var(--df-primary)] hover:bg-[var(--df-primary-soft)] disabled:opacity-50">{t.cancel}</button>
+              <button type="button" onClick={handleLogout} disabled={loggingOut} className="ui-interactive rounded-xl bg-[var(--df-danger)] px-4 py-3 text-xs font-extrabold text-[var(--df-text)] hover:bg-[var(--df-danger)] disabled:opacity-50">{loggingOut ? t.loggingOut : t.confirm}</button>
             </div>
-            {loggingOut && <p className="mt-5 animate-pulse text-center text-[10px] font-bold tracking-widest text-purple-300">{t.loggingOut}</p>}
+            {loggingOut && <p className="mt-5 animate-pulse text-center text-[10px] font-bold tracking-widest text-[var(--df-primary)]">{t.loggingOut}</p>}
           </div>
         </div>
       )}
