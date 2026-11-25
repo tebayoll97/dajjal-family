@@ -78,3 +78,7 @@
 
 /* Editorial metadata and author-link semantic typography roles. */
 .ui-text-editorial-meta{font-family:var(--df-font-sans);font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
+
+/* Author directory typography roles. */
+.ui-author-card__role{margin:var(--df-space-1) 0 0;color:var(--df-text-muted);font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
+@media(min-width:1024px){.ui-author-card__role{font-size:var(--df-text-sm)}}
