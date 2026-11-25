@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/adminAuth";
 import { BLOG_OWNER_USER_ID } from "@/lib/blog/auth";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 const HEADERS = { "Cache-Control": "private, no-store, max-age=0, must-revalidate" };
@@ -38,6 +38,8 @@ export async function PATCH(request) {
     if (body.status === "published") return fail("Publish this article from the Author Dashboard so Gemini can generate and validate both language versions.", 409);
     const { data, error } = await supabaseAdmin.from("df_blog_articles").update(update).eq("id", body.id).select("id,status,published_at").maybeSingle();
     if (error || !data) return fail("Unable to update article status.", 500);
+    revalidateTag("df-blog-public");
+    revalidatePath("/sitemap.xml");
     return Response.json({ success: true, item: data }, { headers: HEADERS });
   }
   if (body.type === "category") {
