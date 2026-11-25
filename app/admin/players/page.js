@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useAdminAuth } from "@/app/components/AdminAuthProvider";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import Image from "next/image";
 
 const translations = {
   en: {
@@ -574,7 +575,7 @@ export default function AdminPlayersPage() {
                       <div className="flex items-center gap-2.5 p-3">
                         <div className="w-11 h-11 shrink-0 rounded-xl border border-purple-500/25 bg-purple-600/10 flex items-center justify-center overflow-hidden">
                           {player.avatarUrl ? (
-                            <img src={player.avatarUrl} alt="" className="w-full h-full object-cover" />
+                            <Image src={player.avatarUrl} alt="" width={44} height={44} unoptimized className="w-full h-full object-cover" />
                           ) : (
                             <span className="text-xl">👤</span>
                           )}
@@ -687,9 +688,12 @@ export default function AdminPlayersPage() {
                           <div className="flex items-center gap-3 min-w-48">
                             <div className="w-10 h-10 rounded-xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center overflow-hidden ui-card">
                               {player.avatarUrl ? (
-                                <img
+                                <Image
                                   src={player.avatarUrl}
                                   alt=""
+                                  width={40}
+                                  height={40}
+                                  unoptimized
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
