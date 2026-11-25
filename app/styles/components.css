@@ -401,3 +401,10 @@
 /* Semantic workspace shell refinement. */
 .df-shell-drawer-nav a:focus-visible,.df-shell-drawer-toggle:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}.df-shell-drawer-toggle{min-height:var(--df-touch-target-min);font-size:var(--df-type-nav-label-size)}
 @media(max-width:760px){.df-shell-drawer-toggle{min-height:var(--df-workspace-nav-compact-button-height);padding-inline:var(--df-space-3);font-size:var(--df-workspace-nav-compact-font-size)}.df-shell-drawer-nav a{font-size:var(--df-workspace-nav-compact-font-size)}.df-shell-drawer-foot .ui-button{min-height:var(--df-workspace-nav-compact-button-height);padding:var(--df-space-2) var(--df-space-3)}}
+
+/* Admin drawer interaction contract: visible focus, active item, and overlay layering. */
+#df-admin-shell .df-admin-nav-link{border-radius:var(--df-workspace-nav-radius);transition:background var(--df-duration-fast),border-color var(--df-duration-fast),color var(--df-duration-fast)}
+#df-admin-shell .df-admin-nav-link:focus-visible,#df-admin-shell .df-admin-drawer-toggle:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+#df-admin-shell .df-admin-mobile-drawer .df-admin-nav{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+#df-admin-shell .df-admin-mobile-drawer .df-admin-sidebar-foot{margin-top:auto}
+#df-admin-shell .df-admin-drawer-backdrop{cursor:pointer}
