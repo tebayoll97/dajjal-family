@@ -111,3 +111,10 @@
 .df-navigation-profile-identity-row strong{color:var(--df-profile-name-color)}
 .df-navigation-profile-identity-row small{color:var(--df-profile-email-color)}
 .df-navigation-profile-menu>a{font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-semibold)}
+
+
+/* Workspace navigation type roles shared by Admin and Contributor shells. */
+.df-workspace-navigation{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+.df-workspace-navigation-link{font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-nav-label-leading)}
+.df-workspace-navigation-group-title{font-size:var(--df-type-nav-section-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-meta-leading)}
+.df-workspace-navigation-identity{font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
