@@ -396,3 +396,8 @@
  .df-shell-drawer{position:fixed;z-index:calc(var(--df-z-overlay) - 1);inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard)}
  .df-shell-drawer[data-open="true"]{transform:translateX(0)}
 }
+
+
+/* Semantic workspace shell refinement. */
+.df-shell-drawer-nav a:focus-visible,.df-shell-drawer-toggle:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}.df-shell-drawer-toggle{min-height:var(--df-touch-target-min);font-size:var(--df-type-nav-label-size)}
+@media(max-width:760px){.df-shell-drawer-toggle{min-height:var(--df-workspace-nav-compact-button-height);padding-inline:var(--df-space-3);font-size:var(--df-workspace-nav-compact-font-size)}.df-shell-drawer-nav a{font-size:var(--df-workspace-nav-compact-font-size)}.df-shell-drawer-foot .ui-button{min-height:var(--df-workspace-nav-compact-button-height);padding:var(--df-space-2) var(--df-space-3)}}
