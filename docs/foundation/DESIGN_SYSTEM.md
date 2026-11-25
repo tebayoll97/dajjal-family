@@ -627,10 +627,19 @@ The Blog Editorial Engine uses one versioned structured-content model for both a
 - No database migration is required for versioned JSON content in existing `content_id` and `content_en` text columns.
 
 
-# 18. AUTHOR DIRECTORY COMPONENT PATTERN
+# 18. CONTRIBUTOR PROFILE COMPONENT PATTERN
 
-- Public contributor directories use the shared `AuthorCard` React component and `.ui-author-grid` layout primitive.
-- `AuthorCard` composes shared `Card`, `Avatar`, typography, and link primitives; feature consumers supply only approved public contributor data.
-- Author identity surfaces consume `--df-author-*` semantic geometry tokens and `.ui-author-card__role` responsive typography. Token values are coordinated through `tokens.css`, `typography.css`, `layout.css`, and `components.css`.
+- Public contributor directories use the shared `ContributorCard` React component and `.ui-contributor-grid` layout primitive.
+- `ContributorCard` composes shared `Card`, `Avatar`, typography, and link primitives; feature consumers supply only approved public contributor data.
+- Contributor identity surfaces consume `--df-contributor-*` semantic geometry tokens and `.ui-author-card__role` responsive typography. Token values are coordinated through `tokens.css`, `typography.css`, `layout.css`, and `components.css`.
 - The responsive directory uses three columns on wide desktop, two on tablet, and one compact column on mobile. Interactive links retain visible focus and touch-sized targets.
-- The production AuthorCard is previewed in Design System Workbench section 17. Do not create a page-local card variant for contributor listings.
+- The production ContributorCard is previewed in Design System Workbench section 17. Do not create a page-local card variant for contributor listings.
+
+
+## Contributor Platform visual contract — 2026-11-25
+
+- Public invitation page /contributors and public profiles /contributors/profile/[slug] use shared PageHeader, Card, Badge, Link, Avatar, BlogArticleCard, and ContributorCard primitives.
+- Private Contributor Shell routes are noindex and use shared session-verification and feedback components. Do not expose email, Auth IDs, permissions, tasks, or draft content on public profile surfaces.
+- ContributorCard semantic roles are defined by --df-contributor-* tokens and .ui-contributor-card, .ui-contributor-grid, and .ui-contributor-card__role in the four global foundation CSS files.
+- Contributor typography uses responsive ui-text-display-wide and ui-text-mobile-small roles. Mobile Compact UI applies without reducing accessible touch targets or desktop readability.
+- Contributor components are demonstrated in Design System Workbench section 17/18; shared exports are used by consumers.

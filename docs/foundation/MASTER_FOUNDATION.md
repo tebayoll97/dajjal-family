@@ -915,3 +915,16 @@ Approved isolated experiences—including Couple, Wedding, and immersive Games�
 **Canonical implementation reference:** `/id/design-system` and `docs/foundation/DESIGN_SYSTEM.md`.  
 **Related operating rule:** `docs/aturan-kerja.md`.  
 **Detailed project plan:** Akashic Record `dajjal-family/backlog/plan-reusable-ui-component-system.md`.
+
+
+## Owner-approved route retirement exception — Contributor Platform — 2026-11-25
+
+The owner explicitly approved retiring the legacy /author/me, /blog/author, /blog/author/[slug], /blog/author/apply, and /blog/author/dashboard routes without redirects because the public website has no visitor traffic requiring URL continuity. This is a narrowly scoped exception to the general legacy-URL redirect rule in Section 3.2; it does not change the bilingual /id and /en URL policy or authorize skipping redirects for unrelated routes. The replacement route contract is /contributors, /contributors/shell/*, and /contributors/profile/[slug].
+
+## Contributor identity and module authorization — 2026-11-25
+
+- df_contributors is the central contributor identity registry shared by all contributor-capable modules. Blog is one module, not the owner of contributor identity.
+- df_contributor_permissions stores explicit capability grants. Every module API must verify the bearer session and exact permission server-side; navigation visibility is not authorization.
+- df_contributor_tasks stores Admin-assigned work scoped to the assigned contributor. df_contributor_activity_logs is the server-written audit trail.
+- Contributor accounts are provisioned by Admin only. Temporary passwords are random, shown once, and must be changed at first login. Never store or re-display plaintext passwords.
+- Public profiles expose only explicitly public profile fields and published contributions. Private account IDs, email, task details, permission grants, and drafts are not public data.
