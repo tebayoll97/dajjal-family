@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { verifyBlogUser, BLOG_PRIVATE_HEADERS } from "@/lib/blog/auth";
+import { verifyBlogUser, BLOG_PRIVATE_HEADERS, slugifyBlogTitle } from "@/lib/blog/auth";
 import { findOrCreateDriveFolder, getGoogleDriveAccessToken, uploadDriveFile, makeDriveFilePubliclyReadable, deleteDriveFile } from "@/lib/googleDriveStorage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const MAX_AVATAR_SIZE = 8 * 1024 * 1024;
+const MAX_AVATAR_SIZE = 4 * 1024 * 1024;
 const TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const fail = (error, status = 400) => NextResponse.json({ success: false, error }, { status, headers: BLOG_PRIVATE_HEADERS });
 
@@ -25,7 +26,7 @@ export async function POST(request) {
   const file = form.get("file");
   if (!file || typeof file.arrayBuffer !== "function") return fail("Choose an avatar image first.");
   if (!TYPES.has(file.type)) return fail("Use a JPG, PNG, or WEBP image.", 415);
-  if (file.size < 1 || file.size > MAX_AVATAR_SIZE) return fail("Avatar image must be between 1 byte and 8 MB.", 413);
+  if (file.size < 1 || file.size > MAX_AVATAR_SIZE) return fail("Avatar image must be between 1 byte and 4 MB.", 413);
   const bytes = Buffer.from(await file.arrayBuffer());
   if (!validSignature(bytes, file.type)) return fail("The selected file does not match its image type.", 415);
 
@@ -41,7 +42,7 @@ export async function POST(request) {
     const authorsFolder = await findOrCreateDriveFolder({ accessToken, name: "AUTHORS", parentId: blogFolder.id });
     const authorFolder = await findOrCreateDriveFolder({ accessToken, name: auth.contributor.display_name, parentId: authorsFolder.id });
     const image = new File([bytes], "avatar", { type: file.type });
-    uploaded = await uploadDriveFile({ accessToken, file: image, folderId: authorFolder.id, slot: auth.contributor.slug });
+    uploaded = await uploadDriveFile({ accessToken, file: image, folderId: authorFolder.id, slot: slugifyBlogTitle(auth.contributor.display_name) || auth.contributor.slug });
     await makeDriveFilePubliclyReadable({ accessToken, fileId: uploaded.id });
     const avatarUrl = `https://drive.google.com/thumbnail?id=${encodeURIComponent(uploaded.id)}&sz=w512`;
     const { data, error } = await supabaseAdmin.from("df_blog_contributors")
@@ -52,6 +53,10 @@ export async function POST(request) {
       await deleteDriveFile({ accessToken, fileId: uploaded.id }).catch(cleanup => console.error("Blog avatar orphan cleanup failed:", cleanup));
       throw error || new Error("Unable to save avatar reference.");
     }
+    revalidateTag("df-blog-public");
+    revalidatePath("/id/blog/author");
+    revalidatePath("/en/blog/author");
+    revalidatePath("/sitemap.xml");
     return NextResponse.json({ success: true, contributor: data }, { status: 201, headers: BLOG_PRIVATE_HEADERS });
   } catch (error) {
     if (uploaded?.id) await deleteDriveFile({ accessToken, fileId: uploaded.id }).catch(cleanup => console.error("Blog avatar cleanup failed:", cleanup));
