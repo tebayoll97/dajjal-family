@@ -9,10 +9,10 @@ export function AuthorCard({ author, locale = "id" }) {
   return (
     <Card className="ui-author-card">
       <div className="ui-author-card__identity">
-        <Avatar name={name} size="lg" />
+        <Avatar name={name} src={author.avatar_url || undefined} size="lg" />
         <div className="ui-author-card__copy">
           <h2 className="ui-heading-h3">{name}</h2>
-          <p className="ui-author-card__role">{isEn ? "Editorial contributor" : "Kontributor editorial"}</p>
+          <p className="ui-author-card__role">{(isEn ? author.bio_en || author.bio_id : author.bio_id || author.bio_en) || (isEn ? "Editorial contributor" : "Kontributor editorial")}</p>
         </div>
       </div>
       <div className="ui-author-card__footer">
