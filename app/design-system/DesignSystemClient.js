@@ -290,7 +290,7 @@ export default function DesignSystemClient() {
             <AdminPanel className="ui-admin-panel-stack">
               <h3 className="ui-admin-panel-title">Storage connection</h3>
               <p className="ui-admin-panel-copy">Reusable panel surface with semantic border, surface, spacing and elevation tokens.</p>
-              <div className="ui-cluster"><Badge variant="success">Connected</Badge><Button size="sm">Manage</Button></div>
+              <div className="ui-cluster"><Badge variant="success">Connected</Badge><Button>Manage</Button></div>
             </AdminPanel>
             <Card className="ui-admin-panel-stack">
               <strong>Semantic contracts</strong>
