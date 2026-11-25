@@ -1,56 +1,36 @@
-
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
+import { ConfirmDialog } from "./ui";
 
 const translations = {
   en: {
-    checking: "Checking account...",
-    title: "SIGN OUT",
-    guestTitle: "WARNING: UNPROTECTED ACCOUNT",
-    guestMessage:
-      "You are using a Guest Account. If you sign out, you may permanently lose access to your nickname, avatar, points and all game progress.",
-    guestAction:
-      "We strongly recommend connecting Google first.",
-    connect: "CONNECT GOOGLE ACCOUNT",
-    cancel: "CANCEL",
-    logoutAnyway: "LOGOUT ANYWAY",
-    confirmGuest:
-      "Are you absolutely sure? Your Guest Account may not be recoverable after signing out.",
-    confirmNormal: "Are you sure you want to sign out?",
-    signingOut: "SIGNING OUT...",
-    failed: "Unable to sign out. Please try again.",
-    confirm: "CONFIRM LOGOUT",
+    checking:"Checking account...", title:"SIGN OUT", guestTitle:"WARNING: UNPROTECTED ACCOUNT",
+    guestMessage:"You are using a Guest Account. If you sign out, you may permanently lose access to your nickname, avatar, points and all game progress.",
+    guestAction:"We strongly recommend connecting Google first.", connect:"CONNECT GOOGLE ACCOUNT",
+    cancel:"CANCEL", logoutAnyway:"LOGOUT ANYWAY", confirmGuest:"Are you absolutely sure? Your Guest Account may not be recoverable after signing out.",
+    confirmNormal:"Are you sure you want to sign out?", signingOut:"SIGNING OUT...", failed:"Unable to sign out. Please try again.", confirm:"CONFIRM LOGOUT",
   },
   id: {
-    checking: "Memeriksa akun...",
-    title: "KELUAR AKUN",
-    guestTitle: "PERINGATAN: AKUN BELUM DIAMANKAN",
-    guestMessage:
-      "Kamu sedang menggunakan Guest Account. Jika logout, kamu berisiko kehilangan akses ke nickname, avatar, poin, dan seluruh progres permainan.",
-    guestAction:
-      "Kami sangat menyarankan menghubungkan Google terlebih dahulu.",
-    connect: "HUBUNGKAN AKUN GOOGLE",
-    cancel: "BATAL",
-    logoutAnyway: "TETAP LOGOUT",
-    confirmGuest:
-      "Apakah kamu benar-benar yakin? Akun Guest mungkin tidak bisa dipulihkan setelah logout.",
-    confirmNormal: "Apakah kamu yakin ingin keluar dari akun?",
-    signingOut: "SEDANG KELUAR...",
-    failed: "Tidak dapat logout. Silakan coba lagi.",
-    confirm: "KONFIRMASI LOGOUT",
+    checking:"Memeriksa akun...", title:"KELUAR AKUN", guestTitle:"PERINGATAN: AKUN BELUM DIAMANKAN",
+    guestMessage:"Kamu sedang menggunakan Guest Account. Jika logout, kamu berisiko kehilangan akses ke nickname, avatar, poin, dan seluruh progres permainan.",
+    guestAction:"Kami sangat menyarankan menghubungkan Google terlebih dahulu.", connect:"HUBUNGKAN AKUN GOOGLE",
+    cancel:"BATAL", logoutAnyway:"TETAP LOGOUT", confirmGuest:"Apakah kamu benar-benar yakin? Akun Guest mungkin tidak bisa dipulihkan setelah logout.",
+    confirmNormal:"Apakah kamu yakin ingin keluar dari akun?", signingOut:"SEDANG KELUAR...", failed:"Tidak dapat logout. Silakan coba lagi.", confirm:"KONFIRMASI LOGOUT",
   },
 };
+
+function LogoutIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>;
+}
 
 export default function AccountLogout() {
   const router = useRouter();
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
-
   const [isGuest, setIsGuest] = useState(false);
   const [checking, setChecking] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -60,25 +40,13 @@ export default function AccountLogout() {
 
   async function startLogout() {
     if (checking || loading) return;
-
     setError("");
     setChecking(true);
-
     try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
-
-      if (!user) {
-        router.replace("/login");
-        return;
-      }
-
+      if (!user) { router.replace("/login"); return; }
       const guest = Boolean(user.is_anonymous);
-
       setIsGuest(guest);
       setShowWarning(guest);
       setShowFinalConfirm(!guest);
@@ -92,16 +60,11 @@ export default function AccountLogout() {
 
   async function handleLogout() {
     if (loading) return;
-
     setLoading(true);
     setError("");
-
     try {
-      const { error: signOutError } =
-        await supabase.auth.signOut({ scope: "local" });
-
+      const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
       if (signOutError) throw signOutError;
-
       router.replace("/login");
       router.refresh();
     } catch (err) {
@@ -111,102 +74,50 @@ export default function AccountLogout() {
     }
   }
 
+  function closeDialogs() {
+    if (loading) return;
+    setShowWarning(false);
+    setShowFinalConfirm(false);
+    setError("");
+  }
+
   return (
     <div className="df-account-logout">
-
       {!showWarning && !showFinalConfirm && (
-        <button
-          onClick={startLogout}
-          disabled={checking || loading}
-          className="df-account-logout-button"
-        >
-          {checking ? t.checking : t.title}
+        <button type="button" onClick={startLogout} disabled={checking || loading} className="df-account-logout-button">
+          <LogoutIcon /><span>{checking ? t.checking : t.title}</span>
         </button>
       )}
-
-      {(showWarning || showFinalConfirm) && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="logout-dialog-title"
-            className="w-full max-w-sm max-h-[88dvh] overflow-y-auto overscroll-contain rounded-2xl border border-red-500/25 bg-[#151020] p-5 sm:p-6 shadow-[0_20px_80px_rgba(0,0,0,0.7)] ui-popup ui-gradient-frame ui-card"
-          >
-            {showWarning && isGuest ? (
-              <div className="space-y-4">
-                <h3 id="logout-dialog-title" className="font-bold text-amber-300">
-                  ⚠ {t.guestTitle}
-                </h3>
-                <p className="text-sm text-gray-300 leading-relaxed">{t.guestMessage}</p>
-                <p className="text-sm font-semibold text-purple-300">{t.guestAction}</p>
-                <Link
-                  href="/profile#account-security"
-                  onClick={() => setShowWarning(false)}
-                  className="block text-center rounded-lg bg-purple-600 hover:bg-purple-500 py-3 text-sm font-bold transition"
-                >
-                  {t.connect}
-                </Link>
-                {!showFinalConfirm ? (
-                  <button
-                    onClick={() => setShowFinalConfirm(true)}
-                    className="w-full rounded-lg border border-red-500/30 bg-red-500/10 py-3 text-sm font-bold text-red-300"
-                  >
-                    {t.logoutAnyway}
-                  </button>
-                ) : (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-3 space-y-3">
-                    <p className="text-sm text-red-300">{t.confirmGuest}</p>
-                    <button
-                      onClick={handleLogout}
-                      disabled={loading}
-                      className="w-full rounded-lg bg-red-600 hover:bg-red-500 py-3 text-sm font-bold disabled:opacity-50"
-                    >
-                      {loading ? t.signingOut : t.confirm}
-                    </button>
-                  </div>
-                )}
-                <button
-                  onClick={() => {
-                    setShowWarning(false);
-                    setShowFinalConfirm(false);
-                    setError("");
-                  }}
-                  disabled={loading}
-                  className="w-full rounded-lg bg-white/10 py-3 text-sm font-bold"
-                >
-                  {t.cancel}
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <h3 id="logout-dialog-title" className="font-bold text-red-300">{t.title}</h3>
-                <p className="text-sm text-gray-300">{t.confirmNormal}</p>
-                <button
-                  onClick={handleLogout}
-                  disabled={loading}
-                  className="w-full rounded-lg bg-red-600 hover:bg-red-500 py-3 text-sm font-bold disabled:opacity-50"
-                >
-                  {loading ? t.signingOut : t.confirm}
-                </button>
-                <button
-                  onClick={() => setShowFinalConfirm(false)}
-                  disabled={loading}
-                  className="w-full rounded-lg bg-white/10 py-3 text-sm font-bold"
-                >
-                  {t.cancel}
-                </button>
-              </div>
-            )}
-            {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-          </div>
+      <ConfirmDialog
+        open={showWarning && isGuest}
+        onClose={() => { if (!loading) setShowWarning(false); }}
+        onConfirm={() => { setShowWarning(false); setShowFinalConfirm(true); }}
+        title={t.guestTitle}
+        description={t.guestMessage}
+        confirmLabel={t.logoutAnyway}
+        cancelLabel={t.cancel}
+        confirmVariant="danger"
+        loading={loading}
+      >
+        <div className="df-account-logout-warning">
+          <p>{t.guestAction}</p>
+          <Link href="/profile#account-security" onClick={() => setShowWarning(false)}>{t.connect}</Link>
+          {error && <p className="df-account-logout-error" role="alert">{error}</p>}
         </div>
-      )}
-
-      {error && (
-        <p className="text-sm text-red-400">
-          {error}
-        </p>
-      )}
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={showFinalConfirm}
+        onClose={closeDialogs}
+        onConfirm={handleLogout}
+        title={t.title}
+        description={isGuest ? t.confirmGuest : t.confirmNormal}
+        confirmLabel={loading ? t.signingOut : t.confirm}
+        cancelLabel={t.cancel}
+        confirmVariant="danger"
+        loading={loading}
+      >
+        {error && <p className="df-account-logout-error" role="alert">{error}</p>}
+      </ConfirmDialog>
     </div>
   );
 }
