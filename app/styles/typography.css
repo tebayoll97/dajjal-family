@@ -131,3 +131,8 @@
  .df-shell-workspace-content .ui-heading-h2{font-size:var(--df-type-mobile-subheading)}
  .df-shell-workspace-content .ui-prose,.df-shell-workspace-content .ui-text-body{font-size:var(--df-type-mobile-body)}
 }
+
+
+/* Semantic workspace shell refinement. */
+.df-shell-drawer-brand strong{font-size:var(--df-type-nav-brand-size);line-height:var(--df-type-nav-brand-leading)}.df-shell-drawer-section{font-size:var(--df-type-nav-section-size);line-height:var(--df-type-nav-meta-leading)}.df-shell-drawer-nav a{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+@media(max-width:760px){.df-shell-drawer-nav a{font-size:var(--df-workspace-nav-compact-font-size);line-height:var(--df-leading-normal)}.df-shell-drawer-foot .ui-button{font-size:var(--df-workspace-nav-compact-font-size)}}
