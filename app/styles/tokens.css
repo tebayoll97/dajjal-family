@@ -133,6 +133,14 @@
   --df-breakpoint-mobile: 760px;
   --df-breakpoint-tablet: 1024px;
 
+  /* Reusable administrative content surface contracts. */
+  --df-admin-panel-padding: clamp(1rem, 1.6vw, 1.5rem);
+  --df-admin-panel-gap: clamp(.875rem, 1.4vw, 1.25rem);
+  --df-admin-panel-radius: var(--df-radius-xl);
+  --df-admin-panel-border: var(--df-border);
+  --df-admin-panel-surface: var(--df-surface);
+  --df-admin-panel-shadow: var(--df-shadow-sm);
+
   /* Shared component contracts — dimensions, layering and interaction. */
   --df-control-height-sm: 2.25rem;
   --df-control-height-md: 2.75rem;
