@@ -215,3 +215,7 @@
 
 /* Blog listing compact layout roles — inherit the active global theme. */
 :root{--df-blog-index-gap:var(--df-space-3);--df-blog-card-padding:var(--df-space-4);--df-blog-mobile-thumb:6.5rem;--df-blog-mobile-thumb-small:5.5rem;--df-blog-filter-gap:var(--df-space-2);--df-blog-card-radius:var(--df-radius-lg)}
+
+
+/* Author byline semantic roles — mapped to the active global theme. */
+:root{--df-editorial-byline-label-color:var(--df-text-muted);--df-editorial-byline-author-color:var(--df-primary);--df-editorial-author-avatar-size:4.5rem}
