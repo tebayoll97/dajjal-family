@@ -18,13 +18,13 @@ export default function BlogArticle({ article, navigation }) {
         { label: "Blog", href: `/${language}/blog` },
         { label: article.title },
       ]} />
+      <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={language} className="df-blog-article-byline" />
       <div className="ui-blog-article-layout">
         <article className="ui-stack df-blog-article-content">
           <header className="ui-page-heading">
             {article.category?.name_id ? <Badge>{isIndonesian ? article.category.name_id : article.category.name_en || article.category.name_id}</Badge> : null}
             <h1 className="ui-heading-h1">{article.title}</h1>
             {article.excerpt ? <p className="ui-subtitle">{article.excerpt}</p> : null}
-            <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} readingTime={article.reading_minutes} locale={language} />
           </header>
           <Image className="df-blog-article-cover" src={article.cover_image_url || "/dajjalfamily_icon_192.png"} alt={article.cover_image_alt || article.title || "DAJJAL FAMILY"} width={1440} height={810} unoptimized={!article.cover_image_url?.includes("/storage/v1/object/public/df-blog-media/")} priority />
           <Card className="df-blog-prose">
