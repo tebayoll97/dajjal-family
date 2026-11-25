@@ -28,6 +28,8 @@ export default async function sitemap() {
 
   if (error) console.error("Blog sitemap query failed:", error);
 
+  const authorProfiles = locales.map((locale) => ({ url: `${origin}/${locale}/blog/author/tebayoll`, changeFrequency: "monthly", priority: 0.45, alternates: { languages: { id: `${origin}/id/blog/author/tebayoll`, en: `${origin}/en/blog/author/tebayoll` } } }));
+
   const articles = (data || []).flatMap((article) => {
     const languages = {};
     if (article.slug_id) languages.id = `${origin}/id/blog/${article.slug_id}`;
@@ -43,5 +45,5 @@ export default async function sitemap() {
       }));
   });
 
-  return [...fixed, ...articles];
+  return [...fixed, ...authorProfiles, ...articles];
 }
