@@ -236,3 +236,8 @@
 /* Contributor identity card semantic roles. */
 :root{--df-contributor-card-gap:var(--df-space-4);--df-contributor-card-padding:var(--df-space-4);--df-contributor-card-radius:var(--df-radius-lg);--df-contributor-grid-gap:var(--df-space-4);--df-contributor-avatar-size:3.5rem}
 @media(min-width:768px){:root{--df-contributor-card-padding:var(--df-space-5);--df-contributor-avatar-size:4rem}}
+
+
+/* VerificationState semantic visual tokens. */
+:root{--df-verification-logo-size:2.1rem;--df-verification-logo-size-compact:1rem;--df-verification-mark-size:3.75rem;--df-verification-mark-size-mobile:3rem;--df-verification-mark-gap:var(--df-space-4);--df-verification-copy-gap:var(--df-space-2);--df-verification-panel-padding:clamp(var(--df-space-4),3vw,var(--df-space-8));--df-verification-panel-radius:var(--df-radius-xl)}
+@media(max-width:600px){:root{--df-verification-mark-size:var(--df-verification-mark-size-mobile);--df-verification-mark-gap:var(--df-space-3);--df-verification-panel-padding:var(--df-space-4)}}
