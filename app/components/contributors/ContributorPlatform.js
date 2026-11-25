@@ -8,6 +8,8 @@ import { Badge,Button,Card,ConfirmDialog,EmptyState,FeedbackDialog,PageHeader,Se
 import AuthorPortal from "@/app/components/blog/AuthorPortal";
 import ContributorProfileEditor from "@/app/components/blog/ContributorProfileEditor";
 
+let contributorSessionSnapshot = null;
+
 const copy = {
  id:{home:"Ringkasan ruang kerja",profile:"Profil saya",blog:"Blog Studio",tasks:"Tugas saya",security:"Keamanan akun",login:"Masuk ke Contributor Shell",email:"Email kontributor",password:"Password",signIn:"Masuk",signOut:"Keluar",welcome:"Selamat datang",intro:"Kelola kontribusi dan tugas lintas modul DAJJAL FAMILY dari satu ruang kerja.",changeTitle:"Buat password baru",changeHint:"Password sementara hanya untuk login pertama. Ganti sekarang sebelum melanjutkan.",newPassword:"Password baru",confirm:"Konfirmasi password baru",save:"Simpan password baru",tasksEmpty:"Belum ada tugas untuk akun ini.",taskIntro:"Tugas yang diberikan Admin akan muncul di sini.",noPermission:"Akun ini belum memiliki akses ke modul tersebut.",loading:"Memeriksa akun kontributor…",access:"Akses kontributor belum aktif. Hubungi Admin."},
  en:{home:"Workspace overview",profile:"My profile",blog:"Blog Studio",tasks:"My tasks",security:"Account security",login:"Sign in to Contributor Shell",email:"Contributor email",password:"Password",signIn:"Sign in",signOut:"Sign out",welcome:"Welcome",intro:"Manage your contributions and cross-module tasks from one DAJJAL FAMILY workspace.",changeTitle:"Create a new password",changeHint:"Your temporary password is for first sign-in only. Change it before continuing.",newPassword:"New password",confirm:"Confirm new password",save:"Save new password",tasksEmpty:"There are no tasks assigned to this account yet.",taskIntro:"Tasks assigned by Admin will appear here.",noPermission:"This account does not have access to this module.",loading:"Verifying contributor account…",access:"Contributor access is not active. Contact Admin."}
@@ -19,10 +21,11 @@ export default function ContributorPlatform({section="home"}){
  const client=clientKey==="admin"?supabaseAdminClient:supabase;
  const inspect=useCallback(async(active,key)=>{
   if(!active?.access_token){setLoading(false);return false;}
+  if(contributorSessionSnapshot?.accessToken===active.access_token){const cached=contributorSessionSnapshot;setSession(active);setClientKey(key);setContributor(cached.contributor);setPermissions(cached.permissions);setEmail(cached.contributor.email||active.user?.email||"");setError("");setLoading(false);return true;}
   const response=await fetch("/api/contributors/session",{headers:{Authorization:"Bearer "+active.access_token},cache:"no-store"});
   const result=await response.json().catch(()=>({}));
-  if(!response.ok){setSession(null);setContributor(null);setPermissions([]);setError(result.error||t.access);setLoading(false);return false;}
-  setSession(active);setClientKey(key);setContributor(result.contributor);setPermissions(result.permissions||[]);setEmail(result.contributor.email||active.user?.email||"");setError("");setLoading(false);return true;
+  if(!response.ok){contributorSessionSnapshot=null;setSession(null);setContributor(null);setPermissions([]);setError(result.error||t.access);setLoading(false);return false;}
+  contributorSessionSnapshot={accessToken:active.access_token,contributor:result.contributor,permissions:result.permissions||[]};setSession(active);setClientKey(key);setContributor(result.contributor);setPermissions(result.permissions||[]);setEmail(result.contributor.email||active.user?.email||"");setError("");setLoading(false);return true;
  },[t.access]);
  useEffect(()=>{let live=true;(async()=>{
   const admin=await supabaseAdminClient.auth.getSession();
@@ -50,7 +53,7 @@ export default function ContributorPlatform({section="home"}){
   if(!response.ok){setError(body.error||"Unable to activate contributor account.");setBusy(false);return;}
   setContributor(c=>({...c,must_change_password:false}));setNewPassword("");setConfirmPassword("");setMessage(isEn?"Password updated. Your workspace is ready.":"Password berhasil diperbarui. Ruang kerja siap digunakan.");setBusy(false);
  }
- async function signOut(){if(busy)return;setBusy(true);const {error:signOutError}=await client.auth.signOut();if(signOutError){setError(signOutError.message);setBusy(false);return;}setSignOutOpen(false);setDrawerOpen(false);setSession(null);setContributor(null);setPermissions([]);setPassword("");setBusy(false);}
+ async function signOut(){if(busy)return;setBusy(true);const {error:signOutError}=await client.auth.signOut();if(signOutError){setError(signOutError.message);setBusy(false);return;}contributorSessionSnapshot=null;setSignOutOpen(false);setDrawerOpen(false);setSession(null);setContributor(null);setPermissions([]);setPassword("");setBusy(false);}
  useEffect(()=>{if(!session||section!=="tasks")return;let active=true;fetch("/api/contributors/tasks",{headers:{Authorization:"Bearer "+session.access_token},cache:"no-store"}).then(r=>r.json()).then(j=>{if(active&&j.success)setTasks(j.tasks||[]);}).catch(()=>{});return()=>{active=false;};},[session,section]);
  
  return <main className="ui-page ui-stack">
