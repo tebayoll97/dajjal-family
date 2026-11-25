@@ -93,7 +93,7 @@ export default function AdminWeddingGuestbookPage() {
     } finally {
       setLoading(false);
     }
-  }, [adminToken, page, router]);
+  }, [adminToken, page, router, tx]);
 
   useEffect(() => {
     if (adminToken) loadEntries(page);
