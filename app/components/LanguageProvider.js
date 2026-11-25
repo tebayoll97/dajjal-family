@@ -24,6 +24,7 @@ export function LanguageProvider({ children, initialLanguage = "id" }) {
       blogSegments.length === 2 &&
       blogSegments[0] === "blog" &&
       blogSegments[1] &&
+      blogSegments[1] !== "author" &&
       currentLocale
     ) {
       try {
