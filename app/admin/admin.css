@@ -252,3 +252,22 @@
 @media(max-width:820px){#df-admin-shell{display:block}#df-admin-shell .df-admin-sidebar{display:flex;position:fixed;inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;z-index:calc(var(--df-z-overlay) + 1);border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard);box-shadow:var(--df-shadow-lg)}#df-admin-shell .df-admin-sidebar[data-open="true"]{transform:translateX(0)}#df-admin-shell .df-admin-topbar{position:sticky;top:0;z-index:var(--df-z-dropdown);display:flex;align-items:center;flex-wrap:wrap}#df-admin-shell .df-admin-drawer-toggle{display:inline-flex;min-width:var(--df-workspace-nav-compact-button-height);min-height:var(--df-workspace-nav-compact-button-height);align-items:center;justify-content:center;font-size:var(--df-workspace-nav-compact-font-size)}#df-admin-shell .df-admin-drawer-backdrop{display:block;position:fixed;inset:0;z-index:var(--df-z-overlay);border:0;background:var(--df-workspace-drawer-backdrop)}#df-admin-shell .df-admin-topbar-actions .ui-button{min-height:var(--df-workspace-nav-compact-button-height);padding:var(--df-space-2) var(--df-space-3);font-size:var(--df-workspace-nav-compact-font-size)}#df-admin-shell .df-admin-mobile-nav{display:none!important}}
 @media(max-width:520px){#df-admin-shell .df-admin-topbar{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-2);padding:var(--df-space-3)}#df-admin-shell .df-admin-topbar-copy{min-width:0;flex:1}#df-admin-shell .df-admin-topbar-actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--df-space-1)}#df-admin-shell .df-admin-topbar-actions .ui-badge{display:none}#df-admin-shell .df-admin-topbar-actions .ui-button{min-height:var(--df-workspace-nav-compact-button-height);padding-inline:var(--df-space-2);font-size:var(--df-workspace-nav-compact-font-size)}#df-admin-shell .df-admin-overline{font-size:var(--df-type-nav-meta-size)}#df-admin-shell .df-admin-current-route{font-size:var(--df-workspace-nav-compact-font-size)}}
 @media(prefers-reduced-motion:reduce){#df-admin-shell .df-admin-sidebar{transition:none}}
+
+/* Explicit split navigation modes: desktop rail and independent mobile overlay drawer. */
+#df-admin-shell .df-admin-desktop-drawer{display:flex;grid-column:1;grid-row:1;min-width:0;width:100%;z-index:var(--df-z-base)}
+#df-admin-shell .df-admin-mobile-drawer{display:none}
+#df-admin-shell .df-admin-workspace{grid-column:2;grid-row:1;min-width:0}
+#df-admin-shell .df-admin-topbar{min-width:0}
+#df-admin-shell .df-admin-drawer-toggle{display:none}
+@media(max-width:820px){
+ #df-admin-shell{display:block}
+ #df-admin-shell .df-admin-desktop-drawer{display:none!important}
+ #df-admin-shell .df-admin-mobile-drawer{display:flex;position:fixed;inset:0 auto 0 0;z-index:calc(var(--df-z-overlay) + 2);width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;margin:0;padding:var(--df-workspace-drawer-padding);border:1px solid var(--df-workspace-nav-border);border-left:0;border-radius:0 var(--df-workspace-panel-radius) var(--df-workspace-panel-radius) 0;transform:translateX(-110%);transition:transform var(--df-duration-normal) var(--df-motion-standard);box-shadow:var(--df-shadow-lg);background:var(--df-workspace-nav-surface)}
+ #df-admin-shell .df-admin-mobile-drawer[data-open="true"]{transform:translateX(0)}
+ #df-admin-shell .df-admin-drawer-toggle{display:inline-flex;min-width:var(--df-workspace-nav-compact-button-height);min-height:var(--df-workspace-nav-compact-button-height);align-items:center;justify-content:center}
+ #df-admin-shell .df-admin-drawer-backdrop{display:block;position:fixed;inset:0;z-index:calc(var(--df-z-overlay) + 1);width:100%;height:100%;border:0;background:var(--df-workspace-drawer-backdrop)}
+ #df-admin-shell .df-admin-topbar{z-index:var(--df-z-dropdown)}
+ #df-admin-shell .df-admin-workspace{display:flex;min-height:100svh;flex-direction:column}
+ #df-admin-shell .df-admin-main{padding:var(--df-workspace-content-gutter)}
+}
+@media(prefers-reduced-motion:reduce){#df-admin-shell .df-admin-mobile-drawer{transition:none}}
