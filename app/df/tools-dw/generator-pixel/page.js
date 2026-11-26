@@ -408,16 +408,13 @@ export default function GeneratorPixelPage() {
 
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData?.session?.access_token) throw new Error(t.session);
-      const form = new FormData();
-      form.append("file", file);
-      const response = await fetch("/api/df/tools-dw/generator-pixel/upload", {
+      const response = await fetch("/api/df/tools-dw/generator-pixel/authorize", {
         method: "POST",
         headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
-        body: form,
         cache: "no-store",
       });
-      const uploaded = await response.json().catch(() => ({}));
-      if (!response.ok || !uploaded.success) throw new Error(uploaded.error || t.uploadError);
+      const authorization = await response.json().catch(() => ({}));
+      if (!response.ok || !authorization.success) throw new Error(authorization.error || t.session);
 
       const historyEntry = {
         id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
