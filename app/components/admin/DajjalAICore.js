@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import DajjalAIChat from "@/app/components/admin/DajjalAIChat";
 import {
   Badge, Button, Card, EmptyState, FeedbackDialog, SectionHeader, SwitchField, TextField
 } from "@/app/components/ui";
@@ -147,6 +148,8 @@ export default function DajjalAICore() {
         variant={error ? "danger" : "success"}
         closeLabel={id ? "Tutup" : "Close"}
       />
+
+      <DajjalAIChat session={session} language={language} />
 
       <Card className="ui-stack">
         <SectionHeader
