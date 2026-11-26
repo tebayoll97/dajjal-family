@@ -50,3 +50,14 @@
 .df-creator-modebar button[aria-pressed=true]{border-color:var(--df-primary);background:var(--df-primary-soft);color:var(--df-primary-text)}
 
 .df-creator-canvas-wrap{aspect-ratio:var(--df-creator-canvas-ratio,4/5)}.df-creator-canvas{touch-action:pan-y}
+
+.df-creator-zoombar{display:flex;align-items:center;justify-content:center;gap:var(--df-space-2);flex-wrap:wrap;padding:var(--df-space-2);border:1px solid var(--df-creator-border);border-radius:var(--df-radius-md);background:var(--df-surface)}
+.df-creator-zoom-value{display:grid;grid-template-columns:auto;gap:2px;min-width:5.5rem;max-width:9rem;color:var(--df-text);font-size:var(--df-type-mobile-small);text-align:center}
+.df-creator-zoom-value input{width:100%;accent-color:var(--df-primary)}
+.df-creator-canvas-viewport{display:flex;align-items:center;justify-content:center;width:100%;min-height:22rem;max-height:72vh;overflow:hidden;overscroll-behavior:contain;border:1px solid var(--df-creator-border);border-radius:var(--df-radius-lg);background:var(--df-bg);touch-action:none;cursor:grab}
+.df-creator-canvas-viewport:active{cursor:grabbing}
+.df-creator-canvas{flex:0 0 auto;width:min(100%,32rem);height:auto;aspect-ratio:4/5;transform-origin:center center;max-height:none;user-select:none;-webkit-user-drag:none}
+.df-creator-panel-toggle{display:flex;width:100%;min-height:44px;align-items:center;justify-content:space-between;gap:var(--df-space-2);padding:0;border:0;background:transparent;color:var(--df-text);font:inherit;text-align:left;cursor:pointer}
+.df-creator-panel-toggle svg{transition:transform var(--df-duration-fast)}
+.df-creator-panel-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
+@media(max-width:620px){.df-creator-canvas-viewport{min-height:18rem;max-height:62vh}.df-creator-zoombar{gap:var(--df-space-1)}.df-creator-zoom-value{min-width:4.5rem;max-width:6rem}.df-creator-zoombar .ui-button{min-height:44px}}

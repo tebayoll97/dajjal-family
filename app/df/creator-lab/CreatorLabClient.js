@@ -28,6 +28,7 @@ const COPY = {
     accentLayer: "Aksen", backgroundLayer: "Latar", templateA: "Crimson Vanguard", templateB: "Azure Protocol", templateC: "Midnight Ops",
     projectName: "Nama proyek", noAI: "NO-AI WORKFLOW", help: "Pilih template, unggah avatar, ubah identitas, lalu atur layer.",
     confirmDelete: "Hapus proyek ini dari perangkat?",
+    quick: "Quick Creator", advanced: "Advanced Editor", zoom: "Zoom", fit: "Sesuaikan", zoomIn: "Perbesar", zoomOut: "Perkecil", panHint: "Geser canvas saat diperbesar. Cubit dengan dua jari untuk zoom.", templates: "Template desain", propertiesPanel: "Properti desain", layersPanel: "Susunan layer", collapse: "Ciutkan", expand: "Buka", zoomReset: "Ukuran asli",
   },
   en: {
     eyebrow: "DF CREATOR LAB · GAMING IDENTITY", title: "Gaming Identity Creator",
@@ -48,6 +49,7 @@ const COPY = {
     accentLayer: "Accent", backgroundLayer: "Background", templateA: "Crimson Vanguard", templateB: "Azure Protocol", templateC: "Midnight Ops",
     projectName: "Project name", noAI: "NO-AI WORKFLOW", help: "Choose a template, upload an avatar, edit your identity, then arrange layers.",
     confirmDelete: "Delete this project from this device?",
+    quick: "Quick Creator", advanced: "Advanced Editor", zoom: "Zoom", fit: "Fit", zoomIn: "Zoom in", zoomOut: "Zoom out", panHint: "Drag the canvas while zoomed in. Pinch with two fingers to zoom.", templates: "Design templates", propertiesPanel: "Design properties", layersPanel: "Layer stack", collapse: "Collapse", expand: "Expand", zoomReset: "Actual size",
   },
 };
 
@@ -79,8 +81,12 @@ export default function CreatorLabClient() {
   const [showProjects, setShowProjects] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const [mode, setMode] = useState("quick");
-  const [canvasWidth, setCanvasWidth] = useState(WIDTH);
-  const [canvasHeight, setCanvasHeight] = useState(HEIGHT);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [collapsed, setCollapsed] = useState({ properties: false, layers: false, templates: false });
+  const viewportRef = useRef(null);
+  const pointersRef = useRef(new Map());
+  const gestureRef = useRef(null);
   const canvasRef = useRef(null);
   const avatarInputRef = useRef(null);
   const importInputRef = useRef(null);
@@ -117,6 +123,43 @@ export default function CreatorLabClient() {
     return () => { if (saveTimer.current) window.clearTimeout(saveTimer.current); };
   }, [project, refreshProjects]);
 
+  const clampZoom = (value) => Math.min(4, Math.max(0.1, value));
+  const changeZoom = (value) => { setZoom(clampZoom(value)); if (value <= 1) setPan({ x: 0, y: 0 }); };
+  const fitCanvas = () => { setZoom(1); setPan({ x: 0, y: 0 }); };
+  const togglePanel = (name) => setCollapsed((current) => ({ ...current, [name]: !current[name] }));
+  const onCanvasPointerDown = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 1) gestureRef.current = { type: "pan", x: event.clientX, y: event.clientY, pan };
+    if (pointersRef.current.size === 2) {
+      const points = [...pointersRef.current.values()];
+      gestureRef.current = { type: "pinch", distance: Math.hypot(points[0].x-points[1].x, points[0].y-points[1].y), zoom };
+    }
+  };
+  const onCanvasPointerMove = (event) => {
+    if (!pointersRef.current.has(event.pointerId)) return;
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const gesture = gestureRef.current;
+    if (pointersRef.current.size >= 2 && gesture?.type === "pinch") {
+      const points = [...pointersRef.current.values()];
+      const distance = Math.hypot(points[0].x-points[1].x, points[0].y-points[1].y);
+      changeZoom(gesture.zoom * distance / Math.max(1, gesture.distance));
+    } else if (pointersRef.current.size === 1 && gesture?.type === "pan" && zoom > 1) {
+      setPan({ x: gesture.pan.x + event.clientX - gesture.x, y: gesture.pan.y + event.clientY - gesture.y });
+    }
+  };
+  const onCanvasPointerUp = (event) => {
+    pointersRef.current.delete(event.pointerId);
+    const points = [...pointersRef.current.values()];
+    if (points.length === 1) gestureRef.current = { type: "pan", x: points[0].x, y: points[0].y, pan };
+    else gestureRef.current = null;
+  };
+  const onCanvasWheel = (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    changeZoom(zoom * (event.deltaY < 0 ? 1.1 : 0.9));
+  };
   const selectedLayer = useMemo(() => project.layers.find((layer) => layer.id === selectedId) || null, [project.layers, selectedId]);
   const commit = useCallback((next) => {
     const current = projectRef.current;
@@ -252,7 +295,7 @@ export default function CreatorLabClient() {
     <main className="ui-page df-creator-page">
       <PageHeader eyebrow={t.eyebrow} title={t.title} description={t.description}
         actions={<div className="ui-cluster df-creator-header-actions"><Badge variant="info">{t.noAI}</Badge><Button size="sm" variant="secondary" onClick={() => setConfirm({ kind: "new" })}><SvgIcon name="file-plus" size={16}/>{t.newProject}</Button></div>} />
-      <div className="df-creator-modebar"><button type="button" aria-pressed={mode === "quick"} onClick={() => setMode("quick")}>Quick Creator</button><button type="button" aria-pressed={mode === "advanced"} onClick={() => setMode("advanced")}>Advanced Editor</button></div>
+      <div className="df-creator-modebar"><button type="button" aria-pressed={mode === "quick"} onClick={() => setMode("quick")}>{t.quick}</button><button type="button" aria-pressed={mode === "advanced"} onClick={() => setMode("advanced")}>{t.advanced}</button></div>
       <div className="df-creator-toolbar">
         <div className="df-creator-toolbar-group">
           <Button size="sm" variant="secondary" onClick={undo} disabled={!past.length}><SvgIcon name="undo" size={16}/>{t.undo}</Button>
@@ -272,23 +315,34 @@ export default function CreatorLabClient() {
       <div className="df-creator-workspace">
         <section className="df-creator-stage-column" aria-label={t.editor}>
           <Card className="df-creator-stage-card">
-            <div className="df-creator-stage-heading"><strong>{t.editor}</strong><span>{t.canvasHint} · {project.width} × {project.height}</span></div>
-            <div className="df-creator-canvas-wrap"><canvas ref={canvasRef} className="df-creator-canvas" aria-label={t.canvasHint} /></div>
-            <p className="ui-caption">{mode === "quick" ? t.help : "Advanced Editor: gunakan daftar layer dan properti untuk menyusun desain."}</p>
+            <div className="df-creator-stage-heading"><strong>{t.editor}</strong><span>{project.width} × {project.height} px</span></div>
+            <div className="df-creator-zoombar" aria-label={t.zoom}>
+              <Button size="sm" variant="secondary" onClick={() => changeZoom(zoom - 0.1)} disabled={zoom <= 0.1} aria-label={t.zoomOut}><SvgIcon name="minus" size={16}/></Button>
+              <label className="df-creator-zoom-value"><span>{Math.round(zoom * 100)}%</span><input aria-label={t.zoom} type="range" min="10" max="400" step="5" value={Math.round(zoom*100)} onChange={(event) => changeZoom(Number(event.target.value)/100)}/></label>
+              <Button size="sm" variant="secondary" onClick={() => changeZoom(zoom + 0.1)} disabled={zoom >= 4} aria-label={t.zoomIn}><SvgIcon name="plus" size={16}/></Button>
+              <Button size="sm" variant="secondary" onClick={fitCanvas}><SvgIcon name="maximize" size={16}/>{t.fit}</Button>
+              <Button size="sm" variant="ghost" onClick={fitCanvas}>{t.zoomReset}</Button>
+            </div>
+            <div ref={viewportRef} className="df-creator-canvas-viewport" onPointerDown={onCanvasPointerDown} onPointerMove={onCanvasPointerMove} onPointerUp={onCanvasPointerUp} onPointerCancel={onCanvasPointerUp} onWheel={onCanvasWheel}>
+              <canvas ref={canvasRef} className="df-creator-canvas" aria-label={t.canvasHint} style={{ transform: `translate(${pan.x}px,${pan.y}px) scale(${zoom})` }} />
+            </div>
+            <p className="ui-caption">{mode === "quick" ? t.help : t.panHint}</p>
           </Card>
           <Card className="df-creator-template-card">
-            <div className="df-creator-section-heading"><strong>{t.template}</strong><Badge>{project.templateId}</Badge></div>
+            <button type="button" className="df-creator-panel-toggle" aria-expanded={!collapsed.templates} onClick={() => togglePanel("templates")}><strong>{t.templates}</strong><SvgIcon name="chevron-down" size={18}/></button>
+            {!collapsed.templates ? <><div className="df-creator-section-heading"><span>{t.template}</span><Badge>{project.templateId}</Badge></div>
             <div className="df-creator-template-grid">
               {TEMPLATES.map((template) => <button type="button" key={template.id} className="df-creator-template" data-active={project.templateId === template.id} onClick={() => changeTemplate(template.id)}>
                 <span style={{ background: template.background }}><i style={{ background: template.accent }} /></span><strong>{t[template.label]}</strong>
               </button>)}
-            </div>
+            </div></> : null}
           </Card>
         </section>
 
         <aside className="df-creator-editor-column">
           <Card className="df-creator-editor-card">
-            <div className="df-creator-section-heading"><strong>{mode === "quick" ? "Quick Creator" : t.properties}</strong><span>{t.selected}</span></div>
+            <button type="button" className="df-creator-panel-toggle" aria-expanded={!collapsed.properties} onClick={() => togglePanel("properties")}><strong>{mode === "quick" ? t.quick : t.propertiesPanel}</strong><SvgIcon name="chevron-down" size={18}/></button>
+            {!collapsed.properties ? <><div className="df-creator-section-heading"><span>{t.selected}</span></div>
             <div className="df-creator-form-grid">
               <TextField label={t.projectName} value={project.name} maxLength={100} onChange={(event) => commit((current) => ({ ...current, name: event.target.value }))} />
               <TextField label={t.player} value={project.layers.find((layer) => layer.name === "player")?.text || ""} maxLength={32} onChange={(event) => { const layer = project.layers.find((item) => item.name === "player"); if (layer) updateLayer(layer.id, { text: event.target.value }); }} />
@@ -312,11 +366,12 @@ export default function CreatorLabClient() {
               </> : <p className="ui-caption">{selectedLayer.type === "image" ? t.imageLayer : t.accentLayer}</p>}
               <label className="df-creator-range"><span>{t.x}</span><input type="range" min="0" max={WIDTH} value={selectedLayer.x} onChange={(event) => updateLayer(selectedLayer.id, { x: Number(event.target.value) })}/></label>
               <label className="df-creator-range"><span>{t.y}</span><input type="range" min="0" max={HEIGHT} value={selectedLayer.y} onChange={(event) => updateLayer(selectedLayer.id, { y: Number(event.target.value) })}/></label>
-            </div> : <p className="ui-caption">{t.emptySelection}</p>}
+            </div> : <p className="ui-caption">{t.emptySelection}</p>}</> : null}
           </Card>
 
           {mode === "advanced" ? <Card className="df-creator-layers-card">
-            <div className="df-creator-section-heading"><strong>{t.layers}</strong><span>{project.layers.length}</span></div>
+            <button type="button" className="df-creator-panel-toggle" aria-expanded={!collapsed.layers} onClick={() => togglePanel("layers")}><strong>{t.layersPanel} ({project.layers.length})</strong><SvgIcon name="chevron-down" size={18}/></button>
+            {!collapsed.layers ? <>
             <div className="df-creator-layer-list">
               {[...project.layers].reverse().map((layer) => <div className="df-creator-layer" key={layer.id} data-selected={selectedId === layer.id}>
                 <button type="button" className="df-creator-layer-select" onClick={() => setSelectedId(layer.id)}><span>{labelFor(layer)}</span><small>{layer.type}</small></button>
@@ -325,7 +380,7 @@ export default function CreatorLabClient() {
                 <Button size="sm" variant="ghost" onClick={() => moveLayer(layer.id, 1)} aria-label={t.down}><SvgIcon name="arrow-down" size={16}/></Button>
                 <Button size="sm" variant="ghost" onClick={() => commit((current) => ({ ...current, layers: current.layers.filter((item) => item.id !== layer.id) }))} aria-label={t.remove}><SvgIcon name="trash" size={16}/></Button>
               </div>)}
-            </div>
+            </div></> : null}
           </Card> : null}
         </aside>
       </div>
