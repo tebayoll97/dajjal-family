@@ -264,3 +264,11 @@
 - Expanded the live Button preview in Component Workbench to show Primary Action, Small, Large, Loading, and Disabled using the production `Button` component.
 - Documented the token contract in the Design System and Component Catalog.
 - No routes, page-specific button classes, APIs, database, Auth, or user data were changed.
+
+
+## 2026-11-26 — Global Button Shadow and Home / DF Adoption
+
+- Added a consistent semantic shadow to the shared `.ui-button` primitive, with a stronger hover elevation and restrained active state using existing `--df-shadow-sm` / `--df-shadow-md` tokens.
+- Expanded the Design System Workbench Button preview to include the Secondary variant alongside the existing size, loading, and disabled states.
+- Migrated Home hero CTAs and `/df` hero CTAs to the global `.ui-button` primary/secondary variants; removed Home-local button skin declarations and updated `/df` responsive selectors to size the global buttons only.
+- Kept button navigation as Next.js Links and preserved their existing destinations and anchor targets. No button behavior, route semantics, API, database, or authentication logic changed.

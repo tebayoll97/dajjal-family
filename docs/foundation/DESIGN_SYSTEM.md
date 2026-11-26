@@ -656,3 +656,11 @@ The standard public Contact page uses the reusable `ContactChannelCard` componen
 - Official platform colors are limited to their icon marks and are represented by semantic tokens; they must not recolor the global card surface or primary action palette.
 - Small mobile uses a compact single-column layout; wider screens use a two-column layout. Preserve touch target, readable metadata, visible focus, and reduced-motion behavior.
 - The production component must remain visible in Design System Component Workbench section 14 and documented in Component Catalog.
+
+
+## Global Button Styling — shared action contract
+
+- The reusable `Button` primitive and navigation links styled with `.ui-button` share the global component CSS in `app/styles/components.css`.
+- Primary, secondary, ghost, and danger variants inherit the shared shadow treatment (`--df-shadow-sm`, increasing to `--df-shadow-md` on hover); active and disabled states remain restrained.
+- Primary foreground uses `--df-button-primary-text`, keeping readable white text in DAJJAL VEYLORA Light without changing the separate `--df-on-primary` semantic.
+- Home hero actions and `/df` hero actions use the same global `.ui-button` primary/secondary variants. Page CSS controls placement and responsive sizing only, not button colors, surfaces, borders, or shadows.

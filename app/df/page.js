@@ -72,8 +72,8 @@ export default function DajjalFamilyHome() {
         <h1>{t.title}<span>{t.subtitle}</span></h1>
         <p className="df-hero-copy">{t.intro}</p>
         <div className="df-hero-actions">
-          <Link href="#projects" className="df-button">{t.explore}</Link>
-          <Link href="#events" className="df-button df-button-secondary">{t.viewEvents}</Link>
+          <Link href="#projects" className="ui-button ui-button-primary">{t.explore}</Link>
+          <Link href="#events" className="ui-button ui-button-secondary">{t.viewEvents}</Link>
         </div>
       </section>
 

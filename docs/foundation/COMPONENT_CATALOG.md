@@ -703,3 +703,10 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Security/accessibility:** external links use `target="_blank"` and `rel="noopener noreferrer"`; accessible names describe the destination and channel identity; visible keyboard focus and reduced-motion behavior are provided.
 - **Responsive/theme:** compact single-column presentation on small mobile, two-column layout at wider widths, and compatibility with all four global theme combinations. Official platform icon colors are semantic brand tokens; card surfaces, text, borders, focus, spacing, and typography use global semantic tokens.
 - **Workbench:** live production component preview is included in Component Workbench section 14.
+
+
+### Button — global styling adoption (2026-11-26)
+
+- Shared `.ui-button` base styles apply to both the reusable native `Button` component and navigation links that need button presentation.
+- Global CSS owns variant colors, primary text contrast, shadows, hover, active, focus, and disabled states. Page-level styles may control layout only.
+- Home and `/df` hero CTAs now consume `.ui-button` with the `ui-button-primary` / `ui-button-secondary` variants.
