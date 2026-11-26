@@ -484,7 +484,8 @@ export default function GeneratorPixelPage() {
       </div>
 
       {result ? (
-        <Card className="df-pixel-result-panel" ref={resultPanelRef}>
+        <div className="df-pixel-result-anchor" ref={resultPanelRef}>
+        <Card className="df-pixel-result-panel">
           <div className="df-pixel-result-heading">
             <h2>{t.resultTitle}</h2>
             <span aria-hidden="true">✓</span>
