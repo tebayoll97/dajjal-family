@@ -524,6 +524,7 @@ export default function GeneratorPixelPage() {
   };
 
   const restoreHistory = (entry) => {
+    setMode(entry.mode === "text" ? "text" : "image");
     setResult(entry);
     setCopied(false);
     setCopiedHistoryId("");
@@ -672,6 +673,9 @@ export default function GeneratorPixelPage() {
               <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
             </div>
             <div className="df-pixel-result-detail">
+              <span>{t.detailDimensions}</span><strong>{result.width || WIDTH} × {result.height || HEIGHT} px</strong>
+            </div>
+            <div className="df-pixel-result-detail">
               <span>{t.detailColors}</span>
               <strong>{result.colors}</strong>
             </div>
@@ -695,7 +699,7 @@ export default function GeneratorPixelPage() {
           <div className="df-pixel-history-list">
             {history.map((entry, index) => (
               <article className="df-pixel-history-item" key={entry.id}>
-                <div className="df-pixel-history-thumb">
+                <div className={`df-pixel-history-thumb ${entry.mode === "text" ? "df-pixel-history-thumb--text" : ""}`}>
                   <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
                 </div>
                 <div className="df-pixel-history-meta">
