@@ -88,7 +88,7 @@ export default function ComponentWorkbench() {
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>36 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>37 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
