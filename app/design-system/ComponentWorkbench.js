@@ -5,7 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog, FeedbackDialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField,
-  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard,
+  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard, SvgIcon,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -40,6 +40,7 @@ export default function ComponentWorkbench() {
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
   const items = [
+    ["SvgIcon", "SvgIcon · semantic modern SVG line icon", <div key="svg-icon" className={styles.inline}><SvgIcon name="home" size={20}/><SvgIcon name="search" size={20}/><SvgIcon name="settings" size={20}/><SvgIcon name="log-out" size={20}/><span>One shared icon API</span></div>],
     ["Button", "Button · 02 Action states", <div key="button" className={styles.stack}>
       <div className={styles.inline}><Button>Primary action</Button><Button variant="secondary">Secondary</Button><Button size="sm">Small</Button><Button size="lg">Large</Button></div>
       <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div>
