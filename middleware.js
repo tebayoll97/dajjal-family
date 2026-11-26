@@ -40,11 +40,6 @@ export function middleware(request) {
       });
     }
 
-    // Contact is static public information. Cache each locale independently at the edge.
-    if (localizedPath === "/contact") {
-      response.headers.set("Cache-Control", "public, max-age=0, s-maxage=120, stale-while-revalidate=600");
-    }
-
     return response;
   }
 
