@@ -6,11 +6,12 @@ export function EditorialByline({ author, date, dateTime, locale = "id", classNa
   const profileHref = authorHref || `/${locale}/blog/author`;
   return (
     <div className={["ui-editorial-byline-component", className].filter(Boolean).join(" ")}>
-      {dateTime ? <time className="ui-editorial-byline-component__date ui-text-editorial-meta" dateTime={dateTime}>{date}</time> : date ? <span className="ui-editorial-byline-component__date ui-text-editorial-meta">{date}</span> : null}
+      
       <span className="ui-editorial-byline-component__author-wrap">
-        <span className="ui-editorial-byline-component__label ui-text-editorial-meta">{isEn ? "By" : "Oleh"}:</span>
+        <span className="ui-editorial-byline-component__label ui-text-editorial-meta">{isEn ? "Published by" : "Diterbitkan oleh"}:</span>
         <Link className="ui-editorial-byline-component__author ui-text-editorial-meta" href={profileHref}>{authorName}</Link>
       </span>
+      {dateTime ? <time className="ui-editorial-byline-component__date ui-text-editorial-meta" dateTime={dateTime}>{date}</time> : date ? <span className="ui-editorial-byline-component__date ui-text-editorial-meta">{date}</span> : null}
     </div>
   );
 }
