@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { useTheme } from "@/app/components/ThemeProvider";
 import { AdminAuthProvider } from "@/app/components/AdminAuthProvider";
@@ -67,6 +67,8 @@ export default function AdminShell({ children }) {
   const { theme, toggleTheme, ready: themeReady } = useTheme();
   const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const mobileDrawerRef = useRef(null);
+  const drawerToggleRef = useRef(null);
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   const isLogin = path === "/admin/login";
@@ -80,14 +82,39 @@ export default function AdminShell({ children }) {
   useEffect(() => {
     if (!drawerOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
+    const drawer = mobileDrawerRef.current;
+    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     document.body.style.overflow = "hidden";
+    drawer?.querySelector(focusableSelector)?.focus();
     function handleKeyDown(event) {
-      if (event.key === "Escape") setDrawerOpen(false);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setDrawerOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !drawer) return;
+      const focusable = Array.from(drawer.querySelectorAll(focusableSelector))
+        .filter((element) => !element.hasAttribute("disabled"));
+      if (!focusable.length) {
+        event.preventDefault();
+        drawer.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !drawer.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !drawer.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
+      drawerToggleRef.current?.focus();
     };
   }, [drawerOpen]);
 
@@ -116,6 +143,7 @@ export default function AdminShell({ children }) {
           <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
         </Link>
+        <a href="https://dajjalfamily.com" className="df-admin-nav-link df-admin-nav-home"><span className="df-admin-nav-icon" aria-hidden="true">⌂</span><span>Home</span></a>
         <div className="df-admin-sidebar-label">{language === "id" ? "MENU UTAMA" : "MAIN MENU"}</div>
         <nav className="df-admin-nav">
           {groups.map((group) => (
@@ -140,11 +168,12 @@ export default function AdminShell({ children }) {
         </div>
       </aside>
 
-      <aside id="df-admin-mobile-drawer" className="df-admin-sidebar df-shell-drawer df-admin-mobile-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"} aria-hidden={!drawerOpen}>
+      <aside id="df-admin-mobile-drawer" ref={mobileDrawerRef} tabIndex={-1} className="df-admin-sidebar df-shell-drawer df-admin-mobile-drawer" data-open={drawerOpen} aria-label={language === "id" ? "Navigasi admin" : "Admin navigation"} aria-hidden={!drawerOpen}>
         <Link href={localized("/admin")} className="df-admin-brand" onClick={() => setDrawerOpen(false)}>
           <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
         </Link>
+        <a href="https://dajjalfamily.com" className="df-admin-nav-link df-admin-nav-home"><span className="df-admin-nav-icon" aria-hidden="true">⌂</span><span>Home</span></a>
         <div className="df-admin-sidebar-label">{language === "id" ? "MENU UTAMA" : "MAIN MENU"}</div>
         <nav className="df-admin-nav" aria-label={language === "id" ? "Menu utama admin" : "Admin main menu"}>
           {groups.map((group) => (
@@ -160,6 +189,8 @@ export default function AdminShell({ children }) {
         <div className="df-admin-sidebar-foot"><Badge>{language === "id" ? "Area admin terproteksi" : "Protected admin workspace"}</Badge><span>DAJJAL FAMILY · 2026</span></div>
       </aside>
 
+      {drawerOpen && <button type="button" className="df-admin-drawer-backdrop" aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"} onClick={() => setDrawerOpen(false)} />}
+
       <div className="df-admin-workspace">
         <div role="banner" className="df-admin-topbar">
           <div className="df-admin-topbar-copy">
@@ -167,7 +198,7 @@ export default function AdminShell({ children }) {
             {path !== "/admin" && <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
-            <Button className="df-admin-drawer-toggle" variant="secondary" size="sm" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-mobile-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</Button>
+            <button ref={drawerToggleRef} type="button" className="ui-button ui-button-secondary ui-button-sm df-admin-drawer-toggle" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-mobile-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</button>
             <Badge variant="info">{language === "id" ? "ADMIN" : "ADMIN AREA"}</Badge>
             <Button variant="secondary" size="sm" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}>{language.toUpperCase()}</Button>
             <Button variant="secondary" size="sm" onClick={toggleTheme} disabled={!themeReady} aria-label={language === "id" ? `Ubah ke tema ${theme === "dark" ? "terang" : "gelap"}` : `Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={language === "id" ? "Ubah tema tampilan" : "Change appearance theme"}>{theme === "dark" ? "☀ Light" : "☾ Dark"}</Button>
@@ -183,7 +214,7 @@ export default function AdminShell({ children }) {
           </section>
         )}
 
-        {drawerOpen && <button type="button" className="df-admin-drawer-backdrop" aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"} onClick={() => setDrawerOpen(false)} />}
+        
 
 
         {logoutError && <p className="df-admin-global-error" role="alert">{logoutError}</p>}
