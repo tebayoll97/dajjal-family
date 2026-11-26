@@ -1,0 +1,209 @@
+/* Dajjal Family Universe page — aligned with the global Master Foundation tokens. */
+.df-main { width: 100%; min-width: 0; color: var(--df-text); font-family: var(--df-font-sans); }
+.df-home {
+  width: min(100% - 2rem, var(--df-content-width, 76rem));
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 4rem) 0;
+  color: var(--df-text);
+}
+.df-hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem);
+  border: 1px solid var(--df-border-strong); border-radius: var(--df-radius-xl);
+  background:
+    radial-gradient(ellipse at 10% 0%, color-mix(in srgb, var(--df-primary) 18%, transparent), transparent 58%),
+    radial-gradient(ellipse at 90% 100%, color-mix(in srgb, var(--df-accent) 10%, transparent), transparent 48%),
+    linear-gradient(145deg, var(--df-surface-raised), var(--df-surface));
+  box-shadow: var(--df-shadow-lg);
+  text-align: center;
+}
+.df-hero::before, .df-hero::after {
+  content: "✦"; position: absolute; z-index: -1; color: var(--df-primary);
+  font-size: 1.4rem; opacity: .55;
+}
+.df-hero::before { top: 1.1rem; left: 1.2rem; }
+.df-hero::after { right: 1.2rem; bottom: 1.1rem; }
+.df-eyebrow {
+  margin: 0 0 .65rem; color: var(--df-primary-hover);
+  font-size: .68rem; font-weight: 800; letter-spacing: .2em; line-height: 1.5;
+}
+.df-hero h1 {
+  margin: .8rem 0 .5rem; color: var(--df-text);
+  font-size: clamp(2rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.05; letter-spacing: -.04em;
+}
+.df-hero h1 span { display: block; margin-top: .55rem; color: var(--df-accent); font-size: .38em; letter-spacing: .24em; }
+.df-hero-copy {
+  max-width: 42rem; margin: 1.2rem auto 0; color: var(--df-text-secondary);
+  font-size: clamp(.9rem, 1.5vw, 1.05rem); line-height: 1.75;
+}
+.df-home .df-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.8rem; }
+.df-button {
+  display: inline-flex; min-height: 46px; align-items: center; justify-content: center;
+  padding: .75rem 1.25rem; border: 1px solid var(--df-primary); border-radius: var(--df-radius-pill);
+  background: var(--df-primary); color: var(--df-on-primary); font-size: .72rem; font-weight: 850;
+  letter-spacing: .08em; line-height: 1.35; text-align: center; text-decoration: none;
+  transition: background var(--df-duration-fast), border-color var(--df-duration-fast), transform var(--df-duration-fast);
+}
+.df-button:hover { background: var(--df-primary-hover); border-color: var(--df-primary-hover); transform: translateY(-1px); }
+.df-button-secondary { background: var(--df-surface-raised); color: var(--df-text); border-color: var(--df-border-strong); }
+.df-button-secondary:hover { background: var(--df-surface-overlay); border-color: var(--df-border-strong); }
+.df-section { margin-top: clamp(2rem, 5vw, 3.75rem); }
+.df-section-heading {
+  margin: 0 0 1rem; padding-left: .9rem; border-left: 3px solid var(--df-primary);
+  color: var(--df-text); font-size: clamp(1.25rem, 2.5vw, 1.8rem); font-weight: 850; line-height: 1.2;
+}
+.df-section-subtitle { margin: -.45rem 0 1.25rem; color: var(--df-text-secondary); font-size: .9rem; line-height: 1.65; }
+.df-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.df-card {
+  min-width: 0; min-height: 170px; padding: 1.25rem;
+  border: 1px solid var(--df-border); border-radius: var(--df-radius-lg);
+  background: linear-gradient(145deg, var(--df-surface-raised), var(--df-surface));
+  box-shadow: var(--df-shadow-sm);
+}
+.df-card-icon { color: var(--df-primary-hover); font-size: 1.5rem; }
+.df-card h3 { margin: .7rem 0 .4rem; color: var(--df-text); font-size: 1.05rem; font-weight: 800; }
+.df-card p { margin: 0; color: var(--df-text-secondary); font-size: .86rem; line-height: 1.65; }
+.df-event-card {
+  display: flex; min-width: 0; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 1.25rem; border: 1px solid var(--df-border-strong);
+  border-radius: var(--df-radius-lg); background: var(--df-surface);
+}
+.df-event-card > div { flex: 1 1 240px; min-width: 0; }
+.df-event-card h3 { margin: 0 0 .35rem; color: var(--df-text); font-size: 1.05rem; font-weight: 800; }
+.df-event-card p { margin: 0; color: var(--df-text-secondary); font-size: .86rem; line-height: 1.65; }
+@media (max-width: 800px) {
+  .df-home { width: min(100% - 1.25rem, var(--df-content-width, 76rem)); padding: 1.25rem 0 2.5rem; }
+  .df-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .df-card-grid { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+  .df-card { min-height: 0; padding: 1rem; }
+  .df-hero { padding: 2.4rem 1rem; border-radius: var(--df-radius-lg); }
+  .df-hero h1 { font-size: clamp(1.8rem, 9vw, 2.8rem); }
+  .df-hero h1 span { letter-spacing: .16em; }
+  .df-home .df-hero-actions { gap: .55rem; }
+  .df-button { flex: 1 1 145px; }
+  .df-event-card { align-items: stretch; flex-direction: column; }
+  .df-event-card .df-button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .df-button { transition: none; }
+  .df-button:hover { transform: none; }
+}
+
+/* Compact event actions on mobile; labels remain readable without stretching full-width. */
+.df-event-card .df-button { flex:0 1 auto; width:auto; max-width:100%; min-height:42px; padding:.65rem 1rem; font-size:.68rem; }
+@media (max-width:560px) {
+  .df-event-card { align-items:flex-start; flex-direction:column; gap:.8rem; padding:1rem; }
+  .df-event-card > div { flex:0 1 auto; width:100%; }
+  .df-event-card .df-button { align-self:flex-start; width:auto; min-width:0; padding:.62rem .9rem; font-size:.66rem; }
+  .df-home .df-hero-actions .ui-button { flex:0 1 auto; }
+}
+
+
+/* DF Universe navigation refresh: compact horizontal cards across breakpoints. */
+.df-card-grid{grid-template-columns:minmax(0,1fr);gap:.7rem}
+.df-card{
+  display:flex;min-height:0;align-items:center;gap:.9rem;padding:.85rem 1rem;
+  color:var(--df-text);text-decoration:none;text-align:left;
+  transition:border-color var(--df-duration-fast),background var(--df-duration-fast),transform var(--df-duration-fast)
+}
+.df-card-icon{
+  display:grid;flex:0 0 48px;width:48px;height:48px;place-items:center;
+  border:1px solid var(--df-border);border-radius:var(--df-radius-md);
+  background:var(--df-primary-soft);font-size:1.35rem;line-height:1
+}
+.df-card-copy{display:flex;min-width:0;flex:1;flex-direction:column;gap:.22rem}
+.df-card-copy strong{color:var(--df-text);font-size:.92rem;font-weight:850;line-height:1.3}
+.df-card-copy>span{color:var(--df-text-secondary);font-size:.78rem;line-height:1.45}
+.df-card-arrow{flex:0 0 auto;color:var(--df-primary);font-size:1rem;font-weight:900}
+a.df-card{cursor:pointer}
+a.df-card:hover{border-color:var(--df-primary);background:var(--df-primary-soft);transform:translateY(-1px)}
+a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
+.df-section{margin-top:clamp(1.5rem,4vw,2.5rem)}
+.df-section-heading{margin-bottom:.75rem}
+.df-section-subtitle{margin-bottom:.85rem}
+.df-home .df-hero-actions{display:none}
+@media(max-width:800px){
+ .df-card-grid{grid-template-columns:minmax(0,1fr);gap:.6rem}
+}
+@media(max-width:560px){
+ .df-home{width:min(100% - 1rem,var(--df-content-width,76rem));padding:1rem 0 2rem}
+ .df-hero{padding:1.8rem .9rem;border-radius:var(--df-radius-lg)}
+ .df-hero-copy{margin-top:.8rem;font-size:.84rem;line-height:1.6}
+ .df-section{margin-top:1.45rem}
+ .df-section-heading{margin-bottom:.6rem;font-size:1.12rem}
+ .df-section-subtitle{margin:-.25rem 0 .7rem;font-size:.78rem;line-height:1.5}
+ .df-card-grid{gap:.5rem}
+ .df-card{gap:.7rem;padding:.65rem .7rem;border-radius:var(--df-radius-md)}
+ .df-card-icon{flex-basis:42px;width:42px;height:42px;font-size:1.2rem}
+ .df-card-copy strong{font-size:.82rem}
+ .df-card-copy>span{font-size:.7rem;line-height:1.4}
+ .df-card-arrow{font-size:.9rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .df-card{transition:none}
+ .df-card:hover{transform:none}
+}
+
+
+/* Restore hero navigation actions; keep the event entry in the compact card system. */
+.df-home .df-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1.2rem}
+.df-home .df-hero-actions .ui-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+#events{scroll-margin-top:6rem}
+#projects{scroll-margin-top:6rem}
+@media(max-width:560px){
+ .df-home .df-hero-actions{gap:.5rem;margin-top:1rem}
+ .df-home .df-hero-actions .ui-button{flex:1 1 0;min-width:0;padding:.65rem .7rem;font-size:.65rem}
+}
+
+
+/* Couple Profile CTA: same width as Explore, with a distinct semantic accent. */
+.df-hero-primary-stack {
+  display: flex;
+  width: min(100%, 17rem);
+  flex-direction: column;
+  gap: .5rem;
+}
+.df-hero-primary-stack .df-button { width: 100%; }
+.df-button-couple {
+  background: var(--df-surface-raised);
+  color: var(--df-text);
+  border-color: var(--df-accent);
+}
+.df-button-couple:hover {
+  background: var(--df-surface-overlay);
+  border-color: var(--df-accent);
+}
+.df-home .df-hero-actions { align-items: center; }
+@media (max-width: 560px) {
+  .df-hero-primary-stack { width: min(100%, 17rem); }
+  .df-hero-primary-stack .df-button { flex: 0 0 auto; }
+}
+
+
+/* Responsive hero actions: balanced tap targets with no squeezed labels. */
+.df-home .df-hero-actions {
+  display: grid;
+  width: min(100%, 34rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--df-space-3);
+  margin: 1.2rem auto 0;
+}
+.df-home .df-hero-actions .ui-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 3rem;
+  padding: .75rem 1rem;
+  white-space: normal;
+  overflow-wrap: normal;
+  text-align: center;
+}
+@media (max-width: 380px) {
+  .df-home .df-hero-actions {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100%, 20rem);
+    gap: var(--df-space-2);
+  }
+}

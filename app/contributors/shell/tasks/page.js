@@ -1,0 +1,4 @@
+import { headers } from "next/headers";
+import ContributorPlatform from "@/app/components/contributors/ContributorPlatform";
+export async function generateMetadata(){const l=(await headers()).get("x-df-locale")==="en"?"en":"id";const title=l==="en"?"My Contributor Tasks | DAJJAL FAMILY":"Tugas Kontributor Saya | DAJJAL FAMILY";const description=l==="en"?"Review tasks assigned by DAJJAL FAMILY Admin.":"Lihat tugas yang diberikan Admin DAJJAL FAMILY.";const url=`https://dajjalfamily.com/${l}/contributors/shell/tasks`,image="https://dajjalfamily.com/dajjalfamily_icon_192.png";return{title,description,robots:{index:false,follow:false},alternates:{canonical:url},openGraph:{title,description,url,siteName:"DAJJAL FAMILY",type:"website",images:[{url:image,alt:"DAJJAL FAMILY"}]},twitter:{card:"summary_large_image",title,description,images:[image]}};}
+export default function ContributorTasksPage(){return <ContributorPlatform section="tasks"/>;}

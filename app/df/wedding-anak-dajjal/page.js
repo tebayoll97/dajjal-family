@@ -1,0 +1,699 @@
+"use client";
+
+import Link from "next/link";
+
+import { useEffect, useRef, useState } from "react";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useLanguage } from "../../components/LanguageProvider";
+import "./wedding.css";
+
+const WEDDING_ASSETS = {
+  // Google Drive public image endpoints optimized for direct browser rendering.
+  couple: "https://drive.google.com/thumbnail?id=1tHIvwAqtgjxoEs4V8328-K4L2yyKdirh&sz=w1600",
+  groom: "https://drive.google.com/thumbnail?id=1SaOMfTFvyp1DE25-6oUEicgjosxlx-Ur&sz=w1600",
+  bride: "https://drive.google.com/thumbnail?id=1JwJP547UasyEMvtt4gfSFfUM1qXAmeEr&sz=w1600",
+  dawnBadge: "https://drive.google.com/thumbnail?id=12zXhOGi5_Y-gPL_Wrkods-aqxx1KBW2v&sz=w1600",
+  // Direct file endpoint so the browser can stream the audio after user interaction.
+  music: "/audio/Payung%20Teduh%20%20Akad%20Cover%20by%20Hanin%20Dhiya.mp3",
+};
+
+const words = {
+  en: {
+    eyebrow: "A LITTLE CELEBRATION, A LOT OF LOVE",
+    title: "The Royal Wedding",
+    invite: "You are warmly invited to celebrate",
+    couple: "Anak Dajjal & Malika",
+    intro: "Two characters, one joyful chapter. Join us for a day filled with smiles, warmth, and treasured memories.",
+    reception: "Wedding Reception",
+    date: "Date to be announced",
+    venue: "Venue to be announced",
+    time: "Time to be announced",
+    schedule: "The Celebration",
+    scheduleText: "Reception details and schedule will be announced soon.",
+    rsvp: "Kindly Respond",
+    rsvpText: "Let us know if you can join the celebration.",
+    invitedName: "Name on invitation (optional)",
+    guestCount: "Number of guests",
+    rsvpSend: "SEND RSVP",
+    name: "Your name",
+    guests: "Number of guests",
+    attendance: "Will you attend?",
+    yes: "Joyfully attending",
+    no: "Unable to attend",
+    send: "SEND RSVP",
+    guestbook: "Guestbook",
+    guestbookText: "Leave a kind note for the happy couple.",
+    message: "Your message / prayer",
+    sign: "WRITE A MESSAGE",
+    footer: "ONE FAMILY. ENDLESS STORIES.",
+    coming: "This feature is being prepared. Your information has not been sent yet.",
+    music: "MUSIC",
+    musicSoon: "Piano music will be added before launch.",
+    share: "SHARE INVITATION",
+    copy: "COPY LINK",
+    copied: "Link copied",
+    count: "Guests",
+    rsvpSuccess: "Thank you. Your RSVP has been received.",
+    guestbookSuccess: "Thank you. Your message is now published.",
+    submitError: "Something went wrong. Please try again.",
+    sending: "SENDING…",
+    musicOff: "MUSIC OFF",
+    musicOn: "MUSIC ON",
+    countdown: "COUNTDOWN TO THE CELEBRATION", days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
+    eventStarted: "THE CELEBRATION HAS BEGUN", parents: "WITH THE BLESSING OF OUR FAMILIES", story: "OUR LOVE STORY", playerId: "PLAYER ID", address: "ADDRESS", sonOf: "Son of", daughterOf: "Daughter of", father: "Mr.", mother: "Mrs.",
+    photoAlt: "Anak Dajjal and Malika",
+    navCouple: "COUPLE", navEvent: "EVENT", navGift: "GIFT", navWishes: "WISHES", navMore: "MORE",
+    attendancePending: "Not sure yet", wishesTitle: "Wishes & Prayers", wishesIntro: "Leave your attendance confirmation and a message for the couple.",
+    sendWishes: "SEND", wishesSuccess: "Thank you. Your response and message have been received.",
+    wishesPartial: "Your attendance was saved, but your message could not be sent. Please contact the host.",
+    wishesError: "Something went wrong. Please try again.",
+  },
+  id: {
+    eyebrow: "SEDIKIT KEMERIAHAN, BANYAK CINTA",
+    title: "Pernikahan Kerajaan",
+    invite: "Dengan hangat kami mengundang Anda untuk merayakan",
+    couple: "Anak Dajjal & Malika",
+    intro: "Dua karakter, satu babak penuh keceriaan. Mari rayakan hari istimewa dengan senyum, kehangatan, dan kenangan indah.",
+    reception: "Resepsi Pernikahan",
+    date: "Tanggal akan diumumkan",
+    venue: "Lokasi akan diumumkan",
+    time: "Waktu akan diumumkan",
+    schedule: "Rangkaian Acara",
+    scheduleText: "Informasi resepsi dan susunan acara akan diumumkan segera.",
+    rsvp: "Konfirmasi Kehadiran",
+    rsvpText: "Beri tahu kami apakah Anda dapat hadir di perayaan ini.",
+    invitedName: "Nama pada undangan (opsional)",
+    guestCount: "Jumlah tamu",
+    rsvpSend: "KIRIM RSVP",
+    name: "Nama Anda",
+    guests: "Jumlah tamu",
+    attendance: "Apakah Anda akan hadir?",
+    yes: "Dengan senang hati hadir",
+    no: "Maaf, belum bisa hadir",
+    send: "KIRIM RSVP",
+    guestbook: "Buku Tamu",
+    guestbookText: "Tinggalkan pesan manis untuk kedua mempelai.",
+    message: "Pesan / Doa",
+    sign: "TULIS PESAN",
+    footer: "SATU KELUARGA. CERITA TANPA BATAS.",
+    coming: "Fitur ini sedang disiapkan. Informasi Anda belum dikirim.",
+    music: "MUSIK",
+    musicSoon: "Musik piano akan ditambahkan sebelum peluncuran.",
+    share: "BAGIKAN UNDANGAN",
+    copy: "SALIN TAUTAN",
+    copied: "Tautan disalin",
+    count: "Tamu",
+    rsvpSuccess: "Terima kasih. Konfirmasi kehadiran Anda sudah diterima.",
+    guestbookSuccess: "Terima kasih. Pesan Anda berhasil dipublikasikan.",
+    submitError: "Terjadi kendala. Silakan coba kembali.",
+    sending: "MENGIRIM…",
+    musicOff: "MUSIK MATI",
+    musicOn: "MUSIK NYALA",
+    countdown: "Menuju Hari Bahaya", days: "HARI", hours: "JAM", minutes: "MENIT", seconds: "DETIK",
+    eventStarted: "PERAYAAN TELAH DIMULAI", parents: "DENGAN RESTU KELUARGA", story: "KISAH KAMI", playerId: "ID PEMAIN", address: "ALAMAT", sonOf: "Putra dari", daughterOf: "Putri dari", father: "Bapak", mother: "Ibu",
+    photoAlt: "Anak Dajjal dan Malika",
+    navCouple: "MEMPELAI", navEvent: "ACARA", navGift: "HADIAH", navWishes: "UCAPAN", navMore: "LAIN-LAIN",
+    attendancePending: "Belum Pasti", wishesTitle: "Ucapan & Doa", wishesIntro: "Sampaikan konfirmasi kehadiran dan pesan untuk kedua karakter.",
+    sendWishes: "KIRIM", wishesSuccess: "Terima kasih. Konfirmasi dan pesan Anda berhasil dikirim.",
+    wishesPartial: "Konfirmasi kehadiran tersimpan, tetapi pesan belum berhasil dikirim. Silakan hubungi penyelenggara.",
+    wishesError: "Terjadi kendala. Silakan coba kembali.",
+  },
+};
+
+export default function WeddingInvitationPage({ invitationSlug = "anak-dajjal-malika" } = {}) {
+  const { language } = useLanguage();
+  const t = words[language] || words.id;
+  const [guestName, setGuestName] = useState("");
+  const [messageLength, setMessageLength] = useState(0);
+  const [eventInfo, setEventInfo] = useState(null);
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [countdown, setCountdown] = useState(null);
+  const [guestbookEntries, setGuestbookEntries] = useState([]);
+  const [guestbookPage, setGuestbookPage] = useState(1);
+  const [guestbookPagination, setGuestbookPagination] = useState({ page: 1, total: 0, totalPages: 0 });
+  const [guestbookPageLoading, setGuestbookPageLoading] = useState(false);
+  const [guestbookLoadError, setGuestbookLoadError] = useState(false);
+  const [rsvpLoading, setRsvpLoading] = useState(false);
+  const [rsvpStatus, setRsvpStatus] = useState("");
+  const [rsvpSuccessToast, setRsvpSuccessToast] = useState(false);
+  const [musicOn, setMusicOn] = useState(false);
+  const [invitationOpened, setInvitationOpened] = useState(false);
+  const [celebrationActive, setCelebrationActive] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [addressCopied, setAddressCopied] = useState(false);
+  const [copiedPlayerId, setCopiedPlayerId] = useState("");
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const moreMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!moreMenuOpen) return undefined;
+    const handlePointerDown = (event) => {
+      if (!moreMenuRef.current?.contains(event.target)) setMoreMenuOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMoreMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [moreMenuOpen]);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (!rsvpSuccessToast) return undefined;
+    const timer = window.setTimeout(() => setRsvpSuccessToast(false), 3000);
+    return () => window.clearTimeout(timer);
+  }, [rsvpSuccessToast]);
+
+  useEffect(() => {
+    setGuestName(new URLSearchParams(window.location.search).get("to") || "");
+    let active = true;
+    async function loadWeddingData() {
+      const publicResponse = await fetch("/api/wedding/public/" + encodeURIComponent(invitationSlug), { cache: "no-store" });
+      if (!publicResponse.ok) return;
+      const publicData = await publicResponse.json();
+      if (!active || !publicData.invitation) return;
+      const profile = publicData.profile || {};
+      setEventInfo({
+        ...profile,
+        rsvp_enabled: profile.rsvp_enabled === true,
+        guestbook_enabled: profile.guestbook_enabled === true,
+        invitation_title: publicData.invitation.title,
+        couple_photo_url: profile.main_photo_url,
+        groom_parent_names: profile.groom_parent_names || "",
+        bride_parent_names: profile.bride_parent_names || "",
+        address: profile.address || "",
+        love_story: profile.love_story || "",
+        schedule: Array.isArray(profile.event_schedule) ? profile.event_schedule.join(" · ") : "",
+        couple_display: [profile.groom_name, profile.bride_name].filter(Boolean).join(" & "),
+        event_date: profile.event_date,
+        event_time: profile.event_time,
+        venue: profile.venue,
+      });
+      if (Array.isArray(profile.gallery_urls)) setGalleryItems(profile.gallery_urls.map((url,index)=>({id:index,title:"",image_url:url})));
+      if (profile.guestbook_enabled === true) {
+        const messagesResponse = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=1", { cache: "no-store" });
+        if (!active) return;
+        if (messagesResponse.ok) {
+          const messagesData = await messagesResponse.json();
+          setGuestbookEntries(Array.isArray(messagesData.entries) ? messagesData.entries : []);
+          setGuestbookPagination(messagesData.pagination || { page: 1, total: 0, totalPages: 0 });
+          setGuestbookPage(1);
+        }
+      }
+    }
+    loadWeddingData();
+    return () => { active = false; };
+  }, [invitationSlug]);
+
+  useEffect(() => {
+    if (!eventInfo?.event_date) {
+      setCountdown(null);
+      return;
+    }
+    const timeMatch = String(eventInfo.event_time || "").match(/^(\d{1,2}):(\d{2})/);
+    const hour = timeMatch ? timeMatch[1].padStart(2, "0") : "00";
+    const minute = timeMatch ? timeMatch[2] : "00";
+    const target = new Date(String(eventInfo.event_date) + "T" + hour + ":" + minute + ":00").getTime();
+    if (!Number.isFinite(target)) {
+      setCountdown(null);
+      return;
+    }
+    const updateCountdown = () => {
+      const remaining = Math.max(0, target - Date.now());
+      setCountdown({
+        days: Math.floor(remaining / 86400000),
+        hours: Math.floor((remaining % 86400000) / 3600000),
+        minutes: Math.floor((remaining % 3600000) / 60000),
+        seconds: Math.floor((remaining % 60000) / 1000),
+        complete: remaining === 0,
+      });
+    };
+    updateCountdown();
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(timer);
+  }, [eventInfo?.event_date, eventInfo?.event_time]);
+
+  useEffect(() => {
+    if (galleryItems.length < 2) return;
+    const timer = window.setInterval(() => setGalleryIndex((index) => (index + 1) % galleryItems.length), 4500);
+    return () => window.clearInterval(timer);
+  }, [galleryItems.length]);
+
+  useEffect(() => {
+    if (!invitationOpened) return undefined;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => {
+      AOS.init({ duration: reducedMotion ? 0 : 850, easing: "ease-out-cubic", offset: 48, once: false, mirror: false, anchorPlacement: "top-bottom", disable: reducedMotion });
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => AOS.refreshHard()));
+    }, 120);
+    return () => { window.clearTimeout(timer); AOS.refreshHard(); };
+  }, [invitationOpened]);
+
+  const submitWishes = async (event) => {
+    event.preventDefault();
+    setRsvpLoading(true);
+    setRsvpStatus("");
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const guestNameValue = String(data.get("guest_name") || "").trim();
+    const serverNameValue = String(data.get("server_name") || "").trim();
+    const attendanceValue = String(data.get("attendance") || "");
+    const messageValue = String(data.get("guestbook_message") || "").trim();
+    const honeypot = String(data.get("website") || "");
+    if (!guestNameValue || guestNameValue.length > 16 || !/^\d{1,4}$/.test(serverNameValue) || !["yes", "maybe", "no"].includes(attendanceValue) || !messageValue || messageValue.length > 200) {
+      setRsvpStatus("error");
+      setRsvpLoading(false);
+      return;
+    }
+    let rsvpSaved = false;
+    try {
+      if (eventInfo?.rsvp_enabled) {
+        const rsvpResponse = await fetch("/api/wedding/rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: invitationSlug, guest_name: guestNameValue, server_name: serverNameValue, invited_name: "",
+            guest_count: 1, attendance: attendanceValue, language, website: honeypot,
+          }),
+        });
+        if (!rsvpResponse.ok) throw new Error("RSVP submission failed");
+        rsvpSaved = true;
+      }
+      if (eventInfo?.guestbook_enabled) {
+        const guestbookResponse = await fetch("/api/wedding/guestbook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: invitationSlug, guest_name: guestNameValue, server_name: serverNameValue, attendance: attendanceValue, message: messageValue, language, website: honeypot }),
+        });
+        if (!guestbookResponse.ok) throw new Error("Guestbook submission failed");
+      }
+      form.reset();
+      setMessageLength(0);
+      setRsvpStatus("success");
+      setRsvpSuccessToast(true);
+      const refreshedMessages = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=1", { cache: "no-store" });
+      if (refreshedMessages.ok) {
+        const refreshedData = await refreshedMessages.json();
+        setGuestbookEntries(Array.isArray(refreshedData.entries) ? refreshedData.entries : []);
+        setGuestbookPagination(refreshedData.pagination || { page: 1, total: 0, totalPages: 0 });
+        setGuestbookPage(1);
+      }
+    } catch {
+      setRsvpStatus(rsvpSaved ? "partial" : "error");
+    } finally {
+      setRsvpLoading(false);
+    }
+  };
+
+  const toggleMusic = async () => {
+    if (!audioRef.current) return;
+    if (musicOn) {
+      audioRef.current.pause();
+      setMusicOn(false);
+      return;
+    }
+    try {
+      await audioRef.current.play();
+      setMusicOn(true);
+    } catch {
+      setMusicOn(false);
+    }
+  };
+
+  const copyPlayerId = async (playerId) => {
+    try {
+      await navigator.clipboard.writeText(playerId);
+      setCopiedPlayerId(playerId);
+      window.setTimeout(() => setCopiedPlayerId((current) => current === playerId ? "" : current), 1800);
+    } catch {
+      setCopiedPlayerId("");
+    }
+  };
+
+  const copyAddress = async () => {
+    const addressText = "Panti Asuhan Anak Ceria #278 [X:291 Y:501]";
+    try { await navigator.clipboard.writeText(addressText); setAddressCopied(true); window.setTimeout(() => setAddressCopied(false), 2200); }
+    catch { setAddressCopied(false); }
+  };
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const shareInvite = async () => {
+    const shareText = language === "id"
+      ? "Dengan hangat, kami mengundang Anda ke perayaan Anak Dajjal & Malika."
+      : "You are warmly invited to celebrate Anak Dajjal & Malika.";
+    const shareData = { title: language === "id" ? "Undangan Anak Dajjal & Malika" : "Anak Dajjal & Malika Invitation", text: shareText, url: window.location.href };
+    if (typeof navigator.share === "function") {
+      try { await navigator.share(shareData); setMoreMenuOpen(false); return; }
+      catch (error) { if (error?.name === "AbortError") return; }
+    }
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setMoreMenuOpen(false);
+    } catch {
+      const message = encodeURIComponent(shareText + " " + window.location.href);
+      window.open("https://wa.me/?text=" + message, "_blank", "noopener,noreferrer");
+      setMoreMenuOpen(false);
+    }
+  };
+
+  const openInvitation = async () => {
+    setInvitationOpened(true);
+    setCelebrationActive(true);
+    window.setTimeout(() => setCelebrationActive(false), 5000);
+    if (audioRef.current) {
+      try { await audioRef.current.play(); setMusicOn(true); }
+      catch { setMusicOn(false); }
+    }
+  };
+
+  return (
+    <main className="wedding-page">
+      {!invitationOpened && (
+        <section className="wedding-opening" aria-label={language === "id" ? "Buka undangan" : "Open invitation"}>
+          <div className="wedding-opening-florals" aria-hidden="true">❀ ❧ ❀</div>
+          <img className="wedding-opening-couple" src={WEDDING_ASSETS.couple} alt="Anak Dajjal dan Malika" />
+          <h1><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h1>
+          <div className="wedding-opening-recipient"><span>{language === "id" ? "Kepada Yth. Bapak/Ibu/Saudara/i" : "Dear Friends and Guests"}</span><strong>{language === "id" ? "Seluruh pemain Darkwar Survival" : "All Darkwar Survival Players"}</strong></div>
+          <button type="button" onClick={openInvitation}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <path d="m3.5 7 8.5 6 8.5-6" />
+            </svg>
+            <span>{language === "id" ? "Buka Undangan" : "Open Invitation"}</span>
+          </button>
+        </section>
+      )}
+      {celebrationActive && <div className="wedding-falling-leaves" aria-hidden="true">{Array.from({length:24},(_,i)=><span key={i} style={{"--leaf-index":i}}>{i%3===0?"🍂":"🍃"}</span>)}</div>}
+      {rsvpSuccessToast && <div className="wedding-success-toast" role="status" aria-live="polite"><span className="wedding-success-toast-icon" aria-hidden="true">✓</span><span>{language === "id" ? "Berhasil! Pesan dan konfirmasi Anda telah terkirim." : "Success! Your message and response have been sent."}</span></div>}
+      <div className="wedding-content" hidden={!invitationOpened}>
+          <p className="wedding-invitation-eyebrow">{language === "id" ? "Undangan Pernikahan" : "Wedding Invitation"}</p>
+          <section className="wedding-hero" id="hero" data-panel-number="01" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Yang Berbahagia" : "The Happy Couple"}</h2>
+            <div className="couple-frame">
+              <div className="couple-placeholder">
+                <img className="couple-photo" src={WEDDING_ASSETS.couple} alt={t.photoAlt} loading="eager" />
+              </div>
+              <span className="frame-corner frame-tl">✦</span><span className="frame-corner frame-tr">✦</span>
+              <span className="frame-corner frame-bl">✦</span><span className="frame-corner frame-br">✦</span>
+            </div>
+            <h1 className="wedding-hero-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h1>
+            <p className="wedding-hero-date">{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</p>
+            <div className="wedding-countdown" id="countdown" aria-label={t.countdown}>
+              <p className="wedding-kicker">{t.countdown}</p>
+              {countdown ? (countdown.complete ? <h3 className="wedding-countdown-complete-title">{t.eventStarted}</h3> : (
+                <div className="detail-grid">
+                  {[[countdown.days,t.days],[countdown.hours,t.hours],[countdown.minutes,t.minutes],[countdown.seconds,t.seconds]].map(([value,label])=>(
+                    <article key={label}><h3>{String(value).padStart(2,"0")}</h3><p>{label}</p></article>
+                  ))}
+                </div>
+              )) : <p className="section-copy">{language === "id" ? "Hitung mundur akan tampil setelah tanggal acara ditentukan." : "The countdown will appear once the event date is set."}</p>}
+            </div>
+          </section>
+
+          <section className="wedding-section wedding-family-panel wedding-groom" id="couple" data-panel-number="02" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Mempelai Pria" : "The Groom"}</h2>
+            <p className="wedding-groom-message"><strong>Assalamu&apos;alaikum wr. wb.</strong><span>{language === "id" ? "Tanpa mengurangi rasa hormat, kami mengundang kalian untuk hadir di acara pernikahan kami." : "With respect and joy, we warmly invite you to celebrate our wedding with us."}</span></p>
+            <img className="wedding-family-photo" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
+            <h2>Anak Dajjal</h2>
+            <p>{t.sonOf} {t.father} Dajjal &amp; {t.mother} Veylora</p>
+            <div className="wedding-couple-amp" aria-hidden="true">&amp;</div>
+          </section>
+
+          <section className="wedding-section wedding-family-panel wedding-bride" id="bride" data-panel-number="03" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Mempelai Wanita" : "The Bride"}</h2>
+            <img className="wedding-family-photo" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
+            <h2>Malika</h2>
+            <p>{t.daughterOf} {t.father} JinuYourIdol &amp; {t.mother} Bubuah</p>
+          </section>
+
+          <section className="wedding-section wedding-event-panel" id="event" data-panel-number="04" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Rangkaian Acara" : "Wedding Schedule"}</h2>
+            <h3 className="wedding-event-subheading">{language === "id" ? "Resepsi" : "Reception"}</h3>
+            <div className="wedding-event-detail">
+              <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+              <strong>{eventInfo?.event_date ? new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${eventInfo.event_date}T12:00:00`)) : t.date}</strong>
+              <p>{eventInfo?.event_time ? `${String(eventInfo.event_time).slice(0, 5).replace(":", ".")} ${language === "id" ? "Waktu Server - Selesai" : "Server Time - Until Finished"}` : (language === "id" ? "Waktu akan diumumkan" : "Time to be announced")}</p>
+            </div>
+            <div className="wedding-event-detail">
+              <svg className="wedding-event-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              <strong>Panti Asuhan Anak Ceria</strong>
+              <p>{language === "id" ? "Jl. IDs, Koordinat [X:239 Y:503]" : "IDs Road, Coordinates [X:239 Y:503]"}</p>
+              <p>{language === "id" ? "Kode server #278" : "Server code #278"}</p>
+              <button className="wedding-copy-address" type="button" onClick={copyAddress}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
+                <span>{addressCopied ? (language === "id" ? "Alamat tersalin" : "Address copied") : (language === "id" ? "Salin alamat" : "Copy address")}</span>
+              </button>
+            </div>
+          </section>
+
+          <section className="wedding-section wedding-planting-panel" id="planting" data-panel-number="05" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Menanam Kedelai" : "Planting Soybeans"}</h2>
+            <div className="wedding-planting-icon" aria-hidden="true">🌱</div>
+            <p className="section-copy">{language === "id" ? "Kita mencoba membuat bumi dari hijau menjadi hitam, seperti kedelai pilihan kami. Sebuah perubahan unik yang melambangkan keberanian, kualitas, dan identitas baru." : "We are turning the world from green to black, just like our chosen soybeans. A curious transformation that represents courage, quality, and a new identity."}</p>
+          </section>
+
+          <nav className="wedding-bottom-nav" aria-label={language === "id" ? "Navigasi undangan" : "Invitation navigation"}>
+            <a href="#couple"><span aria-hidden="true">♙</span><small>{t.navCouple}</small></a>
+            <a href="#event"><span aria-hidden="true">▣</span><small>{t.navEvent}</small></a>
+            <a href="#gift"><span aria-hidden="true">♧</span><small>{t.navGift}</small></a>
+            <a href="#wishes"><span aria-hidden="true">♡</span><small>{t.navWishes}</small></a>
+            <div ref={moreMenuRef}
+              className={"wedding-more-menu" + (moreMenuOpen ? " is-open" : "")}>
+              {moreMenuOpen && (
+                <div className="wedding-more-menu-panel" id="wedding-more-menu">
+                  <a href="#story" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">♡</span>{language === "id" ? "Kisah Kami" : "Our Story"}</a>
+                  <a href="#gallery" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">▧</span>{language === "id" ? "Galeri Foto" : "Photo Gallery"}</a>
+                  <a href="#share" onClick={() => setMoreMenuOpen(false)}><span aria-hidden="true">↗</span>{language === "id" ? "Bagikan" : "Share"}</a>
+                </div>
+              )}
+              <button
+                type="button"
+                className="wedding-more-trigger"
+                aria-expanded={moreMenuOpen}
+                aria-controls="wedding-more-menu"
+                onClick={() => setMoreMenuOpen((open) => !open)}
+              >
+                <span aria-hidden="true">⋯</span><small>{t.navMore}</small>
+              </button>
+            </div>
+          </nav>
+
+
+          <section className="wedding-section wedding-stories-section" id="story" data-panel-number="06">
+            <h2 className="wedding-section-heading" data-aos="fade-up">{language === "id" ? "Kisah Kami" : "Our Stories"}</h2>
+            <div className="wedding-stories-list">
+              <article className="wedding-story-item" data-aos="fade-up">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>4 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img className="wedding-story-image wedding-story-image--one" src="https://drive.google.com/thumbnail?id=1EPSuY8vdPAtlINlxl43IqDozUbJvS6DU&sz=w1600" alt={language === "id" ? "Anak Dajjal bertemu Malika di tengah sawah" : "Anak Dajjal meets Malika in a rice field"} loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>{language === "id" ? "Awal Pertemuan" : "How We Met"}</h3>
+                    <p>{language === "id" ? <>Awalnya aku hanya kabur dari ibu panti yang galak. Namun, di tengah sawah aku justru menemukan dia, <span className="story-accent story-malika">Malika</span> — si <span className="story-accent story-soybean">Kedelai Hitam</span>. Sejak itu, aku merawatnya dengan kasih sayang seperti anak sendiri.</> : <>I was only trying to escape the strict orphanage caretaker. But in the middle of a rice field, I found <span className="story-accent story-malika">Malika</span> — the <span className="story-accent story-soybean">Black Soybean</span>. From that day on, I cared for her as if she were my own child.</>}</p>
+                  </div>
+                </div>
+              </article>
+
+              <article className="wedding-story-item" data-aos="fade-up" data-aos-delay="100">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>10 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img className="wedding-story-image wedding-story-image--two" src="https://drive.google.com/thumbnail?id=15LGrwtC3NSIjGKQSac96Uc35quycNSOA&sz=w1600" alt={language === "id" ? "Anak Dajjal dan Malika berlari bersama di panti asuhan" : "Anak Dajjal and Malika running together at the orphanage"} loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>{language === "id" ? "Perjalanan Bersama" : "Our Journey Together"}</h3>
+                    <p>{language === "id" ? "Di panti, di sekolah, bahkan saat dimarahi ibu panti, kami selalu bersama. Entah berapa banyak masalah yang kami lewati, tetapi justru dari situlah ikatan kami semakin erat." : "At the orphanage, at school, and even when the caretaker scolded us, we stayed together. We faced countless troubles, and each one made our bond even stronger."}</p>
+                  </div>
+                </div>
+              </article>
+
+              <article className="wedding-story-item" data-aos="fade-up" data-aos-delay="150">
+                <div className="wedding-story-date">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.3 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                  <span>30 November 2026</span>
+                </div>
+                <div className="wedding-story-card">
+                  <img className="wedding-story-image wedding-story-image--three" src="https://drive.google.com/thumbnail?id=1NilOhV3TtCCm1LdkgspOf4yzWEiizw0Y&sz=w1600" alt={language === "id" ? "Anak Dajjal dan Malika di pelaminan bersama ibu Anak Dajjal" : "Anak Dajjal and Malika at the wedding altar with Anak Dajjal’s mother"} loading="lazy" decoding="async" />
+                  <div className="wedding-story-card-content">
+                    <h3>{language === "id" ? "Menuju Hari Bencana" : "Towards the Day of Disaster"}</h3>
+                    <p>{language === "id" ? "Siapa sangka, hubungan kami berujung di pelaminan? Padahal aku lahir tanpa pembuahan, sedangkan Malika adalah sejenis biji-bijian. Semua ini bermula dari satu keinginan ibu Anak Dajjal: ingin segera punya cucu!" : "Who would have guessed our story would lead to a wedding? I was born without fertilization, while Malika is a type of seed. It all began with one wish from Anak Dajjal’s mother: she wanted a grandchild as soon as possible!"}</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section className="wedding-section wedding-gallery-section" id="gallery" data-panel-number="07">
+            <h2 className="wedding-section-heading">{language === "id" ? "Galeri Foto" : "Photo Gallery"}</h2>
+            <div className="wedding-gallery-grid">
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="0" key="gallery-0">
+                <img src="https://drive.google.com/thumbnail?id=1trVpyYoeq7cIdFJ6RwxlXz9oRb7aaQ17&sz=w1600" alt="The Runaway" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="80" key="gallery-1">
+                <img src="https://drive.google.com/thumbnail?id=12OHSVAGQpdgn92mEG68W8fGm_0K9Bcmo&sz=w1600" alt="Best Partners" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="160" key="gallery-2">
+                <img src="https://drive.google.com/thumbnail?id=1pfNX5y5gLboMwMrxAXazZCnBZt3gtfAp&sz=w1600" alt="Trouble Again" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="240" key="gallery-3">
+                <img src="https://drive.google.com/thumbnail?id=19wH_SN_InP9IaGY49uBQ-EmJjvmBie7K&sz=w1600" alt="Through the Rain" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="320" key="gallery-4">
+                <img src="https://drive.google.com/thumbnail?id=18jRHXfnlJsPGsHuMuJsTRlsugnJy3Ggo&sz=w1600" alt="The Wedding Disaster" loading="lazy" decoding="async" />
+              </figure>
+              <figure className="wedding-gallery-card" data-aos="fade-up" data-aos-delay="400" key="gallery-5">
+                <img src="https://drive.google.com/thumbnail?id=1kNbCBK8zLfqTHfgn88ckvWqBG8gKc903&sz=w1600" alt="Grandma's Dream" loading="lazy" decoding="async" />
+              </figure>
+            </div>
+          </section>
+
+          <section className="wedding-section wedding-player-id" id="gift" data-panel-number="08" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Hadiah ke Mempelai" : "Gifts for the Couple"}</h2>
+            <div className="dawn-badge-heading">
+              <img className="dawn-badge-image dawn-badge-image--hero" src={WEDDING_ASSETS.dawnBadge} alt={language === "id" ? "Dawn Badge Darkwar Survival" : "Darkwar Survival Dawn Badge"} loading="lazy" />
+              <div><strong>DAWN BADGE</strong><span>DARKWAR SURVIVAL</span></div>
+            </div>
+            <div className="player-id-subpanels">
+              <article className="player-id-subpanel">
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.bride} alt="Malika" loading="lazy" />
+                <div className="player-id-details">
+                  <h3>Malika</h3>
+                  <code>1333797681000290</code>
+                  <button type="button" onClick={() => copyPlayerId("1333797681000290")} aria-label={language === "id" ? "Salin ID Malika" : "Copy Malika ID"}>{copiedPlayerId === "1333797681000290" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
+                </div>
+              </article>
+              <article className="player-id-subpanel">
+                <img className="player-id-badge-icon" src={WEDDING_ASSETS.groom} alt="Anak Dajjal" loading="lazy" />
+                <div className="player-id-details">
+                  <h3>Anak Dajjal</h3>
+                  <code>1122785899000278</code>
+                  <button type="button" onClick={() => copyPlayerId("1122785899000278")} aria-label={language === "id" ? "Salin ID Anak Dajjal" : "Copy Anak Dajjal ID"}>{copiedPlayerId === "1122785899000278" ? (language === "id" ? "Tersalin" : "Copied") : "Copy ID"}</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section className="wedding-section wedding-wishes" id="wishes" data-panel-number="09" data-aos="fade-up">
+              <h2 className="wedding-section-heading">{language === "id" ? "Mohon Doa Restu" : "Your Wishes and Blessings"}</h2>
+              <div className="wishes-prayer-icon" role="img" aria-label={language === "id" ? "Doa dan restu" : "Prayer and blessing"}>🙏</div>
+              <p className="wedding-kicker">{language === "id" ? "UNTUK KEDUA MEMPELAI" : "A NOTE FOR THE COUPLE"}</p>
+              <p className="section-copy">{language === "id" ? "Sampaikan konfirmasi kehadiran dan pesan untuk kedua mempelai." : "Share your attendance confirmation and a message for the couple."}</p>
+              {(eventInfo?.rsvp_enabled || eventInfo?.guestbook_enabled) && <form className="wedding-form" onSubmit={submitWishes}>
+                <label>{language === "id" ? "Nama" : "Name"} <span className="wedding-required">*</span><input required name="guest_name" maxLength={16} placeholder={language === "id" ? "Nama pemain" : "Player name"} /></label>
+                <label>{language === "id" ? "Server Darkwar" : "Darkwar Server"} <span className="wedding-required">*</span><input required name="server_name" type="text" inputMode="numeric" pattern="[0-9]{1,4}" maxLength={4} onChange={(event) => { event.target.value = event.target.value.replace(/\D/g, "").slice(0, 4); }} placeholder={language === "id" ? "Contoh: 278" : "Example: 278"} /></label>
+                <fieldset className="wedding-attendance">
+                  <legend>{language === "id" ? "Konfirmasi Kehadiran" : "Attendance Confirmation"} <span className="wedding-required">*</span></legend>
+                  <label><input required type="radio" name="attendance" value="yes" defaultChecked />{language === "id" ? "Hadir" : "Attending"}</label>
+                  <label><input type="radio" name="attendance" value="maybe" />{t.attendancePending}</label>
+                  <label><input type="radio" name="attendance" value="no" />{language === "id" ? "Tidak Hadir" : "Not Attending"}</label>
+                </fieldset>
+                <label>{t.message} <span className="wedding-required">*</span><textarea required name="guestbook_message" rows="4" maxLength={200} onChange={(event) => setMessageLength(event.target.value.length)} placeholder={language === "id" ? "Tuliskan pesan atau doa..." : "Write your message or prayer..."} /><small className="wedding-message-counter" aria-live="polite">{200 - messageLength}/200</small></label>
+                <label className="sr-only" aria-hidden="true">{language === "id" ? "Situs web" : "Website"}<input name="website" tabIndex={-1} autoComplete="off" /></label>
+                <button className="wedding-primary" type="submit" disabled={rsvpLoading}>{rsvpLoading ? t.sending : t.sendWishes}</button>
+                {rsvpStatus && <p className="form-notice" role="status">{rsvpStatus === "success" ? t.wishesSuccess : rsvpStatus === "partial" ? t.wishesPartial : t.wishesError}</p>}
+              </form>}
+            {!eventInfo?.rsvp_enabled && !eventInfo?.guestbook_enabled && <p className="section-copy">{language === "id" ? "Form ucapan dan konfirmasi akan segera tersedia." : "The response form will be available soon."}</p>}
+          </section>
+
+          <section className="wedding-guestbook-list" id="guestbook-list" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Ucapan dan Doa Teman-teman" : "Friends' Wishes and Prayers"}</h2>
+            <div className="wedding-guestbook-list-panel" aria-label={language === "id" ? "Daftar ucapan tamu" : "Guestbook messages"} aria-busy={guestbookPageLoading}>
+              {guestbookEntries.length > 0 ? guestbookEntries.map((entry) => (
+                <article className="wedding-guest-entry" key={entry.id}>
+                  <div className="wedding-guest-entry-heading">
+                    <div className="wedding-guest-identity">
+                      <strong>{entry.guest_name}</strong>
+                      <span className="wedding-guest-server">- #{entry.server_name || "—"}</span>
+                    </div>
+                    <span className={"wedding-attendance-badge " + (entry.attendance === "yes" ? "is-yes" : entry.attendance === "maybe" ? "is-maybe" : "is-no")}>
+                      {entry.attendance === "yes" ? (language === "id" ? "Hadir" : "Attending") : entry.attendance === "maybe" ? t.attendancePending : entry.attendance === "no" ? (language === "id" ? "Tidak Hadir" : "Not Attending") : (language === "id" ? "Tamu" : "Guest")}
+                    </span>
+                  </div>
+                  <p className="wedding-guest-entry-message">{entry.message}</p>
+                  <time className="wedding-guest-entry-time" dateTime={entry.created_at}>{new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(entry.created_at))} - {new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-GB", { timeZone: "Asia/Jakarta", weekday: "long", day: "2-digit", month: "short", year: "numeric" }).format(new Date(entry.created_at)).replace(/\./g, "").toUpperCase()}</time>
+                </article>
+              )) : <p className="wedding-guestbook-empty">{language === "id" ? "Belum ada ucapan. Jadilah yang pertama mengirim doa!" : "No wishes yet. Be the first to leave a message!"}</p>}
+            </div>
+            {guestbookPagination.totalPages > guestbookPage && (
+              <div className="wedding-guestbook-pagination">
+                <p aria-live="polite">{language === "id" ? `Menampilkan ${guestbookEntries.length} dari ${guestbookPagination.total} ucapan` : `Showing ${guestbookEntries.length} of ${guestbookPagination.total} wishes`}</p>
+                <button type="button" onClick={async () => {
+                  if (guestbookPageLoading || guestbookPage >= guestbookPagination.totalPages) return;
+                  const next = guestbookPage + 1;
+                  setGuestbookPageLoading(true);
+                  setGuestbookLoadError(false);
+                  try {
+                    const response = await fetch("/api/wedding/guestbook?slug=" + encodeURIComponent(invitationSlug) + "&page=" + next, { cache: "no-store" });
+                    if (!response.ok) throw new Error("Unable to load more guestbook entries");
+                    const data = await response.json();
+                    setGuestbookEntries((current) => [...current, ...(Array.isArray(data.entries) ? data.entries : [])]);
+                    setGuestbookPagination(data.pagination || guestbookPagination);
+                    setGuestbookPage(next);
+                  } catch {
+                    setGuestbookLoadError(true);
+                  } finally {
+                    setGuestbookPageLoading(false);
+                  }
+                }} disabled={guestbookPageLoading}>
+                  {guestbookPageLoading ? (language === "id" ? "Memuat..." : "Loading...") : (language === "id" ? "Muat Lebih Banyak ↓" : "Load More ↓")}
+                </button>
+                {guestbookLoadError && <p role="alert">{language === "id" ? "Ucapan berikutnya gagal dimuat. Silakan coba lagi." : "Could not load more wishes. Please try again."}</p>}
+              </div>
+            )}
+            {guestbookEntries.length > 0 && guestbookPage >= guestbookPagination.totalPages && (
+              <p className="wedding-guestbook-end" aria-live="polite">{language === "id" ? "Semua ucapan telah ditampilkan 💗" : "You’ve reached the end of all wishes 💗"}</p>
+            )}
+          </section>
+
+          <section className="wedding-share" id="share" data-panel-number="10" data-aos="fade-up">
+            <h2 className="wedding-section-heading">{language === "id" ? "Bagikan Undangan" : "Share the Invitation"}</h2>
+            <p>{language === "id" ? <>Bagikan undangan ini agar mendapat 100<br className="share-copy-break" /> poin plus di surga.</> : <>Share this invitation and earn 100<br className="share-copy-break" /> bonus points in heaven.</>}</p>
+            <div className="share-actions">
+              <button type="button" onClick={shareInvite}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5 3.8 10.2c-.9.36-.85 1.65.08 1.94l4.5 1.4 1.4 4.5c.29.93 1.58.98 1.94.08L18.5 1.5"/><path d="m8.4 13.6 8.1-8.1"/></svg>{t.share}</button>
+              <button type="button" onClick={copyLink}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>{copied ? t.copied : t.copy}</button>
+            </div>
+          </section>
+          <footer className="wedding-closing" aria-label={language === "id" ? "Penutup undangan" : "Invitation closing"}>
+            <h2 className="wedding-closing-couple-name"><span className="opening-name">Anak Dajjal</span><span className="opening-amp">&amp;</span><span className="opening-name">Malika</span></h2>
+            <p className="wedding-closing-signature"><span className="wedding-closing-with-love">{language === "id" ? "Dengan Cinta" : "With Love"}</span><span className="wedding-closing-separator" aria-hidden="true">—</span><span className="wedding-closing-family">Dajjal Family</span></p>
+            <span className="wedding-closing-heart-animation" role="img" aria-label={language === "id" ? "Cinta" : "Love"}>💞</span>
+          </footer>
+      </div>
+
+      <button
+        className={"wedding-music-float " + (musicOn ? "is-playing" : "is-off")}
+        type="button"
+        onClick={toggleMusic}
+        aria-label={musicOn ? "Turn music off" : "Turn music on"}
+        aria-pressed={musicOn}
+        title={musicOn ? "Music is on" : "Music is off"}
+      >
+        <svg className="wedding-music-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+          {musicOn ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" /></> : <path d="m16 9 5 6m0-6-5 6" />}
+        </svg>
+        <span className="wedding-music-state" aria-hidden="true">{musicOn ? "ON" : "OFF"}</span>
+      </button>
+      <audio ref={audioRef} src={WEDDING_ASSETS.music} loop preload="none" onError={() => setMusicOn(false)} />
+    </main>
+  );
+}

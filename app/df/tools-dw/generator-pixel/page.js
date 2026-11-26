@@ -1,0 +1,674 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLanguage } from "@/app/components/LanguageProvider";
+import { Button, Card, Dialog, PageHeader } from "@/app/components/ui";
+import { supabase } from "@/lib/supabase";
+import "./generator-pixel.css";
+
+const WIDTH = 193;
+const HEIGHT = 45;
+const MAX_CHARACTERS = 32000;
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const HISTORY_DB = "df-pixel-bio-history";
+const HISTORY_STORE = "results";
+const HISTORY_LIMIT = 3;
+
+function openPixelHistoryDb() {
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === "undefined") return reject(new Error("IndexedDB is unavailable."));
+    const request = indexedDB.open(HISTORY_DB, 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(HISTORY_STORE)) request.result.createObjectStore(HISTORY_STORE, { keyPath: "id" });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function readPixelHistory() {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(HISTORY_STORE, "readonly").objectStore(HISTORY_STORE).getAll();
+    request.onsuccess = () => {
+      db.close();
+      resolve((request.result || []).sort((a, b) => b.createdAt - a.createdAt).slice(0, HISTORY_LIMIT));
+    };
+    request.onerror = () => { db.close(); reject(request.error); };
+  });
+}
+
+async function savePixelHistory(entry) {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HISTORY_STORE, "readwrite");
+    const store = transaction.objectStore(HISTORY_STORE);
+    const request = store.getAll();
+    request.onsuccess = () => {
+      (request.result || []).sort((a, b) => b.createdAt - a.createdAt).slice(HISTORY_LIMIT - 1).forEach((item) => store.delete(item.id));
+      store.put(entry);
+    };
+    transaction.oncomplete = async () => {
+      db.close();
+      try { resolve(await readPixelHistory()); } catch (error) { reject(error); }
+    };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+    transaction.onabort = () => { db.close(); reject(transaction.error); };
+  });
+}
+
+async function clearPixelHistory() {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HISTORY_STORE, "readwrite");
+    transaction.objectStore(HISTORY_STORE).clear();
+    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+  });
+}
+
+const COPY = {
+  id: {
+    eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
+    title: "Pixel Bio Generator",
+    description: "Ubah gambar menjadi kode bio pixel Darkwar Survival.",
+    stepUpload: "Pilih gambar",
+    uploadHint: "JPG, PNG, atau WebP",
+    choose: "Pilih gambar",
+    replace: "Ganti gambar",
+    cropTitle: "Atur komposisi",
+    cropHint: "Geser gambar untuk mengatur posisi. Gunakan slider untuk memperbesar atau memperkecil.",
+    zoom: "Zoom gambar",
+    reset: "Atur ulang",
+    process: "Buat Pixel Bio",
+    processing: "Memproses…",
+    uploading: "Memproses...",
+    encoding: "Memproses...",
+    successTitle: "Pixel Bio berhasil dibuat!",
+    successDescription: "Gambar berhasil diproses dan kode bio siap disalin.",
+    copy: "Copy Code",
+    copied: "Kode berhasil disalin!",
+    done: "Selesai",
+    errorTitle: "Belum berhasil",
+    invalidType: "Gunakan gambar JPG, PNG, atau WebP.",
+    tooLarge: "File gambar tidak dapat digunakan.",
+    noImage: "Pilih gambar terlebih dahulu.",
+    session: "Sesi admin tidak ditemukan. Silakan masuk kembali.",
+    uploadError: "Gambar gagal diproses. Silakan coba lagi.",
+    processError: "Gambar belum dapat diproses. Coba atur ulang posisi atau gunakan gambar lain.",
+    noPreview: "Pratinjau gambar akan muncul di sini.",
+    resultTitle: "Hasil Pixel Bio",
+    overLimit: "Hasil melebihi batas 32.000 karakter. Coba gunakan gambar yang lebih sederhana.",
+    detailCharacters: "Jumlah karakter",
+    detailColors: "Jumlah warna",
+    detailDimensions: "Dimensi",
+    historyTitle: "Riwayat Generator",
+    historyDescription: "Tiga hasil generator terakhir tersimpan di perangkat ini.",
+    historyEmpty: "Belum ada riwayat. Hasil yang berhasil dibuat akan muncul di sini.",
+    historyItem: "Pixel Bio",
+    historyCopy: "Salin Kode",
+    historyRestore: "Pulihkan",
+    historyDelete: "Hapus Riwayat",
+    historyDeleteConfirm: "Hapus semua riwayat Pixel Bio dari perangkat ini?",
+  },
+  en: {
+    eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
+    title: "Pixel Bio Generator",
+    description: "Turn an image into Darkwar Survival pixel bio code.",
+    stepUpload: "Choose an image",
+    uploadHint: "JPG, PNG, or WebP",
+    choose: "Choose image",
+    replace: "Change image",
+    cropTitle: "Adjust composition",
+    cropHint: "Drag the image to position it. Use the slider to zoom in or out.",
+    zoom: "Image zoom",
+    reset: "Reset",
+    process: "Create Pixel Bio",
+    processing: "Processing…",
+    uploading: "Processing...",
+    encoding: "Processing...",
+    successTitle: "Pixel Bio created!",
+    successDescription: "Your image has been processed and the bio code is ready to copy.",
+    copy: "Copy Code",
+    copied: "Code copied successfully!",
+    done: "Done",
+    errorTitle: "Unable to complete",
+    invalidType: "Use a JPG, PNG, or WebP image.",
+    tooLarge: "This image file cannot be used.",
+    noImage: "Choose an image first.",
+    session: "Admin session not found. Please sign in again.",
+    uploadError: "The image could not be processed. Please try again.",
+    processError: "The image could not be processed. Reset the crop or try another image.",
+    noPreview: "Your image preview will appear here.",
+    resultTitle: "Pixel Bio Result",
+    overLimit: "The result exceeds the 32,000-character limit. Try a simpler image.",
+    detailCharacters: "Characters",
+    detailColors: "Colors",
+    detailDimensions: "Dimensions",
+    historyTitle: "Generator History",
+    historyDescription: "Your three latest results are saved on this device.",
+    historyEmpty: "No history yet. Successfully generated results will appear here.",
+    historyItem: "Pixel Bio",
+    historyCopy: "Copy Code",
+    historyRestore: "Restore",
+    historyDelete: "Clear History",
+    historyDeleteConfirm: "Delete all Pixel Bio history from this device?",
+  },
+};
+
+function colorTag(rgb) {
+  const short = rgb.map((channel) => Math.max(0, Math.min(15, Math.round(channel / 17))).toString(16)).join("");
+  return `<#${short}>`;
+}
+
+function medianCutPalette(pixels, requestedColors) {
+  const initial = pixels.map((pixel, index) => ({ r: pixel[0], g: pixel[1], b: pixel[2], index }));
+  const boxes = [initial];
+
+  while (boxes.length < requestedColors) {
+    let selectedIndex = -1;
+    let selectedRange = -1;
+    let selectedChannel = "r";
+
+    boxes.forEach((box, index) => {
+      if (box.length < 2) return;
+      const ranges = ["r", "g", "b"].map((channel) => {
+        const values = box.map((pixel) => pixel[channel]);
+        return Math.max(...values) - Math.min(...values);
+      });
+      const range = Math.max(...ranges);
+      if (range > selectedRange) {
+        selectedRange = range;
+        selectedIndex = index;
+        selectedChannel = ["r", "g", "b"][ranges.indexOf(range)];
+      }
+    });
+
+    if (selectedIndex < 0 || selectedRange <= 0) break;
+    const box = boxes.splice(selectedIndex, 1)[0];
+    box.sort((a, b) => a[selectedChannel] - b[selectedChannel]);
+    const middle = Math.floor(box.length / 2);
+    boxes.push(box.slice(0, middle), box.slice(middle));
+  }
+
+  return boxes.map((box) => {
+    const total = box.reduce((sum, pixel) => ({
+      r: sum.r + pixel.r,
+      g: sum.g + pixel.g,
+      b: sum.b + pixel.b,
+    }), { r: 0, g: 0, b: 0 });
+    return [
+      Math.round(total.r / box.length),
+      Math.round(total.g / box.length),
+      Math.round(total.b / box.length),
+    ];
+  });
+}
+
+function encodePixelCanvas(canvas) {
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) throw new Error("Canvas is unavailable.");
+  const image = context.getImageData(0, 0, WIDTH, HEIGHT);
+  const pixels = [];
+  for (let index = 0; index < image.data.length; index += 4) {
+    pixels.push([image.data[index], image.data[index + 1], image.data[index + 2]]);
+  }
+
+  const candidates = [64, 48, 32, 24, 16, 12, 8, 6, 4, 3, 2];
+
+  for (const colorCount of candidates) {
+    const palette = medianCutPalette(pixels, colorCount);
+    const rows = [];
+    for (let y = 0; y < HEIGHT; y += 1) {
+      let row = "";
+      let activeTag = "";
+      let runLength = 0;
+      for (let x = 0; x < WIDTH; x += 1) {
+        const pixel = pixels[y * WIDTH + x];
+        let nearest = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+        for (let colorIndex = 0; colorIndex < palette.length; colorIndex += 1) {
+          const color = palette[colorIndex];
+          const dr = pixel[0] - color[0];
+          const dg = pixel[1] - color[1];
+          const db = pixel[2] - color[2];
+          const distance = dr * dr + dg * dg + db * db;
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearest = colorIndex;
+          }
+        }
+        const nextTag = colorTag(palette[nearest]);
+        if (nextTag === activeTag) {
+          runLength += 1;
+        } else {
+          if (runLength) row += activeTag + ".".repeat(runLength);
+          activeTag = nextTag;
+          runLength = 1;
+        }
+      }
+      if (runLength) row += activeTag + ".".repeat(runLength);
+      rows.push(row);
+    }
+
+    const code = `<size="10"><line-height=10%>\n${rows.join("\n")}\n</line-height></size>`;
+    const result = { code, characters: code.length, colors: palette.length };
+    if (result.characters <= MAX_CHARACTERS) return result;
+  }
+
+  throw new Error("PIXEL_BIO_OVER_LIMIT");
+}
+
+export default function GeneratorPixelPage() {
+  const { language } = useLanguage();
+  const t = COPY[language] || COPY.id;
+  const fileInputRef = useRef(null);
+  const stageRef = useRef(null);
+  const imageRef = useRef(null);
+  const dragRef = useRef(null);
+  const objectUrlRef = useRef(null);
+
+  const [file, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [stageWidth, setStageWidth] = useState(600);
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState(null);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [copiedHistoryId, setCopiedHistoryId] = useState("");
+  const resultPanelRef = useRef(null);
+
+  useEffect(() => {
+    let active = true;
+    readPixelHistory().then((items) => { if (active) setHistory(items); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  const stageHeight = stageWidth * HEIGHT / WIDTH;
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver((entries) => {
+      const nextWidth = entries[0]?.contentRect?.width;
+      if (nextWidth) setStageWidth(nextWidth);
+    });
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+  const baseScale = imageSize.width && imageSize.height
+    ? Math.max(stageWidth / imageSize.width, stageHeight / imageSize.height)
+    : 1;
+  const renderedWidth = imageSize.width * baseScale * zoom;
+  const renderedHeight = imageSize.height * baseScale * zoom;
+
+  useEffect(() => () => {
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+  }, []);
+
+  const chooseFile = (nextFile) => {
+    setError("");
+    setResult(null);
+    setCopied(false);
+    if (!nextFile) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(nextFile.type)) {
+      setError(t.invalidType);
+      return;
+    }
+    if (nextFile.size <= 0 || nextFile.size > MAX_FILE_SIZE) {
+      setError(t.tooLarge);
+      return;
+    }
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    const nextUrl = URL.createObjectURL(nextFile);
+    objectUrlRef.current = nextUrl;
+    setFile(nextFile);
+    setImageUrl(nextUrl);
+    setImageSize({ width: 0, height: 0 });
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const resetCrop = () => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const handlePointerDown = (event) => {
+    if (!imageUrl || busy) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragRef.current = { x: event.clientX, y: event.clientY, offsetX: offset.x, offsetY: offset.y };
+  };
+
+  const handlePointerMove = (event) => {
+    if (!dragRef.current) return;
+    const drag = dragRef.current;
+    const nextX = drag.offsetX + event.clientX - drag.x;
+    const nextY = drag.offsetY + event.clientY - drag.y;
+    const maxX = Math.max(0, (renderedWidth - stageWidth) / 2);
+    const maxY = Math.max(0, (renderedHeight - stageHeight) / 2);
+    setOffset({
+      x: Math.min(maxX, Math.max(-maxX, nextX)),
+      y: Math.min(maxY, Math.max(-maxY, nextY)),
+    });
+  };
+
+  const handlePointerEnd = () => {
+    dragRef.current = null;
+  };
+
+  const makeCropCanvas = useCallback(() => {
+    const image = imageRef.current;
+    const stage = stageRef.current;
+    if (!image || !stage || !image.naturalWidth || !image.naturalHeight) throw new Error("Image is not ready.");
+    const width = stage.clientWidth;
+    const height = width * HEIGHT / WIDTH;
+    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight) * zoom;
+    const drawnWidth = image.naturalWidth * scale;
+    const drawnHeight = image.naturalHeight * scale;
+    const left = (width - drawnWidth) / 2 + offset.x;
+    const top = (height - drawnHeight) / 2 + offset.y;
+    const sx = Math.max(0, -left / scale);
+    const sy = Math.max(0, -top / scale);
+    const sw = Math.min(image.naturalWidth - sx, width / scale);
+    const sh = Math.min(image.naturalHeight - sy, height / scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const context = canvas.getContext("2d");
+    if (!context || sw <= 0 || sh <= 0) throw new Error("Unable to create crop.");
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(image, sx, sy, sw, sh, 0, 0, WIDTH, HEIGHT);
+    return canvas;
+  }, [zoom, offset]);
+
+  const createPixelBio = async () => {
+    if (!file || !imageRef.current?.complete) {
+      setError(t.noImage);
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const pixelCanvas = makeCropCanvas();
+      let encoded;
+      try {
+        encoded = encodePixelCanvas(pixelCanvas);
+      } catch (encodingError) {
+        if (encodingError.message === "PIXEL_BIO_OVER_LIMIT") throw new Error(t.overLimit);
+        throw encodingError;
+      }
+      if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData?.session?.access_token) throw new Error(t.session);
+      const form = new FormData();
+      form.append("file", file);
+      const response = await fetch("/api/df/tools-dw/generator-pixel/upload", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
+        body: form,
+        cache: "no-store",
+      });
+      const uploaded = await response.json().catch(() => ({}));
+      if (!response.ok || !uploaded.success) throw new Error(uploaded.error || t.uploadError);
+
+      const historyEntry = {
+        id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        createdAt: Date.now(),
+        ...encoded,
+        preview: pixelCanvas.toDataURL("image/png"),
+      };
+      setResult(historyEntry);
+      setCopied(false);
+      setCopiedHistoryId("");
+      try {
+        setHistory(await savePixelHistory(historyEntry));
+      } catch (historyError) {
+        console.warn("Pixel Bio history could not be saved:", historyError);
+      }
+      setSuccessOpen(true);
+      setFile(null);
+      setImageUrl("");
+      setImageSize({ width: 0, height: 0 });
+      setZoom(1);
+      setOffset({ x: 0, y: 0 });
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (caught) {
+      setError(caught.message || t.processError);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const finishSuccess = () => {
+    setSuccessOpen(false);
+    requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
+  const copyText = async (code) => {
+    if (!code) return false;
+    try {
+      await navigator.clipboard.writeText(code);
+      return true;
+    } catch {
+      const textArea = document.createElement("textarea");
+      textArea.value = code;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      const success = document.execCommand("copy");
+      textArea.remove();
+      return success;
+    }
+  };
+
+  const copyCode = async () => {
+    if (!result?.code) return;
+    setCopied(await copyText(result.code));
+  };
+
+  const copyHistoryCode = async (entry) => {
+    setCopiedHistoryId(await copyText(entry.code) ? entry.id : "");
+  };
+
+  const restoreHistory = (entry) => {
+    setResult(entry);
+    setCopied(false);
+    setCopiedHistoryId("");
+    requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
+  const deleteHistory = async () => {
+    if (!window.confirm(t.historyDeleteConfirm)) return;
+    try {
+      await clearPixelHistory();
+      setHistory([]);
+      setCopiedHistoryId("");
+    } catch (historyError) {
+      console.warn("Pixel Bio history could not be cleared:", historyError);
+    }
+  };
+
+  const imageStyle = useMemo(() => ({
+    width: renderedWidth,
+    height: renderedHeight,
+    left: `calc(50% + ${offset.x}px)`,
+    top: `calc(50% + ${offset.y}px)`,
+  }), [renderedWidth, renderedHeight, offset]);
+
+  return (
+    <main className="df-pixel-page">
+      <PageHeader
+        eyebrow={t.eyebrow}
+        title={t.title}
+        description={t.description}
+        className="df-pixel-header"
+      />
+
+      <div className="df-pixel-workspace">
+        <Card className="df-pixel-panel">
+          <div className="df-pixel-step-heading">
+            <span className="df-pixel-step-number">01</span>
+            <div>
+              <h2>{t.stepUpload}</h2>
+              <p>{t.uploadHint}</p>
+            </div>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            className="df-pixel-file-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={(event) => {
+              chooseFile(event.target.files?.[0]);
+              event.target.value = "";
+            }}
+          />
+
+          {!file ? (
+            <button className="df-pixel-dropzone" type="button" onClick={() => fileInputRef.current?.click()}>
+              <span className="df-pixel-upload-icon" aria-hidden="true">↑</span>
+              <strong>{t.choose}</strong>
+              <span>{t.uploadHint}</span>
+            </button>
+          ) : (
+            <div className="df-pixel-file-summary">
+              <span className="df-pixel-file-icon" aria-hidden="true">▧</span>
+              <span className="df-pixel-file-name">{file.name}</span>
+              <Button size="sm" variant="secondary" onClick={() => fileInputRef.current?.click()}>{t.replace}</Button>
+            </div>
+          )}
+
+         </Card>
+
+        <Card className="df-pixel-panel">
+          <div className="df-pixel-step-heading">
+            <span className="df-pixel-step-number">02</span>
+            <div>
+              <h2>{t.cropTitle}</h2>
+              <p>{t.cropHint}</p>
+            </div>
+          </div>
+
+          <div className={["df-pixel-stage", imageUrl ? "has-image" : ""].join(" ")}>
+             <div
+              ref={stageRef}
+              className="df-pixel-crop-area"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerEnd}
+              onPointerCancel={handlePointerEnd}
+              onLostPointerCapture={handlePointerEnd}
+              role="img"
+              aria-label={t.cropTitle}
+            >
+              {imageUrl ? (
+                <img
+                  ref={imageRef}
+                  src={imageUrl}
+                  alt="Crop preview"
+                  draggable="false"
+                  style={imageStyle}
+                  onLoad={(event) => setImageSize({ width: event.currentTarget.naturalWidth, height: event.currentTarget.naturalHeight })}
+                />
+              ) : <span className="df-pixel-empty-preview">{t.noPreview}</span>}
+              <span className="df-pixel-crop-outline" aria-hidden="true" />
+            </div>
+           </div>
+
+          <div className="df-pixel-controls">
+            <label htmlFor="pixel-zoom">{t.zoom}<strong>{zoom.toFixed(1)}×</strong></label>
+            <input id="pixel-zoom" type="range" min="1" max="3" step="0.05" value={zoom} onChange={(event) => setZoom(Number(event.target.value))} disabled={!file || busy} />
+            <Button variant="ghost" size="sm" onClick={resetCrop} disabled={!file || busy}>{t.reset}</Button>
+          </div>
+
+          {error ? <p className="df-pixel-error" role="alert">{error}</p> : null}
+          <Button className="df-pixel-create-button" onClick={createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
+            {busy ? t.processing : t.process}
+          </Button>
+        </Card>
+      </div>
+
+      {result ? (
+        <div className="df-pixel-result-anchor" ref={resultPanelRef}>
+        <Card className="df-pixel-result-panel">
+          <div className="df-pixel-result-heading">
+            <h2>{t.resultTitle}</h2>
+            <span aria-hidden="true">✓</span>
+          </div>
+          <div className="df-pixel-result-preview">
+            <img src={result.preview} alt={t.resultTitle} />
+          </div>
+          <div className="df-pixel-result-details" aria-label={t.resultTitle}>
+            <div className="df-pixel-result-detail">
+              <span>{t.detailCharacters}</span>
+              <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
+            </div>
+            <div className="df-pixel-result-detail">
+              <span>{t.detailColors}</span>
+              <strong>{result.colors}</strong>
+            </div>
+          </div>
+          <Button className="df-pixel-copy-button" onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
+        </Card>
+        </div>
+      ) : null}
+
+      <Card className="df-pixel-history-panel">
+        <div className="df-pixel-history-heading">
+          <div>
+            <h2>{t.historyTitle}</h2>
+            <p>{t.historyDescription}</p>
+          </div>
+          {history.length > 0 ? <Button variant="ghost" size="sm" onClick={deleteHistory}>{t.historyDelete}</Button> : null}
+        </div>
+        {history.length === 0 ? (
+          <p className="df-pixel-history-empty">{t.historyEmpty}</p>
+        ) : (
+          <div className="df-pixel-history-list">
+            {history.map((entry, index) => (
+              <article className="df-pixel-history-item" key={entry.id}>
+                <div className="df-pixel-history-thumb">
+                  <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
+                </div>
+                <div className="df-pixel-history-meta">
+                  <strong>{t.historyItem} #{history.length - index}</strong>
+                  <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
+                  <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
+                </div>
+                <div className="df-pixel-history-actions">
+                  <Button size="sm" variant="secondary" onClick={() => copyHistoryCode(entry)}>{copiedHistoryId === entry.id ? t.copied : t.historyCopy}</Button>
+                  <Button size="sm" variant="ghost" onClick={() => restoreHistory(entry)}>{t.historyRestore}</Button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      <Dialog
+        open={successOpen}
+        onClose={finishSuccess}
+        title={t.successTitle}
+        description={t.successDescription}
+        closeLabel={t.done}
+        closeOnBackdrop={false}
+        className="df-pixel-success-dialog"
+        actions={<Button onClick={finishSuccess}>{t.done}</Button>}
+      />
+    </main>
+  );
+}

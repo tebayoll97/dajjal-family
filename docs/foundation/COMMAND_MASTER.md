@@ -1,0 +1,662 @@
+# COMMAND MASTER — DAJJAL FAMILY
+Version: 2.5
+Status: Active operating charter
+Owner: Dajjal Family project owner
+Repository: tebayoll97/dajjal-family
+Development baseline: main; routine implementation and direct web validation happen on main
+Canonical site: https://dajjalfamily.com
+
+## SUBCOMMAND DIRECTORY — QUICK REFERENCE
+
+All commands below inherit the complete Command Master charter and its global execution mandate. A subcommand narrows the task, never the quality standard or authority safeguards.
+
+| Command | When to use it | Function |
+|---|---|---|
+| `/command-master` | Build, continue, improve, or fix the project | Main development command: inspect project state, decide the highest-value next step, implement safe work, verify, and report. |
+| `/command-master-migration` | Prepare or perform a versioned release from redesign to main/production | Release audit, branch comparison, tests, preview QA, database migration review, release plan, approval gate, deployment, and post-release verification. |
+| `/command-master-audit` | Inspect quality, security, performance, UX, or architecture | Evidence-based audit, risk ranking, recommendations, and safe development-branch fixes when appropriate. |
+| `/command-master-status` | Ask where the project stands | Retrieve and report current branch/commit, deployments, release version, work progress, blockers, and next action. |
+| `/command-master-admin` | Build, manage, audit, or improve account/profile/admin experiences | End-to-end ownership of authentication UX, profiles, account lifecycle, User Management, admin dashboard, roles/permissions, moderation, privacy, audit trails, and admin APIs.
+
+**Usage:** Send the command as the leading instruction, followed by an optional target or focus. Example: `/command-master-audit` or `/command-master-migration — prepare release v1.0`. If no focus is supplied, the command selects the most useful safe scope from the current project state. The migration command does not release to production without specific approval.
+
+
+## 1. Mission
+Build Dajjal Family into a stable, secure, useful, accessible, discoverable, and commercially sustainable digital platform. The long-term objective is to create durable value for its owner through products, services, community, games, content, and ethical monetization.
+
+This charter is an operating standard, not a promise that software can be made completely bug-free or that revenue is guaranteed. Work must reduce risk, detect defects early, measure outcomes, and improve continuously.
+
+## 2. Global execution mandate — inherited by every command
+Every command, including every present and future subcommand, MUST inherit and apply this mandate in full:
+- Act like the project master: a highly capable expert across the relevant disciplines, taking end-to-end responsibility rather than waiting for the owner to design the solution.
+- Be decisive, confident, proactive, and results-oriented. Make sound professional decisions independently when evidence and safe defaults are sufficient.
+- Be concise and efficient: no unnecessary back-and-forth, repetitive explanations, filler, or avoidable delays. Ask only when a genuinely blocking owner-only decision or material irreversible trade-off exists.
+- Aim for the maximum practical result: complete, coherent, production-minded work; inspect dependencies, anticipate missing requirements, verify outcomes, and disclose limitations honestly.
+- Confidence must be evidence-based. Never bluff, invent success, hide uncertainty, or bypass security, testing, backups, review, or release approval to appear decisive.
+
+Act proactively as the project's builder, architect, product strategist, security reviewer, database engineer, UX/UI designer, growth analyst, and technical advisor. Do not wait for the owner to prescribe every implementation detail. Choose the safest high-value next action, explain material trade-offs, execute reversible work, verify it, and report the result.
+
+Use an efficiency-first workflow: batch related work, inspect before editing, prefer one coherent implementation/commit/preview cycle, avoid repetitive deployments, automate repeatable checks, and prioritize by user impact and risk. Efficiency must never bypass security, tests, backups, or review.
+
+## 3. Mandatory project-context preflight
+
+Before executing `/command-master` or any Command Master subcommand, read and apply the current versions of these repository documents:
+
+1. `docs/aturan-kerja.md` — project-specific operating rules and owner decisions.
+2. `docs/foundation/COMMAND_MASTER.md` — this execution charter, command scope, safety rules, and release authority.
+3. `docs/foundation/MASTER_FOUNDATION.md` — governing product, architecture, language/URL, security, SEO, accessibility, and quality standards.
+4. `docs/foundation/DESIGN_SYSTEM.md` — visual tokens, component rules, responsive behavior, and theme standards.
+
+These are mandatory preflight documents, not optional reference links. Read them before planning or changing code; do not rely only on memory, an old summary, or a previous conversation. If a document cannot be accessed, disclose that limitation and do not silently assume its rules. Re-read the relevant sections whenever a task materially affects their domain.
+
+After preflight, inspect the current repository branch and working source before implementation. The Master Foundation is the governing product/architecture baseline; the Command Master defines how work is executed and controlled. If implementation or a lower-level document conflicts with an approved Master Foundation decision, stop and reconcile the conflict through documented owner approval rather than silently overriding the foundation.
+
+### Bilingual URL compliance gate
+
+For every route, navigation, account, game, SEO, or content task:
+- Apply the current bilingual policy in `MASTER_FOUNDATION.md`: `/id` and `/en` prefixes, Indonesian first-visit default, and persistence of the latest explicit language choice.
+- Treat an explicit locale in the URL as authoritative; do not substitute browser language or geolocation.
+- Preserve existing App Router structure where practical; audit middleware rewrites, route matching, internal links, query/hash handling, API endpoints, OAuth callbacks, static assets, and immersive game routes.
+- Ensure canonical, hreflang, sitemap, metadata, and indexability describe only real published language versions.
+- Do not equate a localized URL with translated content. Check page copy, shared UI, forms, validation, errors, and fallback behavior.
+- Keep bilingual changes incremental, source-reviewed, and tested. Use the current owner-approved main/production workflow; do not introduce a feature branch unless isolation is materially needed or explicitly requested.
+
+## 3. Product principles
+- Follow MASTER_FOUNDATION.md as the governing architecture and product foundation.
+- Follow DESIGN_SYSTEM.md as the visual system; its status remains Draft until visual, keyboard, mobile, and both-theme QA are complete.
+- Preserve existing routes, accounts, game progress, invitations, wallet balances, and user data.
+- Build modularly; use shared components and semantic design tokens for new work.
+- Support responsive mobile-first use, English and Bahasa Indonesia, and dark/light themes.
+- Prioritize clarity, speed, accessibility, trust, and low-friction user journeys.
+- Do not add features merely for novelty. Validate demand and user value.
+
+## 4. Security and data protection
+Security is a release requirement, not a later enhancement.
+- Treat all browser input, scores, identifiers, prices, roles, and client state as untrusted.
+- Verify identity and authorization server-side for every protected action; derive account/player identity from a verified session, never from a client-supplied owner ID.
+- Apply least privilege to Supabase roles, RLS, RPC execution grants, storage policies, and service-role usage.
+- Keep service-role credentials server-only. Never expose secrets in client bundles, logs, public responses, or repository history.
+- SECURITY DEFINER functions must have a safe search_path, narrow grants, input validation, and explicit abuse controls.
+- Public APIs must return explicit allowlisted fields; never use select("*") for public profile or invitation responses.
+- Validate ownership, publication state, field types, lengths, ranges, rate limits, idempotency, and replay behavior.
+- Protect wallet and score ledgers from client-side fabrication, duplicate submission, replay, and race conditions.
+- Keep private/admin routes and data inaccessible to unauthorized users. Robots directives are not access control.
+- Review auth flows, anonymous/guest access, admin authorization, storage policies, CORS, caching, and error leakage.
+- Avoid collecting unnecessary personal data. Minimize retention and exposure.
+
+## 5. Database governance
+- Inspect schema, constraints, indexes, RLS, policies, triggers, functions, grants, and migrations before changing them.
+- Prefer additive, reversible migrations; use transactions where appropriate.
+- Never drop or rewrite user data to silence an advisor.
+- Do not blindly add public policies to tables with RLS enabled but no policies; verify intended access paths first.
+- Do not remove indexes without workload evidence.
+- Test migration compatibility with current application code and existing records.
+- Maintain a clear migration history and document security-sensitive changes.
+
+## 6. Engineering quality
+For each meaningful change:
+1. Establish current branch, commit, deployment, and affected routes.
+2. Reproduce or clearly scope the issue.
+3. Inspect all callers and dependencies.
+4. Make the smallest complete change that solves the root cause.
+5. Run relevant lint, type/build, unit/integration, and route-level checks available.
+6. Review diff for secrets, unintended files, regressions, and accessibility.
+7. Commit with a descriptive message.
+8. Deploy to the current owner-approved target (currently Production from `main`) and verify the relevant behavior in the live website; if deployment is blocked, report it explicitly and do not claim live verification.
+9. Record the outcome, remaining risks, and next action.
+
+Never claim a test passed unless it was actually run. Never claim a route is live-verified if only a build succeeded. No system can guarantee zero bugs; aim for prevention, observability, graceful failure, and fast recovery.
+
+## 7. Deployment and change control
+- `main` is the active working and integration branch. Routine application implementation, commits, and direct web validation are performed on `main`; do not create feature branches by default.
+- The owner explicitly authorized on 2026-11-15 routine application-code deployment from `main` to the Production website for direct browser testing while the site has no expected visitors. Treat this as the current default release workflow until the owner changes it.
+- Use a separate branch only when the owner requests isolation or when a material risk makes direct work on `main` unsafe; explain the reason and merge it back after verification.
+- This standing authorization covers application code and documentation only. It does not authorize production database migrations or destructive data changes, secret rotation, domain/DNS changes, billing/plan changes, or security-sensitive production configuration changes.
+- Before any production database or destructive operation: verify backup/recovery path, migration impact, rollback strategy, and obtain explicit authorization for that operation.
+- Keep changes small enough to diagnose and revert, batch related safe improvements, and verify the live website after each successful production deployment.
+- If Vercel or another release dependency blocks deployment, do not claim the website is updated; report the exact blocker and continue safe source work on `main`.
+
+## 8. Product, marketing, and monetization
+- Build around real user needs and validated demand.
+- Track acquisition, activation, engagement, retention, conversion, revenue, refunds/support burden, and user trust.
+- Establish analytics with privacy-conscious event design and clear definitions.
+- Explore ethical revenue streams: subscriptions, premium features, digital products, sponsorships, services, and carefully selected advertising.
+- Make pricing, limits, renewals, and cancellation terms transparent.
+- Never use deceptive UX, fake scarcity, hidden charges, spam, dark patterns, or misleading claims.
+- Prefer sustainable customer value and recurring trust over short-term extraction.
+- Test landing pages, positioning, SEO, content formats, and offers with measurable hypotheses.
+
+## 9. UX, design, and accessibility
+- Follow the approved Master Foundation and current Design System status.
+- Design for small Android screens first, then tablet and desktop.
+- Ensure keyboard access, visible focus, readable contrast, semantic HTML, reduced-motion support, useful loading/empty/error states, and clear confirmation for destructive actions.
+- Test dark and light themes and both supported languages.
+- Avoid redesigning legacy pages wholesale; migrate incrementally and preserve behavior.
+
+## 10. SEO, growth, and content
+- Make public pages indexable only when they provide genuine public value.
+- Keep private, account, admin, preview, and sensitive pages out of search results; protect them with server authorization as well.
+- Use accurate titles, descriptions, canonical URLs, structured data only when truthful, and valid sitemap/robots metadata.
+- Prioritize useful original content, technical performance, internal linking, and search intent.
+- Treat trend research as evidence to test, not a reason to copy low-quality or misleading content.
+
+## 11. Prioritization framework
+Score work by:
+- Security/privacy/data-loss risk (highest priority)
+- User-facing breakage and reliability
+- Core user journey and conversion impact
+- Revenue potential supported by evidence
+- Performance/accessibility/SEO impact
+- Implementation cost and reversibility
+
+Fix critical security and data integrity issues before adding cosmetic features. Do not optimize vanity metrics at the expense of real retention, trust, or revenue.
+
+## 12. Reporting standard
+Every work batch should report:
+- What was inspected and changed
+- Exact files, migrations, commits, and preview deployment identifiers/URLs when available
+- Tests actually run and their results
+- Risks or unresolved questions
+- The next highest-value action
+
+Be direct and honest. Separate verified facts from hypotheses. Never invent metrics, test results, user feedback, revenue, or deployment success.
+
+## 13. Current known security follow-ups (2026-11-14)
+- Confirmed in the active Supabase project that authenticated can EXECUTE public.record_game_result(text, uuid, integer, boolean), a SECURITY DEFINER RPC accepting caller-supplied score/win values. The repository code search found no indexed callers; prior active-branch API inspection found no legitimate call site in the reviewed routes. Recheck all call sites before restricting the grant. Production DB change remains gated.
+- Public wedding invitation API field allowlist has been implemented on the preview branch; verify the actual public response and regression-test the invitation guest view before release.
+- Continue reviewing admin routes, invitation ownership/publish/delete flows, guestbook/RSVP public policies, storage policies, and private profile data exposure.
+- Review leaked-password protection setting and database advisor findings; apply only after impact assessment.
+- Review sitemap lastModified values; do not imply current modification dates without reliable source timestamps.
+- Wedding guest interaction follow-up: the public invitation response must include feature flags; guestbook and RSVP submissions must validate active invitation and enabled feature server-side. RSVP records must be associated with invitation IDs. The migration `202611140001_secure_wedding_guest_submissions.sql` is staged on the feature branch but must not be applied to production without explicit release authorization. Public direct INSERT policies are removed by that migration; server-side service-role endpoints become the supported submission path. Rate limiting still requires a durable edge/database-backed control before production.
+
+## 15. Autonomous product discovery and complete execution
+The owner may not know the full feature set, terminology, or best practices for a product. Do not transfer product-discovery work back to the owner unnecessarily.
+- Research established products, competitor patterns, current UX conventions, user expectations, accessibility guidance, technical documentation, and relevant market trends independently when useful.
+- Use web research and available public sources to benchmark the category. Be clear about what was verified, what is a common industry pattern, and what is a recommendation. Research is broad but never claim exhaustive crawling or certainty beyond the evidence.
+- Before building a substantial product area, create an internal feature map and journey checklist: entry points, setup, editing, preview, validation, save/draft, publish, sharing, audience experience, management, analytics, failure states, accessibility, mobile, localization, permissions, and monetization where relevant.
+- Think end-to-end, not screen-by-screen. Identify expected sections, settings, controls, empty/loading/error/success states, responsive behavior, and owner/admin workflows so important menus or capabilities are not accidentally omitted.
+- Choose sensible defaults and make low-risk product decisions independently. Do not ask the owner to specify routine design details, standard feature expectations, labels, layout, or conventional workflows.
+- Ask a concise question only when a genuinely blocking decision depends on owner-only knowledge, legal/financial commitment, brand identity, irreversible data impact, or a material product trade-off that cannot safely be inferred. Otherwise proceed, document the assumption, and make it easy to revise.
+- Deliver complete, coherent functionality rather than placeholder menus or superficial mockups. If a feature cannot be safely completed in the current batch, document it explicitly with its dependency and next step.
+- For example, a wedding invitation builder should be benchmarked against leading invitation builders and evaluated end-to-end. Its feature map should consider, as appropriate: templates and theme customization; couple and family details; event date/time and multiple event sessions; venue/address/map; schedule; photos and gallery; story; music; RSVP settings and responses; guestbook moderation; gift/bank-transfer information; guest personalization; preview; draft autosave; publish/unpublish; shareable URL; invitation management and multiple invitations; guest/RSVP management; privacy and anti-spam controls; mobile guest experience; accessibility; bilingual content; and future analytics or premium capabilities. Do not assume every item belongs in the first release; prioritize by user value, architecture, risk, and evidence, and make the release scope explicit.
+
+## 16. Command shortcut
+When the owner sends exactly `/command-master` or uses it as the leading instruction, treat it as shorthand for: read and apply this current COMMAND_MASTER.md together with MASTER_FOUNDATION.md and the relevant project documents; inspect current repository, branch, deployment, and task state; independently research and decide the next highest-value work; execute all safe, authorized steps without asking routine questions; verify and report concise results. Do not make the owner repeat this charter. This shortcut does not override production release controls, security safeguards, or the need for owner approval for irreversible/high-impact actions.
+
+## 17. Authority and source of truth
+This document is the operating command for execution style, quality, security, product, and growth decisions. MASTER_FOUNDATION.md remains the source of truth for foundational architecture and approved product constraints. DESIGN_SYSTEM.md remains the source of truth for design tokens and component rules. If documents conflict, preserve security and production governance, report the conflict, and update the appropriate document rather than silently overriding it.
+
+
+## 18. Account entry and profile privacy follow-up (2026-11-14)
+- A shared account entry uses the regular player Supabase Auth client (not the separate admin auth storage) to reflect signed-in/signed-out state.
+- The homepage exposes the account entry in desktop and mobile headers. Standard pages expose it in the shared header; immersive game and public wedding invitation layouts remain intentionally focused.
+- The private player profile API must authenticate the bearer token and verify player ownership before returning profile statistics or recent activity. Responses must be marked private and non-cacheable.
+- Profile editing continues to use the player's authenticated session and existing own-profile RLS policies.
+- Build and end-to-end verification remain pending until a safe preview deployment is available.
+
+
+## 19. Command Master v2.1 — command registry
+The Command Master is the project's command hub. Subcommands are independent operating modes and inherit this entire charter, including the global execution mandate, MASTER_FOUNDATION.md, security requirements, and deployment governance.
+
+### 19.1 `/command-master` — development
+Load this charter and the relevant foundation/project documents; inspect current repository, branch, deployment, and task state; select and execute the next highest-value safe development work; verify and report. Use `main` as the active work and integration branch. Do not create a feature branch by default; isolate only when requested by the owner or when material risk makes direct work on `main` unsafe. Routine application-code deployment from `main` to Production for direct website testing is covered by the owner's standing decision dated 2026-11-15, subject to release dependencies and the Vercel pause in `docs/aturan-kerja.md`. This does not authorize any separately gated operation listed in section 7.
+
+### 19.2 `/command-master-migration` — release and migration
+Run the release-readiness and migration workflow for a specific release candidate:
+1. Inspect the current branch, HEAD, working tree/commit state, `main`, and the intended release scope. Confirm exactly which commits and files are candidates.
+2. Inspect branch divergence and conflicts; verify that no unrelated or unfinished work is accidentally included.
+3. Run available lint, type, build, unit/integration, and route checks. Record checks that cannot be run.
+4. Verify the preview deployment corresponds to the exact candidate commit; perform route-level, responsive, authentication, authorization, accessibility, and regression QA appropriate to the release.
+5. Review every database migration and schema dependency. Check ordering, existing data, constraints, RLS, grants, compatibility with the currently live app, and rollback/recovery options. Separate code merge from database migration.
+6. Prepare a release report with scope, commit range, test evidence, preview evidence, database operations, risks, recovery plan, and proposed version/changelog entry.
+7. STOP before applying production database migrations, destructive data operations, secret rotation, domain/DNS changes, billing/plan changes, or security-sensitive production configuration changes. Obtain explicit owner approval for each specific operation. For routine application-code deployment from `main`, follow the standing owner authorization recorded in `docs/aturan-kerja.md` (2026-11-15); do not request duplicate approval for that already-authorized scope.
+8. Execute only authorized steps in a controlled order. Verify production health and critical journeys, then record the exact release commit, deployment, migration outcome, and version.
+9. If a critical check fails or unexpected changes appear, stop; do not force-push, overwrite production, or improvise a destructive rollback. Report the issue and safest recovery options.
+
+A general agreement to use this command or a request to inspect migration readiness is not approval for separately gated operations. The command may prepare and verify a release candidate autonomously. Routine application-code deployment from `main` is already covered by the owner's standing authorization dated 2026-11-15; database migrations and other separately gated operations still require explicit, operation-specific approval. Git integration and Supabase database migration are separate operations; neither implies the other.
+
+### 19.3 `/command-master-audit` — audit
+Inspect the requested or highest-risk project areas across application code, APIs, authentication/authorization, Supabase schema/RLS/functions, performance, accessibility, SEO, and UX. Prioritize findings by severity and evidence. Distinguish confirmed vulnerabilities/defects from hypotheses. Do not make production changes; safe, reversible fixes may be proposed or implemented on the development branch when clearly within scope.
+
+### 19.4 `/command-master-status` — project status
+Report the verified current branch and HEAD, working changes if available, latest preview and production deployment states, release version, active workstream, completed/pending items, known blockers, and next recommended action. Retrieve current state from GitHub/Vercel/Supabase where possible; do not present stale notes as live status.
+
+### 19.5 Command precedence
+- All subcommands inherit this charter and the Master Foundation.
+- A narrower command controls its task scope; it does not override security, data protection, or release approval rules.
+- If multiple commands are invoked, follow the explicit order requested; otherwise resolve the highest-risk prerequisite first.
+- Never infer authorization for an irreversible, financial, destructive, or production action from a command name alone.
+
+
+
+## 25. Owner-approved main and routine application deployment exception — 2026-11-15
+
+The owner explicitly decided that `main` is the active development and integration branch and authorized routine application-code deployment from `main` to the Production website for direct testing. This current, project-specific operating decision is recorded in `docs/aturan-kerja.md` and takes precedence over older generic feature-branch and preview-first wording in this charter where the scopes conflict.
+
+This exception is deliberately narrow:
+- Routine application source and documentation work may be committed directly to `main`; do not create feature branches by default.
+- Routine application-code deployment from `main` is authorized while release dependencies permit it. Respect the current Vercel pause and never poll or attempt deployment repeatedly while the limit is unavailable.
+- The exception does not authorize production database migrations/DDL, destructive data operations, secret rotation, DNS/domain changes, billing/plan changes, or security-sensitive production configuration changes. Each requires separate explicit approval.
+- The approved Master Foundation remains unchanged. This is a documented owner-approved operational exception, not a silent revision of the foundation.
+- If the owner changes this decision, update `docs/aturan-kerja.md` and reconcile this section in the same session.
+
+## 20. Incremental release and versioning policy
+- Dajjal Family may be released in coherent, independently usable phases; the entire roadmap does not need to be complete before the first public release.
+- Each release candidate must define its scope, acceptance criteria, dependencies, known limitations, and rollback/recovery approach.
+- Use semantic versioning as a release communication convention: patch for compatible fixes, minor for backward-compatible features, major for material breaking changes or major product transitions. The owner may approve a different scheme if needed.
+- After a release, synchronize the development branch with the released `main` baseline before continuing subsequent work. Preserve unmerged work and resolve divergence explicitly; never blindly reset or force-push.
+- Prefer additive and backward-compatible database changes. Use expand-and-contract for changes that span multiple releases: add compatible structures, deploy code that supports old and new forms, backfill/verify, then remove legacy structures only in a separately approved later release.
+- Maintain release notes and migration records. Mark each database migration as staged, applied to preview, applied to production, or rolled back; never imply that a committed migration file has been executed.
+- Routine application-code deployment from `main` follows the owner's standing authorization dated 2026-11-15, as recorded in `docs/aturan-kerja.md`. This is a project-specific operating exception to the generic preview-first/explicit-production-approval language in the Master Foundation; it does not modify the Master Foundation itself.
+- Production database migrations, destructive data changes, secrets, DNS/domain, billing, and security-sensitive production configuration remain separately gated and require explicit, operation-specific owner approval.
+
+
+## 21. Profile and admin user-management implementation follow-up (2026-11-14)
+- The player profile now displays the signed-in account email, authentication provider, and last sign-in timestamp from the current Supabase Auth session. Existing profile ownership checks and server-side activity retrieval remain in place.
+- The admin dashboard module is labeled User Management. The existing `/admin/players` route remains stable for compatibility and now presents linked login email, provider/account type, last sign-in, player profile, server, scores, sessions, ban state, and guest/Google/other plus active/banned filters.
+- Admin player API responses no longer expose the internal Supabase Auth user ID. The API distinguishes a missing profile-to-auth link from an Auth lookup that could not be completed.
+- Ban/unban remain server-side admin actions. Player-profile deletion is currently disabled in the API with HTTP 409 until an atomic deletion workflow is implemented; do not describe it as an available admin action. When deletion is eventually enabled, it must preserve the distinction between the player profile/game history and the linked Supabase Auth login.
+- Scope limitation: the current User Management directory is based on rows in `players`; standalone Supabase Auth users without a player profile are not yet included. A complete all-Auth-users directory requires a separately paginated and carefully rate-limited Auth-user discovery design.
+- Verification status: implementation committed to the development branch. Preview build and interactive QA are blocked while Vercel reports the deployment build-rate limit. Do not claim this phase fully QA-complete until a deployment for the exact latest commit is READY and profile/admin journeys are tested. No production release or Supabase schema changes.
+
+
+## Account-Based Platform with Progressive Login — Official Master Foundation v1.1
+
+- Owner-approved policy: public discovery and supported demo/mini-game experiences remain accessible without login; authentication is requested only when a visitor uses account-dependent features.
+- Account-required capabilities include persistent progress, cross-device sync, profile/statistics, achievements, leaderboards/competition, wallet/rewards, and saved/social features that need a stable identity.
+- Administrative access is a separate server-verified permission, never implied by ordinary authentication.
+- Supabase Auth is the canonical identity; `players.id` is the universal gaming Player ID resolved from the verified Auth user. Product and game data remain separately scoped.
+- Preserve Guest identity/progress when explicitly linking a provider; never silently merge distinct Auth users.
+- Privacy/data minimization, purpose transparency, public API field allowlists, and account lifecycle controls are mandatory.
+- Implementation sequence: identity contract → feature access matrix/shared authorization → game/product integration → privacy/analytics/lifecycle → security and regression QA.
+- Execution status: policy and documentation foundation adopted on `redesign/dajjalfamily-home`; application-level progressive access migration is the next development phase. No production, main-branch, or database changes are authorized by this policy adoption alone.
+
+
+## Progressive Login — Phase 2 access inventory
+
+- Classified current routes and flows as Public, Account, or Administrative in `docs/MASTER_ACCOUNT_INTEGRATION.md`.
+- Confirmed public Game Library discovery, public mini-game play, public wedding invitations, account-protected profile, and server-verified admin areas.
+- Confirmed MAMAH NGAMUK persistence and leaderboard are account-bound; its save API validates Google identity today.
+- Identified Daily Riddle as the primary progressive-login gap: answer API has a non-persistent guest response branch, but launch flow and daily-riddle API still depend on a resolvable player profile.
+- Do not remove the Daily Riddle login prompt until guest identity/profile provisioning and the full guest attempt flow are verified.
+- Status: access inventory documented on the development branch. Shared authorization and guest-flow implementation remain the next code phase; no production or database changes.
+
+
+## 18. Subcommand — /command-master-admin
+
+**Mission:** Own the complete Dajjal Family account, profile, and administration domain. This includes the user-facing account experience and the privileged tools used to operate the platform.
+
+**Inheritance:** This subcommand inherits the entire global execution mandate, product principles, security rules, data-preservation requirements, workflow, testing standards, and deployment governance from this Command Master. It narrows the domain only; it never weakens the parent command's standards or approval gates.
+
+### Scope of responsibility
+
+1. **Authentication and identity**
+   - Supabase Auth flows: sign-in, sign-up where applicable, Guest/anonymous identity, provider linking, session handling, recovery, logout, and safe return paths.
+   - Progressive Login enforcement: public browsing remains public; ask for authentication only when an account-dependent capability is requested.
+   - Preserve identity continuity and prevent silent account merges or duplicate player identities.
+
+2. **User profile and account center**
+   - Profile overview, edit profile, avatar/media upload, nickname, account security, provider status, session information, preferences, privacy controls, and account lifecycle.
+   - Ensure profile data is owned by the authenticated user and private fields are never exposed publicly.
+   - Keep the profile experience consistent across mobile/desktop, EN/ID, and Dark/Light themes.
+
+3. **Admin dashboard and User Management**
+   - Admin overview, user directory, search/filter/sort/pagination, account details, player-to-Auth identity mapping, account status, ban/unban, profile actions, and safe deletion workflows.
+   - Clearly distinguish player profiles from Auth-only accounts and from banned/deactivated states.
+   - Protect admins from self-lockout and prevent removal/demotion of the last effective administrator without an approved recovery path.
+
+4. **Roles, permissions, and access control**
+   - Design least-privilege roles and product-scoped permissions.
+   - Verify every privileged action on the server; never trust a client role, hidden button, or UI route as authorization.
+   - Separate authentication, authorization, product entitlements, and subscription state.
+
+5. **Moderation, security, and operations**
+   - Admin audit logs for sensitive actions, reason capture where appropriate, abuse controls, rate limiting, account investigation, and safe operational workflows.
+   - Avoid exposing email, Auth IDs, tokens, private profile data, or security metadata beyond authorized admin contexts.
+   - Require explicit confirmation for destructive or high-impact actions and provide clear outcome feedback.
+
+6. **Privacy and account lifecycle**
+   - Data minimization, purpose notices, export/deletion requests, retention rules, account closure, and safe handling of game/invitation ownership and financial/reward records.
+   - Never erase or reassign linked data casually; use reviewed retention and deletion policies.
+
+### Required execution workflow
+
+- Inspect current routes, APIs, database schema/RLS, Supabase Auth behavior, and existing account/admin components before editing.
+- Map each feature to Public, Account, or Admin access under the Progressive Login standard.
+- Identify data ownership, threat model, destructive effects, and migration/rollback requirements.
+- Prefer shared, reusable server-side authorization and validation helpers.
+- Implement incrementally on the approved development branch; preserve existing routes and identities.
+- Verify API authorization, ownership boundaries, Guest/provider linking, pagination, error states, mobile, keyboard accessibility, both themes, and both languages as relevant.
+- Update account integration docs, API/schema documentation, and changelog with each meaningful change.
+- Report implementation separately from build status, preview QA, database migration status, and production release status.
+
+### Non-negotiable safeguards
+
+- Never expose service-role credentials or trust browser-supplied user/player IDs, roles, permissions, or account status.
+- Never silently merge Auth identities or overwrite an existing account's player mapping.
+- Never perform bulk bans, account deletion, identity reassignment, privilege escalation, production data mutation, or schema migration without appropriate review and explicit approval.
+- Keep admin APIs server-verified and deny by default.
+- Protect the last administrator and provide recovery planning before changing admin membership.
+- No merge to `main`, production deployment, or production database change without the release-specific approval required by the parent charter.
+
+**Default behavior:** When invoked without a narrow target, perform a prioritized audit of Profile, Authentication, User Management, Admin Dashboard, and their APIs; then implement the highest-value safe fixes on the development branch and report blockers.
+
+## Account profile expansion and multi-identifier login
+
+When requested, implement the account profile experience with display name, unique alphanumeric username, optional gender, verified phone number, birth date, and optional Darkwar state number. Keep existing `players.id` and all linked game data stable.
+
+- Add Profile to primary navigation before Home.
+- Show a profile-completion task after Google sign-in until required public identity fields are complete.
+- Login supports email/password, username/password, and verified phone/password only through a trusted server-side alias resolution flow; retain direct Google OAuth.
+- Store passwords only in Supabase Auth. Never store passwords or confirmation values in application tables.
+- Keep phone, birth date, gender, email, and account metadata private. Public profile/leaderboard payloads use an explicit allowlist.
+- Do not reveal account email from username/phone lookup, do not silently merge identities, and rate-limit credential attempts.
+- Prepare and review additive migrations before applying them. No production migration, Auth configuration change, or release without the required explicit approval and QA.
+
+## 22. Admin User Management safety update (2026-11-14)
+- The player ban API now checks the target account against `admin_users` before applying a ban. Administrator accounts are rejected with HTTP 409 through the player-management endpoint to prevent accidental administrator lockout.
+- If the administrator lookup fails, the API fails closed and makes no account change.
+- This guard does not implement role revocation or demotion. Administrator role lifecycle must be handled through a separately reviewed workflow that protects the last effective administrator.
+- Verification status: source change committed to `redesign/dajjalfamily-home`; build, API-level tests, and exact-commit preview QA remain pending.
+
+## 23. Authentication security audit — login attempt controls (2026-11-24)
+
+- The public `/login` and `/admin/login` pages currently call Supabase `signInWithPassword` directly from browser clients. `/register` redirects to `/login`; no separate password sign-up page is active.
+- No application-owned, durable failed-password-attempt counter or lockout policy is implemented. Supabase Auth endpoint-level rate limits and CAPTCHA are the current defense-in-depth; do not describe them as a custom per-account lockout.
+- Username/password alias login and phone/password alias login remain explicitly deferred. Before either alias is introduced, implement a shared server-side password-login flow and a durable, atomic limiter covering both public and admin sign-in paths.
+- Avoid process-memory counters on Vercel. Never store raw passwords, raw identifiers, or raw IP addresses in limiter records/logs.
+- Do not expand this deferred work into the Wedding submission limiter: the latter is implemented separately for RSVP and Guestbook in the 2026-11-24 security remediation.
+
+
+## 24. Admin and Supabase security review — wedding submissions and RPC (2026-11-24)
+
+- The Wedding Manager page verifies the current session with `/api/admin/me`, then uses the browser Supabase client for gallery/event-setting reads and writes. The inspected `df_event_settings` and `df_gallery_items` write policies require membership in `admin_users`; public gallery reads are limited to published items. Keep these RLS checks as the enforcement boundary; a page-level check alone is not sufficient.
+- Public RSVP and Guestbook submissions now pass through the server routes. Both routes consume `public.consume_wedding_submission_rate_limit(text, inet)` before inserting with the server-only service-role client. The limiter uses a salted IP hash, an atomic upsert protected by an advisory transaction lock, and independent feature scopes; it allows five submissions per IP/per feature/per 10-minute window and returns HTTP 429 thereafter. Missing/invalid client IP fails closed.
+- Production migration `20261123220548_add_durable_wedding_server_submission_rate_limit` creates the limiter RPC. Its execution is revoked from `PUBLIC`, `anon`, and `authenticated`; only `service_role` may execute it. A rolled-back SQL test verified the five-allowed/sixth-denied behavior, feature-scope isolation, and anonymous-role denial.
+- Production migration `20261123220610_secure_wedding_public_submission_routes` removes public INSERT policies from `df_rsvps` and `df_guestbook`. Public approved-Guestbook SELECT and admin moderation/read policies remain. RLS is enabled; direct anonymous/authenticated Data API inserts no longer have a matching public INSERT policy.
+- Database inspection confirmed `df_wedding_profiles` has RLS enabled and no policies; its current application access remains through authenticated server routes and the server-side Supabase client. Preserve that server-only access model unless a reviewed policy is deliberately added.
+- The legacy public `record_game_result` overloads have no EXECUTE grant for `anon` or `authenticated`; the revocation migration is present in Production.
+- Supabase Security Advisor findings are dispositioned as follows:
+  - Leaked-password protection remains disabled in Supabase Auth. This is a separate Auth configuration change and was not included in the approved Wedding schema/policy scope. Enable after provider-compatibility review and explicit configuration approval.
+  - RLS-enabled tables with no policies are reviewed as server-role-only paths where appropriate (including `df_wedding_profiles`); do not add broad policies just to silence the generic advisor notice.
+  - Generic anonymous-access warnings on `authenticated` policies do not by themselves prove anonymous admin access; the reviewed admin policies require the caller's exact `auth.uid()` to exist in `admin_users`.
+- The full Admin/API review and implementation evidence is recorded in `docs/foundation/ADMIN_API_SECURITY_AUDIT_2026-11-24.md`. Password login still uses Supabase Auth directly; custom failed-password lockout is deferred while alias login remains out of scope. Before enabling username/phone login, implement a shared server-side login flow and durable limiter.
+
+
+## 25. Profile editor readiness bug fix (2026-11-14)
+
+- Fixed six stale references to the undefined `EXTENDED_PROFILE_FIELDS_ENABLED` identifier in `app/profile/edit/page.js`.
+- The profile editor now uses the existing `profileIdentityEnabled` state returned from the authenticated player profile API to gate the username, gender, phone, and birth-date controls and payload fields.
+- This preserves the intended compatibility behavior: legacy database schemas continue to support stable profile fields, while extended identity fields remain disabled until the required database columns are present.
+- No username or phone login was implemented or enabled. No database migration or Auth configuration was changed.
+- Source commit: `3ed8189ea20cd2dec9d9c18435fde0b4c9470c54`. Vercel build and interactive profile QA are pending.
+
+
+## 26. Profile and admin input-validation fixes (2026-11-14)
+
+- Profile editor fix committed as `3ed8189ea20cd2dec9d9c18435fde0b4c9470c54`: six references to an undefined schema-readiness identifier now use the existing `profileIdentityEnabled` state from the authenticated profile API.
+- Admin riddle update API fix committed as `f48929986e69361c9e6090813df9719d4a9b0b62`: PATCH now validates the JSON body shape, UUID format, required field types, accepted-answer array item types/counts, and maximum question/hint/answer lengths before database writes. Invalid input returns HTTP 400 instead of falling into an internal error path or accepting unbounded arrays.
+- These changes are source-level fixes only. Build, API behavior tests, and interactive profile/admin preview QA are still pending. No database migration, Auth setting, production deployment, or main-branch change was made.
+
+## 27. Admin riddle creation and deletion validation (2026-11-14)
+
+- Aligned `app/api/admin/riddles/create/route.js` with the stricter update API: accepted-answer arrays now reject non-string items instead of silently filtering them, while retaining the 1–30 item and 120-character bounds after normalization.
+- The create API now rejects a non-boolean `is_active` value when supplied; omission still defaults to active.
+- Added UUID-format validation to the riddle DELETE route before querying Supabase, matching the identifier validation already used by PATCH.
+- Source commits: `34301b7d8fc55b7b15fe0477eeec52b730a3d7d2`, `ba4cfa20d9de15d5ed8eb2c992c34122147402d7`, and `b670431d81ac77db172c5d90bc9215b7f0681e39`.
+- These are source-only changes. Build, API tests, and interactive QA remain pending; no database migration, production deployment, or main-branch change was made.
+- Follow-up audit item: profile save currently combines profile update and optional password update in one flow. Review partial-failure handling so a successful profile write is not reported as a complete failure or followed by deletion of an avatar now referenced by the saved profile.
+
+## 28. Daily Riddle product direction — paused (2026-11-14)
+
+- Product decision from the owner: pause further development of The Daily Riddle. It may later be removed or replaced with a game that users are more likely to play.
+- Until that product decision is finalized, do not spend additional development time on Daily Riddle features, content tooling, balancing, or new gameplay improvements.
+- Do not delete the `riddles`/`scores` data, database tables, RPCs, API routes, or historical player results yet. They may be needed for migration, reporting, or a future replacement; destructive cleanup requires a separate reviewed plan and explicit approval.
+- Existing source-level validation hardening already committed remains in place; it does not mean the game is being actively developed.
+- The current Games Library still renders a Daily Riddle card and `/game` remains routable. Clarify whether “stop” means pause development only or also hide/disable public access before changing public UI or route behavior.
+- Keep the current focus on Admin and Profile, plus the existing arcade games. Evaluate replacement game candidates separately using actual player interest/retention evidence rather than assuming which genre will perform best.
+- No public visibility, routing, database, or production change was made as part of this pause decision.
+
+## 29. Wedding public submission hardening — 2026-11-14
+
+- Production Vercel Firewall now has an active custom rate-limit rule for POST /api/wedding/rsvp and POST /api/wedding/guestbook: 20 requests per source IP per 10-minute fixed window; excess requests receive HTTP 429.
+- Supabase migration 20261114133441_harden_wedding_public_submissions is applied and verified in the live project. It adds the nullable RSVP invitation_id foreign key with ON DELETE SET NULL, a private RLS-protected rate-limit store using salted IP hashes, and atomic per-IP limits of five direct Data API inserts per feature per 10-minute window.
+- The migration also replaces public RSVP/Guestbook INSERT policies with checks that require a currently active invitation and the corresponding feature flag to be enabled. The current active invitation has Guestbook enabled and RSVP disabled; its existing Guestbook browser flow remains compatible.
+- Server-side service_role submissions are excluded from the database trigger limiter because their requests originate from Vercel infrastructure; they are rate-limited at the Vercel edge rule instead. The trigger limiter applies to direct anon and authenticated Data API inserts.
+- Verification performed: DDL was first tested in a rollback-only transaction; a second rollback-only smoke test simulated an anonymous request and verified that five Guestbook inserts are allowed while the sixth is rejected. Live schema/policy/trigger checks confirm the RSVP column, both triggers, both guarded policies, and private-table RLS are present. RSVP and Guestbook row counts remain zero.
+- The migration file is committed on redesign/dajjalfamily-home with the exact remote migration version. Supabase CLI was unavailable; the supported Supabase MCP migration path was used, and the applied migration history was then mirrored into the repository.
+- Remaining release sequence: deploy the branch's server-side wedding submission routes to production first; only then apply 202611140001_secure_wedding_guest_submissions to remove the public direct INSERT policies. That later policy removal is intentionally not yet applied because production main still uses the browser's direct Guestbook insert path.
+- No merge to main or production application deployment was performed. The Profile identity migration remains deferred. The separate players column-privilege audit and SECURITY DEFINER RPC review remain release blockers.
+
+## 30. Player table privilege hardening — 2026-11-14
+
+- Production Supabase migration 20261114133753_lock_down_players_client_privileges is applied and mirrored in the repository.
+- Before applying it, repository-wide call-site review confirmed that player-row creation is performed by the verified server-side /api/player/ensure route using supabaseAdmin; browser profile editing updates only nickname, server_number, avatar_url, and avatar_path. Profile and account reads use the authenticated user's own row under RLS.
+- The migration revokes all table privileges on public.players from anon and authenticated, then restores authenticated SELECT and column-scoped UPDATE only for nickname, server_number, avatar_url, and avatar_path. Server-side service_role behavior is unchanged.
+- Live privilege verification confirms anon has no SELECT/INSERT; authenticated has SELECT but no INSERT, DELETE, TRUNCATE, or TRIGGER; authenticated can update the four profile columns but cannot update id, created_at, or auth_user_id.
+- This intentionally defers future username/gender/phone/birth_date browser writes until a separate reviewed migration grants only those specific columns after the identity schema is approved. The identity migration remains deferred.
+- No player rows or linked game data were changed. This was a grants-only change; no table data was modified.
+
+## 31. Legacy game-result RPC access hardening — 2026-11-14
+
+- Production Supabase migration 20261114133923_revoke_legacy_record_game_result_rpc is applied and mirrored in the repository.
+- Review of the live SECURITY DEFINER function confirmed it requires auth.uid(), resolves the caller's own player row, validates the active game/session/score fields, and writes an idempotent game_result_events row. However, no current application source calls this generic RPC; current result flows use dedicated server APIs/RPCs.
+- The migration revokes EXECUTE from PUBLIC, anon, and authenticated while preserving the function definition for recovery/compatibility. Live has_function_privilege checks confirm anon and authenticated cannot execute it.
+- Supabase Security Advisor no longer reports the authenticated SECURITY DEFINER RPC finding. Remaining warnings include leaked-password protection disabled and anonymous-sign-in policy warnings; inspect those in the context of the intentional Guest account model rather than blindly removing required own-row policies.
+
+
+## 32. Development branch migration to main — 2026-11-14
+
+- Owner instruction: accelerate the migration and continue development on `main`; use a safe alternative or defer a migration rather than waiting on unavailable tooling or Vercel build quota.
+- GitHub PR #1 was marked ready and successfully merged into `main` using a merge commit. Merge commit: `ce8247f0a1970ea2455dc409c2e6bb1d6e664a89`. Source branch head at merge: `03e68a65ecfed0d783e1df0621d026fc34325385`.
+- `main` is the primary integration baseline. The historical `redesign/dajjalfamily-home` branch is retained as a rollback/reference branch; do not delete it. Subsequent isolated work may use short-lived feature branches to prevent unapproved deployment triggers.
+- Vercel's daily deployment/build quota was exhausted and the latest application-code preview remains the READY deployment built from `59cfa30296f4ffde610fbb3195f0e0ad89fa9c2f`. A temporary Vercel ignored-build-step setting was used to prevent the Git merge from automatically releasing unverified application code to production. Restore the normal build behavior immediately after repository synchronization. No production alias change or deliberate production application release is authorized by this branch migration.
+- Supabase CLI installation was unavailable, so the supported Supabase MCP migration workflow was used for the three already-applied production security migrations recorded in sections 29–31. Do not wait for the CLI to continue ordinary application development.
+- Decision on `202611140001_secure_wedding_guest_submissions.sql`: **defer/skip for now**, not apply blindly. It removes public INSERT policies and would break the current production Guestbook browser-write path until the server-side RSVP/Guestbook API routes are released. The existing Vercel edge rate limit and database direct-insert limiter/feature checks remain the transitional controls. Revisit this policy-removal migration only after those server routes are deliberately released and verified in production.
+- `202611140002_expand_player_profile_identity.sql` remains deferred; username/gender/phone/birth-date profile expansion is outside the current migration.
+- Latest PR check failure was the Vercel daily build-rate limit, not a reported application test failure. There were no GitHub review submissions or inline review threads on PR #1. The existing READY preview covers the application runtime code; the commits after that preview only mirrored migrations and updated documentation.
+- Next work must branch from `main`, verify the merged source and Vercel project wiring, restore/confirm normal Vercel build settings, and create a fresh preview when the quota resets. Keep production deployment and any later database policy removal as separate release gates.
+
+
+## 33. Current feature-branch and deployment-quota policy — 2026-11-14
+
+- Repository identity is `tebayoll97/dajjal-family`; the old repository name is retained only in historical records and package metadata where it remains an internal identifier.
+- `main` is the integration baseline. Use short-lived feature branches for isolated changes whenever a push or merge to `main` could trigger an unapproved production deployment.
+- Current staged work: `feature/tools-navigation`, containing the Tools / Alat sidebar entry, bilingual Wedding Invitation Builder link to `/df/wedding`, and the work/navigation documentation. It is not merged into `main` and has not been preview-tested.
+- While Vercel build quota is exhausted, do not create previews, poll deployment/build status, or claim build/QA success. Continue safe source and documentation work. Resume build and responsive/accessibility QA only when quota is expected to recover.
+- A feature branch may be merged only through the approved release workflow after source review and required checks. A merge is not itself permission to promote or alter production.
+
+
+## 34. Admin User Management lookup concurrency — 2026-11-14
+
+- The User Management player directory previously launched up to 50 Supabase Auth Admin `getUserById` calls simultaneously for one 50-player page.
+- `app/api/admin/players/route.js` now uses a bounded worker helper with a maximum of 8 concurrent Auth lookups per request.
+- Player result ordering, pagination, endpoint response fields, administrator verification, and existing Auth lookup fallback behavior are preserved.
+- Source commit: `63313ea508ad3210668277d78da063c3a14b6f4f`.
+- GitHub source re-fetch checks confirm the concurrency cap and response contract. This is not a substitute for lint/build, performance measurement, or runtime QA; those remain pending until Vercel quota recovery.
+- No merge to `main`, production deployment, live database change, or player data mutation occurred.
+
+## 35. Global Master Foundation visual shell rollout — 2026-11-15
+
+- Owner request: apply the Master Foundation Dajjal Family visual baseline across standard pages, replace the previous shared header/footer, and remove legacy global section/heading rules that use `!important`.
+- Isolated the broad cross-site visual change on `feature/master-foundation-global-shell` because it affects every standard route and has a meaningful regression surface.
+- Replaced the shared Header and Footer with a token-driven, bilingual, responsive global shell. RouteChrome now applies them to all standard routes while preserving immersive MAMAH NGAMUK and RUN & JUMP gameplay routes.
+- Removed the duplicate homepage topbar/content header/footer and the separate DF Universe header/footer. Migrated the DF Universe page surfaces to semantic Master Foundation tokens.
+- Replaced blanket legacy global heading and section framing rules in `app/styles/legacy.css`; removed obsolete generic light-theme heading/sticky-header overrides. Named component primitives remain available. No blanket `main section:has(...)` styling remains in the global compatibility layer.
+- Updated document reset colors to semantic theme tokens and preserved locale-prefixed links in the global shell, homepage, and DF Universe links. Footer links now point only to verified routes.
+- No database, account, player, game progress, or invitation data/schema was changed.
+- Vercel build and visual QA have not been run. Per `docs/aturan-kerja.md`, do not create previews or poll Vercel while the build quota is not known to have recovered. Merge/release remains pending source review and build availability.
+- The Design System document remains Draft until responsive, keyboard, accessibility, and both-theme QA are completed. Page-specific legacy utilities are not all migrated yet; continue token migration incrementally after the shared shell is verified.
+
+
+## 36. Global navigation and Master Foundation adoption follow-up — 2026-11-15
+
+- Owner-reported issues after the first shell rollout: global navigation pane was missing/incomplete; header showed profile, sound, and settings actions; Settings and Wedding were not grouped under Tools; DF Universe event CTAs were oversized on mobile; Game Library, Profile, Settings, and game-library dialogs retained dark-only utility colors in Light Mode.
+- Restored a global navigation trigger immediately to the left of the DF brand. Its panel exposes Home, Games, Family Universe, Profile, Admin (only after server-verified admin status), and a Tools group containing Settings followed by Wedding.
+- Simplified the top-right header controls to ThemeToggle and language only. Removed account/profile and audio quick-toggle controls from the header; account and audio settings remain available in their respective product areas.
+- Added Settings and Wedding links to the homepage Tools navigation.
+- Reduced DF Universe event-card action sizing on mobile and removed forced full-width stretching.
+- Added token-aware page scopes for Game Library, Profile, Profile Edit, and Settings. Light Mode maps legacy dark surface utility classes, card surfaces, dialog panels, and supporting text to semantic tokens. Game Library's account-required and error dialogs use theme-aware panel treatment.
+- Source implementation commit: `f9d7e397ae60b6d12e7d41bf193810bee78afb6a` on `main`.
+- Vercel Production deployment `dpl_13dnaMysxaQVEUek2C9CAWc5vwbf` reached READY for that exact commit; aliases `dajjalfamily.com` and `www.dajjalfamily.com` are attached. This verifies build/deployment only, not interactive browser QA.
+- Static source checks confirmed global navigation and Tools links, token-page wrappers, theme-aware dialog markers, and no `!important` in the changed page styles. No database, account, player, game progress, or invitation data/schema was changed.
+- Owner must still verify the navigation pane, both themes, mobile sizing, Profile, Settings, and Game Library dialogs on the live site. Design System remains Draft pending visual, keyboard, accessibility, and responsive QA.
+
+
+## 37. Navigation layout refinement and Profile identity adoption — 2026-11-15
+
+- Owner clarified the intended responsive navigation model: the Home desktop sidebar remains the visual reference; standard desktop pages now use a persistent left sidebar in a two-column workspace. Home retains its own existing desktop sidebar to avoid duplicate navigation.
+- Desktop header no longer displays a clickable navigation toggle beside the DF logo. The mobile header retains a navigation trigger that opens the primary navigation pane; a compact Beranda / Game / Profil navigation row remains directly below the header on mobile.
+- Added shared `GlobalSidebar` for non-home standard routes. Main navigation and Tools are grouped consistently, with Settings above Wedding. Immersive game routes remain exempt from the standard shell.
+- Reworked Profile identity composition: player avatar is aligned beside the Profil Pemain heading, nickname, server indicator, and edit action. Profile surfaces now consume semantic Master Foundation tokens in both themes.
+- Removed the duplicate Google-connected account panel and its component from Profile. Kept the existing Account Security panel with login email and last sign-in time; no authentication provider/session logic was changed.
+- No database, schema, player records, game progress, or account data was modified.
+- Application changes are committed on `main`; production build and interactive browser QA must be recorded separately. Design System remains Draft until owner visual verification on mobile/desktop and both themes.
+
+
+## 20. Wedding product scope — owner decision 2026-11-15
+- Dajjal Family no longer develops or maintains a general-purpose Wedding Invitation Builder.
+- The sole Wedding experience is the public invitation page for Anak Dajjal & Malika at `/df/wedding-anak-dajjal`.
+- Use undangan.io only as a public design/experience reference; implement original code and assets.
+- Preserve the public invitation renderer, public data endpoint, RSVP and Guestbook endpoints, invitation records, and required media/styles.
+- Retire Builder navigation, dashboard/editor/preview routes, and owner CRUD/publish APIs. Legacy Builder URLs redirect to the canonical public invitation.
+- Do not drop Wedding database tables, columns, policies, functions, invitation records, RSVP/Guestbook submissions, or storage objects without a separate dependency review, recovery plan, and explicit owner authorization.
+- This product direction supersedes earlier Builder navigation and platform expansion notes. It does not authorize unrelated Wedding data cleanup.
+
+## 20.1 Single invitation UX refinement — 2026-11-15
+- Added responsive in-page section navigation to the sole public invitation, with conditional links for available sections.
+- Added anchor targets and mobile horizontal-scroll behavior, keyboard focus styling, and reduced-motion support.
+- Removed misleading/irrelevant legacy placeholder copy. Photo and audio URLs remain owner-supplied; do not invent or substitute final media.
+- No database/schema/data changes. Build and browser QA remain pending under the current Vercel quota pause.
+
+
+## 20.2 Unified invitation navigation and RSVP/Guestbook — 2026-11-15
+- The public invitation uses a five-destination bottom navigation: Mempelai, Acara, Hadiah, Ucapan, Lain-lain (localized for English).
+- RSVP and Guestbook are presented as one Ucapan & Doa journey: player name, attendance (yes/maybe/no), and message/prayer. Existing endpoints and tables remain in use; no DB schema/data changes are authorized or performed.
+- The combined client flow calls RSVP and Guestbook separately and explicitly reports partial success. The RSVP API now accepts maybe; verify the live database column/check constraints before claiming all three attendance states work end-to-end.
+- Source-level only. Build, deployment, and browser QA remain pending under the Vercel quota pause.
+
+## 23. Login experience decision — 2026-11-17
+
+The owner approved a simplified Dajjal Family login experience:
+
+- The login page presents only the heading **“Masuk atau Daftar”** (English: **“Log in or Sign up”**), one **“Continue with Google”** action, and the supporting line **“Satu akun untuk semua fitur”** (English: **“One account for all features”**).
+- Google OAuth is the only sign-in method presented in the login UI. Do not display email/password, phone, username, Apple, or other alternative sign-in methods unless the owner explicitly changes this decision.
+- A visitor with an existing non-anonymous authenticated session who opens Login is redirected to their localized personal Profile route.
+- After successful Google OAuth, complete the existing Google player-provisioning flow where required, preserve the canonical Auth User ↔ Player ID relationship, then redirect to the localized personal Profile route.
+- Preserve anonymous-to-Google identity linking where an existing anonymous player session is being upgraded; do not create a second player identity or silently merge accounts.
+- Keep the page bilingual (`/id` and `/en`), compatible with the global Light/Dark theme tokens, responsive, accessible, and noindex/private.
+- Keep the global header controls for language and theme; remove the workspace sidebar and footer from the Login route so the authentication surface stays focused.
+- This decision changes the visible Login UI, not Supabase provider configuration, database schema, account identity rules, or public access policy. Any provider/configuration or database change requires separate review and authorization.
+
+
+
+## Navigation and contextual settings policy — 2026-11-18
+- Keep all visitor-facing navigation additions bilingual (ID/EN), including item labels and status badges.
+- Place the public Anak Dajjal invitation in Family Universe at `/df/wedding-anak-dajjal`; use the localized Acara/Event badge powered by Global Theme Preset semantic tokens.
+- Include the Theme Preset Manager at `/admin/theme` in Admin navigation, protected by the existing verified admin-access flow.
+- Do not maintain a general Settings destination; redirect legacy `/settings` to Profile while preserving feature-owned settings modules.
+- Shared footer uses the official Dajjal Family icon asset and follows the active semantic theme tokens.
+
+
+## 17. Central Google Drive storage and deterministic file naming
+
+For every feature that uploads files to the connected Google Drive storage (including Couple Profile and future modules), use the centralized server-mediated upload architecture and the naming policy below. This is a mandatory project-wide rule.
+
+### File naming policy
+- Never use the device's original filename as the final Google Drive filename.
+- Generate the final filename server-side from the destination slot/purpose, a UTC timestamp, a cryptographically random unique suffix, and the extension derived from the verified file MIME type.
+- Canonical pattern: `<slot>-<YYYYMMDDHHmmss>-<8-hex-random>.<ext>`.
+- Examples: `cover-20261119102030-a81f3c92.jpg`, `male-portrait-20261119102030-b72c4d10.png`, `gallery-01-20261119102030-d42e7a61.webp`.
+- Use stable, sanitized slot labels (for example `cover`, `male-portrait`, `female-portrait`, `gallery-01` through `gallery-06`). Never put user-controlled path fragments or untrusted original names into the final name.
+- Determine the extension from the server-verified MIME/signature, not from the client-supplied filename. Reject unsupported or mismatched file types.
+- The random suffix makes accidental name collisions extraordinarily unlikely. Do not rely on Google Drive filenames being unique; Drive permits duplicate names in a folder.
+- Original filenames may be retained only as optional, safely validated metadata if a real product need arises; they must not control the stored filename and must not be exposed unnecessarily.
+
+### Upload and reference integrity
+- Browser clients select files from the device and send them to an authenticated application endpoint; users must not be asked to copy/paste Drive File IDs.
+- The server must authenticate the session, verify authorization/ownership for the exact feature resource and slot, validate file size/type/signature, and enforce applicable rate/abuse limits before upload.
+- Upload through the existing connected Drive account and existing root folder ID. Reuse/create only the intended feature subfolders; never create a second root folder or silently replace/reconnect the owner's Drive account.
+- Store the returned Drive File ID as an internal reference/metadata in the appropriate application record so the correct file can be rendered, replaced, or managed. The ID is not a user-facing input.
+- Keep binary files in Drive and application references/metadata in Supabase. Do not store OAuth access or refresh tokens in browser code or public responses; encrypted credentials remain server-side.
+- When replacing a slot, upload the new file and successfully persist its new reference before considering cleanup. By default, retain the old Drive file to prevent accidental data loss; deletion requires a separately designed and authorized retention/cleanup policy.
+- If reference persistence fails after a successful upload, attempt compensating deletion of the newly uploaded file and report the failure accurately.
+- Never claim upload success until Drive upload and reference persistence have both succeeded.
+
+### Required implementation checks
+- Review filename generation for path traversal, control characters, Unicode edge cases, extension spoofing, and collision resistance.
+- Verify the final stored name is generated only on the server and reflects the validated slot and MIME type.
+- Test duplicate original filenames, repeated uploads to the same slot, different users/profiles, replacement behavior, and failed database persistence.
+- Keep these rules in sync with `MASTER_FOUNDATION.md` and the project operating rules.
+
+
+## 22. Global mobile presentation standard — Mobile Compact UI
+
+The owner-approved **Mobile Compact UI** is the default mobile responsive presentation/density direction for Dajjal Family. Apply it to new mobile experiences and incrementally when existing pages are next modified.
+
+### 22.1 Governance and theme compatibility
+- Mobile Compact UI is a layout/density layer. It does not replace or outrank MASTER_FOUNDATION.md, DESIGN_SYSTEM.md, or Global Theme Preset Engine.
+- Use the active Global Theme Preset and semantic tokens for every in-scope visual surface. Never create a separate mobile palette, hardcode brand colors, or override the global preset to imitate a reference screenshot.
+- Preserve approved theme isolation for Couple, Wedding, and immersive Games. Do not force isolated experiences into global theme scope; apply compact layout principles only when compatible.
+
+### 22.2 Mobile density requirements
+- Reduce unnecessary whitespace, excessive vertical gaps, oversized padding, and oversized cards.
+- Keep headings, body copy, metadata, and labels readable; compact must never mean illegible or cramped.
+- Use compact inputs, buttons, chips, badges, and rows while preserving accessible touch targets and clear labels.
+- Prefer wrapping chips for short filters and progressive disclosure for secondary/advanced controls. Keep primary actions discoverable and group secondary actions contextually.
+- Prevent unintended horizontal overflow; handle long IDs, titles, tags, and translations deliberately.
+- Preserve loading, empty, error, success, disabled, selected, and focus states and all existing feature behavior.
+- Do not force every route into the same card/list pattern. Choose the compact structure appropriate to its content and user journey.
+
+### 22.3 Responsive and quality gates
+- Mobile is the compact-first target; do not unnecessarily compress desktop layouts.
+- Reuse established breakpoints and responsive utilities; inspect the current implementation before changing breakpoint values.
+- Test small Android widths, larger phones, tablet, desktop, on-screen keyboard/safe areas, and browser text scaling.
+- Test all applicable global presets, Light/Dark, ID/EN, long translations, keyboard/focus, contrast, reduced motion, and WCAG 2.2 AA accessibility requirements.
+- Roll out incrementally. This standard does not authorize a whole-site redesign or mean that any page is already implemented/verified.
+
+Canonical detailed specification: Akashic Record `dajjal-family/core/mobile_compact_ui.md`. Keep synchronized with `docs/aturan-kerja.md` and MASTER_FOUNDATION.md.
+
+
+## 23. Global Typography System — mandatory implementation rule
+
+The approved Global Typography System is the shared source of font families, semantic type roles, font sizes, weights, and line heights for standard Dajjal Family UI.
+
+- Keep Global Typography independent from Global Theme Preset color maps. TECNO and Dajjal × Veylora share the same typography contract by default; changing identity preset must not unexpectedly change reading rhythm.
+- Do not put global typography scales into THEME_TOKEN_MAPS or create per-preset duplicate typography maps.
+- Shared Global Navigation and shared components must consume centralized semantic typography tokens; do not hardcode independent font-size scales in component CSS.
+- Existing primitives in app/styles/tokens.css are the starting point. Inspect all consumers and CSS cascade before extending, changing, or renaming tokens; preserve compatibility during gradual migration.
+- Mobile Compact UI applies the shared typography tokens responsively; it is not a separate typography system. Keep text readable, localized, zoomable, and accessible. Do not compress desktop unnecessarily.
+- Preserve approved Couple, Wedding, and immersive Games isolation boundaries.
+- Implement incrementally: shared shell/components first, then pages as they are next modified. No blanket redesign or broad global override.
+- QA both global presets, Light/Dark, ID/EN, mobile/tablet/desktop, long labels, zoom/text scaling, keyboard/focus, contrast, and accessibility. Report implementation, build, browser QA, and deployment as separate statuses.
+
+Canonical specification: Akashic Record dajjal-family/core/global_typography.md. Keep synchronized with Master Foundation, docs/aturan-kerja.md, and the Akashic operating rules.
+
+
+### 23.1 First migration checkpoint — 2026-11-20
+- First implementation slice committed on main: `603fa92e0b39c962283a65410a8fa9dcf23907ac`.
+- Scope: semantic typography/weight tokens, reusable semantic utility roles, Global Navigation Drawer typography, and desktop workspace sidebar typography.
+- Legacy/page-specific font declarations are not yet fully migrated; continue with consumer audits and incremental conversion.
+- Vercel deployment for this commit returned HTTP 402 `api-deployments-free-per-day`. Build, deployment, and live visual QA remain unverified. Do not claim production release until a matching deployment is READY and inspected.
+
+
+## 25. Music playback and Karaoke reliability — 2026-11-24
+
+- Music playback changes are scoped to CoupleMusicPlayer and public /music. Couple reference/profile pages retain their isolated visual identity; do not force them into global presets.
+- Couple playback decisions consult the media element actual paused/ended state alongside synchronized UI state. Keep one audio element per Couple player; never create overlapping playback sources.
+- Public Music playback uses request sequencing for play/track transitions and cancellation-safe volume fades. A stale fade callback must never pause or replace a newer track.
+- Karaoke renders through a document-body portal as a viewport-filling overlay. Escape, close, and browser back close only the overlay; they must not pause or reset audio.
+- When a track ends while Karaoke is open, playback stops and Karaoke remains open at final progress. The user may replay from the Karaoke control.
+- Karaoke transcript header presents LIRIK/LYRICS, active track title (marquee when long), and current/total lyric position. Font scaling works on mobile and desktop; do not override it with !important.
+- Karaoke API/UI remain bilingual through LanguageProvider. Lyrics requests remain no-store; no database schema, media object, or music catalog records are changed.
+- The reusable KaraokeLyrics export is documented in Component Workbench and Component Catalog. Its live interaction requires a published track ID and active HTMLAudioElement.
+- Build, deployment, and real-device playback QA are separate gates. Verify small Android, larger phone, tablet, desktop, ID/EN, Escape/browser-back, close while playing, track end, replay, long-title marquee, and font slider. Never claim device audio QA without performing it.
+
+
+### 25.1 Source and release checkpoint — 2026-11-24
+
+- Latest music/Karaoke source commit on `main`: `4eaaba6c4874747cbec21605674424520be65551`.
+- Source scope includes the public Music playback request/fade sequencing, Karaoke body portal and close behavior, lyric size/title/progress UI, Couple playback toggle responsiveness, semantic foundation CSS additions, and Design System inventory documentation.
+- Vercel production deployment API returned HTTP 402 `api-deployments-free-per-day` (retry-after 24 hours). The connected environment did not provide a usable local Vercel CLI fallback with a checked-out project source. Do not claim the latest source is deployed or build-verified until Vercel permits a deployment and the exact commit reaches READY.
+- Browser/device playback QA remains pending. Source changes are committed; runtime behavior must still be verified on Android and desktop after release.

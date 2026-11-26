@@ -1,0 +1,175 @@
+/* Shared typography primitives. Explicit classes only; legacy element styles remain untouched. */
+.text-fluid-xs{font-size:var(--df-text-xs)}
+.text-fluid-sm{font-size:var(--df-text-sm)}
+.text-fluid-base{font-size:clamp(.9375rem,.9rem + .18vw,1rem)}
+.text-fluid-lg{font-size:clamp(1.0625rem,1rem + .35vw,1.25rem)}
+.text-fluid-xl{font-size:clamp(1.25rem,1.08rem + .8vw,1.75rem)}
+.text-fluid-display{font-size:var(--df-text-display);line-height:var(--df-leading-tight);letter-spacing:-.045em}
+.ui-eyebrow{margin:0 0 var(--df-space-2);color:var(--df-secondary);font-size:var(--df-text-xs);font-weight:750;letter-spacing:.14em;line-height:1.4;text-transform:uppercase}
+.ui-gradient-text{color:transparent;background:var(--df-gradient-brand);background-clip:text;-webkit-background-clip:text}
+.ui-heading-h1{color:var(--df-text);font-size:clamp(1.75rem,1.35rem + 1.8vw,2.5rem);font-weight:850;line-height:1.12;letter-spacing:-.035em;text-wrap:balance}
+.ui-heading-h2{color:var(--df-text);font-size:clamp(1.375rem,1.15rem + .9vw,1.875rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;text-wrap:balance}
+.ui-heading-h3{color:var(--df-text);font-size:clamp(1.125rem,1.02rem + .45vw,1.375rem);font-weight:750;line-height:1.25}
+.ui-heading-h4{color:var(--df-text);font-size:var(--df-text-lg);font-weight:700;line-height:1.3}
+.ui-subtitle{max-width:var(--df-reading-width);color:var(--df-text-secondary);font-size:clamp(.9375rem,.9rem + .18vw,1.0625rem);line-height:var(--df-leading-relaxed)}
+.ui-prose{max-width:var(--df-reading-width);color:var(--df-text-secondary);font-size:var(--df-text-base);line-height:var(--df-leading-relaxed)}
+.ui-caption{color:var(--df-text-muted);font-size:var(--df-text-sm);line-height:1.45}
+
+/* Semantic type roles — shared by components; responsive density is handled separately. */
+.ui-text-body{font-family:var(--df-font-sans);font-size:var(--df-type-body-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-body-leading)}
+.ui-text-heading{font-family:var(--df-font-sans);font-weight:var(--df-weight-bold);line-height:var(--df-type-heading-leading)}
+.ui-text-label{font-family:var(--df-font-sans);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}
+.ui-text-caption{font-family:var(--df-font-sans);font-size:var(--df-type-caption-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-caption-leading)}
+.ui-text-nav{font-family:var(--df-font-sans);font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
+.ui-text-nav-submenu{font-family:var(--df-font-sans);font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-submenu-leading)}
+
+
+/* Semantic typography contracts shared by reusable controls. */
+.ui-text-control{font-family:var(--df-font-sans);font-size:var(--df-type-control-size);font-weight:var(--df-weight-regular);line-height:var(--df-type-control-leading)}
+.ui-text-control-label{font-family:var(--df-font-sans);font-size:var(--df-type-control-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-control-label-leading)}
+.ui-text-meta{font-family:var(--df-font-sans);font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
+
+
+/* Page and section heading roles shared by new page compositions. */
+.ui-page-heading .ui-heading-h1{margin:0}
+.ui-page-heading .ui-subtitle{margin:var(--df-space-2) 0 0}
+.ui-section-heading .ui-heading-h2,.ui-section-heading .ui-heading-h3{margin:0}
+.ui-section-description{margin:var(--df-space-2) 0 0;color:var(--df-text-secondary);font-size:var(--df-text-sm);line-height:var(--df-leading-relaxed)}
+.ui-stat-label{color:var(--df-text-secondary);font-size:var(--df-text-sm);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}
+.ui-stat-value{color:var(--df-text);font-size:clamp(1.5rem,1.2rem + 1vw,2rem);font-weight:var(--df-weight-extrabold);line-height:var(--df-leading-tight);font-variant-numeric:tabular-nums}
+.ui-stat-description{color:var(--df-text-muted);font-size:var(--df-text-xs);line-height:var(--df-type-caption-leading)}
+.ui-stat-trend{color:var(--df-success);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
+
+
+/* Visible compact bilingual bottom-dock labels. */
+.ui-bottom-navigation-label,.ui-bottom-navigation-center-label{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--df-font-sans);font-size:var(--df-bottom-nav-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-bottom-nav-label-leading)}
+.ui-bottom-navigation-center-label{font-size:var(--df-bottom-nav-center-label-size);font-weight:var(--df-weight-bold);line-height:1.05}
+
+
+/* Compact administrative typography utility. */
+.admin-small{font-family:var(--df-font-sans);font-size:var(--df-type-admin-small-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
+.admin-meta{font-family:var(--df-font-sans);font-size:var(--df-type-admin-meta-size);font-weight:var(--df-weight-medium);line-height:1.4}
+
+
+/* Responsive semantic type roles: compact mobile, spacious wide displays. */
+.ui-text-mobile-small{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+.ui-text-display-wide{font-size:var(--df-type-display-wide);line-height:var(--df-leading-tight);letter-spacing:-.045em}
+
+.ui-text-karaoke-mobile{font-size:var(--df-type-karaoke-lyric-mobile);line-height:var(--df-leading-tight)}.ui-text-karaoke-wide{font-size:var(--df-type-karaoke-lyric-wide);line-height:var(--df-leading-tight);letter-spacing:-.035em}
+
+/* Editorial typography roles: compact metadata on mobile, wider reading scale on desktop. */
+.ui-text-editorial-meta{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);font-weight:var(--df-weight-medium)}.ui-text-editorial-body{font-size:var(--df-type-body-size);line-height:var(--df-leading-relaxed);color:var(--df-text-secondary)}@media(min-width:1024px){.ui-text-editorial-body{font-size:var(--df-text-lg)}}
+
+.ui-editorial-byline__author{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-semibold);color:var(--df-text-secondary)}.ui-editorial-byline__meta{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-medium);color:var(--df-editorial-meta-color)}
+
+/* Editorial editor roles: compact controls on mobile and wide code reading on desktop. */
+.df-editorial-editor,.df-editorial-content{font-family:var(--df-font-sans)}.df-editorial-editor__head{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}.df-editorial-content{font-size:var(--df-type-body-size);line-height:var(--df-leading-relaxed)}.df-editorial-content h2{font-size:var(--df-text-xl);line-height:var(--df-leading-tight)}.df-editorial-content h3{font-size:var(--df-text-lg)}.df-editorial-content figcaption{font-size:var(--df-type-mobile-small);color:var(--df-text-muted)}.df-editorial-code figcaption{font-size:var(--df-type-mobile-small)}@media(min-width:1024px){.df-editorial-content{font-size:var(--df-text-lg)}}
+
+.ui-blog-article-navigation__heading{font-size:var(--df-text-base);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}.ui-blog-article-navigation__link,.ui-blog-article-navigation__category{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}.ui-blog-article-navigation__link time{font-size:var(--df-type-mobile-small)}
+
+
+/* Public Blog listing typography: compact mobile, wider titles on desktop. */
+.ui-text-blog-title{font-size:var(--df-text-base);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight);letter-spacing:-.015em;color:var(--df-text)}
+.ui-text-blog-summary{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal);color:var(--df-text-secondary)}
+.ui-text-blog-meta{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);color:var(--df-text-muted)}
+@media(min-width:640px){.ui-text-blog-title{font-size:var(--df-text-lg)}.ui-text-blog-summary{font-size:var(--df-text-sm)}}
+@media(min-width:1280px){.ui-text-blog-title{font-size:var(--df-text-xl)}}
+
+
+/* Editorial metadata and author-link semantic typography roles. */
+.ui-text-editorial-meta{font-family:var(--df-font-sans);font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-medium);line-height:var(--df-type-caption-leading)}
+
+/* Author directory typography roles. */
+.ui-author-card__role{margin:var(--df-space-1) 0 0;color:var(--df-text-muted);font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
+@media(min-width:1024px){.ui-author-card__role{font-size:var(--df-text-sm)}}
+
+/* Author profile helper copy follows compact mobile and readable desktop roles. */
+.ui-author-profile-editor .ui-field-help{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
+@media(min-width:1024px){.ui-author-profile-editor .ui-field-help{font-size:var(--df-text-sm)}}
+
+/* Contributor workspace type roles: compact mobile, wide-display title. */
+.ui-author-workspace .ui-heading-h1{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-tight)}
+@media(min-width:768px){.ui-author-workspace .ui-heading-h1{font-size:clamp(1.875rem,1.5rem + 1.2vw,2.5rem)}}
+@media(min-width:1280px){.ui-author-workspace .ui-heading-h1{font-size:var(--df-type-display-wide)}}
+
+
+/* Responsive contributor card biography text. */
+.ui-contributor-card__role{margin:var(--df-space-1) 0 0;color:var(--df-text-secondary);font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading);overflow-wrap:anywhere}
+@media(min-width:1024px){.ui-contributor-card__role{font-size:var(--df-text-sm)}}
+
+
+/* VerificationState typography roles. */
+.df-verification__eyebrow{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-extrabold);letter-spacing:.14em;line-height:var(--df-leading-normal)}
+.df-verification__title{font-size:var(--df-text-lg);font-weight:var(--df-weight-extrabold);line-height:var(--df-leading-tight);overflow-wrap:anywhere}
+.df-verification__description,.df-verification__detail{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-relaxed)}
+@media(min-width:1024px){.df-verification__title{font-size:var(--df-text-xl)}.df-verification__description,.df-verification__detail{font-size:var(--df-text-sm)}}
+
+
+/* Navigation profile identity typography. */
+.df-navigation-profile-identity-row{font-size:var(--df-type-nav-profile-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-label-leading)}
+.df-navigation-profile-identity-row+.df-navigation-profile-identity-row{font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
+.df-navigation-profile-identity-row strong{color:var(--df-profile-name-color)}
+.df-navigation-profile-identity-row small{color:var(--df-profile-email-color)}
+.df-navigation-profile-menu>a{font-size:var(--df-type-nav-submenu-size);font-weight:var(--df-weight-semibold)}
+
+
+/* Workspace navigation type roles shared by Admin and Contributor shells. */
+.df-workspace-navigation{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+.df-workspace-navigation-link{font-size:var(--df-type-nav-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-type-nav-label-leading)}
+.df-workspace-navigation-group-title{font-size:var(--df-type-nav-section-size);font-weight:var(--df-weight-bold);line-height:var(--df-type-nav-meta-leading)}
+.df-workspace-navigation-identity{font-size:var(--df-type-nav-meta-size);font-weight:var(--df-weight-medium);line-height:var(--df-type-nav-meta-leading)}
+
+
+/* Workspace display typography roles: compact on mobile, wider on desktop. */
+.ui-text-mobile-small{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+.ui-text-display-wide{font-size:var(--df-type-wide-heading);line-height:var(--df-type-heading-leading);letter-spacing:-.035em}
+.df-shell-workspace-content .ui-heading-h1{font-size:var(--df-type-wide-heading)}
+.df-shell-workspace-content .ui-heading-h2{font-size:var(--df-type-wide-subheading)}
+.df-shell-workspace-content .ui-prose,.df-shell-workspace-content .ui-text-body{font-size:var(--df-type-body-size);line-height:var(--df-type-body-leading)}
+@media(max-width:760px){
+ .df-shell-workspace-content .ui-heading-h1{font-size:var(--df-type-mobile-heading)}
+ .df-shell-workspace-content .ui-heading-h2{font-size:var(--df-type-mobile-subheading)}
+ .df-shell-workspace-content .ui-prose,.df-shell-workspace-content .ui-text-body{font-size:var(--df-type-mobile-body)}
+}
+
+
+/* Semantic workspace shell refinement. */
+.df-shell-drawer-brand strong{font-size:var(--df-type-nav-brand-size);line-height:var(--df-type-nav-brand-leading)}.df-shell-drawer-section{font-size:var(--df-type-nav-section-size);line-height:var(--df-type-nav-meta-leading)}.df-shell-drawer-nav a{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+@media(max-width:760px){.df-shell-drawer-nav a{font-size:var(--df-workspace-nav-compact-font-size);line-height:var(--df-leading-normal)}.df-shell-drawer-foot .ui-button{font-size:var(--df-workspace-nav-compact-font-size)}}
+
+/* Admin shell typography: compact mobile controls, readable wide workspace headings. */
+#df-admin-shell .df-admin-nav-link{font-size:var(--df-type-nav-label-size);line-height:var(--df-type-nav-label-leading)}
+#df-admin-shell .df-admin-sidebar-label,#df-admin-shell .df-admin-nav-group h2{font-size:var(--df-type-nav-section-size);line-height:var(--df-type-nav-meta-leading)}
+#df-admin-shell .df-admin-main :is(.ui-heading-h1,.ui-heading-h2,.ui-heading-h3){text-wrap:balance}
+@media(max-width:820px){
+ #df-admin-shell .df-admin-nav-link{font-size:var(--df-admin-mobile-control-font);line-height:var(--df-leading-normal)}
+ #df-admin-shell .df-admin-topbar-actions .ui-button{font-size:var(--df-admin-mobile-control-font)}
+ #df-admin-shell .df-admin-current-route{font-size:var(--df-type-mobile-small)}
+}
+
+/* Admin panel typography roles — compact on mobile, fluid on wider screens. */
+.ui-admin-panel-title{margin:0;color:var(--df-text);font-size:var(--df-type-wide-subheading,1.125rem);font-weight:800;line-height:1.25;text-wrap:balance}
+.ui-admin-panel-copy{margin:0;color:var(--df-text-secondary);font-size:var(--df-type-mobile-small,.8125rem);line-height:1.55}
+@media(min-width:768px){.ui-admin-panel-copy{font-size:var(--df-type-admin-small-size,.875rem)}}
+
+/* Reusable contact-channel typography: compact on mobile, more spacious on wide displays. */
+.ui-contact-channel-card__eyebrow{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-bold);letter-spacing:.1em;line-height:var(--df-type-caption-leading);text-transform:uppercase}
+.ui-contact-channel-card__title{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}
+.ui-contact-channel-card__description,.ui-contact-channel-card__value{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+@media(min-width:768px){.ui-contact-channel-card__title{font-size:var(--df-text-lg)}.ui-contact-channel-card__description{font-size:var(--df-text-sm)}}
+
+
+/* SVG icon alignment follows the current text role and label baseline. */
+.ui-icon{flex:0 0 auto;vertical-align:middle;color:inherit}
+.ui-icon-label{display:inline-flex;align-items:center;gap:var(--df-icon-gap);min-width:0}
+
+
+/* DF Creator Engine typography aliases — shared scale, compact on mobile. */
+:root {
+  --df-type-creator-title: var(--df-type-mobile-subheading, var(--df-text-xl));
+  --df-type-creator-body: var(--df-type-mobile-body, var(--df-text-sm));
+  --df-type-creator-meta: var(--df-type-mobile-small, var(--df-text-xs));
+}
+@media (min-width: 768px) {
+  :root { --df-type-creator-title: var(--df-type-wide-subheading, var(--df-text-xl)); --df-type-creator-body: var(--df-type-body-size); }
+}

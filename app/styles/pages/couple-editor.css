@@ -1,0 +1,69 @@
+.df-couple-create-page,.df-couple-editor-page{width:100%;min-width:0;padding:clamp(1rem,3vw,2rem);background:var(--df-bg);color:var(--df-text)}
+.df-couple-create-page{min-height:70vh;display:grid;place-items:center}
+.df-couple-create-card{width:min(100%,42rem);padding:clamp(1.2rem,4vw,2.5rem);display:grid;gap:1rem;border:1px solid var(--df-border);border-radius:var(--df-radius-xl);background:var(--df-surface);box-shadow:var(--df-shadow-lg)}
+.df-couple-create-eyebrow,.df-couple-editor-eyebrow{margin:0;color:var(--df-primary);font-size:.68rem;font-weight:850;letter-spacing:.16em}
+.df-couple-create-card h1,.df-couple-editor-toolbar h1{margin:0;color:var(--df-text);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;line-height:1.15}
+.df-couple-create-card>p:not(.df-couple-create-eyebrow),.df-couple-editor-toolbar p{margin:0;color:var(--df-text-secondary);line-height:1.7}
+.df-couple-create-card form{display:grid;gap:1rem}
+.df-couple-create-card label{display:grid;gap:.45rem;color:var(--df-text-secondary);font-size:.85rem;font-weight:750}
+.df-couple-create-card input{width:100%;min-height:46px;padding:.7rem .85rem;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text)}
+.df-couple-create-card button,.df-couple-danger-button,.df-couple-secondary-button{min-height:44px;padding:.7rem 1rem;border:1px solid var(--df-primary);border-radius:var(--df-radius-md);background:var(--df-primary);color:var(--df-on-primary);font-weight:850;cursor:pointer}
+.df-couple-create-card button:disabled{opacity:.6}
+.df-couple-create-success,.df-couple-editor-notice{padding:.8rem 1rem;border:1px solid var(--df-success);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-success)}
+.df-couple-create-error,.df-couple-editor-error{color:var(--df-danger)}
+.df-couple-editor-toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;max-width:76rem;margin:0 auto 1rem;padding:1rem;border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface)}
+.df-couple-editor-toolbar>div{display:grid;gap:.4rem}.df-couple-editor-toolbar>a{color:var(--df-primary);font-weight:800}
+.df-couple-editor-status,.df-couple-editor-notice,.df-couple-editor-error{max-width:76rem;margin:.5rem auto;padding:.7rem 1rem}
+.df-couple-reset-panel{max-width:76rem;margin:1rem auto;padding:1rem;border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface)}
+.df-couple-danger-button{border-color:var(--df-danger);background:var(--df-danger);color:#fff}
+.df-couple-secondary-button{margin-left:.5rem;border-color:var(--df-border);background:var(--df-surface-raised);color:var(--df-text)}
+@media(max-width:600px){.df-couple-editor-page{padding:.75rem}.df-couple-editor-toolbar{align-items:flex-start}.df-couple-reset-panel{margin-inline:0}}
+
+
+/* Couple editor quick actions and foundation-aligned reset confirmation. */
+.df-couple-editor-quick-actions {
+  width: min(100% - 2rem, 76rem); margin: 1rem auto 1.25rem; padding: 1rem 1.1rem;
+  border: 1px solid var(--df-border); border-radius: var(--df-radius-lg);
+  background: var(--df-surface); color: var(--df-text); box-shadow: var(--df-shadow-sm);
+}
+.df-couple-editor-quick-buttons { display: flex; flex-wrap: wrap; gap: .65rem; }
+.df-couple-editor-quick-buttons :is(button, a) {
+  display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .5rem;
+  padding: .65rem 1rem; border: 1px solid var(--df-border); border-radius: var(--df-radius-md);
+  font: inherit; font-size: .85rem; font-weight: 800; text-decoration: none; cursor: pointer;
+}
+.df-couple-editor-action-primary { border-color: var(--df-primary) !important; background: var(--df-primary); color: var(--df-on-primary); }
+.df-couple-editor-action-secondary { background: var(--df-surface-raised); color: var(--df-text); }
+.df-couple-editor-quick-actions p { margin: .8rem 0 0; color: var(--df-text-secondary); font-size: .78rem; line-height: 1.6; }
+.df-couple-confirm-backdrop {
+  position: fixed; z-index: 1500; inset: 0; display: grid; place-items: center;
+  padding: 1rem; background: rgba(3, 7, 18, .68); backdrop-filter: blur(8px);
+}
+.df-couple-confirm-dialog {
+  width: min(100%, 28rem); padding: clamp(1.2rem, 4vw, 1.65rem);
+  border: 1px solid var(--df-border); border-radius: var(--df-radius-xl);
+  background: var(--df-surface-overlay); color: var(--df-text); box-shadow: var(--df-shadow-lg);
+}
+.df-couple-confirm-dialog h2 { margin: .45rem 0 .65rem; color: var(--df-text); font-size: 1.2rem; font-weight: 900; }
+.df-couple-confirm-dialog > p:not(.df-couple-eyebrow) { margin: 0; color: var(--df-text-secondary); line-height: 1.7; }
+.df-couple-confirm-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.35rem; }
+.df-couple-confirm-actions button {
+  min-height: 44px; padding: .65rem 1.1rem; border: 1px solid var(--df-border);
+  border-radius: var(--df-radius-md); font: inherit; font-weight: 850; cursor: pointer;
+}
+.df-couple-confirm-primary { border-color: var(--df-danger) !important; background: var(--df-danger); color: #fff; }
+.df-couple-confirm-secondary { background: var(--df-surface-raised); color: var(--df-text); }
+@media (max-width: 600px) {
+  .df-couple-editor-quick-actions { width: calc(100% - 1.5rem); padding: .85rem; }
+  .df-couple-editor-quick-buttons > * { flex: 1 1 8rem; }
+  .df-couple-confirm-actions { flex-direction: column-reverse; }
+  .df-couple-confirm-actions button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .df-couple-confirm-backdrop { backdrop-filter: none; } }
+
+
+.df-couple-create-checking .df-couple-create-card { gap: 1rem; }
+.df-couple-checking-status { margin: 0; color: var(--df-text-secondary); font-size: .88rem; font-weight: 700; }
+.df-couple-checking-fields { display: grid; gap: .55rem; }
+.df-couple-checking-fields .ui-skeleton:nth-child(3) { margin-top: .4rem; }
+@media(prefers-reduced-motion:reduce) { .df-couple-create-checking .ui-skeleton { animation: none; } }

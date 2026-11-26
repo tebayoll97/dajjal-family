@@ -1,0 +1,842 @@
+
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabaseAdminClient } from "@/lib/supabaseAdminClient";
+import { useAdminAuth } from "@/app/components/AdminAuthProvider";
+import { useLanguage } from "@/app/components/LanguageProvider";
+import Image from "next/image";
+
+const translations = {
+  en: {
+    checking: "Verifying administrator...",
+    title: "USER",
+    titleAccent: "MANAGEMENT",
+    subtitle: "Manage account access, player profiles, and game activity.",
+    back: "BACK TO DASHBOARD",
+    ban: "BAN PLAYER",
+    unban: "UNBAN",
+    delete: "DELETE PROFILE",
+    email: "EMAIL",
+    lastSignIn: "LAST SIGN-IN",
+    authMissing: "LOGIN ACCOUNT NOT FOUND",
+    never: "Never",
+    banned: "BANNED",
+    active: "ACTIVE",
+    actionTitle: "PLAYER ACTION",
+    banConfirm: "Ban this player from signing in?",
+    unbanConfirm: "Restore this player's access?",
+    deleteConfirm: "Permanently delete this player's game profile and score history? The linked login account will remain. This cannot be undone.",
+    cancel: "CANCEL",
+    confirm: "CONFIRM",
+    processing: "PROCESSING...",
+    actionError: "Unable to complete this action.",
+    actionSuccessBan: "Login access has been blocked.",
+    actionSuccessUnban: "Login access has been restored.",
+    actionSuccessDelete: "Player profile and game history deleted. The login account remains.",
+    logout: "SIGN OUT",
+    total: "TOTAL PLAYERS",
+    guest: "GUESTS ON THIS PAGE",
+    google: "GOOGLE ON THIS PAGE",
+    search: "Search nickname...",
+    all: "ALL",
+    guestFilter: "GUEST",
+    googleFilter: "GOOGLE",
+    other: "OTHER",
+    activeFilter: "ACTIVE",
+    bannedFilter: "BANNED",
+    playerList: "USER DIRECTORY",
+    found: "players found",
+    noPlayers: "No players found.",
+    noResults: "Try another nickname or filter.",
+    server: "SERVER",
+    points: "POINTS",
+    games: "GAMES",
+    joined: "JOINED",
+    account: "ACCOUNT",
+    previous: "PREVIOUS",
+    next: "NEXT",
+    page: "Page",
+    of: "of",
+    loading: "LOADING PLAYERS...",
+    error: "Unable to load players.",
+    accessDenied: "Administrator access denied.",
+    retry: "TRY AGAIN",
+    guestLabel: "GUEST",
+    googleLabel: "GOOGLE",
+    otherLabel: "OTHER",
+    unknownLabel: "UNKNOWN",
+    logoutLoading: "SIGNING OUT...",
+    searchButton: "SEARCH",
+    emptySearch: "Enter a nickname to search.",
+    details: "PLAYER DETAILS",
+    expand: "VIEW DETAILS",
+    collapse: "HIDE DETAILS",
+    footer: "DAJJAL FAMILY · GAMING UNIVERSE · PLAYER CONTROL CENTER",
+  },
+  id: {
+    checking: "Memverifikasi administrator...",
+    title: "MANAJEMEN",
+    titleAccent: "PENGGUNA",
+    subtitle: "Kelola akses akun, profil pemain, dan aktivitas permainan.",
+    back: "KEMBALI KE DASHBOARD",
+    ban: "BLOKIR PEMAIN",
+    unban: "BUKA BLOKIR",
+    delete: "HAPUS PROFIL",
+    email: "EMAIL",
+    lastSignIn: "LOGIN TERAKHIR",
+    authMissing: "AKUN LOGIN TIDAK DITEMUKAN",
+    never: "Belum pernah",
+    banned: "DIBLOKIR",
+    active: "AKTIF",
+    actionTitle: "TINDAKAN PEMAIN",
+    banConfirm: "Blokir pemain ini agar tidak bisa masuk?",
+    unbanConfirm: "Pulihkan akses pemain ini?",
+    deleteConfirm: "Hapus permanen profil permainan dan seluruh riwayat skor pemain ini? Akun login yang terhubung tetap ada. Tindakan ini tidak dapat dibatalkan.",
+    cancel: "BATAL",
+    confirm: "KONFIRMASI",
+    processing: "MEMPROSES...",
+    actionError: "Tindakan tidak dapat diselesaikan.",
+    actionSuccessBan: "Akses login berhasil diblokir.",
+    actionSuccessUnban: "Akses login berhasil dipulihkan.",
+    actionSuccessDelete: "Profil pemain dan riwayat game dihapus. Akun login tetap ada.",
+    logout: "KELUAR",
+    total: "TOTAL PEMAIN",
+    guest: "GUEST DI HALAMAN INI",
+    google: "GOOGLE DI HALAMAN INI",
+    search: "Cari nickname...",
+    all: "SEMUA",
+    guestFilter: "GUEST",
+    googleFilter: "GOOGLE",
+    other: "LAINNYA",
+    activeFilter: "AKTIF",
+    bannedFilter: "DIBLOKIR",
+    playerList: "DAFTAR PENGGUNA",
+    found: "pemain ditemukan",
+    noPlayers: "Pemain tidak ditemukan.",
+    noResults: "Coba nickname atau filter lainnya.",
+    server: "SERVER",
+    points: "POIN",
+    games: "PERMAINAN",
+    joined: "BERGABUNG",
+    account: "AKUN",
+    previous: "SEBELUMNYA",
+    next: "BERIKUTNYA",
+    page: "Halaman",
+    of: "dari",
+    loading: "MEMUAT PEMAIN...",
+    error: "Tidak dapat memuat data pemain.",
+    accessDenied: "Akses administrator ditolak.",
+    retry: "COBA LAGI",
+    guestLabel: "GUEST",
+    googleLabel: "GOOGLE",
+    otherLabel: "LAINNYA",
+    unknownLabel: "TIDAK DIKETAHUI",
+    logoutLoading: "SEDANG KELUAR...",
+    searchButton: "CARI",
+    emptySearch: "Masukkan nickname untuk mencari.",
+    details: "DETAIL PEMAIN",
+    expand: "LIHAT DETAIL",
+    collapse: "TUTUP DETAIL",
+    footer: "DAJJAL FAMILY · GAMING UNIVERSE · PLAYER CONTROL CENTER",
+  },
+};
+
+const filters = ["ALL", "GUEST", "GOOGLE", "OTHER", "ACTIVE", "BANNED"];
+
+function formatDate(date, language) {
+  if (!date) return "-";
+
+  return new Date(date).toLocaleDateString(
+    language === "id" ? "id-ID" : "en-US",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }
+  );
+}
+
+function accountStyle(type) {
+  switch (type) {
+    case "GUEST":
+      return "bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] border-[var(--df-warning)] text-[var(--df-warning)]";
+    case "GOOGLE":
+      return "bg-[color:color-mix(in_srgb,var(--df-info)_10%,transparent)] border-[var(--df-info)] text-[var(--df-info)]";
+    case "OTHER":
+      return "bg-[var(--df-primary-soft)] border-[var(--df-border)] text-[var(--df-primary)]";
+    default:
+      return "bg-[var(--df-surface-raised)] border-[var(--df-border)] text-[var(--df-text-secondary)]";
+  }
+}
+
+export default function AdminPlayersPage() {
+  const router = useRouter();
+  const { language } = useLanguage();
+  const { admin } = useAdminAuth();
+  const t = translations[language] || translations.en;
+
+
+
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("ALL");
+
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 50,
+    total: 0,
+    totalPages: 0,
+  });
+  const [expandedPlayerId, setExpandedPlayerId] = useState(null);
+  const [actionTarget, setActionTarget] = useState(null);
+  const [actionType, setActionType] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const loadPlayers = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error: sessionError } =
+        await supabaseAdminClient.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      const session = data?.session;
+
+      if (!session) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const params = new URLSearchParams({
+        page: String(page),
+        limit: "50",
+        search,
+      });
+
+      const response = await fetch(
+        `/api/admin/players?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          cache: "no-store",
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          router.replace("/admin/login");
+          return;
+        }
+
+        throw new Error(result.error || t.error);
+      }
+
+      setPlayers(result.players || []);
+      setPagination(
+        result.pagination || {
+          page: 1,
+          limit: 50,
+          total: 0,
+          totalPages: 0,
+        }
+      );
+    } catch (err) {
+      console.error("Player management error:", err);
+      setError(err.message || t.error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search, router, t.error]);
+
+
+
+  useEffect(() => {
+    if (admin) loadPlayers();
+  }, [admin, loadPlayers]);
+
+  async function handleSearch(event) {
+    event.preventDefault();
+    setPage(1);
+    setSearch(searchInput.trim());
+  }
+
+  function handleFilterChange(value) {
+    setFilter(value);
+  }
+
+
+  function openPlayerAction(player, action) {
+    setActionTarget(player);
+    setActionType(action);
+  }
+
+  async function confirmPlayerAction() {
+    if (!actionTarget || !actionType || actionLoading) return;
+    setActionLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const { data: { session }, error: sessionError } =
+        await supabaseAdminClient.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!session) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const response = await fetch(
+        `/api/admin/players/${actionTarget.id}`,
+        {
+          method: actionType === "delete" ? "DELETE" : "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: actionType === "delete"
+            ? undefined
+            : JSON.stringify({ action: actionType }),
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || t.actionError);
+
+      setActionTarget(null);
+      setActionType(null);
+      setSuccess(actionType === "delete" ? t.actionSuccessDelete : actionType === "ban" ? t.actionSuccessBan : t.actionSuccessUnban);
+      await loadPlayers();
+    } catch (err) {
+      setError(err.message || t.actionError);
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  const filteredPlayers = players.filter((player) => {
+    if (filter === "ALL") return true;
+    if (filter === "BANNED") return player.isBanned;
+    if (filter === "ACTIVE") return !player.isBanned;
+    if (filter === "OTHER") {
+      return (
+        player.accountType === "OTHER" ||
+        player.accountType === "UNKNOWN"
+      );
+    }
+
+    return player.accountType === filter;
+  });
+
+  const guestCount = players.filter(
+    (p) => p.accountType === "GUEST"
+  ).length;
+
+  const googleCount = players.filter(
+    (p) => p.accountType === "GOOGLE"
+  ).length;
+
+  if (!admin) {
+    return (
+      <main className="min-h-screen bg-[var(--df-bg)] text-[var(--df-text)] flex flex-col items-center justify-center px-5 text-center">
+        <div className="text-5xl">🔒</div>
+        <h1 className="text-2xl font-black mt-5 ui-title">
+          {t.accessDenied}
+        </h1>
+        <button
+          onClick={() => router.replace("/admin/login")}
+          className="mt-6 rounded-xl bg-[var(--df-primary)] px-6 py-3 font-bold"
+        >
+          ADMIN LOGIN
+        </button>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--df-bg)] text-[var(--df-text)] px-3 sm:px-4 py-4 sm:py-10">
+      <div className="max-w-6xl mx-auto">
+
+        {/* HEADER */}
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-5">
+          <div>
+            <p className="ui-eyebrow">DAJJAL FAMILY <span className="text-cyan-300">/ GAMING UNIVERSE</span></p>
+
+            <h1 className="text-2xl sm:text-4xl font-black mt-2 sm:mt-3 ui-title">
+              {t.title}{" "}
+              <span className="text-[var(--df-primary)]">
+                {t.titleAccent}
+              </span>
+            </h1>
+
+            <p className="ui-section-subtitle mt-1.5 sm:mt-2">
+              {t.subtitle}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => router.push("/admin")}
+              className="rounded-lg sm:rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] hover:bg-[var(--df-primary-soft)] px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold text-[var(--df-primary)] transition"
+            >
+              ← {t.back}
+            </button>
+          </div>
+        </header>
+
+        {/* ADMIN INFO */}
+        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-5 ui-card">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center text-xl ui-card">
+              ♛
+            </div>
+
+            <div className="min-w-0">
+              <p className="text-[10px] text-[var(--df-primary)] font-bold tracking-widest">
+                ADMINISTRATOR
+              </p>
+              <p className="text-sm font-bold break-all mt-1">
+                {admin.email}
+              </p>
+            </div>
+
+            <div className="ml-auto hidden sm:block text-[10px] text-[var(--df-success)] font-bold">
+              ● SECURE ACCESS
+            </div>
+          </div>
+        </section>
+
+        {/* STATISTICS */}
+        <section className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-text-secondary)] font-bold">
+              {t.total}
+            </p>
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-text)] mt-2 sm:mt-3 tabular-nums">
+              {pagination.total.toLocaleString()}
+            </p>
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
+              {t.playerList}
+            </p>
+          </div>
+
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-warning)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-warning)] font-bold">
+              {t.guest}
+            </p>
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-warning)] mt-2 sm:mt-3 tabular-nums">
+              {guestCount}
+            </p>
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
+              {t.account}
+            </p>
+          </div>
+
+          <div className="rounded-xl sm:rounded-2xl border border-[var(--df-info)] bg-[var(--df-surface)] p-2.5 sm:p-5 ui-card">
+            <p className="text-[10px] tracking-widest text-[var(--df-info)] font-bold">
+              {t.google}
+            </p>
+            <p className="text-xl sm:text-3xl font-black text-[var(--df-info)] mt-2 sm:mt-3 tabular-nums">
+              {googleCount}
+            </p>
+            <p className="text-[10px] text-[var(--df-text-muted)] mt-2">
+              {t.account}
+            </p>
+          </div>
+        </section>
+
+        {success && <div role="status" className="mt-4 rounded-xl border border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] px-4 py-3 text-sm text-[var(--df-success)]">{success}</div>}
+
+        {/* SEARCH */}
+        <section className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-5 ui-card">
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-row gap-2 sm:gap-3"
+          >
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder={t.search}
+              className="flex-1 min-w-0 rounded-lg sm:rounded-xl border border-[var(--df-border)] bg-[var(--df-bg)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-[var(--df-text)] outline-none focus:border-[var(--df-border-strong)] focus:ring-2 focus:ring-[var(--df-focus)]/15 transition placeholder:text-[var(--df-text-muted)]"
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="shrink-0 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 px-3 sm:px-6 py-2.5 sm:py-3 text-[10px] sm:text-sm font-black tracking-wide transition shadow-lg shadow-[var(--df-shadow-md)]"
+            >
+              {t.searchButton}
+            </button>
+          </form>
+
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+            {filters.map((item) => {
+              const active = filter === item;
+
+              const labels = {
+                ALL: t.all,
+                GUEST: t.guestFilter,
+                GOOGLE: t.googleFilter,
+                OTHER: t.other,
+                ACTIVE: t.activeFilter,
+                BANNED: t.bannedFilter,
+              };
+
+              return (
+                <button
+                  key={item}
+                  onClick={() => handleFilterChange(item)}
+                  className={`rounded-full border px-3 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black tracking-wider transition active:scale-[0.97] ${
+                    active
+                      ? "bg-[var(--df-primary)] border-[var(--df-border-strong)] text-[var(--df-text)] shadow-lg shadow-[var(--df-shadow-md)]"
+                      : "bg-[var(--df-bg)] border-[var(--df-border)] text-[var(--df-text-secondary)] hover:border-[var(--df-border-strong)] hover:text-[var(--df-text)]"
+                  }`}
+                >
+                  {labels[item]}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* PLAYER LIST */}
+        <section className="mt-5 sm:mt-8">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div>
+              <h2 className="text-sm font-black tracking-wider text-[var(--df-primary)] ui-section-title">
+                {t.playerList}
+              </h2>
+              <p className="text-xs text-[var(--df-text-muted)] mt-1">
+                {filteredPlayers.length} {t.found}
+              </p>
+            </div>
+
+            <button
+              onClick={loadPlayers}
+              disabled={loading}
+              className="rounded-lg border border-[var(--df-border)] bg-[var(--df-primary-soft)] hover:bg-[var(--df-primary-soft)] px-3 py-2 text-[10px] sm:text-xs font-bold text-[var(--df-primary)] disabled:opacity-50 active:scale-[0.97] transition"
+            >
+              ↻ REFRESH
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] min-h-64 flex flex-col items-center justify-center gap-3 sm:p-4 ui-card">
+              <div className="w-10 h-10 border-4 border-[var(--df-border)] border-t-purple-400 rounded-full animate-spin" />
+              <p className="text-xs text-[var(--df-primary)] font-bold tracking-widest animate-pulse">
+                {t.loading}
+              </p>
+            </div>
+          ) : error ? (
+            <div className="rounded-2xl border border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_5%,transparent)] p-8 text-center ui-card">
+              <div className="text-3xl">⚠️</div>
+              <p className="text-sm text-[var(--df-danger)] mt-3">{error}</p>
+              <button
+                onClick={loadPlayers}
+                className="mt-5 rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary)] px-5 py-3 text-xs font-bold"
+              >
+                {t.retry}
+              </button>
+            </div>
+          ) : filteredPlayers.length === 0 ? (
+            <div className="rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] min-h-56 flex flex-col items-center justify-center text-center px-5 ui-card">
+              <div className="text-4xl">👥</div>
+              <p className="font-bold mt-4">{t.noPlayers}</p>
+              <p className="text-xs text-[var(--df-text-muted)] mt-2">
+                {t.noResults}
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* MOBILE PLAYER CARDS */}
+              <div className="grid grid-cols-1 md:hidden gap-2.5">
+                {filteredPlayers.map((player) => {
+                  const expanded = expandedPlayerId === player.id;
+                  return (
+                    <article
+                      key={player.id}
+                      className={`overflow-hidden rounded-xl border bg-[var(--df-surface)] transition-all duration-300 ui-card ${expanded ? "border-[var(--df-border-strong)] shadow-lg shadow-[var(--df-shadow-md)]" : "border-[var(--df-border)]"}`}
+                    >
+                      <div className="flex items-center gap-2.5 p-3">
+                        <div className="w-11 h-11 shrink-0 rounded-xl border border-[var(--df-border)] bg-[var(--df-primary-soft)] flex items-center justify-center overflow-hidden">
+                          {player.avatarUrl ? (
+                            <Image src={player.avatarUrl} alt="" width={44} height={44} unoptimized className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xl">👤</span>
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <p className="font-extrabold text-sm text-[var(--df-text)] truncate">
+                            {player.nickname || "Unnamed Player"}
+                          </p>
+                          <p className="text-[11px] text-[var(--df-text-secondary)] mt-0.5">
+                            {player.authEmail || (player.hasAuthLink ? t.unknownLabel : t.authMissing)}
+                          </p>
+                          <p className="text-[10px] text-[var(--df-text-muted)] mt-0.5">{t.server} {player.serverNumber || "-"}</p>
+                        </div>
+
+                        <span className={`shrink-0 rounded-full border px-2 py-1 text-[9px] font-black ${accountStyle(player.accountType)}`}>
+                          {player.accountType}
+                        </span>
+
+                        <button
+                          type="button"
+                          aria-expanded={expanded}
+                          aria-label={expanded ? t.collapse : t.expand}
+                          onClick={() => setExpandedPlayerId(expanded ? null : player.id)}
+                          className={`w-8 h-8 shrink-0 rounded-lg border flex items-center justify-center text-[var(--df-primary)] transition-all duration-300 ${expanded ? "rotate-180 border-[var(--df-border-strong)] bg-[var(--df-primary-soft)]" : "border-[var(--df-border)] bg-[var(--df-primary-soft)]"}`}
+                        >
+                          <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4" aria-hidden="true">
+                            <path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      {expanded && (
+                        <div className="border-t border-[var(--df-border)] px-3 pb-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                          <p className="text-[9px] font-black tracking-[0.18em] text-[var(--df-primary)] mb-2">
+                            {t.details}
+                          </p>
+
+                          <div className="mb-2 rounded-lg bg-black/20 p-2.5 space-y-2">
+                            <div><p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.email}</p><p className="text-xs text-[var(--df-text)] break-all mt-1">{player.authEmail || "—"}</p></div>
+                            <div><p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.lastSignIn}</p><p className="text-xs text-[var(--df-text)] mt-1">{player.lastSignInAt ? formatDate(player.lastSignInAt, language) : t.never}</p></div>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2 rounded-lg bg-black/20 p-2.5">
+                            <div className="min-w-0">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.points}</p>
+                              <p className="text-sm font-black text-[var(--df-primary)] mt-1 tabular-nums">
+                                {(player.totalPoints || 0).toLocaleString()}
+                              </p>
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.games}</p>
+                              <p className="text-sm font-black text-[var(--df-text)] mt-1 tabular-nums">
+                                {player.gamesPlayed || 0}
+                              </p>
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-[9px] text-[var(--df-text-muted)] font-bold">{t.joined}</p>
+                              <p className="text-[11px] font-bold text-[var(--df-text)] mt-1 leading-tight">
+                                {formatDate(player.createdAt, language)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2 mt-3">
+                            <span className={`text-[9px] font-black rounded-full px-2.5 py-1.5 border ${player.isBanned ? "border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_10%,transparent)] text-[var(--df-danger)]" : "border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] text-[var(--df-success)]"}`}>
+                              {player.isBanned ? t.banned : t.active}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => openPlayerAction(player, player.isBanned ? "unban" : "ban")}
+                                className="rounded-lg border border-[var(--df-warning)] bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] px-3 py-2 text-[10px] font-bold text-[var(--df-warning)] active:scale-[0.98] transition"
+                              >
+                                {player.isBanned ? t.unban : t.ban}
+                              </button>
+
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+
+              {/* DESKTOP TABLE */}
+              <div className="hidden md:block overflow-x-auto rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] ui-card">
+                <table className="w-full text-left">
+                  <thead className="bg-[var(--df-primary-soft)] border-b border-[var(--df-border)]">
+                    <tr className="text-[10px] text-[var(--df-primary)] tracking-wider">
+                      <th className="px-5 py-4">PLAYER</th>
+                      <th className="px-4 py-4">{t.email}</th>
+                      <th className="px-4 py-4">{t.account}</th>
+                      <th className="px-4 py-4">{t.server}</th>
+                      <th className="px-4 py-4">{t.points}</th>
+                      <th className="px-4 py-4">{t.games}</th>
+                      <th className="px-4 py-4">{t.joined}</th>
+                      <th className="px-4 py-4">{t.lastSignIn}</th>
+                      <th className="px-4 py-4">STATUS</th>
+                      <th className="px-4 py-4">ACTIONS</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {filteredPlayers.map((player) => (
+                      <tr
+                        key={player.id}
+                        className="border-b border-[var(--df-border)] last:border-0 hover:bg-[var(--df-primary-soft)] transition"
+                      >
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3 min-w-48">
+                            <div className="w-10 h-10 rounded-xl bg-[var(--df-primary-soft)] border border-[var(--df-border)] flex items-center justify-center overflow-hidden ui-card">
+                              {player.avatarUrl ? (
+                                <Image
+                                  src={player.avatarUrl}
+                                  alt=""
+                                  width={40}
+                                  height={40}
+                                  unoptimized
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                "👤"
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <span className="font-bold text-sm block">
+                                {player.nickname || "Unnamed Player"}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)] break-all max-w-56">{player.authEmail || "—"}</td>
+
+                        <td className="px-4 py-4">
+                          <span
+                            className={`rounded-full border px-3 py-1 text-[9px] font-black ${accountStyle(player.accountType)}`}
+                          >
+                            {player.accountType}
+                          </span>
+                        </td>
+
+                        <td className="px-4 py-4 text-sm text-[var(--df-text-secondary)]">
+                          {player.serverNumber || "-"}
+                        </td>
+
+                        <td className="px-4 py-4 text-sm font-black text-[var(--df-primary)] tabular-nums">
+                          {player.totalPoints.toLocaleString()}
+                        </td>
+
+                        <td className="px-4 py-4 text-sm text-[var(--df-text-secondary)]">
+                          {player.gamesPlayed}
+                        </td>
+
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)]">
+                          {formatDate(player.createdAt, language)}
+                        </td>
+                        <td className="px-4 py-4 text-xs text-[var(--df-text-secondary)]">
+                          {player.lastSignInAt ? formatDate(player.lastSignInAt, language) : t.never}
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`text-[9px] font-black rounded-full px-2 py-1 border ${player.isBanned ? "border-[var(--df-danger)] bg-[color:color-mix(in_srgb,var(--df-danger)_10%,transparent)] text-[var(--df-danger)]" : "border-[var(--df-success)] bg-[color:color-mix(in_srgb,var(--df-success)_10%,transparent)] text-[var(--df-success)]"}`}>
+                            {player.isBanned ? t.banned : t.active}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => openPlayerAction(player, player.isBanned ? "unban" : "ban")}
+                              className="rounded-lg border border-[var(--df-warning)] bg-[color:color-mix(in_srgb,var(--df-warning)_10%,transparent)] px-3 py-2 text-[10px] font-bold text-[var(--df-warning)] whitespace-nowrap"
+                            >
+                              {player.isBanned ? t.unban : t.ban}
+                            </button>
+
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {/* PAGINATION */}
+          {!loading && !error && pagination.totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-5 rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-3 sm:p-4 ui-card">
+              <p className="text-xs text-[var(--df-text-secondary)]">
+                {t.page} {page} {t.of} {pagination.totalPages}
+              </p>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1 || loading}
+                  className="rounded-xl border border-[var(--df-border)] bg-[var(--df-bg)] px-4 py-2 text-xs font-bold text-[var(--df-text-secondary)] disabled:opacity-30"
+                >
+                  ← {t.previous}
+                </button>
+
+                <button
+                  onClick={() =>
+                    setPage((p) =>
+                      Math.min(pagination.totalPages, p + 1)
+                    )
+                  }
+                  disabled={
+                    page >= pagination.totalPages || loading
+                  }
+                  className="rounded-xl bg-[var(--df-primary)] hover:bg-[var(--df-primary)] px-4 py-2 text-xs font-bold disabled:opacity-30"
+                >
+                  {t.next} →
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <p className="text-center text-[var(--df-text-muted)] text-[10px] mt-8 sm:mt-12 tracking-wider">
+          {t.footer} · 2026
+        </p>
+
+        {actionTarget && actionType && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="player-action-title"
+              className="w-full max-w-md rounded-2xl border border-[var(--df-border)] bg-[var(--df-surface)] p-5 sm:p-6 shadow-2xl shadow-[var(--df-shadow-lg)] ui-card"
+            >
+              <div className="text-2xl mb-3">{actionType === "delete" ? "⚠️" : actionType === "ban" ? "🛡️" : "🔓"}</div>
+              <h2 id="player-action-title" className="text-lg font-black text-[var(--df-text)] ui-section-title">
+                {t.actionTitle}
+              </h2>
+              <p className="text-sm font-bold text-[var(--df-primary)] mt-2 break-words">
+                {actionTarget.nickname || "Unnamed Player"}
+              </p>
+              <p className="text-sm text-[var(--df-text-secondary)] mt-3 leading-relaxed">
+                {actionType === "delete" ? t.deleteConfirm : actionType === "ban" ? t.banConfirm : t.unbanConfirm}
+              </p>
+              {error && <p className="text-xs text-[var(--df-danger)] mt-3">{error}</p>}
+              <div className="flex gap-2 mt-6">
+                <button
+                  onClick={() => { setActionTarget(null); setActionType(null); }}
+                  disabled={actionLoading}
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs font-bold text-[var(--df-text-secondary)] disabled:opacity-50"
+                >
+                  {t.cancel}
+                </button>
+                <button
+                  onClick={confirmPlayerAction}
+                  disabled={actionLoading}
+                  className={`flex-1 rounded-xl px-3 py-2.5 text-xs font-black disabled:opacity-50 ${actionType === "delete" ? "bg-[var(--df-danger)] hover:bg-[var(--df-danger)]" : "bg-[var(--df-primary)] hover:bg-[var(--df-primary)]"}`}
+                >
+                  {actionLoading ? t.processing : t.confirm}
+                </button>
+              </div>
+            </section>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
