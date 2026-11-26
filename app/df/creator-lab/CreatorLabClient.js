@@ -8,7 +8,7 @@ import "./creator-lab.css";
 const DB_NAME = "df-creator-engine";
 const STORE = "projects";
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
-const MAX_PROJECTS = 20;
+const MAX_PROJECTS = 5;
 const WIDTH = 1080;
 const HEIGHT = 1350;
 const VERSION = 1;
@@ -137,6 +137,7 @@ function validProject(value) {
     && typeof value.name === "string" && value.name.length <= 100
     && value.width === WIDTH && value.height === HEIGHT
     && Array.isArray(value.layers) && value.layers.length > 0 && value.layers.length <= 40
+    && new Set(value.layers.map((layer) => layer && layer.id)).size === value.layers.length
     && value.layers.every((layer) => layer && typeof layer.id === "string"
       && ["text", "shape", "image"].includes(layer.type)
       && Number.isFinite(layer.x) && Number.isFinite(layer.y) && typeof layer.visible === "boolean"
