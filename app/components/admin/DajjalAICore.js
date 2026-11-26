@@ -23,6 +23,9 @@ export default function DajjalAICore() {
   const [session, setSession] = useState(null);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [drafts, setDrafts] = useState([]);
+  const [published, setPublished] = useState([]);
+  const [articleTab, setArticleTab] = useState("draft");
+  const [articlePage, setArticlePage] = useState(1);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,6 +42,7 @@ export default function DajjalAICore() {
     if (!response.ok) throw new Error(result.error || "Unable to load DAJJAL AI Core.");
     setSettings(result.settings || DEFAULT_SETTINGS);
     setDrafts(result.drafts || []);
+    setPublished(result.published || []);
     setHistory(result.history || []);
   }, []);
 
@@ -168,28 +172,30 @@ export default function DajjalAICore() {
           </Card>
 
           <section className="ui-stack">
-            <SectionHeader
-              title={id ? "Antrean Draft" : "Draft Queue"}
-              description={id ? "Urutan dari draft paling lama ke paling baru." : "Ordered from oldest draft to newest."}
-            />
-            {drafts.length ? drafts.map((article, index) => (
-              <Card key={article.id} className="ui-stack">
-                <div className="ui-cluster">
-                  <Badge>{id ? `Urutan ${index + 1}` : `Queue ${index + 1}`}</Badge>
-                  <Badge variant="warning">{id ? "Draft" : "Draft"}</Badge>
-                  {article.source_locale ? <Badge>{article.source_locale.toUpperCase()}</Badge> : null}
+            <SectionHeader title={id ? "Artikel" : "Articles"} description={id ? "Daftar artikel draft dan terpublikasi." : "Browse draft and published articles."} />
+            <div className="ui-cluster">
+              <Button size="sm" variant={articleTab === "draft" ? "primary" : "secondary"} onClick={() => { setArticleTab("draft"); setArticlePage(1); }}>{id ? "Draft" : "Drafts"} ({drafts.length})</Button>
+              <Button size="sm" variant={articleTab === "published" ? "primary" : "secondary"} onClick={() => { setArticleTab("published"); setArticlePage(1); }}>{id ? "Terpublish" : "Published"} ({published.length})</Button>
+            </div>
+            {(() => {
+              const items = articleTab === "draft" ? drafts : published;
+              const pageCount = Math.max(1, Math.ceil(items.length / 20));
+              const pageItems = items.slice((articlePage - 1) * 20, articlePage * 20);
+              return <>
+                {pageItems.length ? pageItems.map((article) => (
+                  <Card key={article.id} className="ui-stack">
+                    <div className="ui-cluster"><Badge>{articleTab === "draft" ? "Draft" : (id ? "Terpublish" : "Published")}</Badge>{article.source_locale ? <Badge>{article.source_locale.toUpperCase()}</Badge> : null}</div>
+                    <strong>{id ? article.title_id : (article.title_en || article.title_id)}</strong>
+                    <p className="ui-caption">{article.df_contributors?.display_name || "—"} · {formatDate(article.created_at || article.published_at, language)}</p>
+                  </Card>
+                )) : <EmptyState title={articleTab === "draft" ? (id ? "Belum ada draft artikel" : "No article drafts") : (id ? "Belum ada artikel terpublikasi" : "No published articles")} />}
+                <div className="ui-cluster" style={{ justifyContent: "space-between" }}>
+                  <Button size="sm" variant="secondary" disabled={articlePage <= 1} onClick={() => setArticlePage((p) => p - 1)}>{id ? "Sebelumnya" : "Previous"}</Button>
+                  <span className="ui-caption">{id ? "Halaman" : "Page"} {articlePage} / {pageCount} · {items.length} {id ? "artikel" : "articles"}</span>
+                  <Button size="sm" variant="secondary" disabled={articlePage >= pageCount} onClick={() => setArticlePage((p) => p + 1)}>{id ? "Berikutnya" : "Next"}</Button>
                 </div>
-                <strong>{id ? article.title_id : (article.title_en || article.title_id)}</strong>
-                <p className="ui-caption">
-                  {article.df_contributors?.display_name || "—"} · {formatDate(article.created_at, language)}
-                </p>
-              </Card>
-            )) : (
-              <EmptyState
-                title={id ? "Belum ada draft artikel" : "No article drafts yet"}
-                description={id ? "Artikel draft yang dibuat di Blog akan muncul di antrean ini." : "Drafts created in Blog will appear in this queue."}
-              />
-            )}
+              </>;
+            })()}
           </section>
 
           <section className="ui-stack">
