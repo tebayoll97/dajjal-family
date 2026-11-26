@@ -9,9 +9,10 @@ export function Button({
   disabled = false,
   type = "button",
   className = "",
+  wide = false,
   ...props
 }) {
-  const classes = ["ui-button", `ui-button-${variant}`, size !== "md" ? `ui-button-${size}` : "", className]
+  const classes = ["ui-button", `ui-button-${variant}`, size !== "md" ? `ui-button-${size}` : "", wide ? "ui-button-wide" : "", className]
     .filter(Boolean).join(" ");
 
   return (
