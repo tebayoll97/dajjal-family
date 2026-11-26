@@ -288,7 +288,7 @@ export default function CreatorLabClient() {
 
         <aside className="df-creator-editor-column">
           <Card className="df-creator-editor-card">
-            <div className="df-creator-section-heading"><strong>{t.properties}</strong><span>{t.selected}</span></div>
+            <div className="df-creator-section-heading"><strong>{mode === "quick" ? "Quick Creator" : t.properties}</strong><span>{t.selected}</span></div>
             <div className="df-creator-form-grid">
               <TextField label={t.projectName} value={project.name} maxLength={100} onChange={(event) => commit((current) => ({ ...current, name: event.target.value }))} />
               <TextField label={t.player} value={project.layers.find((layer) => layer.name === "player")?.text || ""} maxLength={32} onChange={(event) => { const layer = project.layers.find((item) => item.name === "player"); if (layer) updateLayer(layer.id, { text: event.target.value }); }} />
@@ -326,7 +326,7 @@ export default function CreatorLabClient() {
                 <Button size="sm" variant="ghost" onClick={() => commit((current) => ({ ...current, layers: current.layers.filter((item) => item.id !== layer.id) }))} aria-label={t.remove}><SvgIcon name="trash" size={16}/></Button>
               </div>)}
             </div>
-          </Card>
+          </Card> : null}
         </aside>
       </div>
 

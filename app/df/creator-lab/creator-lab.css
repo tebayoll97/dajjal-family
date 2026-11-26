@@ -48,3 +48,5 @@
 .df-creator-modebar{display:flex;gap:var(--df-space-2);padding:var(--df-space-1);border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface)}
 .df-creator-modebar button{flex:1;min-height:44px;padding:var(--df-space-2);border:1px solid transparent;border-radius:var(--df-radius-md);background:transparent;color:var(--df-text-secondary);font:inherit;font-weight:var(--df-weight-semibold)}
 .df-creator-modebar button[aria-pressed=true]{border-color:var(--df-primary);background:var(--df-primary-soft);color:var(--df-primary-text)}
+
+.df-creator-canvas-wrap{aspect-ratio:var(--df-creator-canvas-ratio,4/5)}.df-creator-canvas{touch-action:pan-y}
