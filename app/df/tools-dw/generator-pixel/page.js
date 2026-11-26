@@ -86,11 +86,6 @@ const COPY = {
   },
 };
 
-function compactHex(value) {
-  const hex = value.toString(16).padStart(2, "0");
-  return hex[0] === hex[1] ? hex[0] : hex;
-}
-
 function colorTag(rgb) {
   const full = rgb.map((channel) => channel.toString(16).padStart(2, "0"));
   const short = full.every((part) => part[0] === part[1])
@@ -210,6 +205,7 @@ export default function GeneratorPixelPage() {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [stageWidth, setStageWidth] = useState(600);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [busy, setBusy] = useState(false);
@@ -218,8 +214,18 @@ export default function GeneratorPixelPage() {
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const stageWidth = stageRef.current?.clientWidth || 600;
   const stageHeight = stageWidth * HEIGHT / WIDTH;
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver((entries) => {
+      const nextWidth = entries[0]?.contentRect?.width;
+      if (nextWidth) setStageWidth(nextWidth);
+    });
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
   const baseScale = imageSize.width && imageSize.height
     ? Math.max(stageWidth / imageSize.width, stageHeight / imageSize.height)
     : 1;
@@ -457,7 +463,7 @@ export default function GeneratorPixelPage() {
           </div>
 
           {error ? <p className="df-pixel-error" role="alert">{error}</p> : null}
-          <Button className="df-pixel-create-button" block onClick={createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
+          <Button className="df-pixel-create-button" onClick={createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
             {busy ? (busyLabel || t.processing) : t.process}
           </Button>
           {busy ? <p className="df-pixel-busy-label" role="status">{busyLabel}</p> : null}
