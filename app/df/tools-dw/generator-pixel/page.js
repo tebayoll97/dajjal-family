@@ -17,14 +17,13 @@ const COPY = {
     title: "Pixel Bio Generator",
     description: "Ubah gambar menjadi kode bio pixel Darkwar Survival.",
     stepUpload: "Pilih gambar",
-    uploadHint: "JPG, PNG, atau WebP · Maksimal 20 MB",
+    uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
     replace: "Ganti gambar",
     cropTitle: "Atur komposisi",
     cropHint: "Geser gambar untuk mengatur posisi. Gunakan slider untuk memperbesar atau memperkecil.",
     zoom: "Zoom gambar",
     reset: "Atur ulang",
-    canvas: "AREA BIO · 193 × 45 PX",
     process: "Buat Pixel Bio",
     processing: "Memproses…",
     uploading: "Memproses...",
@@ -34,10 +33,6 @@ const COPY = {
     copy: "Copy Code",
     copied: "Kode berhasil disalin!",
     done: "Selesai",
-    characters: "Karakter kode",
-    palette: "Warna",
-    withinLimit: "Dalam batas target",
-    overLimit: "Melebihi target karakter",
     errorTitle: "Belum berhasil",
     invalidType: "Gunakan gambar JPG, PNG, atau WebP.",
     tooLarge: "Ukuran gambar maksimal 20 MB.",
@@ -53,14 +48,13 @@ const COPY = {
     title: "Pixel Bio Generator",
     description: "Turn an image into Darkwar Survival pixel bio code.",
     stepUpload: "Choose an image",
-    uploadHint: "JPG, PNG, or WebP · Maximum 20 MB",
+    uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
     replace: "Change image",
     cropTitle: "Adjust composition",
     cropHint: "Drag the image to position it. Use the slider to zoom in or out.",
     zoom: "Image zoom",
     reset: "Reset",
-    canvas: "BIO AREA · 193 × 45 PX",
     process: "Create Pixel Bio",
     processing: "Processing…",
     uploading: "Processing...",
@@ -70,10 +64,6 @@ const COPY = {
     copy: "Copy Code",
     copied: "Code copied successfully!",
     done: "Done",
-    characters: "Code characters",
-    palette: "Colors",
-    withinLimit: "Within target limit",
-    overLimit: "Over target character limit",
     errorTitle: "Unable to complete",
     invalidType: "Use a JPG, PNG, or WebP image.",
     tooLarge: "Image size must not exceed 20 MB.",
@@ -496,8 +486,8 @@ export default function GeneratorPixelPage() {
           <textarea className="df-pixel-result-code" value={result.code} readOnly aria-label={t.resultTitle} />
           <Button className="df-pixel-copy-button" onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
         </Card>
+        </div>
       ) : null}
-      </div>
 
       <Dialog
         open={successOpen}
