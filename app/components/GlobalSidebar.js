@@ -7,6 +7,7 @@ import {stripLocalePrefix,withLocalePrefix} from "@/lib/localePath";
 import {useLanguage} from "./LanguageProvider";
 import NavigationProfileCard from "./NavigationProfileCard";
 import NavigationIcon from "./NavigationIcon";
+import { SvgIcon } from "./ui";
 import ContactCenterNavIndicator from "./ContactCenterNavIndicator";
 import useAdminAccess from "./useAdminAccess";
 import {getNavigationGroups,getAdminNavigationGroup,getNavigationLabels} from "@/lib/navigationConfig";
@@ -24,7 +25,7 @@ export default function GlobalSidebar(){
     <Link className="df-global-sidebar-home" href={withLocalePrefix("/",language)} aria-current={active("/")?"page":undefined}><NavigationIcon name="home"/><span>{t.home}</span></Link>
     {groups.map(group=>{const expanded=openGroup===null?activeGroupId===group.id:openGroup===group.id;const id=`df-sidebar-group-${group.id}`;return <section className="df-global-sidebar-nav-group" key={group.id}>
      <button type="button" className="df-global-sidebar-trigger" aria-expanded={expanded} aria-controls={id} onClick={()=>setOpenGroup(current=>current===group.id?null:group.id)}><NavigationIcon name={group.icon}/><span>{group.label}</span><svg className={`df-global-sidebar-chevron${expanded?" is-expanded":""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
-     <div id={id} className="df-global-sidebar-submenu" data-expanded={expanded} aria-hidden={!expanded} inert={!expanded}>{group.items.map(item=><Link key={item.route} href={withLocalePrefix(item.route,language)} aria-current={active(item.route)?"page":undefined}><span className="df-global-sidebar-item-label">{item.route==="/admin/contact-center"?<NavigationIcon name="message"/>:null}{item.label}</span>{item.route==="/admin/contact-center"?<ContactCenterNavIndicator mode="admin"/>:null}{active(item.route)&&<span className="df-global-sidebar-active" aria-hidden="true">●</span>}</Link>)}</div>
+     <div id={id} className="df-global-sidebar-submenu" data-expanded={expanded} aria-hidden={!expanded} inert={!expanded}>{group.items.map(item=><Link key={item.route} href={withLocalePrefix(item.route,language)} aria-current={active(item.route)?"page":undefined}><span className="df-global-sidebar-item-label">{item.icon==="palette"?<SvgIcon name="palette" size={16}/>:item.route==="/admin/contact-center"?<NavigationIcon name="message"/>:null}{item.label}</span>{item.route==="/admin/contact-center"?<ContactCenterNavIndicator mode="admin"/>:null}{active(item.route)&&<span className="df-global-sidebar-active" aria-hidden="true">●</span>}</Link>)}</div>
     </section>;})}
    </nav>
   </section>

@@ -721,3 +721,15 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - **Visual contract:** 24 × 24 viewBox, `fill="none"`, `stroke="currentColor"`, round caps/joins, default stroke width 1.8; sizing and color follow global icon tokens and the active theme.
 - **Accessibility:** decorative by default (`aria-hidden`); pass `label` for a meaningful standalone image. Icon-only controls still require an accessible control name and minimum 44 × 44px target.
 - **Workbench:** live preview is available in Design System section 09 and Component Workbench. Add new semantic icon names centrally; do not create page-local duplicate SVGs.
+
+
+## DF Creator Engine — shared semantic contract
+
+The first Creator Lab implementation consumes existing `PageHeader`, `Card`, `Button`, `TextField`, `Badge`, and `SvgIcon` primitives. Its editor shell uses shared Creator workspace semantic aliases and layout/component primitives from the four Global CSS Foundation files. The page-specific canvas renderer and layer model remain feature-owned; do not duplicate them as generic UI components until a second real consumer exists.
+
+- Semantic aliases: `--df-creator-surface`, `--df-creator-raised`, `--df-creator-border`, `--df-creator-panel-padding`, `--df-creator-canvas-radius`, and `--df-type-creator-*`.
+- Layout primitives: `.ui-creator-workspace` and `.ui-creator-column`.
+- Component patterns: `.ui-creator-panel`, `.ui-creator-toolbar`, `.ui-creator-layer-row`, and `.ui-creator-canvas`.
+- All values alias existing active theme, spacing, typography, radius, and elevation tokens; no independent palette is introduced.
+- Creator Lab uses the shared `SvgIcon` library. Its editor controls require visible accessible labels, keyboard focus, and minimum 44px targets for icon-only actions.
+- Local-first project documents use IndexedDB and versioned JSON; avatar images remain on-device and are not uploaded to a server.

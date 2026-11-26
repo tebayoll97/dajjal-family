@@ -347,3 +347,14 @@
 
 /* Reusable SVG icon system geometry. */
 :root{--df-icon-size-xs:14px;--df-icon-size-sm:16px;--df-icon-size-md:20px;--df-icon-size-lg:24px;--df-icon-size-xl:32px;--df-icon-stroke:1.8;--df-icon-gap:var(--df-space-2)}
+
+
+/* DF Creator Engine — semantic aliases for the active global theme. */
+:root {
+  --df-creator-surface: var(--df-surface);
+  --df-creator-raised: var(--df-surface-raised);
+  --df-creator-border: var(--df-border);
+  --df-creator-panel-padding: var(--df-space-4);
+  --df-creator-canvas-radius: var(--df-radius-lg);
+  --df-creator-template-accent: var(--df-accent);
+}

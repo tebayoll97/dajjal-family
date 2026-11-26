@@ -445,3 +445,11 @@
 .ui-icon--xl{width:var(--df-icon-size-xl);height:var(--df-icon-size-xl)}
 .ui-icon-label{display:inline-flex;align-items:center;gap:var(--df-icon-gap);min-width:0}
 .df-account-logout-button>.ui-icon{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm);flex:0 0 var(--df-icon-size-sm)}
+
+
+/* DF Creator Engine shared workspace surface and control patterns. */
+.ui-creator-panel{display:grid;gap:var(--df-space-3);min-width:0;padding:var(--df-creator-panel-padding);border:1px solid var(--df-creator-border);border-radius:var(--df-radius-lg);background:var(--df-creator-surface);box-shadow:var(--df-shadow-sm)}
+.ui-creator-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);flex-wrap:wrap;padding:var(--df-space-3);border:1px solid var(--df-creator-border);border-radius:var(--df-radius-lg);background:var(--df-creator-surface)}
+.ui-creator-layer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--df-space-2);min-width:0;padding:var(--df-space-2);border:1px solid var(--df-creator-border);border-radius:var(--df-radius-md);background:var(--df-creator-raised)}
+.ui-creator-canvas{display:block;width:100%;height:auto;border-radius:var(--df-creator-canvas-radius);background:var(--df-bg)}
+@media(max-width:620px){.ui-creator-panel{padding:var(--df-space-3)}.ui-creator-toolbar{padding:var(--df-space-2)}}

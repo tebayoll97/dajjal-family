@@ -162,3 +162,14 @@
 /* SVG icon alignment follows the current text role and label baseline. */
 .ui-icon{flex:0 0 auto;vertical-align:middle;color:inherit}
 .ui-icon-label{display:inline-flex;align-items:center;gap:var(--df-icon-gap);min-width:0}
+
+
+/* DF Creator Engine typography aliases — shared scale, compact on mobile. */
+:root {
+  --df-type-creator-title: var(--df-type-mobile-subheading, var(--df-text-xl));
+  --df-type-creator-body: var(--df-type-mobile-body, var(--df-text-sm));
+  --df-type-creator-meta: var(--df-type-mobile-small, var(--df-text-xs));
+}
+@media (min-width: 768px) {
+  :root { --df-type-creator-title: var(--df-type-wide-subheading, var(--df-text-xl)); --df-type-creator-body: var(--df-type-body-size); }
+}

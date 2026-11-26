@@ -199,3 +199,10 @@
 /* Reusable icon layout primitives. */
 .ui-icon{display:inline-block;overflow:visible}
 .ui-icon-label{max-width:100%}
+
+
+/* DF Creator Engine workspace layout primitives. */
+.ui-creator-workspace{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(19rem,.85fr);gap:var(--df-space-4);align-items:start;min-width:0}
+.ui-creator-column{display:grid;gap:var(--df-space-3);min-width:0}
+@media(max-width:900px){.ui-creator-workspace{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:620px){.ui-creator-workspace{gap:var(--df-space-2)}}

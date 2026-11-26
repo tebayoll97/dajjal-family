@@ -172,7 +172,7 @@ export default function DesignSystemClient() {
                 ["external","External"],["more","More"],["heart","Favorite"],["users","Community"],
                 ["mail","Mail"],["bell","Notifications"],["calendar","Calendar"],["image","Image"],
                 ["file","File"],["music","Music"],["log-out","Sign out"],["shield","Security"],
-                ["globe","Language"],["arrow-left","Back"],["chevron-down","Expand"],
+                ["globe","Language"],["arrow-left","Back"],["chevron-down","Expand"],["palette","Creator Lab"],["file-plus","New project"],["undo","Undo"],["redo","Redo"],["download","Download"],["upload","Upload"],["layers","Layers"],["eye","Show layer"],["eye-off","Hide layer"],["arrow-up","Move up"],["arrow-down","Move down"],["trash","Delete"],
               ].map(([name,label]) => <div className={styles.iconSample} key={name}><SvgIcon name={name} size={24}/><small>{label}</small><code>{name}</code></div>)}
             </div>
             <p className={styles.demoLabel}>SIZE SCALE</p>
