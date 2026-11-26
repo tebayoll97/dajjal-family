@@ -159,7 +159,6 @@ export default function AdminShell({ children }) {
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
         </Link>
         <div className="df-admin-sidebar-scroll">
-          <div className="df-admin-sidebar-scroll">
           <a href="https://dajjalfamily.com" className="df-admin-nav-link df-admin-nav-home"><span className="df-admin-nav-icon"><AdminNavIcon name="home" /></span><span>Home</span></a>
         <div className="df-admin-sidebar-label">{language === "id" ? "MENU UTAMA" : "MAIN MENU"}</div>
         <nav className="df-admin-nav">
@@ -191,6 +190,7 @@ export default function AdminShell({ children }) {
           <span className="df-admin-brand-mark" aria-hidden="true">DF</span>
           <span><strong>DAJJAL FAMILY</strong><small>ADMIN CONTROL CENTER</small></span>
         </Link>
+        <div className="df-admin-sidebar-scroll">
         <a href="https://dajjalfamily.com" className="df-admin-nav-link df-admin-nav-home"><span className="df-admin-nav-icon"><AdminNavIcon name="home" /></span><span>Home</span></a>
         <div className="df-admin-sidebar-label">{language === "id" ? "MENU UTAMA" : "MAIN MENU"}</div>
         <nav className="df-admin-nav" aria-label={language === "id" ? "Menu utama admin" : "Admin main menu"}>
