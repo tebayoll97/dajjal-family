@@ -8,8 +8,6 @@ import { TEMPLATES, WIDTH, HEIGHT, MAX_IMAGE_BYTES, createIdentityProject as cre
 import { putProject, listProjects, deleteProject } from "@/lib/creator-engine/projectStore";
 import { drawProject, downloadBlob } from "@/lib/creator-engine/canvasRenderer";
 
-;
-
 const COPY = {
   id: {
     eyebrow: "DF CREATOR LAB · GAMING IDENTITY", title: "Gaming Identity Creator",
