@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "./LanguageProvider";
-import { ConfirmDialog } from "./ui";
+import { ConfirmDialog, SvgIcon } from "./ui";
 
 const translations = {
   en: {
@@ -22,10 +22,6 @@ const translations = {
     confirmNormal:"Apakah kamu yakin ingin keluar dari akun?", signingOut:"SEDANG KELUAR...", failed:"Tidak dapat logout. Silakan coba lagi.", confirm:"KONFIRMASI LOGOUT",
   },
 };
-
-function LogoutIcon() {
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>;
-}
 
 export default function AccountLogout() {
   const router = useRouter();
@@ -85,7 +81,7 @@ export default function AccountLogout() {
     <div className="df-account-logout">
       {!showWarning && !showFinalConfirm && (
         <button type="button" onClick={startLogout} disabled={checking || loading} className="df-account-logout-button">
-          <LogoutIcon /><span>{checking ? t.checking : t.title}</span>
+          <SvgIcon name="log-out" size={18} /><span>{checking ? t.checking : t.title}</span>
         </button>
       )}
       {error && !showWarning && !showFinalConfirm && <p className="df-account-logout-error" role="alert">{error}</p>}
