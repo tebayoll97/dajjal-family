@@ -273,7 +273,7 @@ function normalizePixelGlyph(char) {
 function buildTextPixelCanvas(text, background, foreground) {
   if (typeof Intl.Segmenter !== "function") return {error:"unsupported",canvas:null,count:0};
   const segments=Array.from(new Intl.Segmenter(undefined,{granularity:"grapheme"}).segment(text),x=>x.segment);
-  const expanded=segments.map(normalizePixelGlyph).flatMap(x=>Array.from(x));
+  const expanded=segments.map(normalizePixelGlyph).flatMap(x=>Array.from(x === "\\t" ? "    " : x));
   const unsupported=expanded.find(ch=>!FONT_5X7[ch.toUpperCase()] && ch!=="\n" && ch!=="\r" && ch!=="\t");
   if(unsupported)return {error:"unsupported",canvas:null,count:expanded.length};
   if(expanded.length>TEXT_LIMIT)return {error:"limit",canvas:null,count:expanded.length};
@@ -525,6 +525,11 @@ export default function GeneratorPixelPage() {
 
   const restoreHistory = (entry) => {
     setMode(entry.mode === "text" ? "text" : "image");
+    if (entry.mode === "text") {
+      setBioText(entry.text || "");
+      if (entry.background) { const [r,g,b] = entry.background.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setBackgroundRgb({r,g,b}); }
+      if (entry.foreground) { const [r,g,b] = entry.foreground.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setForegroundRgb({r,g,b}); }
+    }
     setResult(entry);
     setCopied(false);
     setCopiedHistoryId("");
@@ -644,7 +649,7 @@ export default function GeneratorPixelPage() {
       </div> : (
         <Card className="df-pixel-text-panel">
           <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
-          <TextField as="textarea" label={t.textTitle} value={bioText} onChange={(event)=>setBioText(event.target.value)} placeholder={t.textPlaceholder} rows={3} helpText={t.textHint} />
+          <TextField as="textarea" label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} rows={3} helpText={t.textHint} />
           <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
