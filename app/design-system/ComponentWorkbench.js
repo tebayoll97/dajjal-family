@@ -43,7 +43,7 @@ export default function ComponentWorkbench() {
     ["SvgIcon", "SvgIcon · semantic modern SVG line icon", <div key="svg-icon" className={styles.inline}><SvgIcon name="home" size={20}/><SvgIcon name="search" size={20}/><SvgIcon name="settings" size={20}/><SvgIcon name="log-out" size={20}/><SvgIcon name="palette" size={20}/><SvgIcon name="layers" size={20}/><SvgIcon name="undo" size={20}/><SvgIcon name="redo" size={20}/><span>One shared icon API</span></div>],
     ["Button", "Button · 02 Action states", <div key="button" className={styles.stack}>
       <div className={styles.inline}><Button>Primary action</Button><Button variant="secondary">Secondary</Button><Button size="sm">Small</Button><Button size="lg">Large</Button></div>
-      <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div>
+      <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div><Button wide>Full-width action</Button>
     </div>],
     ["Card", "Card", <Card key="card" className={styles.cardSample}><strong>Card surface</strong><span>Content container</span></Card>],
     ["ContactChannelCard", "ContactChannelCard · WhatsApp / Telegram", <div key="contact-channel" className={styles.stack}><ContactChannelCard channel="whatsapp" locale="id" href="https://wa.me/6285141320943" /><ContactChannelCard channel="telegram" locale="id" href="https://t.me/dajjalf4mily" /></div>],
