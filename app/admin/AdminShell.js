@@ -36,6 +36,7 @@ const groups = [
   ]},
   { id: "content", idLabel: "Konten", enLabel: "Content", items: [
     { href: "/admin/blog", icon: "file", id: "Pengelolaan Blog", en: "Blog Management" },
+    { href: "/admin/dajjalai-core", icon: "file", id: "DAJJAL AI CORE", en: "DAJJAL AI CORE" },
     { href: "/admin/music", icon: "music", id: "Music Library", en: "Music Library" },
   ]},
   { id: "couple", idLabel: "Couple", enLabel: "Couple", items: [
@@ -56,6 +57,7 @@ const titles = {
   "/admin": ["Dashboard Admin", "Admin Dashboard"],
   "/admin/players": ["Manajemen Pengguna", "User Management"],
   "/admin/blog": ["Pengelolaan Blog", "Blog Management"],
+  "/admin/dajjalai-core": ["DAJJAL AI CORE", "DAJJAL AI CORE"],
   "/admin/contact-center": ["Contact Center", "Contact Center"],
   "/admin/music": ["Music Library", "Music Library"],
   "/admin/music/new": ["Tambah Musik", "Add Music"],
