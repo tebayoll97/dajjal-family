@@ -14,7 +14,7 @@
 .ui-button-ghost:hover:not(:disabled){background:var(--df-primary-soft);color:var(--df-text)}
 .ui-button-danger{background:var(--df-danger);color:#fff}
 .ui-button-sm{min-height:36px;padding:.5rem .75rem;font-size:var(--df-text-sm)}
-.ui-button-lg{min-height:48px;padding:.8rem 1.25rem}
+.ui-button-lg{min-height:48px;padding:.8rem 1.25rem}.ui-button-wide{width:100%}
 .ui-button:disabled,.ui-button[aria-disabled="true"]{opacity:.52;cursor:not-allowed;transform:none}
 .ui-button:focus-visible,.ui-input:focus-visible,.ui-select:focus-visible,.ui-textarea:focus-visible,.ui-icon-button:focus-visible{outline:3px solid var(--df-focus);outline-offset:2px}
 .ui-icon-button{width:44px;min-width:44px;height:44px;display:inline-grid;place-items:center;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text);cursor:pointer}
@@ -453,3 +453,19 @@
 .ui-creator-layer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--df-space-2);min-width:0;padding:var(--df-space-2);border:1px solid var(--df-creator-border);border-radius:var(--df-radius-md);background:var(--df-creator-raised)}
 .ui-creator-canvas{display:block;width:100%;height:auto;border-radius:var(--df-creator-canvas-radius);background:var(--df-bg)}
 @media(max-width:620px){.ui-creator-panel{padding:var(--df-space-3)}.ui-creator-toolbar{padding:var(--df-space-2)}}
+
+
+/* Disclosure layout mode for the shared DropdownMenu; unlike action menus it stays in document flow. */
+.ui-dropdown-disclosure{display:grid;width:100%;min-width:0;gap:var(--df-space-3)}
+.ui-dropdown-disclosure>.ui-dropdown-trigger{width:100%;justify-content:space-between;min-width:0}
+.ui-dropdown-disclosure>.ui-dropdown-panel{position:static;inset:auto;display:grid;width:100%;min-width:0;gap:var(--df-space-3);margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.ui-dropdown-disclosure>.ui-dropdown-panel>section{min-width:0}
+.ui-admin-pagination{display:grid;gap:var(--df-space-2);min-width:0}
+.ui-admin-pagination .ui-pagination{width:100%}
+.ui-admin-record{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);min-width:0;flex-wrap:wrap}
+.ui-admin-record__identity{flex:1 1 15rem;min-width:0}
+.ui-admin-article__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--df-space-2);min-width:0;flex-wrap:wrap}
+.ui-admin-article__heading>strong{min-width:0;overflow-wrap:anywhere}
+.ui-admin-article__meta{gap:var(--df-space-2)}
+.ui-admin-secret{display:block;max-width:100%;overflow-wrap:anywhere;padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text)}
+@media(min-width:640px){.ui-admin-pagination{grid-template-columns:1fr auto;align-items:center}.ui-admin-pagination .ui-pagination{justify-content:flex-end}}
