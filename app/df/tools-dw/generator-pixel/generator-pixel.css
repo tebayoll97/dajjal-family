@@ -16,7 +16,7 @@
 .df-pixel-file-icon{width:2.2rem;height:2.2rem;flex:0 0 auto;display:grid;place-items:center;border-radius:.6rem;background:var(--df-primary-soft);color:var(--df-accent);font-size:1.2rem}
 .df-pixel-file-name{min-width:0;flex:1;overflow:hidden;color:var(--df-text);font-size:.78rem;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
 .df-pixel-stage{min-width:0;padding:.75rem;border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-bg)}
-.df-pixel-crop-area{position:relative;width:100%;aspect-ratio:193/45;overflow:hidden;border:1px solid var(--df-border-strong);border-radius:.35rem;background-color:#080711;background-image:linear-gradient(45deg,rgba(255,255,255,.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(255,255,255,.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(255,255,255,.045) 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;touch-action:none;cursor:grab}
+.df-pixel-crop-area{position:relative;width:100%;aspect-ratio:193/45;overflow:hidden;border:1px solid var(--df-border-strong);border-radius:.35rem;background-color:var(--df-bg);background-image:linear-gradient(45deg,rgba(255,255,255,.045) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,.045) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(255,255,255,.045) 75%),linear-gradient(-45deg,transparent 75%,rgba(255,255,255,.045) 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;touch-action:none;cursor:grab}
 .df-pixel-crop-area:active{cursor:grabbing}
 .df-pixel-crop-area img{position:absolute;max-width:none;max-height:none;transform:translate(-50%,-50%);pointer-events:none;user-select:none}
 .df-pixel-crop-outline{position:absolute;inset:0;border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);pointer-events:none}
@@ -35,7 +35,7 @@
 .df-pixel-result-heading{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
 .df-pixel-result-heading h2{margin:0;color:var(--df-text);font-size:1rem}
 .df-pixel-result-heading>span{width:1.8rem;height:1.8rem;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--df-success) 14%,var(--df-surface));color:var(--df-success);font-weight:800}
-.df-pixel-result-preview{width:100%;overflow:hidden;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:#080711}
+.df-pixel-result-preview{width:100%;overflow:hidden;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-bg)}
 .df-pixel-result-preview img{display:block;width:100%;height:auto;image-rendering:pixelated}
 .df-pixel-result-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
 .df-pixel-result-detail{min-width:0;display:grid;gap:.3rem;padding:.75rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
@@ -53,7 +53,7 @@
 .df-pixel-history-empty{margin:0;padding:1rem;border:1px dashed var(--df-border);border-radius:var(--df-radius-md);color:var(--df-text-muted);font-size:.78rem;text-align:center}
 .df-pixel-history-list{display:grid;gap:.65rem}
 .df-pixel-history-item{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:.8rem;padding:.7rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
-.df-pixel-history-thumb{overflow:hidden;border:1px solid var(--df-border);border-radius:.4rem;background:#080711}
+.df-pixel-history-thumb{overflow:hidden;border:1px solid var(--df-border);border-radius:.4rem;background:var(--df-bg)}
 .df-pixel-history-thumb img{display:block;width:100%;aspect-ratio:193/45;object-fit:cover;image-rendering:pixelated}
 .df-pixel-history-meta{min-width:0;display:grid;gap:.2rem}
 .df-pixel-history-meta strong{color:var(--df-text);font-size:.82rem}
