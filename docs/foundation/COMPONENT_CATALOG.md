@@ -742,3 +742,19 @@ Creator Lab uses the existing reusable ConfirmDialog for export and project dele
 - The shared `Button` adds the optional `wide` boolean prop, which applies `.ui-button-wide` for full-width form actions. Variants, sizes, focus, loading and disabled behavior remain centrally styled.
 - The Blog admin uses the shared `Tabs` for Published/Drafts and shared `Pagination` for its 20-item article pages. Cards, fields, badges, empty states, feedback dialogs and verification states use existing shared components.
 - Page composition/layout classes are limited to semantic layout roles in the global component stylesheet; business logic and authorization remain in the Blog admin/API.
+
+## DropdownMenu — disclosure layout mode (2026-11-27 refinement)
+
+- `DropdownMenu` retains its native floating `<details>` action-menu mode for compact contextual actions.
+- With `disclosure`, it renders an accessible in-flow section using a real button, `aria-expanded`, and `aria-controls`; the content is mounted only while expanded.
+- Disclosure panels must remain full width and in normal document flow. They must never inherit the floating panel positioning, overlay z-index, intrinsic width, or shadow from action-menu mode.
+- The shared CSS contract is `.ui-dropdown-disclosure` and `.ui-dropdown-disclosure__panel`; consumers must not implement page-local dropdown styles.
+- Supports keyboard activation through the native button, visible shared focus treatment, translated labels, responsive widths, and reduced-motion behavior.
+- The production disclosure and Admin Blog composition are previewed in Component Workbench.
+
+## Admin Blog responsive composition (2026-11-27 refinement)
+
+- The Admin Blog page composes shared `DropdownMenu`, `Card`, `SectionHeader`, `Badge`, `Button`, `TextField`, `Tabs`, `Pagination`, `Link`, and feedback/state components.
+- Contributor and task records use the shared card list layout; all disclosure panels remain in-flow and span the available content width.
+- Semantic geometry is defined by `--df-admin-blog-*` tokens and shared typography/layout/component CSS. Mobile uses compact type and one-column content; wider layouts use a bounded two-column record grid.
+- Keep data fetching, authorization, and business actions in the page consumer; the reusable UI only controls presentation and disclosure state.
