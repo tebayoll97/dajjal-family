@@ -194,3 +194,8 @@
 .ui-contact-channel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--df-contact-card-grid-gap);min-width:0}
 .ui-contact-channel-grid>*{min-width:0}
 @media(max-width:639px){.ui-contact-channel-grid{grid-template-columns:minmax(0,1fr);gap:var(--df-space-3)}}
+
+
+/* Reusable icon layout primitives. */
+.ui-icon{display:inline-block;overflow:visible}
+.ui-icon-label{max-width:100%}
