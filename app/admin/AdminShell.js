@@ -77,6 +77,20 @@ export default function AdminShell({ children }) {
     if (!isLogin) document.title = `${pageTitle} | Dajjal Family Admin`;
   }, [isLogin, pageTitle]);
 
+  useEffect(() => {
+    if (!drawerOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setDrawerOpen(false);
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [drawerOpen]);
+
   async function signOut() {
     if (signingOut) return;
     setSigningOut(true);
@@ -150,7 +164,7 @@ export default function AdminShell({ children }) {
         <div role="banner" className="df-admin-topbar">
           <div className="df-admin-topbar-copy">
             <span className="df-admin-overline">DAJJAL FAMILY / ADMIN</span>
-            {path === "/admin" ? <PageHeader className="df-admin-page-heading" title={pageTitle} description={language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."} /> : <p className="df-admin-current-route">{pageTitle}</p>}
+            {path !== "/admin" && <p className="df-admin-current-route">{pageTitle}</p>}
           </div>
           <div className="df-admin-topbar-actions">
             <Button className="df-admin-drawer-toggle" variant="secondary" size="sm" onClick={() => setDrawerOpen((value) => !value)} aria-expanded={drawerOpen} aria-controls="df-admin-mobile-drawer" aria-label={language === "id" ? "Buka navigasi admin" : "Open admin navigation"}>☰</Button>
@@ -160,6 +174,14 @@ export default function AdminShell({ children }) {
             <Button variant="danger" size="sm" loading={signingOut} onClick={() => setSignOutConfirmOpen(true)}>{language === "id" ? "Keluar" : "Sign out"}</Button>
           </div>
         </div>
+
+        {path === "/admin" && (
+          <section className="df-admin-dashboard-intro" aria-labelledby="df-admin-dashboard-title">
+            <span className="df-admin-overline">{language === "id" ? "PUSAT KENDALI" : "CONTROL CENTER"}</span>
+            <h1 id="df-admin-dashboard-title">{pageTitle}</h1>
+            <p>{language === "id" ? "Kelola ekosistem Dajjal Family dari satu pusat kendali." : "Manage the Dajjal Family ecosystem from one control center."}</p>
+          </section>
+        )}
 
         {drawerOpen && <button type="button" className="df-admin-drawer-backdrop" aria-label={language === "id" ? "Tutup navigasi" : "Close navigation"} onClick={() => setDrawerOpen(false)} />}
 
