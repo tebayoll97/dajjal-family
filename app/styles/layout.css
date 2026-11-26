@@ -217,3 +217,7 @@
 .df-admin-blog .ui-admin-card-list>*{min-width:0}
 @media(min-width:768px){.df-admin-blog{gap:var(--df-space-5)}.df-admin-blog .ui-admin-card-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1280px){.df-admin-blog .ui-admin-card-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Reusable compact field layout for range controls. */
+.ui-range-field{display:grid;gap:var(--df-space-2);min-width:0}.ui-range-label{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);min-width:0}.ui-range-label output{font-variant-numeric:tabular-nums;color:var(--df-text-secondary)}
