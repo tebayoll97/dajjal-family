@@ -140,7 +140,7 @@ function validProject(value) {
     && value.layers.every((layer) => layer && typeof layer.id === "string"
       && ["text", "shape", "image"].includes(layer.type)
       && Number.isFinite(layer.x) && Number.isFinite(layer.y) && typeof layer.visible === "boolean"
-      && (layer.type !== "image" || (typeof layer.src === "string" && (!layer.src || (/^data:image\\/(png|jpeg|webp);base64,/i.test(layer.src) && layer.src.length <= 11500000))))
+      && (layer.type !== "image" || (typeof layer.src === "string" && (!layer.src || (new RegExp("^data:image/(png|jpeg|webp);base64,", "i").test(layer.src) && layer.src.length <= 11500000))))
       && (layer.type !== "text" || (typeof layer.text === "string" && layer.text.length <= 120))
       && (layer.type !== "shape" || (Number.isFinite(layer.width) && Number.isFinite(layer.height)))));
 }
