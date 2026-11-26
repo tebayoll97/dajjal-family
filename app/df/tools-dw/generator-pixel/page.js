@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Button, Card, Dialog, PageHeader } from "@/app/components/ui";
+import { Button, Card, Dialog, PageHeader, Tabs, TextField, RangeSlider } from "@/app/components/ui";
 import "./generator-pixel.css";
 
 const WIDTH = 193;
 const HEIGHT = 45;
+const TEXT_WIDTH = 193;
+const TEXT_HEIGHT = 40;
+const TEXT_LIMIT = 160;
 const MAX_CHARACTERS = 32000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const HISTORY_DB = "df-pixel-bio-history";
@@ -70,7 +73,8 @@ const COPY = {
   id: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
-    description: "Ubah gambar menjadi kode bio pixel Darkwar Survival.",
+    description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Kanvas 193 × 40 px · Maksimal 160 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat di kanvas 193 × 40 px. Kurangi teks atau baris.",textLimit:"Maksimal 160 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -112,7 +116,8 @@ const COPY = {
   en: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
-    description: "Turn an image into Darkwar Survival pixel bio code.",
+    description: "Turn an image or text into Darkwar Survival pixel bio code.",
+    tabImage:"Image Mode",tabText:"Text Mode",textTitle:"Write your bio",textHint:"5×7 pixel font · 193 × 40 px canvas · Up to 160 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit the 193 × 40 px canvas. Shorten the text or use fewer lines.",textLimit:"Maximum 160 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -202,10 +207,10 @@ function medianCutPalette(pixels, requestedColors) {
   });
 }
 
-function encodePixelCanvas(canvas) {
+function encodePixelCanvas(canvas, width = WIDTH, height = HEIGHT) {
   const context = canvas.getContext("2d", { willReadFrequently: true });
   if (!context) throw new Error("Canvas is unavailable.");
-  const image = context.getImageData(0, 0, WIDTH, HEIGHT);
+  const image = context.getImageData(0, 0, width, height);
   const pixels = [];
   for (let index = 0; index < image.data.length; index += 4) {
     pixels.push([image.data[index], image.data[index + 1], image.data[index + 2]]);
@@ -216,11 +221,11 @@ function encodePixelCanvas(canvas) {
   for (const colorCount of candidates) {
     const palette = medianCutPalette(pixels, colorCount);
     const rows = [];
-    for (let y = 0; y < HEIGHT; y += 1) {
+    for (let y = 0; y < height; y += 1) {
       let row = "";
       let activeTag = "";
       let runLength = 0;
-      for (let x = 0; x < WIDTH; x += 1) {
+      for (let x = 0; x < width; x += 1) {
         const pixel = pixels[y * WIDTH + x];
         let nearest = 0;
         let nearestDistance = Number.POSITIVE_INFINITY;
@@ -256,6 +261,33 @@ function encodePixelCanvas(canvas) {
   throw new Error("PIXEL_BIO_OVER_LIMIT");
 }
 
+const FONT_5X7 = {
+A:["01110","10001","10001","11111","10001","10001","10001"],B:["11110","10001","10001","11110","10001","10001","11110"],C:["01111","10000","10000","10000","10000","10000","01111"],D:["11110","10001","10001","10001","10001","10001","11110"],E:["11111","10000","10000","11110","10000","10000","11111"],F:["11111","10000","10000","11110","10000","10000","10000"],G:["01111","10000","10000","10111","10001","10001","01111"],H:["10001","10001","10001","11111","10001","10001","10001"],I:["11111","00100","00100","00100","00100","00100","11111"],J:["00111","00010","00010","00010","10010","10010","01100"],K:["10001","10010","10100","11000","10100","10010","10001"],L:["10000","10000","10000","10000","10000","10000","11111"],M:["10001","11011","10101","10101","10001","10001","10001"],N:["10001","11001","10101","10011","10001","10001","10001"],O:["01110","10001","10001","10001","10001","10001","01110"],P:["11110","10001","10001","11110","10000","10000","10000"],Q:["01110","10001","10001","10001","10101","10010","01101"],R:["11110","10001","10001","11110","10100","10010","10001"],S:["01111","10000","10000","01110","00001","00001","11110"],T:["11111","00100","00100","00100","00100","00100","00100"],U:["10001","10001","10001","10001","10001","10001","01110"],V:["10001","10001","10001","10001","10001","01010","00100"],W:["10001","10001","10001","10101","10101","10101","01010"],X:["10001","10001","01010","00100","01010","10001","10001"],Y:["10001","10001","01010","00100","00100","00100","00100"],Z:["11111","00001","00010","00100","01000","10000","11111"],
+"0":["01110","10001","10011","10101","11001","10001","01110"],"1":["00100","01100","00100","00100","00100","00100","01110"],"2":["01110","10001","00001","00010","00100","01000","11111"],"3":["11110","00001","00001","01110","00001","00001","11110"],"4":["00010","00110","01010","10010","11111","00010","00010"],"5":["11111","10000","10000","11110","00001","00001","11110"],"6":["01110","10000","10000","11110","10001","10001","01110"],"7":["11111","00001","00010","00100","01000","01000","01000"],"8":["01110","10001","10001","01110","10001","10001","01110"],"9":["01110","10001","10001","01111","00001","00001","01110"],
+" ":["00000","00000","00000","00000","00000","00000","00000"],".":["00000","00000","00000","00000","00000","01100","01100"],",":["00000","00000","00000","00000","00110","00110","00100"],"!":["00100","00100","00100","00100","00100","00000","00100"],"?":["01110","10001","00001","00010","00100","00000","00100"],":":["00000","00100","00100","00000","00100","00100","00000"],";":["00000","00100","00100","00000","00100","00100","01000"],"-":["00000","00000","00000","11111","00000","00000","00000"],"_":["00000","00000","00000","00000","00000","00000","11111"],"+":["00000","00100","00100","11111","00100","00100","00000"],"=":["00000","11111","00000","11111","00000","00000","00000"],"/":["00001","00010","00010","00100","01000","01000","10000"],"(":["00010","00100","01000","01000","01000","00100","00010"],")":["01000","00100","00010","00010","00010","00100","01000"],"'":["00100","00100","00000","00000","00000","00000","00000"],"\"":["01010","01010","00000","00000","00000","00000","00000"],"#":["01010","11111","01010","01010","11111","01010","00000"],"@":["01110","10001","10111","10101","10111","10000","01111"],"*":["00000","10101","01110","11111","01110","10101","00000"],"$":["00100","01111","10100","01110","00101","11110","00100"],"%":["11001","11010","00100","01000","10110","00110","00000"],"&":["01100","10010","10100","01000","10101","10010","01101"]
+};
+function normalizePixelGlyph(char) {
+  const special={"ß":"SS","Æ":"AE","æ":"ae","Œ":"OE","œ":"oe","Ø":"O","ø":"o","Đ":"D","đ":"d","Ł":"L","ł":"l","Þ":"P","þ":"p","ı":"i"};
+  return special[char] || char.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+function buildTextPixelCanvas(text, background, foreground) {
+  if (typeof Intl.Segmenter !== "function") return {error:"unsupported",canvas:null,count:0};
+  const segments=Array.from(new Intl.Segmenter(undefined,{granularity:"grapheme"}).segment(text),x=>x.segment);
+  const expanded=segments.map(normalizePixelGlyph).flatMap(x=>Array.from(x));
+  const unsupported=expanded.find(ch=>!FONT_5X7[ch.toUpperCase()] && ch!=="\n" && ch!=="\r" && ch!=="\t");
+  if(unsupported)return {error:"unsupported",canvas:null,count:expanded.length};
+  if(expanded.length>TEXT_LIMIT)return {error:"limit",canvas:null,count:expanded.length};
+  const rows=[];let row=[];let width=0;
+  for(const ch of expanded){if(ch==="\r")continue;if(ch==="\n"){rows.push(row);row=[];width=0;continue;}const glyph=FONT_5X7[ch.toUpperCase()];if(row.length&&width+6>TEXT_WIDTH){rows.push(row);row=[];width=0;}row.push(glyph);width+=6;}
+  if(row.length||!rows.length)rows.push(row);
+  if(rows.length>5)return {error:"overflow",canvas:null,count:expanded.length};
+  const canvas=document.createElement("canvas");canvas.width=TEXT_WIDTH;canvas.height=TEXT_HEIGHT;
+  const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {error:"canvas",canvas:null,count:expanded.length};
+  ctx.fillStyle=background;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);ctx.fillStyle=foreground;
+  rows.forEach((items,ri)=>{let x=0;items.forEach(glyph=>{glyph.forEach((bits,y)=>{for(let col=0;col<5;col++)if(bits[col]==="1")ctx.fillRect(x+col,ri*8+y,1,1);});x+=6;});});
+  return {error:"",canvas,count:expanded.length};
+}
+
 export default function GeneratorPixelPage() {
   const { language } = useLanguage();
   const t = COPY[language] || COPY.id;
@@ -279,6 +311,12 @@ export default function GeneratorPixelPage() {
   const [history, setHistory] = useState([]);
   const [copiedHistoryId, setCopiedHistoryId] = useState("");
   const resultPanelRef = useRef(null);
+  const textCanvasRef = useRef(null);
+  const [mode,setMode]=useState("image");
+  const [bioText,setBioText]=useState("DAJJAL FAMILY");
+  const [backgroundRgb,setBackgroundRgb]=useState({r:0,g:0,b:0});
+  const [foregroundRgb,setForegroundRgb]=useState({r:255,g:255,b:255});
+  const [textValidation,setTextValidation]=useState({error:"",count:14});
 
   useEffect(() => {
     let active = true;
@@ -287,6 +325,9 @@ export default function GeneratorPixelPage() {
   }, []);
 
   const stageHeight = stageWidth * HEIGHT / WIDTH;
+  const backgroundHex="#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>v.toString(16).padStart(2,"0")).join("");
+  const foregroundHex="#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>v.toString(16).padStart(2,"0")).join("");
+  useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -407,6 +448,7 @@ export default function GeneratorPixelPage() {
         id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         createdAt: Date.now(),
         ...encoded,
+        mode: "image", width: WIDTH, height: HEIGHT,
         preview: pixelCanvas.toDataURL("image/png"),
       };
       setResult(historyEntry);
@@ -433,6 +475,20 @@ export default function GeneratorPixelPage() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const createTextPixelBio = async () => {
+    const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex);
+    if(rendered.error){setError(rendered.error==="unsupported"?t.textUnsupported:rendered.error==="limit"?t.textLimit:t.textOverflow);return;}
+    setBusy(true);setError("");
+    try{
+      const encoded=encodePixelCanvas(rendered.canvas,TEXT_WIDTH,TEXT_HEIGHT);
+      if(encoded.characters>MAX_CHARACTERS)throw new Error(t.overLimit);
+      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
+      setResult(entry);setCopied(false);setCopiedHistoryId("");
+      try{setHistory(await savePixelHistory(entry));}catch(historyError){console.warn("Pixel Bio history could not be saved:",historyError);}
+      setSuccessOpen(true);
+    }catch(caught){setError(caught.message||t.processError);}finally{setBusy(false);}
   };
 
   const finishSuccess = () => {
@@ -501,7 +557,8 @@ export default function GeneratorPixelPage() {
         className="df-pixel-header"
       />
 
-      <div className="df-pixel-workspace">
+      <Tabs value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null}]} />
+      {mode === "image" ? <div className="df-pixel-workspace">
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
             <span className="df-pixel-step-number">01</span>
@@ -584,7 +641,20 @@ export default function GeneratorPixelPage() {
             {busy ? t.processing : t.process}
           </Button>
         </Card>
-      </div>
+      </div> : (
+        <Card className="df-pixel-text-panel">
+          <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
+          <TextField as="textarea" label={t.textTitle} value={bioText} onChange={(event)=>setBioText(event.target.value)} placeholder={t.textPlaceholder} rows={3} helpText={t.textHint} />
+          <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
+          <div className="df-pixel-color-grid">
+            <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
+            <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
+          </div>
+          <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
+          {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
+          <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
+        </Card>
+      )}
 
       {result ? (
         <div className="df-pixel-result-anchor" ref={resultPanelRef}>
@@ -629,7 +699,7 @@ export default function GeneratorPixelPage() {
                   <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
                 </div>
                 <div className="df-pixel-history-meta">
-                  <strong>{t.historyItem} #{history.length - index}</strong>
+                  <strong>{t.historyItem} #{history.length - index} · {entry.mode === "text" ? t.tabText : t.tabImage}</strong>
                   <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
                   <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
                 </div>
