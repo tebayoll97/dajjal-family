@@ -664,3 +664,8 @@ The standard public Contact page uses the reusable `ContactChannelCard` componen
 - Primary, secondary, ghost, and danger variants inherit the shared shadow treatment (`--df-shadow-sm`, increasing to `--df-shadow-md` on hover); active and disabled states remain restrained.
 - Primary foreground uses `--df-button-primary-text`, keeping readable white text in DAJJAL VEYLORA Light without changing the separate `--df-on-primary` semantic.
 - Home hero actions and `/df` hero actions use the same global `.ui-button` primary/secondary variants. Page CSS controls placement and responsive sizing only, not button colors, surfaces, borders, or shadows.
+
+
+## Reusable SVG Icon contract
+
+The shared `SvgIcon` is the canonical line-icon API. New interface icons and icon-bearing labels must use a semantically relevant icon from the central library, inherit `currentColor`, and follow the 24 × 24 outline geometry with 1.8 stroke, round caps and joins. The real component is previewed in section 09 and Component Workbench. New names must be added centrally and documented in Component Catalog; avoid Unicode glyph substitutes and page-local duplicate SVGs.
