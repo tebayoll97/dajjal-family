@@ -44,3 +44,5 @@ export { BlogArticleCard } from "./BlogArticleCard";
 export { ContributorCard } from "./ContributorCard";
 
 export { AdminPanel } from "./AdminPanel";
+
+export { default as SvgIcon } from "./SvgIcon";
