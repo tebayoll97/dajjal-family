@@ -31,6 +31,9 @@ export default function DajjalAICore() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [memoryQuery, setMemoryQuery] = useState("Apa identitas dan prinsip kerja DAJJAL AI?");
+  const [memoryResults, setMemoryResults] = useState([]);
+  const [memoryLoading, setMemoryLoading] = useState(false);
 
   const load = useCallback(async (activeSession) => {
     if (!activeSession?.access_token) return;
@@ -96,6 +99,27 @@ export default function DajjalAICore() {
     }
   }
 
+  async function testMemorySearch(event) {
+    event.preventDefault();
+    if (!session?.access_token || memoryLoading || !memoryQuery.trim()) return;
+    setMemoryLoading(true);
+    setError("");
+    setMessage("");
+    try {
+      const { data, error: invokeError } = await supabaseAdminClient.functions.invoke("dajjal-ai-memory", {
+        body: { action: "search_internal", query: memoryQuery.trim(), limit: 6 },
+      });
+      if (invokeError) throw new Error(invokeError.message || "Memory search failed.");
+      if (!data?.success) throw new Error(data?.error || "Memory search failed.");
+      setMemoryResults(data.results || []);
+      setMessage(id ? `Pencarian memori selesai. ${data.count || 0} hasil ditemukan.` : `Memory search completed. ${data.count || 0} results found.`);
+    } catch (err) {
+      setError(err.message || (id ? "Gagal mencari memori." : "Unable to search memory."));
+    } finally {
+      setMemoryLoading(false);
+    }
+  }
+
   const statusLabel = (status) => {
     const labels = id
       ? { processing: "Memproses", published: "Terbit", no_draft: "Tidak ada draft", failed: "Gagal" }
@@ -123,6 +147,45 @@ export default function DajjalAICore() {
         variant={error ? "danger" : "success"}
         closeLabel={id ? "Tutup" : "Close"}
       />
+
+      <Card className="ui-stack">
+        <SectionHeader
+          title={id ? "Uji Memory Core" : "Memory Core Test"}
+          description={id
+            ? "Uji pencarian makna pada memori internal DAJJAL AI. Hanya admin yang dapat mengakses hasil privat."
+            : "Test semantic retrieval from DAJJAL AI private memory. Only admins can access private results."}
+        />
+        <form className="ui-stack" onSubmit={testMemorySearch}>
+          <TextField
+            label={id ? "Pertanyaan untuk memori" : "Memory query"}
+            value={memoryQuery}
+            onChange={(event) => setMemoryQuery(event.target.value)}
+            placeholder={id ? "Tanyakan sesuatu tentang DAJJAL FAMILY…" : "Ask about DAJJAL FAMILY…"}
+            required
+          />
+          <Button type="submit" disabled={memoryLoading || loading || !memoryQuery.trim()}>
+            {memoryLoading ? (id ? "Mencari memori…" : "Searching memory…") : (id ? "Uji Pencarian Memori" : "Test Memory Search")}
+          </Button>
+        </form>
+        {memoryResults.length ? (
+          <div className="ui-stack">
+            {memoryResults.map((item) => (
+              <Card key={item.chunk_id} className="ui-stack">
+                <div className="ui-cluster">
+                  <Badge>{item.memory_type}</Badge>
+                  <Badge>{item.visibility}</Badge>
+                  <Badge>{Math.round((item.similarity || 0) * 100)}% match</Badge>
+                </div>
+                <strong>{item.title}</strong>
+                <p className="ui-caption">{item.summary || item.slug}</p>
+                <p>{item.content}</p>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <EmptyState title={id ? "Belum ada hasil pencarian" : "No memory results yet"} />
+        )}
+      </Card>
 
       {loading ? <Card><p className="ui-caption">{id ? "Memuat pengaturan…" : "Loading settings…"}</p></Card> : (
         <>
