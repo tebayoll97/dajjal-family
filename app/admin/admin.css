@@ -232,10 +232,10 @@
 #df-admin-shell .df-admin-drawer-backdrop{display:none}
 @media(max-width:760px){
  #df-admin-shell{display:block}
- #df-admin-shell .df-admin-sidebar.df-shell-drawer{position:fixed;z-index:calc(var(--df-z-overlay) - 1);inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;margin:0;border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard)}
+ #df-admin-shell .df-admin-sidebar.df-shell-drawer{position:fixed;z-index:calc(var(--df-z-overlay) + 2);inset:0 auto 0 0;width:var(--df-workspace-drawer-mobile-width);height:100dvh;min-height:0;margin:0;border-radius:0 var(--df-radius-xl) var(--df-radius-xl) 0;transform:translateX(-105%);transition:transform var(--df-duration-normal) var(--df-motion-standard)}
  #df-admin-shell .df-admin-sidebar.df-shell-drawer[data-open="true"]{transform:translateX(0)}
  #df-admin-shell .df-admin-drawer-toggle{display:inline-flex}
- #df-admin-shell .df-admin-drawer-backdrop{display:block;position:fixed;inset:0;z-index:calc(var(--df-z-overlay) - 2);border:0;background:var(--df-workspace-drawer-backdrop)}
+ #df-admin-shell .df-admin-drawer-backdrop{display:block;position:fixed;inset:0;z-index:calc(var(--df-z-overlay) + 1);border:0;background:var(--df-workspace-drawer-backdrop)}
  #df-admin-shell .df-admin-mobile-nav{display:none}
  #df-admin-shell .df-admin-workspace{min-width:0}
 }
