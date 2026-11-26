@@ -42,6 +42,10 @@ const COPY = {
     processError: "Gambar belum dapat diproses. Coba atur ulang posisi atau gunakan gambar lain.",
     noPreview: "Pratinjau gambar akan muncul di sini.",
     resultTitle: "Hasil Pixel Bio",
+    overLimit: "Hasil melebihi batas 32.000 karakter. Coba gunakan gambar yang lebih sederhana.",
+    detailCharacters: "Jumlah karakter",
+    detailColors: "Jumlah warna",
+    detailDimensions: "Dimensi",
   },
   en: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
@@ -73,6 +77,10 @@ const COPY = {
     processError: "The image could not be processed. Reset the crop or try another image.",
     noPreview: "Your image preview will appear here.",
     resultTitle: "Pixel Bio Result",
+    overLimit: "The result exceeds the 32,000-character limit. Try a simpler image.",
+    detailCharacters: "Characters",
+    detailColors: "Colors",
+    detailDimensions: "Dimensions",
   },
 };
 
@@ -177,8 +185,7 @@ function encodePixelCanvas(canvas) {
     if (code.length <= MAX_CHARACTERS) return lastResult;
   }
 
-  if (lastResult) return lastResult;
-  throw new Error("Pixel encoding failed.");
+  throw new Error("PIXEL_BIO_OVER_LIMIT");
 }
 
 export default function GeneratorPixelPage() {
@@ -311,10 +318,14 @@ export default function GeneratorPixelPage() {
     setError("");
     try {
       const pixelCanvas = makeCropCanvas();
-      const encoded = encodePixelCanvas(pixelCanvas);
-      if (encoded.characters > MAX_CHARACTERS) {
-        throw new Error(t.overLimit);
+      let encoded;
+      try {
+        encoded = encodePixelCanvas(pixelCanvas);
+      } catch (encodingError) {
+        if (encodingError.message === "PIXEL_BIO_OVER_LIMIT") throw new Error(t.overLimit);
+        throw encodingError;
       }
+      if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
 
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData?.session?.access_token) throw new Error(t.session);
@@ -483,7 +494,20 @@ export default function GeneratorPixelPage() {
           <div className="df-pixel-result-preview">
             <img src={result.preview} alt={t.resultTitle} />
           </div>
-          <textarea className="df-pixel-result-code" value={result.code} readOnly aria-label={t.resultTitle} />
+          <div className="df-pixel-result-details" aria-label={t.resultTitle}>
+            <div className="df-pixel-result-detail">
+              <span>{t.detailCharacters}</span>
+              <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
+            </div>
+            <div className="df-pixel-result-detail">
+              <span>{t.detailColors}</span>
+              <strong>{result.colors}</strong>
+            </div>
+            <div className="df-pixel-result-detail">
+              <span>{t.detailDimensions}</span>
+              <strong>{WIDTH} × {HEIGHT} px</strong>
+            </div>
+          </div>
           <Button className="df-pixel-copy-button" onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
         </Card>
         </div>
