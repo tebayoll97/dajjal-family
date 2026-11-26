@@ -710,3 +710,14 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - Shared `.ui-button` base styles apply to both the reusable native `Button` component and navigation links that need button presentation.
 - Global CSS owns variant colors, primary text contrast, shadows, hover, active, focus, and disabled states. Page-level styles may control layout only.
 - Home and `/df` hero CTAs now consume `.ui-button` with the `ui-button-primary` / `ui-button-secondary` variants.
+
+
+## SvgIcon — shared modern SVG icon system
+
+- **Source:** `app/components/ui/SvgIcon.js`; export: `SvgIcon` from `app/components/ui`.
+- **API:** `SvgIcon({ name, size = 20, strokeWidth = 1.8, className = "", label })`.
+- **Purpose:** central reusable SVG line-icon library for navigation, actions, labels, status and common interface semantics.
+- **Names:** `home`, `user`, `settings`, `search`, `plus`, `check`, `alert`, `close`, `external`, `more`, `heart`, `users`, `mail`, `bell`, `calendar`, `image`, `file`, `music`, `log-out`, `arrow-left`, `chevron-down`, `shield`, and `globe`.
+- **Visual contract:** 24 × 24 viewBox, `fill="none"`, `stroke="currentColor"`, round caps/joins, default stroke width 1.8; sizing and color follow global icon tokens and the active theme.
+- **Accessibility:** decorative by default (`aria-hidden`); pass `label` for a meaningful standalone image. Icon-only controls still require an accessible control name and minimum 44 × 44px target.
+- **Workbench:** live preview is available in Design System section 09 and Component Workbench. Add new semantic icon names centrally; do not create page-local duplicate SVGs.
