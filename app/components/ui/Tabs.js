@@ -2,8 +2,9 @@
 
 import { useId, useRef } from "react";
 
-export function Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", className = "" }) {
-  const id = useId();
+export function Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", className = "", id: suppliedId, renderPanel = true }) {
+  const generatedId = useId();
+  const id = suppliedId || generatedId;
   const refs = useRef([]);
   const selectedIndex = Math.max(0, tabs.findIndex((tab) => tab.value === value));
 
@@ -62,9 +63,7 @@ export function Tabs({ tabs = [], value, onChange, ariaLabel = "Content tabs", c
           >{tab.label}</button>
         ))}
       </div>
-      <div className="ui-tab-panel" role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${selectedIndex}`} tabIndex={0}>
-        {active?.content}
-      </div>
+      {renderPanel ? <div className="ui-tab-panel" role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${selectedIndex}`} tabIndex={0}>{active?.content}</div> : null}
     </div>
   );
 }
