@@ -48,15 +48,20 @@ export async function POST(request) {
     }
 
     const accessToken = await getGoogleDriveAccessToken();
-    const folder = await findOrCreateDriveFolder({
+    const toolsFolder = await findOrCreateDriveFolder({
       accessToken,
-      name: "PIXEL BIO GENERATOR",
+      name: "TOOLS",
       parentId: connection.drive_root_folder_id,
+    });
+    const generatorFolder = await findOrCreateDriveFolder({
+      accessToken,
+      name: "GENERATOR PIXEL",
+      parentId: toolsFolder.id,
     });
     const uploaded = await uploadDriveFile({
       accessToken,
       file: new File([bytes], file.name || "pixel-bio-image", { type: file.type }),
-      folderId: folder.id,
+      folderId: generatorFolder.id,
       slot: "image",
     });
 
