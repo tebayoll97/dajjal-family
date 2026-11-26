@@ -151,3 +151,9 @@
 .ui-admin-panel-title{margin:0;color:var(--df-text);font-size:var(--df-type-wide-subheading,1.125rem);font-weight:800;line-height:1.25;text-wrap:balance}
 .ui-admin-panel-copy{margin:0;color:var(--df-text-secondary);font-size:var(--df-type-mobile-small,.8125rem);line-height:1.55}
 @media(min-width:768px){.ui-admin-panel-copy{font-size:var(--df-type-admin-small-size,.875rem)}}
+
+/* Reusable contact-channel typography: compact on mobile, more spacious on wide displays. */
+.ui-contact-channel-card__eyebrow{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-bold);letter-spacing:.1em;line-height:var(--df-type-caption-leading);text-transform:uppercase}
+.ui-contact-channel-card__title{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}
+.ui-contact-channel-card__description,.ui-contact-channel-card__value{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
+@media(min-width:768px){.ui-contact-channel-card__title{font-size:var(--df-text-lg)}.ui-contact-channel-card__description{font-size:var(--df-text-sm)}}

@@ -220,3 +220,23 @@
   .df-legal-section p { font-size:.86rem; line-height:1.8; }
   .df-legal-aside nav { grid-template-columns:1fr; }
 }
+
+/* Contact page — semantic layout and responsive typography roles. */
+.df-contact-page .df-public-hero h1{font-size:var(--df-type-display-wide)}
+.df-contact-channels{margin-block-start:var(--df-space-12)}
+.df-contact-channels-heading{margin-block-end:var(--df-space-4)}
+.df-contact-channels-heading .ui-heading-h2{font-size:var(--df-type-display-wide)}
+.df-contact-channel-hint{margin-block-start:var(--df-space-3);color:var(--df-text-muted);font-size:var(--df-type-mobile-small);line-height:var(--df-leading-relaxed)}
+.df-contact-status{padding:var(--df-space-6);border-color:var(--df-border);background:var(--df-surface)}
+.df-contact-note{max-width:48rem;margin-block-start:var(--df-space-6);padding:var(--df-space-5);border-inline-start:3px solid var(--df-primary);background:var(--df-surface-raised)}
+.df-contact-note h2{font-size:var(--df-text-lg)}
+.df-contact-note p{font-size:var(--df-type-mobile-small)}
+.df-contact-page .df-public-lead{font-size:var(--df-text-lg);line-height:var(--df-leading-relaxed)}
+.df-contact-page .df-public-copy h2{font-size:var(--df-type-display-wide)}
+.df-contact-page .df-public-copy>p,.df-contact-page .df-contact-status>p{font-size:var(--df-text-sm);line-height:var(--df-leading-relaxed)}
+.df-contact-page .df-contact-status h2{font-size:var(--df-text-lg);font-weight:var(--df-weight-bold);letter-spacing:normal;line-height:var(--df-leading-tight)}
+.df-contact-page .df-contact-note h2{font-size:var(--df-text-lg);font-weight:var(--df-weight-bold)}
+.df-contact-page .df-contact-note p{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-relaxed)}
+.df-contact-page .df-public-actions .ui-button{min-height:var(--df-touch-target-min)}
+@media(max-width:760px){.df-contact-channels{margin-block-start:var(--df-space-8)}.df-contact-status{padding:var(--df-space-4)}.df-contact-note{margin-block-start:var(--df-space-4);padding:var(--df-space-4)}}
+@media(max-width:639px){.df-contact-page .df-public-lead{font-size:var(--df-text-sm)}}

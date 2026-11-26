@@ -413,3 +413,24 @@
 .ui-admin-panel{min-width:0;padding:var(--df-admin-panel-padding);border:1px solid var(--df-admin-panel-border);border-radius:var(--df-admin-panel-radius);background:var(--df-admin-panel-surface);box-shadow:var(--df-admin-panel-shadow)}
 .ui-admin-panel:focus-within{border-color:var(--df-border-strong)}
 .ui-admin-panel :is(input,textarea,select){max-width:100%}
+
+/* Official contact-channel card — shared production component and Design System Workbench preview. */
+.ui-contact-channel-card{display:flex;min-width:0;min-height:var(--df-contact-card-min-height);align-items:center;gap:var(--df-contact-card-gap);padding:var(--df-contact-card-padding);color:var(--df-text);text-decoration:none;overflow:hidden}
+.ui-contact-channel-card:hover{border-color:var(--df-primary);background:var(--df-surface-raised)}
+.ui-contact-channel-card:focus-visible{outline:var(--df-focus-ring-width) solid var(--df-focus);outline-offset:var(--df-focus-ring-offset)}
+.ui-contact-channel-card__icon{display:grid;width:var(--df-contact-card-icon-size);height:var(--df-contact-card-icon-size);flex:0 0 var(--df-contact-card-icon-size);place-items:center;border-radius:var(--df-contact-card-icon-radius);color:#fff}
+.ui-contact-channel-card__icon svg{display:block;width:58%;height:58%}
+.ui-contact-channel-card--whatsapp .ui-contact-channel-card__icon{background:var(--df-contact-whatsapp-brand)}
+.ui-contact-channel-card--telegram .ui-contact-channel-card__icon{background:var(--df-contact-telegram-brand)}
+.ui-contact-channel-card__copy{display:grid;gap:var(--df-space-1);min-width:0;flex:1 1 auto}
+.ui-contact-channel-card__eyebrow{color:var(--df-text-muted)}
+.ui-contact-channel-card__title{color:var(--df-text);overflow-wrap:anywhere}
+.ui-contact-channel-card__description{color:var(--df-text-secondary);overflow-wrap:anywhere}
+.ui-contact-channel-card__value{color:var(--df-primary);font-weight:var(--df-weight-bold);overflow-wrap:anywhere}
+.ui-contact-channel-card__arrow{width:var(--df-icon-size-md);height:var(--df-icon-size-md);flex:0 0 auto;color:var(--df-text-muted);transition:transform var(--df-duration-fast) var(--df-motion-standard),color var(--df-duration-fast)}
+.ui-contact-channel-card:hover .ui-contact-channel-card__arrow{transform:translate(2px,-2px);color:var(--df-primary)}
+@media(max-width:639px){.ui-contact-channel-card{min-height:5.5rem;gap:var(--df-space-3);padding:var(--df-space-3)}.ui-contact-channel-card__icon{width:3rem;height:3rem;flex-basis:3rem}}
+@media(prefers-reduced-motion:reduce){.ui-contact-channel-card__arrow{transition:none}.ui-contact-channel-card:hover .ui-contact-channel-card__arrow{transform:none}}
+.ui-link.ui-button{text-decoration:none}
+.ui-link.ui-button-primary{color:var(--df-on-primary)}
+.ui-link.ui-button-secondary{color:var(--df-text)}

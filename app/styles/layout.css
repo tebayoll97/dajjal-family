@@ -189,3 +189,8 @@
 .ui-admin-panel-stack{display:flex;flex-direction:column;gap:var(--df-admin-panel-gap);min-width:0}
 .ui-admin-panel-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--df-admin-panel-gap);min-width:0}
 @media(min-width:768px){.ui-admin-panel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Reusable responsive composition for official communication channel cards. */
+.ui-contact-channel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--df-contact-card-grid-gap);min-width:0}
+.ui-contact-channel-grid>*{min-width:0}
+@media(max-width:639px){.ui-contact-channel-grid{grid-template-columns:minmax(0,1fr);gap:var(--df-space-3)}}

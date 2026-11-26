@@ -643,3 +643,14 @@ The Blog Editorial Engine uses one versioned structured-content model for both a
 - ContributorCard semantic roles are defined by --df-contributor-* tokens and .ui-contributor-card, .ui-contributor-grid, and .ui-contributor-card__role in the four global foundation CSS files.
 - Contributor typography uses responsive ui-text-display-wide and ui-text-mobile-small roles. Mobile Compact UI applies without reducing accessible touch targets or desktop readability.
 - Contributor components are demonstrated in Design System Workbench section 17/18; shared exports are used by consumers.
+
+# 10. CONTACT CHANNEL COMPONENT CONTRACT
+
+The standard public Contact page uses the reusable `ContactChannelCard` component from `app/components/ui/ContactChannelCard.js`.
+
+- WhatsApp displays a telephone number; Telegram displays a username. Never swap or duplicate the identities.
+- The destination URL is provided by the page consumer; display values do not generate or mutate destinations.
+- Use the shared Card primitive, semantic surface/text/focus tokens, shared spacing and radius tokens, and Global Typography roles.
+- Official platform colors are limited to their icon marks and are represented by semantic tokens; they must not recolor the global card surface or primary action palette.
+- Small mobile uses a compact single-column layout; wider screens use a two-column layout. Preserve touch target, readable metadata, visible focus, and reduced-motion behavior.
+- The production component must remain visible in Design System Component Workbench section 14 and documented in Component Catalog.

@@ -246,3 +246,12 @@
 - Added reusable ContributorCard and semantic contributor tokens/layout/type styles across the four global foundation CSS layers; documented the preview in Design System.
 
 - Retired and dropped the legacy `df_blog_contributors` table and its slug trigger function after validating the transferred contributor and all Blog article foreign keys. Added covering indexes for new contributor actor/ownership foreign keys.
+
+## 2026-11-26 — Contact channel cards and semantic UI adoption
+
+- Added reusable `ContactChannelCard` composed from the shared `Card` primitive, with accessible inline SVG marks for WhatsApp and Telegram.
+- Corrected channel identity presentation: WhatsApp shows `+62 851-4132-0943`; Telegram shows `@dajjalf4mily`. Existing official destination URLs and WhatsApp prefilled message behavior are preserved.
+- Migrated Contact channel presentation to the shared component and moved channel-card styling out of page-local inline styles into the global reusable component/layout foundations.
+- Added semantic contact identity/geometry tokens and responsive typography roles across the four global CSS foundations; added a live Workbench preview and component documentation.
+- Updated localized Contact metadata descriptions. Existing localized canonical, Open Graph URL, fallback image, sitemap inclusion, and 120-second public route revalidation remain in place.
+- No Supabase schema/data, Auth, Storage, secrets, or security configuration changes.

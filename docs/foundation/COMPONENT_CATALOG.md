@@ -692,3 +692,14 @@ The Admin Shell is an application-level composition, not a replacement for the r
 - `ContributorPlatform` composes the existing shared PageHeader, Card, Button, Badge, TextField, CheckboxField, FeedbackDialog, and ContributorProfileEditor. Authorization is always checked by server APIs; navigation visibility is not an authorization boundary.
 - First sign-in password changes are enforced server-side. Temporary credentials are returned to Admin once and never stored in plaintext or re-displayed from the contributor list.
 - ContributorCard uses semantic `--df-contributor-*` tokens and the shared responsive typography/layout/component layers in tokens.css, typography.css, layout.css, and components.css.
+
+## ContactChannelCard — official communication channel card
+
+- **Source:** `app/components/ui/ContactChannelCard.js`; exported from `app/components/ui/index.js`.
+- **API:** `ContactChannelCard({ channel, locale = "id", href })`; supported channels are `whatsapp` and `telegram`. Invalid channel values or an empty destination render nothing.
+- **Purpose:** reusable, accessible outbound contact card for the official DAJJAL FAMILY WhatsApp and Telegram channels.
+- **Composition:** semantic anchor rendered through the shared `Card` primitive with the interactive contract; includes inline SVG channel icon, localized channel label/description, channel-specific identity, and external-navigation affordance.
+- **Identity contract:** WhatsApp displays the official telephone number `+62 851-4132-0943`; Telegram displays the official username `@dajjalf4mily`. Destination URLs are supplied by the page consumer and are not inferred from display text.
+- **Security/accessibility:** external links use `target="_blank"` and `rel="noopener noreferrer"`; accessible names describe the destination and channel identity; visible keyboard focus and reduced-motion behavior are provided.
+- **Responsive/theme:** compact single-column presentation on small mobile, two-column layout at wider widths, and compatibility with all four global theme combinations. Official platform icon colors are semantic brand tokens; card surfaces, text, borders, focus, spacing, and typography use global semantic tokens.
+- **Workbench:** live production component preview is included in Component Workbench section 14.

@@ -5,7 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog, FeedbackDialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField,
-  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard,
+  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -42,6 +42,7 @@ export default function ComponentWorkbench() {
   const items = [
     ["Button", "Button", <Button key="button">Primary action</Button>],
     ["Card", "Card", <Card key="card" className={styles.cardSample}><strong>Card surface</strong><span>Content container</span></Card>],
+    ["ContactChannelCard", "ContactChannelCard · WhatsApp / Telegram", <div key="contact-channel" className={styles.stack}><ContactChannelCard channel="whatsapp" locale="id" href="https://wa.me/6285141320943" /><ContactChannelCard channel="telegram" locale="id" href="https://t.me/dajjalf4mily" /></div>],
     ["Badge", "Badge", <div key="badge" className={styles.inline}><Badge>Neutral</Badge><Badge variant="success">Success</Badge><Badge variant="warning">Warning</Badge></div>],
     ["Alert", "Alert", <Alert key="alert" variant="info" title="Information">Status message example.</Alert>],
     ["TextField", "TextField", <TextField key="field" label="Display name" placeholder="Enter a name" helpText="Helper text example." />],
@@ -80,7 +81,7 @@ export default function ComponentWorkbench() {
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>34 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>35 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}

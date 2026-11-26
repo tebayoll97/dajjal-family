@@ -121,6 +121,16 @@
   --df-shadow-md: 0 8px 24px rgba(0,0,0,.18);
   --df-shadow-lg: 0 18px 48px rgba(0,0,0,.24);
 
+  /* Official communication channel identity and reusable contact-card geometry. */
+  --df-contact-whatsapp-brand: #25D366;
+  --df-contact-telegram-brand: #229ED9;
+  --df-contact-card-icon-size: 3.5rem;
+  --df-contact-card-icon-radius: var(--df-radius-lg);
+  --df-contact-card-padding: var(--df-space-5);
+  --df-contact-card-min-height: 8rem;
+  --df-contact-card-gap: var(--df-space-4);
+  --df-contact-card-grid-gap: var(--df-space-4);
+
   /* Layout and motion */
   --df-content-width: 76rem;
   --df-reading-width: 46rem;

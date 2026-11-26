@@ -1,5 +1,6 @@
 export { Button } from "./Button";
 export { Card } from "./Card";
+export { ContactChannelCard } from "./ContactChannelCard";
 export { Badge } from "./Badge";
 export { Alert } from "./Alert";
 export { TextField } from "./TextField";
