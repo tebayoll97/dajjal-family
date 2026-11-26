@@ -206,3 +206,14 @@
 .ui-creator-column{display:grid;gap:var(--df-space-3);min-width:0}
 @media(max-width:900px){.ui-creator-workspace{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:620px){.ui-creator-workspace{gap:var(--df-space-2)}}
+
+/* Admin Blog: one-column mobile flow with bounded wide-screen reading measure. */
+.df-admin-blog{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--df-admin-blog-section-gap);width:100%;max-width:100%;min-width:0}
+.df-admin-blog>*{min-width:0;max-width:100%}
+.df-admin-blog .ui-page-heading{display:grid;gap:var(--df-space-2);min-width:0}
+.df-admin-blog .ui-admin-section{width:100%;min-width:0}
+.df-admin-blog .ui-admin-section__content{display:grid;gap:var(--df-admin-blog-card-gap);min-width:0}
+.df-admin-blog .ui-admin-card-list{display:grid;gap:var(--df-admin-blog-card-gap);min-width:0}
+.df-admin-blog .ui-admin-card-list>*{min-width:0}
+@media(min-width:768px){.df-admin-blog{gap:var(--df-space-5)}.df-admin-blog .ui-admin-card-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1280px){.df-admin-blog .ui-admin-card-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
