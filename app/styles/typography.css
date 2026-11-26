@@ -157,3 +157,8 @@
 .ui-contact-channel-card__title{font-size:var(--df-type-mobile-small);font-weight:var(--df-weight-bold);line-height:var(--df-leading-tight)}
 .ui-contact-channel-card__description,.ui-contact-channel-card__value{font-size:var(--df-type-mobile-small);line-height:var(--df-type-caption-leading)}
 @media(min-width:768px){.ui-contact-channel-card__title{font-size:var(--df-text-lg)}.ui-contact-channel-card__description{font-size:var(--df-text-sm)}}
+
+
+/* SVG icon alignment follows the current text role and label baseline. */
+.ui-icon{flex:0 0 auto;vertical-align:middle;color:inherit}
+.ui-icon-label{display:inline-flex;align-items:center;gap:var(--df-icon-gap);min-width:0}
