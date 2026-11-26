@@ -343,3 +343,7 @@
  --df-admin-panel-padding:var(--df-workspace-panel-padding);
 }
 @media(max-width:820px){:root{--df-admin-panel-padding:var(--df-space-3);--df-admin-nav-group-padding:var(--df-space-2)}}
+
+
+/* Reusable SVG icon system geometry. */
+:root{--df-icon-size-xs:14px;--df-icon-size-sm:16px;--df-icon-size-md:20px;--df-icon-size-lg:24px;--df-icon-size-xl:32px;--df-icon-stroke:1.8;--df-icon-gap:var(--df-space-2)}
