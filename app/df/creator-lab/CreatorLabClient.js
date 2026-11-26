@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Badge, Button, Card, PageHeader, SvgIcon, TextField } from "@/app/components/ui";
+import { Badge, Button, Card, ConfirmDialog, PageHeader, SvgIcon, TextField } from "@/app/components/ui";
 import "./creator-lab.css";
 import { TEMPLATES, WIDTH, HEIGHT, MAX_IMAGE_BYTES, createIdentityProject as createProject, makeCreatorId as makeId, validIdentityProject as validProject } from "@/lib/creator-engine/schema";
 import { putProject, listProjects, deleteProject } from "@/lib/creator-engine/projectStore";
-import { drawProject, downloadBlob } from "@/lib/creator-engine/canvasRenderer";
+import { drawProject, renderBrandedPng, downloadBlob } from "@/lib/creator-engine/canvasRenderer";
 
 const COPY = {
   id: {
@@ -77,6 +77,10 @@ export default function CreatorLabClient() {
   const [past, setPast] = useState([]);
   const [future, setFuture] = useState([]);
   const [showProjects, setShowProjects] = useState(false);
+  const [confirm, setConfirm] = useState(null);
+  const [mode, setMode] = useState("quick");
+  const [canvasWidth, setCanvasWidth] = useState(WIDTH);
+  const [canvasHeight, setCanvasHeight] = useState(HEIGHT);
   const canvasRef = useRef(null);
   const avatarInputRef = useRef(null);
   const importInputRef = useRef(null);
@@ -204,13 +208,12 @@ export default function CreatorLabClient() {
 
   const exportPng = async () => {
     try {
-      const canvas = document.createElement("canvas");
-      await drawProject(canvas, project);
-      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      const blob = await renderBrandedPng(project);
       if (!blob) throw new Error("PNG encoding failed");
       downloadBlob(blob, (project.name || "gaming-identity").trim().replace(/[^a-z0-9-_]+/gi, "-").toLowerCase() + ".png");
       setNotice(t.exportReady);
     } catch { setNotice(t.importError); }
+    finally { setConfirm(null); }
   };
   const backupProject = () => {
     const blob = new Blob([JSON.stringify(project, null, 2)], { type: "application/json" });
@@ -240,8 +243,7 @@ export default function CreatorLabClient() {
     setShowProjects(false);
   };
   const removeProject = async (id) => {
-    if (!window.confirm(t.confirmDelete)) return;
-    try { await deleteProject(id); await refreshProjects(); } catch { setSaveError(t.saveError); }
+    try { await deleteProject(id); await refreshProjects(); setConfirm(null); } catch { setSaveError(t.saveError); }
   };
 
   const labelFor = (layer) => t[layer.name === "player" ? "titleLayer" : layer.name === "role" ? "roleLayer" : layer.name === "server" ? "serverLayer" : layer.name === "alliance" ? "allianceLayer" : layer.name === "avatar" ? "imageLayer" : layer.name === "background" ? "backgroundLayer" : "accentLayer"];
@@ -249,7 +251,8 @@ export default function CreatorLabClient() {
   return (
     <main className="ui-page df-creator-page">
       <PageHeader eyebrow={t.eyebrow} title={t.title} description={t.description}
-        actions={<div className="ui-cluster df-creator-header-actions"><Badge variant="info">{t.noAI}</Badge><Button size="sm" variant="secondary" onClick={newProject}><SvgIcon name="file-plus" size={16}/>{t.newProject}</Button></div>} />
+        actions={<div className="ui-cluster df-creator-header-actions"><Badge variant="info">{t.noAI}</Badge><Button size="sm" variant="secondary" onClick={() => setConfirm({ kind: "new" })}><SvgIcon name="file-plus" size={16}/>{t.newProject}</Button></div>} />
+      <div className="df-creator-modebar"><button type="button" aria-pressed={mode === "quick"} onClick={() => setMode("quick")}>Quick Creator</button><button type="button" aria-pressed={mode === "advanced"} onClick={() => setMode("advanced")}>Advanced Editor</button></div>
       <div className="df-creator-toolbar">
         <div className="df-creator-toolbar-group">
           <Button size="sm" variant="secondary" onClick={undo} disabled={!past.length}><SvgIcon name="undo" size={16}/>{t.undo}</Button>
@@ -259,7 +262,7 @@ export default function CreatorLabClient() {
         <div className="df-creator-toolbar-group">
           <Button size="sm" variant="secondary" onClick={backupProject}><SvgIcon name="download" size={16}/>{t.exportProject}</Button>
           <Button size="sm" variant="secondary" onClick={() => importInputRef.current?.click()}><SvgIcon name="upload" size={16}/>{t.importProject}</Button>
-          <Button size="sm" onClick={exportPng}><SvgIcon name="image" size={16}/>{t.export}</Button>
+          <Button size="sm" onClick={() => setConfirm({ kind: "export" })}><SvgIcon name="image" size={16}/>{t.export}</Button>
         </div>
       </div>
 
@@ -269,9 +272,9 @@ export default function CreatorLabClient() {
       <div className="df-creator-workspace">
         <section className="df-creator-stage-column" aria-label={t.editor}>
           <Card className="df-creator-stage-card">
-            <div className="df-creator-stage-heading"><strong>{t.editor}</strong><span>{t.canvasHint}</span></div>
+            <div className="df-creator-stage-heading"><strong>{t.editor}</strong><span>{t.canvasHint} · {project.width} × {project.height}</span></div>
             <div className="df-creator-canvas-wrap"><canvas ref={canvasRef} className="df-creator-canvas" aria-label={t.canvasHint} /></div>
-            <p className="ui-caption">{t.help}</p>
+            <p className="ui-caption">{mode === "quick" ? t.help : "Advanced Editor: gunakan daftar layer dan properti untuk menyusun desain."}</p>
           </Card>
           <Card className="df-creator-template-card">
             <div className="df-creator-section-heading"><strong>{t.template}</strong><Badge>{project.templateId}</Badge></div>
@@ -312,7 +315,7 @@ export default function CreatorLabClient() {
             </div> : <p className="ui-caption">{t.emptySelection}</p>}
           </Card>
 
-          <Card className="df-creator-layers-card">
+          {mode === "advanced" ? <Card className="df-creator-layers-card">
             <div className="df-creator-section-heading"><strong>{t.layers}</strong><span>{project.layers.length}</span></div>
             <div className="df-creator-layer-list">
               {[...project.layers].reverse().map((layer) => <div className="df-creator-layer" key={layer.id} data-selected={selectedId === layer.id}>
@@ -333,11 +336,12 @@ export default function CreatorLabClient() {
           {projects.map((item) => <div className="df-creator-project-row" key={item.id}>
             <div><strong>{item.name}</strong><small>{new Date(item.updatedAt).toLocaleString(language === "en" ? "en-US" : "id-ID")}</small></div>
             <Button size="sm" variant="secondary" onClick={() => openProject(item)}>{t.open}</Button>
-            <Button size="sm" variant="ghost" onClick={() => removeProject(item.id)} aria-label={t.delete}><SvgIcon name="trash" size={16}/></Button>
+            <Button size="sm" variant="ghost" onClick={() => setConfirm({ kind: "delete", id: item.id })} aria-label={t.delete}><SvgIcon name="trash" size={16}/></Button>
           </div>)}
         </div> : <p className="ui-caption">{t.noProjects}</p> : null}
       </Card>
       {notice ? <p className="df-creator-notice" role="status">{notice}</p> : null}
+      <ConfirmDialog open={!!confirm} onClose={() => setConfirm(null)} onConfirm={() => { if (confirm?.kind === "export") exportPng(); else if (confirm?.kind === "delete") removeProject(confirm.id); else if (confirm?.kind === "new") { newProject(); setConfirm(null); } }} title={confirm?.kind === "export" ? "Export PNG?" : confirm?.kind === "delete" ? "Delete project?" : "Create new project?"} description={confirm?.kind === "export" ? "PNG akan diberi watermark dajjalfamily.com secara otomatis di pojok kanan bawah." : confirm?.kind === "delete" ? t.confirmDelete : "Buat proyek baru? Proyek saat ini tetap tersimpan di perangkat."} confirmLabel={confirm?.kind === "export" ? "Yes, Export" : confirm?.kind === "delete" ? "Yes, Delete" : "Yes, Continue"} cancelLabel="Cancel" confirmVariant={confirm?.kind === "delete" ? "danger" : "primary"} />
     </main>
   );
 }

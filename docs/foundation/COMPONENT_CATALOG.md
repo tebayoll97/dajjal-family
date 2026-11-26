@@ -725,7 +725,7 @@ The Admin Shell is an application-level composition, not a replacement for the r
 
 ## DF Creator Engine — shared semantic contract
 
-The first Creator Lab implementation consumes existing `PageHeader`, `Card`, `Button`, `TextField`, `Badge`, and `SvgIcon` primitives. Its editor shell uses shared Creator workspace semantic aliases and layout/component primitives from the four Global CSS Foundation files. The page-specific canvas renderer and layer model remain feature-owned; do not duplicate them as generic UI components until a second real consumer exists.
+Creator Lab uses the existing reusable ConfirmDialog for export and project deletion confirmation. Export branding is composed only in the PNG export processor; the editable canvas/project JSON remains watermark-free. The first Creator Lab implementation consumes existing `PageHeader`, `Card`, `Button`, `TextField`, `Badge`, and `SvgIcon` primitives. Its editor shell uses shared Creator workspace semantic aliases and layout/component primitives from the four Global CSS Foundation files. The page-specific canvas renderer and layer model remain feature-owned; do not duplicate them as generic UI components until a second real consumer exists.
 
 - Semantic aliases: `--df-creator-surface`, `--df-creator-raised`, `--df-creator-border`, `--df-creator-panel-padding`, `--df-creator-canvas-radius`, and `--df-type-creator-*`.
 - Layout primitives: `.ui-creator-workspace` and `.ui-creator-column`.
