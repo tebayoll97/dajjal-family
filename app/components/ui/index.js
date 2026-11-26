@@ -4,6 +4,7 @@ export { ContactChannelCard } from "./ContactChannelCard";
 export { Badge } from "./Badge";
 export { Alert } from "./Alert";
 export { TextField } from "./TextField";
+export { RangeSlider } from "./RangeSlider";
 export { SearchField } from "./SearchField";
 export { Dialog } from "./Dialog";
 export { CheckboxField } from "./CheckboxField";
