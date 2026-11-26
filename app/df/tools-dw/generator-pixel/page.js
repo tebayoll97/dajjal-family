@@ -10,6 +10,62 @@ const WIDTH = 193;
 const HEIGHT = 45;
 const MAX_CHARACTERS = 32000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const HISTORY_DB = "df-pixel-bio-history";
+const HISTORY_STORE = "results";
+const HISTORY_LIMIT = 3;
+
+function openPixelHistoryDb() {
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === "undefined") return reject(new Error("IndexedDB is unavailable."));
+    const request = indexedDB.open(HISTORY_DB, 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(HISTORY_STORE)) request.result.createObjectStore(HISTORY_STORE, { keyPath: "id" });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function readPixelHistory() {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(HISTORY_STORE, "readonly").objectStore(HISTORY_STORE).getAll();
+    request.onsuccess = () => {
+      db.close();
+      resolve((request.result || []).sort((a, b) => b.createdAt - a.createdAt).slice(0, HISTORY_LIMIT));
+    };
+    request.onerror = () => { db.close(); reject(request.error); };
+  });
+}
+
+async function savePixelHistory(entry) {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HISTORY_STORE, "readwrite");
+    const store = transaction.objectStore(HISTORY_STORE);
+    const request = store.getAll();
+    request.onsuccess = () => {
+      (request.result || []).sort((a, b) => b.createdAt - a.createdAt).slice(HISTORY_LIMIT - 1).forEach((item) => store.delete(item.id));
+      store.put(entry);
+    };
+    transaction.oncomplete = async () => {
+      db.close();
+      try { resolve(await readPixelHistory()); } catch (error) { reject(error); }
+    };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+    transaction.onabort = () => { db.close(); reject(transaction.error); };
+  });
+}
+
+async function clearPixelHistory() {
+  const db = await openPixelHistoryDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(HISTORY_STORE, "readwrite");
+    transaction.objectStore(HISTORY_STORE).clear();
+    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+  });
+}
 
 const COPY = {
   id: {
@@ -46,6 +102,14 @@ const COPY = {
     detailCharacters: "Jumlah karakter",
     detailColors: "Jumlah warna",
     detailDimensions: "Dimensi",
+    historyTitle: "Riwayat Generator",
+    historyDescription: "Tiga hasil generator terakhir tersimpan di perangkat ini.",
+    historyEmpty: "Belum ada riwayat. Hasil yang berhasil dibuat akan muncul di sini.",
+    historyItem: "Pixel Bio",
+    historyCopy: "Salin Kode",
+    historyRestore: "Pulihkan",
+    historyDelete: "Hapus Riwayat",
+    historyDeleteConfirm: "Hapus semua riwayat Pixel Bio dari perangkat ini?",
   },
   en: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
@@ -81,6 +145,14 @@ const COPY = {
     detailCharacters: "Characters",
     detailColors: "Colors",
     detailDimensions: "Dimensions",
+    historyTitle: "Generator History",
+    historyDescription: "Your three latest results are saved on this device.",
+    historyEmpty: "No history yet. Successfully generated results will appear here.",
+    historyItem: "Pixel Bio",
+    historyCopy: "Copy Code",
+    historyRestore: "Restore",
+    historyDelete: "Clear History",
+    historyDeleteConfirm: "Delete all Pixel Bio history from this device?",
   },
 };
 
@@ -207,7 +279,15 @@ export default function GeneratorPixelPage() {
   const [result, setResult] = useState(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [copiedHistoryId, setCopiedHistoryId] = useState("");
   const resultPanelRef = useRef(null);
+
+  useEffect(() => {
+    let active = true;
+    readPixelHistory().then((items) => { if (active) setHistory(items); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   const stageHeight = stageWidth * HEIGHT / WIDTH;
 
@@ -339,8 +419,20 @@ export default function GeneratorPixelPage() {
       const uploaded = await response.json().catch(() => ({}));
       if (!response.ok || !uploaded.success) throw new Error(uploaded.error || t.uploadError);
 
-      setResult({ ...encoded, preview: pixelCanvas.toDataURL("image/png") });
+      const historyEntry = {
+        id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        createdAt: Date.now(),
+        ...encoded,
+        preview: pixelCanvas.toDataURL("image/png"),
+      };
+      setResult(historyEntry);
       setCopied(false);
+      setCopiedHistoryId("");
+      try {
+        setHistory(await savePixelHistory(historyEntry));
+      } catch (historyError) {
+        console.warn("Pixel Bio history could not be saved:", historyError);
+      }
       setSuccessOpen(true);
       setFile(null);
       setImageUrl("");
@@ -364,21 +456,48 @@ export default function GeneratorPixelPage() {
     requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
-  const copyCode = async () => {
-    if (!result?.code) return;
+  const copyText = async (code) => {
+    if (!code) return false;
     try {
-      await navigator.clipboard.writeText(result.code);
-      setCopied(true);
+      await navigator.clipboard.writeText(code);
+      return true;
     } catch {
       const textArea = document.createElement("textarea");
-      textArea.value = result.code;
+      textArea.value = code;
       textArea.style.position = "fixed";
       textArea.style.opacity = "0";
       document.body.appendChild(textArea);
       textArea.select();
       const success = document.execCommand("copy");
       textArea.remove();
-      setCopied(success);
+      return success;
+    }
+  };
+
+  const copyCode = async () => {
+    if (!result?.code) return;
+    setCopied(await copyText(result.code));
+  };
+
+  const copyHistoryCode = async (entry) => {
+    setCopiedHistoryId(await copyText(entry.code) ? entry.id : "");
+  };
+
+  const restoreHistory = (entry) => {
+    setResult(entry);
+    setCopied(false);
+    setCopiedHistoryId("");
+    requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
+  const deleteHistory = async () => {
+    if (!window.confirm(t.historyDeleteConfirm)) return;
+    try {
+      await clearPixelHistory();
+      setHistory([]);
+      setCopiedHistoryId("");
+    } catch (historyError) {
+      console.warn("Pixel Bio history could not be cleared:", historyError);
     }
   };
 
@@ -502,15 +621,43 @@ export default function GeneratorPixelPage() {
               <span>{t.detailColors}</span>
               <strong>{result.colors}</strong>
             </div>
-            <div className="df-pixel-result-detail">
-              <span>{t.detailDimensions}</span>
-              <strong>{WIDTH} × {HEIGHT} px</strong>
-            </div>
           </div>
           <Button className="df-pixel-copy-button" onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
         </Card>
         </div>
       ) : null}
+
+      <Card className="df-pixel-history-panel">
+        <div className="df-pixel-history-heading">
+          <div>
+            <h2>{t.historyTitle}</h2>
+            <p>{t.historyDescription}</p>
+          </div>
+          {history.length > 0 ? <Button variant="ghost" size="sm" onClick={deleteHistory}>{t.historyDelete}</Button> : null}
+        </div>
+        {history.length === 0 ? (
+          <p className="df-pixel-history-empty">{t.historyEmpty}</p>
+        ) : (
+          <div className="df-pixel-history-list">
+            {history.map((entry, index) => (
+              <article className="df-pixel-history-item" key={entry.id}>
+                <div className="df-pixel-history-thumb">
+                  <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
+                </div>
+                <div className="df-pixel-history-meta">
+                  <strong>{t.historyItem} #{history.length - index}</strong>
+                  <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
+                  <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
+                </div>
+                <div className="df-pixel-history-actions">
+                  <Button size="sm" variant="secondary" onClick={() => copyHistoryCode(entry)}>{copiedHistoryId === entry.id ? t.copied : t.historyCopy}</Button>
+                  <Button size="sm" variant="ghost" onClick={() => restoreHistory(entry)}>{t.historyRestore}</Button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </Card>
 
       <Dialog
         open={successOpen}
