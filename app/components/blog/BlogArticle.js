@@ -16,6 +16,7 @@ export default function BlogArticle({ article, navigation }) {
       <Breadcrumbs items={[
         { label: isIndonesian ? "Beranda" : "Home", href: `/${language}` },
         { label: "Blog", href: `/${language}/blog` },
+        ...(article.category ? [{ label: isIndonesian ? article.category.name_id : article.category.name_en || article.category.name_id, href: article.category.slug ? `/${language}/blog?category=${encodeURIComponent(article.category.slug)}` : undefined }] : []),
         { label: article.title },
       ]} />
       <EditorialByline author={article.author?.display_name} date={date} dateTime={article.published_at} locale={language} authorHref={article.author?.slug ? `/${language}/contributors/profile/${article.author.slug}` : undefined} className="df-blog-article-byline" />
