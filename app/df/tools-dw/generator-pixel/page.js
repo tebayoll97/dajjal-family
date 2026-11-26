@@ -143,7 +143,6 @@ function encodePixelCanvas(canvas) {
   }
 
   const candidates = [64, 48, 32, 24, 16, 12, 8, 6, 4, 3, 2];
-  let lastResult = null;
 
   for (const colorCount of candidates) {
     const palette = medianCutPalette(pixels, colorCount);
@@ -181,8 +180,8 @@ function encodePixelCanvas(canvas) {
     }
 
     const code = `<size="10"><line-height=10%>\n${rows.join("\n")}\n</line-height></size>`;
-    lastResult = { code, characters: code.length, colors: palette.length };
-    if (code.length <= MAX_CHARACTERS) return lastResult;
+    const result = { code, characters: code.length, colors: palette.length };
+    if (result.characters <= MAX_CHARACTERS) return result;
   }
 
   throw new Error("PIXEL_BIO_OVER_LIMIT");
