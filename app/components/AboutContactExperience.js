@@ -147,7 +147,7 @@ export default function AboutContactExperience({ section }) {
           </Card>
         </section>
 
-        <section className="df-contact-channels" aria-labelledby="df-contact-channels-title">
+        <section className="df-contact-channels" aria-label={locale === "id" ? "Kanal kontak resmi DAJJAL FAMILY" : "Official DAJJAL FAMILY contact channels"}>
           <SectionHeader eyebrow={locale === "id" ? "KANAL RESMI" : "OFFICIAL CHANNELS"} title={locale === "id" ? "Pilih cara terhubung" : "Choose how to connect"} description={locale === "id" ? "Hubungi tim DAJJAL FAMILY melalui kanal yang paling nyaman untukmu." : "Reach the DAJJAL FAMILY team through the channel that works best for you."} className="df-contact-channels-heading" />
 
           <div className="ui-contact-channel-grid"><ContactChannelCard channel="whatsapp" locale={locale} href={whatsappHref} /><ContactChannelCard channel="telegram" locale={locale} href={telegramHref} /></div>
