@@ -29,13 +29,21 @@ export function middleware(request) {
       request: { headers: requestHeaders },
     });
 
-    response.cookies.set(LOCALE_COOKIE, locale, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-    });
+    // Persist locale only when it changes; repeated writes prevent public-page CDN caching.
+    if (request.cookies.get(LOCALE_COOKIE)?.value !== locale) {
+      response.cookies.set(LOCALE_COOKIE, locale, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: "lax",
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
+
+    // Contact is static public information. Cache each locale independently at the edge.
+    if (localizedPath === "/contact") {
+      response.headers.set("Cache-Control", "public, max-age=0, s-maxage=120, stale-while-revalidate=600");
+    }
 
     return response;
   }
