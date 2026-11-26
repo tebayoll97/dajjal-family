@@ -40,7 +40,10 @@ export default function ComponentWorkbench() {
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
   const items = [
-    ["Button", "Button", <Button key="button">Primary action</Button>],
+    ["Button", "Button · 02 Action states", <div key="button" className={styles.stack}>
+      <div className={styles.inline}><Button>Primary action</Button><Button size="sm">Small</Button><Button size="lg">Large</Button></div>
+      <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div>
+    </div>],
     ["Card", "Card", <Card key="card" className={styles.cardSample}><strong>Card surface</strong><span>Content container</span></Card>],
     ["ContactChannelCard", "ContactChannelCard · WhatsApp / Telegram", <div key="contact-channel" className={styles.stack}><ContactChannelCard channel="whatsapp" locale="id" href="https://wa.me/6285141320943" /><ContactChannelCard channel="telegram" locale="id" href="https://t.me/dajjalf4mily" /></div>],
     ["Badge", "Badge", <div key="badge" className={styles.inline}><Badge>Neutral</Badge><Badge variant="success">Success</Badge><Badge variant="warning">Warning</Badge></div>],

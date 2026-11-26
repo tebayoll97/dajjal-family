@@ -255,3 +255,12 @@
 - Added semantic contact identity/geometry tokens and responsive typography roles across the four global CSS foundations; added a live Workbench preview and component documentation.
 - Updated localized Contact metadata descriptions. Existing localized canonical, Open Graph URL, fallback image, sitemap inclusion, and 120-second public route revalidation remain in place.
 - No Supabase schema/data, Auth, Storage, secrets, or security configuration changes.
+
+## 2026-11-26 — Dedicated Primary Button Text Semantic
+
+- Added `--df-button-primary-text` to the global fallback and all four theme preset maps.
+- Kept TECNO Dark, TECNO Light, and DAJJAL VEYLORA Dark aligned with their existing `--df-on-primary` value; set DAJJAL VEYLORA Light to white independently of its dark `--df-on-primary` foreground.
+- Updated only the shared `.ui-button-primary` foreground to consume the new token. Existing Home, page-specific button semantics, and navigation-link styles remain unchanged.
+- Expanded the live Button preview in Component Workbench to show Primary Action, Small, Large, Loading, and Disabled using the production `Button` component.
+- Documented the token contract in the Design System and Component Catalog.
+- No routes, page-specific button classes, APIs, database, Auth, or user data were changed.

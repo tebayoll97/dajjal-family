@@ -87,6 +87,8 @@ Light theme must not be a simple inversion of dark theme. Surfaces, shadows, bor
 
 Color tokens must describe purpose, not just hue.
 
+Primary button foreground has its own semantic role: `--df-button-primary-text`. The shared `.ui-button-primary` consumes this token instead of `--df-on-primary`, so button-label contrast can be tuned independently without changing heading or other foreground semantics. All four global theme presets define this token; its value is white in each preset. Existing page-specific and navigation-link button styles are not migrated by this contract.
+
 Required semantic token groups:
 - `--df-bg`: page background.
 - `--df-surface`: default component surface.

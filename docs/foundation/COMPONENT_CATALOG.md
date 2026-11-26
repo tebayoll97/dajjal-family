@@ -31,7 +31,7 @@ Status meanings:
 
 | Component / pattern | Current status | Source / evidence | Next action |
 |---|---|---|---|
-| Button | React shared component | `app/components/ui/Button.js` | Document variants/states and validate themes |
+| Button | React shared component | `app/components/ui/Button.js`; primary label uses `--df-button-primary-text` | Validate primary, small, large, loading, and disabled states across all four themes |
 | Card | React shared component | `app/components/ui/Card.js` | Document supported surface variants; do not invent unused variants |
 | Badge | React shared component | `app/components/ui/Badge.js` | Validate semantic status contrast |
 | Alert | React shared component | `app/components/ui/Alert.js` | Document announcement semantics and variants |
