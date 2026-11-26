@@ -26,7 +26,7 @@ async function indexChunks(admin: ReturnType<typeof createClient>, rows: { id: s
   return indexed;
 }
 async function requireAdmin(req: Request, url: string, anonKey: string, admin: ReturnType<typeof createClient>) {
-  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\\s+/i, "");
+  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
   if (!token) return null;
   const auth = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await auth.auth.getUser(token);
