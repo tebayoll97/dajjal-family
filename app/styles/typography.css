@@ -173,3 +173,10 @@
 @media (min-width: 768px) {
   :root { --df-type-creator-title: var(--df-type-wide-subheading, var(--df-text-xl)); --df-type-creator-body: var(--df-type-body-size); }
 }
+
+/* Admin Blog page: compact mobile hierarchy, relaxed wide-screen headings. */
+.df-admin-blog .ui-heading-h1{font-size:var(--df-type-admin-heading-size);line-height:var(--df-leading-tight);letter-spacing:-.025em}
+.df-admin-blog .ui-subtitle{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-relaxed)}
+.df-admin-blog .ui-section-heading .ui-heading-h2{font-size:var(--df-text-lg);line-height:var(--df-leading-tight)}
+.df-admin-blog .ui-admin-record__identity>strong,.df-admin-blog .ui-admin-article__heading>strong{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
+@media(min-width:1024px){.df-admin-blog .ui-heading-h1{font-size:var(--df-type-display-wide)}.df-admin-blog .ui-subtitle{font-size:var(--df-text-base)}.df-admin-blog .ui-section-heading .ui-heading-h2{font-size:var(--df-text-xl)}}
