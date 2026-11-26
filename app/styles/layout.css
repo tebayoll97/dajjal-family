@@ -221,3 +221,7 @@
 
 /* Reusable compact field layout for range controls. */
 .ui-range-field{display:grid;gap:var(--df-space-2);min-width:0}.ui-range-label{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);min-width:0}.ui-range-label output{font-variant-numeric:tabular-nums;color:var(--df-text-secondary)}
+
+
+/* Reusable compact field layout for range controls. */
+.ui-range-field{display:grid;gap:var(--df-space-2);min-width:0}.ui-range-label{display:flex;align-items:center;justify-content:space-between;gap:var(--df-space-3);min-width:0}.ui-range-label output{font-variant-numeric:tabular-nums;color:var(--df-text-secondary)}
