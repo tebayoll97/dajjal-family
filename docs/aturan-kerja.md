@@ -29,6 +29,35 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Every new icon-bearing label must pair an icon with text that clearly names the same function. Do not use icon-only controls unless the control has a meaningful accessible name and at least a 44 × 44px touch target. Decorative icons stay hidden from assistive technology.
 - If a required semantic icon is missing, extend the central `SvgIcon` library first, preview the real component in Design System section 09 and Component Workbench, and document the new name/API. Do not create page-local substitutes.
 
+## Mandat Eksekusi Langsung, Tuntas, dan Konsisten — 2026-11-27
+
+- **Kerjakan langsung di branch `main`** untuk seluruh pekerjaan aplikasi dan dokumentasi rutin. Jangan membuat feature branch secara default. Pengecualian hanya mengikuti guardrail risiko material dan ketentuan Command Master.
+- **Jangan setengah-setengah.** Untuk pekerjaan yang ruang lingkup dan dependensinya sudah jelas, lakukan implementasi secara menyeluruh dalam satu batch koheren: audit, rancangan, perubahan terkait, integrasi, pengujian yang tersedia, review regresi, dan checkpoint dokumentasi. Hindari memecah pekerjaan menjadi langkah-langkah kecil yang tidak perlu atau berhenti hanya pada mockup/placeholder.
+- **Utamakan hasil maksimal yang aman.** Selagi dapat dikerjakan dengan bukti, akses, dan otorisasi yang tersedia, lanjutkan tanpa meminta persetujuan rutin atau mengulang pertanyaan yang jawabannya sudah ada. Jangan menunda pekerjaan hanya demi memberi laporan progres.
+- Kecepatan dan cakupan tidak boleh mengorbankan keamanan, integritas data, backup, test, review, persetujuan khusus, atau kejujuran pelaporan. Jika ada blocker nyata atau tindakan yang memerlukan persetujuan khusus, selesaikan semua bagian aman yang tidak bergantung padanya dan laporkan blocker secara spesifik.
+- Batch perubahan yang saling terkait agar efisien, tetapi jaga diff tetap dapat ditinjau, diuji, dan di-rollback. Jangan melakukan perubahan besar yang tidak terkait hanya untuk mengejar jumlah perubahan.
+
+**Motto kerja:**
+
+> Sekali jalan, tuntas tanpa hambatan, dengan penuh harapan dan tanpa adanya kekecewaan. Anjayy!
+
+## Standar wajib setiap halaman dan fitur baru — 2026-11-27
+
+1. **Reusable Semantic Design System:** seluruh konten dan UI halaman wajib menggunakan semantic tokens dari empat Global CSS Foundation (`tokens.css`, `typography.css`, `layout.css`, `components.css`) serta reusable components/primitives yang sudah dipublikasikan di halaman Design System. Jangan membuat warna, typography, spacing, button, card, field, atau pola kontrol lokal yang menduplikasi fondasi.
+2. Jika komponen/pola belum tersedia, bangun sebagai reusable component terlebih dahulu, ekspor dari `app/components/ui/index.js`, integrasikan token dan styling ke empat Global CSS Foundation, dokumentasikan API/aksesibilitas/responsive behavior di Component Catalog, dan tampilkan implementasi produksi yang sama di Design System Workbench sebelum dipakai halaman.
+3. **Mobile Compact UI adalah prioritas utama.** Rancang dan uji dari layar mobile kecil terlebih dahulu, lalu tablet dan desktop. Pastikan tidak ada horizontal overflow yang tidak disengaja, kontrol nyaman disentuh, layout ringkas, dan seluruh fungsi tetap tersedia pada tiap ukuran layar.
+4. **Bilingual wajib:** semua halaman/fitur user-facing harus mendukung locale URL `/id` dan `/en`, mengikuti Master Foundation. Gunakan provider bahasa global yang sudah ada, yaitu `app/components/LanguageProvider.js` (bukan membuat provider/page-local baru). Semua teks, label, helper, validasi, empty/loading/error/success state, metadata, dan navigasi harus dilokalkan. URL locale eksplisit adalah sumber kebenaran.
+5. **Reusable SVG Icon wajib:** gunakan `SvgIcon` dari `app/components/ui` untuk setiap ikon UI dan label berikon. Jika ikon semantik belum tersedia, tambahkan ke pustaka pusat, ekspor tetap melalui UI index, integrasikan ukuran/semantik yang diperlukan ke empat Global CSS Foundation, lalu tampilkan di panel Iconography Design System section 09 dan Component Workbench. Jangan memakai emoji, glyph Unicode, atau SVG satu kali di halaman untuk ikon antarmuka standar.
+6. **Master Foundation dan /command-master:** sebelum implementasi, baca `docs/aturan-kerja.md`, `docs/foundation/COMMAND_MASTER.md`, `docs/foundation/MASTER_FOUNDATION.md`, dan `docs/foundation/DESIGN_SYSTEM.md`; jalankan mandat `/command-master` secara penuh. Periksa pula aturan fitur dan implementasi aktif yang terkait.
+7. **Responsive:** verifikasi mobile, tablet, dan desktop, termasuk orientasi/viewport relevan, safe areas, touch/keyboard, dan overflow.
+8. **Metadata dan SEO:** setiap route memiliki title dan description yang unik, akurat, terlokalisasi, canonical yang benar, kebijakan index/noindex yang sesuai, serta sitemap/robots yang konsisten. Hreflang hanya boleh menunjuk versi bahasa yang benar-benar tersedia.
+9. **Open Graph:** tetapkan OG metadata sesuai halaman dan locale. Gunakan gambar halaman yang relevan dan tersedia; jika halaman tidak memiliki gambar khusus, gunakan fallback resmi Dajjal Family. OG URL harus menunjuk URL publik berbahasa yang benar. Jangan membuat referensi file gambar yang tidak ada.
+10. **Caching dan bandwidth:** tentukan strategi cache berdasarkan sensitivitas data dan sifat konten. Cache publik yang stabil secara efisien dengan TTL/revalidation dan stale-while-revalidate bila tepat; gunakan `private, no-store` untuk data personal, admin, sesi, dan respons sensitif. Optimalkan gambar/font/media, lazy-load konten non-kritis, hindari request berulang, dan jangan cache respons privat secara bersama.
+11. **Keamanan:** lakukan threat/risk review sesuai fitur. Validasi input server-side, autentikasi dan otorisasi server-side, least privilege, perlindungan endpoint, rate limit untuk operasi berisiko, upload signature/size validation, safe error handling, dan secret server-only. Menyembunyikan UI bukan pengganti authorization.
+12. **UI/UX dan aksesibilitas:** sediakan loading, empty, error, success, disabled, dan confirmation states yang relevan; gunakan semantic HTML, keyboard/focus, kontras, reduced motion, label/alt yang benar, serta target sentuh yang memadai.
+13. **Checkpoint Akashic wajib:** setiap sesi/perubahan proyek yang bermakna harus dicatat di `tebayoll97/akashic-record` sebagai checkpoint/chronicle yang menyebutkan tujuan, keputusan, file yang diubah, commit SHA, verifikasi yang benar-benar dilakukan, blocker, dan next action. Perbarui index Akashic bila dokumen baru perlu ditemukan melalui reading map.
+14. Jangan menyatakan SEO, cache, keamanan, aksesibilitas, build, QA, atau deployment selesai hanya karena konfigurasi/kode telah ditambahkan. Catat pemeriksaan yang benar-benar dijalankan dan batas validasinya.
+
 ## Penerapan
 
 - Aturan ini berlaku untuk seluruh pekerjaan proyek sampai pengguna mengubah atau mencabutnya.
