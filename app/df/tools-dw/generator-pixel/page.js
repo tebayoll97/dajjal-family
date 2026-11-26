@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Button, Card, Dialog, PageHeader, Tabs, TextField, RangeSlider } from "@/app/components/ui";
+import { Button, Card, Dialog, PageHeader, Tabs, TextField, RangeSlider, SvgIcon } from "@/app/components/ui";
 import "./generator-pixel.css";
 
 const WIDTH = 193;
@@ -581,14 +581,14 @@ export default function GeneratorPixelPage() {
           />
 
           {!file ? (
-            <button className="df-pixel-dropzone" type="button" onClick={() => fileInputRef.current?.click()}>
-              <span className="df-pixel-upload-icon" aria-hidden="true">↑</span>
+            <Button className="df-pixel-dropzone" variant="secondary" wide onClick={() => fileInputRef.current?.click()}>
+              <SvgIcon name="upload" size={24} />
               <strong>{t.choose}</strong>
               <span>{t.uploadHint}</span>
-            </button>
+            </Button>
           ) : (
             <div className="df-pixel-file-summary">
-              <span className="df-pixel-file-icon" aria-hidden="true">▧</span>
+              <span className="df-pixel-file-icon"><SvgIcon name="image" size={20}/></span>
               <span className="df-pixel-file-name">{file.name}</span>
               <Button size="sm" variant="secondary" onClick={() => fileInputRef.current?.click()}>{t.replace}</Button>
             </div>
@@ -632,8 +632,7 @@ export default function GeneratorPixelPage() {
            </div>
 
           <div className="df-pixel-controls">
-            <label htmlFor="pixel-zoom">{t.zoom}<strong>{zoom.toFixed(1)}×</strong></label>
-            <input id="pixel-zoom" type="range" min="1" max="3" step="0.05" value={zoom} onChange={(event) => setZoom(Number(event.target.value))} disabled={!file || busy} />
+            <RangeSlider id="pixel-zoom" label={t.zoom} min={1} max={3} step={0.05} value={zoom} onChange={setZoom} disabled={!file || busy}/>
             <Button variant="ghost" size="sm" onClick={resetCrop} disabled={!file || busy}>{t.reset}</Button>
           </div>
 
