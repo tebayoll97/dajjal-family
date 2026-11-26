@@ -273,9 +273,13 @@ export default function GeneratorPixelPage() {
   const handlePointerMove = (event) => {
     if (!dragRef.current) return;
     const drag = dragRef.current;
+    const nextX = drag.offsetX + event.clientX - drag.x;
+    const nextY = drag.offsetY + event.clientY - drag.y;
+    const maxX = Math.max(0, (renderedWidth - stageWidth) / 2);
+    const maxY = Math.max(0, (renderedHeight - stageHeight) / 2);
     setOffset({
-      x: drag.offsetX + event.clientX - drag.x,
-      y: drag.offsetY + event.clientY - drag.y,
+      x: Math.min(maxX, Math.max(-maxX, nextX)),
+      y: Math.min(maxY, Math.max(-maxY, nextY)),
     });
   };
 
