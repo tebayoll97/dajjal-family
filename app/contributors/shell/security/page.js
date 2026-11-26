@@ -1,4 +1,0 @@
-import { headers } from "next/headers";
-import ContributorPlatform from "@/app/components/contributors/ContributorPlatform";
-export async function generateMetadata(){const l=(await headers()).get("x-df-locale")==="en"?"en":"id";const title=l==="en"?"Contributor Account Security | DAJJAL FAMILY":"Keamanan Akun Kontributor | DAJJAL FAMILY";const description=l==="en"?"Manage your contributor account security.":"Kelola keamanan akun kontributor.";const url=`https://dajjalfamily.com/${l}/contributors/shell/security`,image="https://dajjalfamily.com/dajjalfamily_icon_192.png";return{title,description,robots:{index:false,follow:false},alternates:{canonical:url},openGraph:{title,description,url,siteName:"DAJJAL FAMILY",type:"website",images:[{url:image,alt:"DAJJAL FAMILY"}]},twitter:{card:"summary_large_image",title,description,images:[image]}};}
-export default function ContributorSecurityPage(){return <ContributorPlatform section="security"/>;}

@@ -1,4 +1,0 @@
-import { headers } from "next/headers";
-import ContributorPlatform from "@/app/components/contributors/ContributorPlatform";
-export async function generateMetadata(){const l=(await headers()).get("x-df-locale")==="en"?"en":"id";const title=l==="en"?"My Contributor Profile | DAJJAL FAMILY":"Profil Kontributor Saya | DAJJAL FAMILY";const description=l==="en"?"Manage your contributor identity and public profile.":"Kelola identitas dan profil publik kontributor.";const url=`https://dajjalfamily.com/${l}/contributors/shell/profile`,image="https://dajjalfamily.com/dajjalfamily_icon_192.png";return{title,description,robots:{index:false,follow:false},alternates:{canonical:url},openGraph:{title,description,url,siteName:"DAJJAL FAMILY",type:"website",images:[{url:image,alt:"DAJJAL FAMILY"}]},twitter:{card:"summary_large_image",title,description,images:[image]}};}
-export default function ContributorProfilePage(){return <ContributorPlatform section="profile"/>;}

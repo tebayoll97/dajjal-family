@@ -1,3 +1,0 @@
-export function PageHeader({ eyebrow, title, description, breadcrumbs, actions, meta, className = "" }) {
-  return <header className={["ui-page-heading", className].filter(Boolean).join(" ")}>{breadcrumbs ? <div className="ui-page-heading-breadcrumbs">{breadcrumbs}</div> : null}<div className="ui-page-heading-main"><div className="ui-page-heading-copy">{eyebrow ? <p className="ui-eyebrow">{eyebrow}</p> : null}<h1 className="ui-heading-h1">{title}</h1>{description ? <p className="ui-subtitle">{description}</p> : null}{meta ? <div className="ui-page-heading-meta">{meta}</div> : null}</div>{actions ? <div className="ui-page-heading-actions">{actions}</div> : null}</div></header>;
-}

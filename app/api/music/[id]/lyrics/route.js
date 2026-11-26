@@ -1,4 +1,0 @@
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
-export const dynamic="force-dynamic";
-const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export async function GET(_request,{params}){const {id}=await params;if(!UUID.test(id))return Response.json({error:"Track not found."},{status:404});const {data,error}=await supabaseAdmin.from("df_music_library").select("id,title,lyrics").eq("id",id).eq("status","published").eq("lyrics_status","published").maybeSingle();if(error)return Response.json({error:"Lyrics unavailable."},{status:503,headers:{"Cache-Control":"no-store"}});if(!data||!Array.isArray(data.lyrics)||!data.lyrics.length)return Response.json({error:"Lyrics not found."},{status:404,headers:{"Cache-Control":"no-store, no-cache, must-revalidate, max-age=0"}});return Response.json({success:true,item:data},{headers:{"Cache-Control":"no-store, no-cache, must-revalidate, max-age=0"}});}
