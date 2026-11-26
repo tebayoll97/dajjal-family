@@ -27,8 +27,8 @@ const COPY = {
     canvas: "AREA BIO · 193 × 45 PX",
     process: "Buat Pixel Bio",
     processing: "Memproses…",
-    uploading: "Menyimpan gambar ke Google Drive…",
-    encoding: "Membuat kode pixel…",
+    uploading: "Memproses...",
+    encoding: "Memproses...",
     successTitle: "Pixel Bio berhasil dibuat!",
     successDescription: "Gambar berhasil diproses dan kode bio siap disalin.",
     copy: "Copy Code",
@@ -45,8 +45,8 @@ const COPY = {
     session: "Sesi admin tidak ditemukan. Silakan masuk kembali.",
     uploadError: "Gambar gagal disimpan ke Google Drive.",
     processError: "Gambar belum dapat diproses. Coba atur ulang posisi atau gunakan gambar lain.",
-    driveNote: "Gambar asli akan disimpan di Google Drive pusat DAJJAL FAMILY.",
     noPreview: "Pratinjau gambar akan muncul di sini.",
+    resultTitle: "Hasil Pixel Bio",
   },
   en: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
@@ -63,8 +63,8 @@ const COPY = {
     canvas: "BIO AREA · 193 × 45 PX",
     process: "Create Pixel Bio",
     processing: "Processing…",
-    uploading: "Saving image to Google Drive…",
-    encoding: "Generating pixel code…",
+    uploading: "Processing...",
+    encoding: "Processing...",
     successTitle: "Pixel Bio created!",
     successDescription: "Your image has been processed and the bio code is ready to copy.",
     copy: "Copy Code",
@@ -81,16 +81,13 @@ const COPY = {
     session: "Admin session not found. Please sign in again.",
     uploadError: "The image could not be saved to Google Drive.",
     processError: "The image could not be processed. Reset the crop or try another image.",
-    driveNote: "The original image will be stored in DAJJAL FAMILY central Google Drive.",
     noPreview: "Your image preview will appear here.",
+    resultTitle: "Pixel Bio Result",
   },
 };
 
 function colorTag(rgb) {
-  const full = rgb.map((channel) => channel.toString(16).padStart(2, "0"));
-  const short = full.every((part) => part[0] === part[1])
-    ? full.map((part) => part[0]).join("")
-    : full.join("");
+  const short = rgb.map((channel) => Math.max(0, Math.min(15, Math.round(channel / 17))).toString(16)).join("");
   return `<#${short}>`;
 }
 
@@ -155,7 +152,7 @@ function encodePixelCanvas(canvas) {
     const rows = [];
     for (let y = 0; y < HEIGHT; y += 1) {
       let row = "";
-      let activeColor = -1;
+      let activeTag = "";
       let runLength = 0;
       for (let x = 0; x < WIDTH; x += 1) {
         const pixel = pixels[y * WIDTH + x];
@@ -172,15 +169,16 @@ function encodePixelCanvas(canvas) {
             nearest = colorIndex;
           }
         }
-        if (nearest === activeColor) {
+        const nextTag = colorTag(palette[nearest]);
+        if (nextTag === activeTag) {
           runLength += 1;
         } else {
-          if (runLength) row += colorTag(palette[activeColor]) + ".".repeat(runLength);
-          activeColor = nearest;
+          if (runLength) row += activeTag + ".".repeat(runLength);
+          activeTag = nextTag;
           runLength = 1;
         }
       }
-      if (runLength) row += colorTag(palette[activeColor]) + ".".repeat(runLength);
+      if (runLength) row += activeTag + ".".repeat(runLength);
       rows.push(row);
     }
 
@@ -209,10 +207,11 @@ export default function GeneratorPixelPage() {
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [busy, setBusy] = useState(false);
-  const [busyLabel, setBusyLabel] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
+  const [successOpen, setSuccessOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const resultPanelRef = useRef(null);
 
   const stageHeight = stageWidth * HEIGHT / WIDTH;
 
@@ -320,7 +319,6 @@ export default function GeneratorPixelPage() {
     }
     setBusy(true);
     setError("");
-    setBusyLabel(t.encoding);
     try {
       const pixelCanvas = makeCropCanvas();
       const encoded = encodePixelCanvas(pixelCanvas);
@@ -328,7 +326,6 @@ export default function GeneratorPixelPage() {
         throw new Error(t.overLimit);
       }
 
-      setBusyLabel(t.uploading);
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData?.session?.access_token) throw new Error(t.session);
       const form = new FormData();
@@ -342,13 +339,29 @@ export default function GeneratorPixelPage() {
       const uploaded = await response.json().catch(() => ({}));
       if (!response.ok || !uploaded.success) throw new Error(uploaded.error || t.uploadError);
 
-      setResult({ ...encoded, driveFile: uploaded.file });
+      setResult({ ...encoded, preview: pixelCanvas.toDataURL("image/png") });
+      setCopied(false);
+      setSuccessOpen(true);
+      setFile(null);
+      setImageUrl("");
+      setImageSize({ width: 0, height: 0 });
+      setZoom(1);
+      setOffset({ x: 0, y: 0 });
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (caught) {
       setError(caught.message || t.processError);
     } finally {
       setBusy(false);
-      setBusyLabel("");
     }
+  };
+
+  const finishSuccess = () => {
+    setSuccessOpen(false);
+    requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
   const copyCode = async () => {
@@ -420,8 +433,7 @@ export default function GeneratorPixelPage() {
             </div>
           )}
 
-          <p className="df-pixel-drive-note"><span aria-hidden="true">☁</span> {t.driveNote}</p>
-        </Card>
+         </Card>
 
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
@@ -433,8 +445,7 @@ export default function GeneratorPixelPage() {
           </div>
 
           <div className={["df-pixel-stage", imageUrl ? "has-image" : ""].join(" ")}>
-            <div className="df-pixel-stage-label">{t.canvas}</div>
-            <div
+             <div
               ref={stageRef}
               className="df-pixel-crop-area"
               onPointerDown={handlePointerDown}
@@ -457,8 +468,7 @@ export default function GeneratorPixelPage() {
               ) : <span className="df-pixel-empty-preview">{t.noPreview}</span>}
               <span className="df-pixel-crop-outline" aria-hidden="true" />
             </div>
-            <div className="df-pixel-dimensions"><span>193 px</span><span>45 px</span></div>
-          </div>
+           </div>
 
           <div className="df-pixel-controls">
             <label htmlFor="pixel-zoom">{t.zoom}<strong>{zoom.toFixed(1)}×</strong></label>
@@ -468,38 +478,36 @@ export default function GeneratorPixelPage() {
 
           {error ? <p className="df-pixel-error" role="alert">{error}</p> : null}
           <Button className="df-pixel-create-button" onClick={createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
-            {busy ? (busyLabel || t.processing) : t.process}
+            {busy ? t.processing : t.process}
           </Button>
-          {busy ? <p className="df-pixel-busy-label" role="status">{busyLabel}</p> : null}
         </Card>
       </div>
 
+      {result ? (
+        <Card className="df-pixel-result-panel" ref={resultPanelRef}>
+          <div className="df-pixel-result-heading">
+            <h2>{t.resultTitle}</h2>
+            <span aria-hidden="true">✓</span>
+          </div>
+          <div className="df-pixel-result-preview">
+            <img src={result.preview} alt={t.resultTitle} />
+          </div>
+          <textarea className="df-pixel-result-code" value={result.code} readOnly aria-label={t.resultTitle} />
+          <Button className="df-pixel-copy-button" onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
+        </Card>
+      ) : null}
+      </div>
+
       <Dialog
-        open={Boolean(result)}
-        onClose={() => { setResult(null); setCopied(false); }}
+        open={successOpen}
+        onClose={finishSuccess}
         title={t.successTitle}
         description={t.successDescription}
         closeLabel={t.done}
         closeOnBackdrop={false}
         className="df-pixel-success-dialog"
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => { setResult(null); setCopied(false); }}>{t.done}</Button>
-            <Button onClick={copyCode}>{copied ? t.copied : t.copy}</Button>
-          </>
-        }
-      >
-        {result ? (
-          <div className="df-pixel-success-summary">
-            <span className="df-pixel-success-mark" aria-hidden="true">✓</span>
-            <div className="df-pixel-result-stats">
-              <div><span>{t.characters}</span><strong>{result.characters.toLocaleString(language === "id" ? "id-ID" : "en-US")} / {MAX_CHARACTERS.toLocaleString(language === "id" ? "id-ID" : "en-US")}</strong></div>
-              <div><span>{t.palette}</span><strong>{result.colors}</strong></div>
-            </div>
-            <p>{result.characters <= MAX_CHARACTERS ? t.withinLimit : t.overLimit}</p>
-          </div>
-        ) : null}
-      </Dialog>
+        actions={<Button onClick={finishSuccess}>{t.done}</Button>}
+      />
     </main>
   );
 }
