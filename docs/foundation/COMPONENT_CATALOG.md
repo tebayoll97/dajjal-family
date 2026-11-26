@@ -31,7 +31,7 @@ Status meanings:
 
 | Component / pattern | Current status | Source / evidence | Next action |
 |---|---|---|---|
-| Button | React shared component | `app/components/ui/Button.js`; primary label uses `--df-button-primary-text` | Validate primary, small, large, loading, and disabled states across all four themes |
+| Button | React shared component | `app/components/ui/Button.js`; supports primary, secondary, ghost, danger, size, loading, disabled, and `wide` full-width layout; primary label uses `--df-button-primary-text` | Validate all variants, full-width layout, loading, and disabled states across all four themes |
 | Card | React shared component | `app/components/ui/Card.js` | Document supported surface variants; do not invent unused variants |
 | Badge | React shared component | `app/components/ui/Badge.js` | Validate semantic status contrast |
 | Alert | React shared component | `app/components/ui/Alert.js` | Document announcement semantics and variants |
@@ -733,3 +733,12 @@ Creator Lab uses the existing reusable ConfirmDialog for export and project dele
 - All values alias existing active theme, spacing, typography, radius, and elevation tokens; no independent palette is introduced.
 - Creator Lab uses the shared `SvgIcon` library. Its editor controls require visible accessible labels, keyboard focus, and minimum 44px targets for icon-only actions.
 - Local-first project documents use IndexedDB and versioned JSON; avatar images remain on-device and are not uploaded to a server.
+
+
+## Admin Blog reusable composition — 2026-11-27
+
+- The Admin Blog Management page consumes the shared `DropdownMenu` in disclosure layout mode for its four collapsible management sections. The default action-menu behavior remains unchanged.
+- `DropdownMenu({ label, children, className, disclosure = false, defaultOpen = false })`: disclosure mode keeps its panel in normal document flow and stretches to the available width; default mode remains a floating action menu.
+- The shared `Button` adds the optional `wide` boolean prop, which applies `.ui-button-wide` for full-width form actions. Variants, sizes, focus, loading and disabled behavior remain centrally styled.
+- The Blog admin uses the shared `Tabs` for Published/Drafts and shared `Pagination` for its 20-item article pages. Cards, fields, badges, empty states, feedback dialogs and verification states use existing shared components.
+- Page composition/layout classes are limited to semantic layout roles in the global component stylesheet; business logic and authorization remain in the Blog admin/API.
