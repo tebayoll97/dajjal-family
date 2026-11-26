@@ -59,6 +59,10 @@ Six curated records:
 
 Only the public identity record is published publicly. No private conversation archive has been bulk-imported yet.
 
+## Admin test panel
+
+The DAJJAL AI Core admin page now includes a bilingual Memory Core Test panel. It calls the Edge Function with the signed-in admin session using `search_internal`, so private memory remains protected. The first internal search indexes up to 24 pending chunks before retrieval.
+
 ## Current limitations / next integration
 
 The memory database and semantic retrieval endpoint are live. The endpoint returns retrieved context, not a generated assistant answer. The next integration step is to connect the DAJJAL AI bot's chat/research/article workflow to `search_internal`, pass retrieved context to the configured language model, and record citations/source references. No language-model provider or chat-generation endpoint is configured by this foundation migration.
