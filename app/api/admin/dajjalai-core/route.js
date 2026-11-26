@@ -20,17 +20,20 @@ export async function GET(request) {
   const auth = await verifyAdmin(request);
   if (!auth.authorized) return fail(auth.error, auth.status);
 
-  const [settingsResult, draftsResult, logsResult] = await Promise.all([
+  const [settingsResult, draftsResult, publishedResult, logsResult] = await Promise.all([
     supabaseAdmin.from("df_dajjal_ai_autopost_settings").select("*").eq("id", true).maybeSingle(),
     supabaseAdmin.from("df_blog_articles")
       .select("id,title_id,title_en,slug_id,slug_en,source_locale,created_at,updated_at,df_contributors(display_name)")
       .eq("status", "draft").order("created_at", { ascending: true }).limit(100),
+    supabaseAdmin.from("df_blog_articles")
+      .select("id,title_id,title_en,slug_id,slug_en,source_locale,published_at,updated_at,df_contributors(display_name)")
+      .eq("status", "published").order("published_at", { ascending: false }).limit(400),
     supabaseAdmin.from("df_dajjal_ai_autopost_logs")
       .select("id,slot_key,scheduled_date,scheduled_time,article_id,status,attempts,error_message,created_at,updated_at,df_blog_articles(title_id,title_en,slug_id,slug_en)")
       .order("created_at", { ascending: false }).limit(30),
   ]);
 
-  const error = settingsResult.error || draftsResult.error || logsResult.error;
+  const error = settingsResult.error || draftsResult.error || publishedResult.error || logsResult.error;
   if (error) {
     console.error("DAJJAL AI Core data load failed:", error.code || "unknown");
     return fail("Unable to load DAJJAL AI Core data.", 500);
@@ -40,6 +43,7 @@ export async function GET(request) {
     success: true,
     settings: normalizeSettings(settingsResult.data),
     drafts: draftsResult.data || [],
+    published: publishedResult.data || [],
     history: logsResult.data || [],
   }, { headers: HEADERS });
 }
