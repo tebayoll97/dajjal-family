@@ -23,6 +23,12 @@ Dokumen ini menjadi acuan operasional untuk aturan kerja dan perubahan proses. S
 - Halaman lama tidak wajib dimigrasikan dan tidak boleh disentuh dalam pekerjaan penambahan Reusable kecuali diminta eksplisit. Couple, Wedding, dan immersive Games tetap mengikuti batas isolasinya.
 - Jangan menghapus komponen/token yang ada hanya untuk merapikan inventaris. Penghapusan komponen memerlukan bukti tidak digunakan dan tidak dibutuhkan; token yang sudah ada tetap dipertahankan.
 
+- **Reusable SVG Icon standard:** Every new icon or icon-bearing label must use the shared `SvgIcon` component from `app/components/ui`; select a semantic icon name relevant to the accompanying label/action. Do not use emoji, Unicode glyphs, or one-off SVG markup for standard interface icons when a matching shared icon exists.
+- The icon library is defined in `app/components/ui/SvgIcon.js` and exported by `app/components/ui/index.js`. Use its `name`, `size`, `strokeWidth`, `className`, and optional accessible `label` props.
+- SVG visual contract: `viewBox="0 0 24 24"`, `fill="none"`, `stroke="currentColor"`, round line caps/joins, consistent 1.8 stroke width, and semantic icon sizing tokens. Icons inherit the active theme and surrounding text color.
+- Every new icon-bearing label must pair an icon with text that clearly names the same function. Do not use icon-only controls unless the control has a meaningful accessible name and at least a 44 × 44px touch target. Decorative icons stay hidden from assistive technology.
+- If a required semantic icon is missing, extend the central `SvgIcon` library first, preview the real component in Design System section 09 and Component Workbench, and document the new name/API. Do not create page-local substitutes.
+
 ## Penerapan
 
 - Aturan ini berlaku untuk seluruh pekerjaan proyek sampai pengguna mengubah atau mencabutnya.
