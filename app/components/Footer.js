@@ -38,7 +38,7 @@ export default function Footer() {
     ]},
     { id: "legal", title: t.legal, links: [
       [t.privacy, "/privacy-policy"], [t.terms, "/terms"],
-      [t.cookies, "/cookie-policy"], [t.disclaimer, "/disclaimer"],
+      [t.cookies, "/cookies"], [t.disclaimer, "/disclaimer"],
     ]},
   ];
 

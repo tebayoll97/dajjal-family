@@ -11,7 +11,7 @@ const related = {
 const slugs = {
   "privacy-policy": "privacy-policy",
   terms: "terms",
-  "cookie-policy": "cookie-policy",
+  "cookie-policy": "cookies",
   disclaimer: "disclaimer",
 };
 

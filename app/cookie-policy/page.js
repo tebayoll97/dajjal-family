@@ -6,8 +6,8 @@ export async function generateMetadata() {
   const requestHeaders = await headers();
   const locale = requestHeaders.get("x-df-locale") === "en" ? "en" : "id";
   const t = getLegalDocument("cookie-policy", locale);
-  const canonical = "https://dajjalfamily.com/" + locale + "/cookie-policy";
-  return { title: t.title, description: t.lead, robots: { index: true, follow: true }, alternates: { canonical, languages: { id: "https://dajjalfamily.com/id/cookie-policy", en: "https://dajjalfamily.com/en/cookie-policy", "x-default": "https://dajjalfamily.com/id/cookie-policy" } }, openGraph: { title: t.title, description: t.lead, url: canonical, siteName: "DAJJAL FAMILY", type: "website", locale: locale === "en" ? "en_US" : "id_ID" } };
+  const canonical = "https://dajjalfamily.com/" + locale + "/cookies";
+  return { title: t.title, description: t.lead, robots: { index: true, follow: true }, alternates: { canonical, languages: { id: "https://dajjalfamily.com/id/cookies", en: "https://dajjalfamily.com/en/cookies", "x-default": "https://dajjalfamily.com/id/cookies" } }, openGraph: { title: t.title, description: t.lead, url: canonical, siteName: "DAJJAL FAMILY", type: "website", locale: locale === "en" ? "en_US" : "id_ID" } };
 }
 
 export default async function CookiePolicyPage() {
