@@ -435,3 +435,13 @@
 .ui-link.ui-button{text-decoration:none}
 .ui-link.ui-button-primary{color:var(--df-on-primary)}
 .ui-link.ui-button-secondary{color:var(--df-text)}
+
+
+/* Shared modern SVG icon component. */
+.ui-icon{width:var(--df-icon-size-md);height:var(--df-icon-size-md);fill:none;stroke:currentColor;stroke-width:var(--df-icon-stroke);stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.ui-icon--xs{width:var(--df-icon-size-xs);height:var(--df-icon-size-xs)}
+.ui-icon--sm{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm)}
+.ui-icon--lg{width:var(--df-icon-size-lg);height:var(--df-icon-size-lg)}
+.ui-icon--xl{width:var(--df-icon-size-xl);height:var(--df-icon-size-xl)}
+.ui-icon-label{display:inline-flex;align-items:center;gap:var(--df-icon-gap);min-width:0}
+.df-account-logout-button>.ui-icon{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm);flex:0 0 var(--df-icon-size-sm)}
