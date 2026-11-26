@@ -23,7 +23,7 @@ const iconPaths = {
   shield: <><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></>,
   globe: <><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></>,
 };
-export default function SvgIcon({ name, size = 20, strokeWidth = 1.8, className = "", label }) {
+export default function SvgIcon({ name, size = "var(--df-icon-size-md)", strokeWidth = 1.8, className = "", label }) {
   const paths = iconPaths[name];
   if (!paths) return null;
   return <svg className={("ui-icon " + className).trim()} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden={label ? undefined : "true"} aria-label={label || undefined} role={label ? "img" : undefined} focusable="false">{paths}</svg>;
