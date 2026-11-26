@@ -35,6 +35,19 @@ export async function generateMetadata() {
     title: { default: "Dajjal Family — One Family. Many Possibilities.", template: "%s | Dajjal Family" },
     description: "Explore Dajjal Family, a growing digital ecosystem for gaming, knowledge, articles, digital products, business, and community.",
     applicationName: "Dajjal Family",
+    icons: {
+      icon: [
+        { url: "/favicon/favicon.ico", sizes: "any" },
+        { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+        { url: "/favicon/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+        { url: "/favicon/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      ],
+      shortcut: ["/favicon/favicon.ico"],
+      apple: [{ url: "/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    },
+    manifest: "/favicon/site.webmanifest",
     keywords: ["Dajjal Family", "digital ecosystem", "online games", "digital products", "knowledge and learning", "digital community"],
     ...(isPrivatePath(pathname) ? { robots: { index: false, follow: false } } : {}),
     // Canonical is safe to derive for every localized route. hreflang is page-specific:
