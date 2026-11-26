@@ -9,7 +9,7 @@ export async function GET(request){
  const auth=await verifyAdmin(request);if(!auth.authorized)return fail(auth.error,auth.status);
  const [contributors,articles,categories]=await Promise.all([
   supabaseAdmin.from("df_contributors").select("id,account_user_id,display_name,email,status,created_at,invited_at,public_profile_enabled,slug").order("created_at",{ascending:false}).limit(200),
-  supabaseAdmin.from("df_blog_articles").select("id,title_id,title_en,slug_id,slug_en,status,published_at,updated_at,df_contributors(display_name,email)").order("updated_at",{ascending:false}).limit(200),
+  supabaseAdmin.from("df_blog_articles").select("id,title_id,title_en,slug_id,slug_en,status,published_at,updated_at,df_contributors(display_name,email)").order("updated_at",{ascending:false}).limit(400),
   supabaseAdmin.from("df_blog_categories").select("id,slug,name_id,name_en,is_active,sort_order").order("sort_order",{ascending:true})
  ]);
  const error=contributors.error||articles.error||categories.error;if(error)return fail("Unable to load Blog administration data.",500);
@@ -48,7 +48,9 @@ export async function PATCH(request){
 }
 export async function DELETE(request){
  const auth=await verifyAdmin(request);if(!auth.authorized)return fail(auth.error,auth.status);
- const body=await request.json().catch(()=>({}));if(body.type!=="category"||!body.id)return fail("Invalid category deletion request.",422);
+ const body=await request.json().catch(()=>({}));if(!body.id)return fail("Invalid deletion request.",422);
+ if(body.type==="article"){const {data,error}=await supabaseAdmin.from("df_blog_articles").delete().eq("id",body.id).select("id").maybeSingle();if(error||!data)return fail("Unable to delete article.",500);revalidateTag("df-blog-public");revalidatePath("/sitemap.xml");return Response.json({success:true},{headers:HEADERS});}
+ if(body.type!=="category")return fail("Invalid category deletion request.",422);
  const {error}=await supabaseAdmin.from("df_blog_categories").delete().eq("id",body.id);
  if(error)return fail("Unable to delete category. Articles may still reference it.",409);
  revalidateTag("df-blog-public");return Response.json({success:true},{headers:HEADERS});
