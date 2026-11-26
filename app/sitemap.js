@@ -6,7 +6,7 @@ const origin = "https://dajjalfamily.com";
 const locales = ["id", "en"];
 const publicRoutes = [
   "", "/games", "/knowledge", "/blog", "/contributors", "/digital-products", "/business",
-  "/community", "/community-guidelines", "/about", "/contact", "/help",
+  "/community", "/community-guidelines", "/about", "/contact", "/help", "/df/tools-dw/generator-pixel",
   "/privacy-policy", "/terms", "/cookies", "/disclaimer",
   "/music", "/df", "/df/creator-lab", "/df/couple", "/df/wedding-anak-dajjal",
 ];
