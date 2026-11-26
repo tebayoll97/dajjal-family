@@ -36,6 +36,7 @@ Status meanings:
 | Badge | React shared component | `app/components/ui/Badge.js` | Validate semantic status contrast |
 | Alert | React shared component | `app/components/ui/Alert.js` | Document announcement semantics and variants |
 | TextField | React shared component | `app/components/ui/TextField.js` | Covers input, textarea and select through `as`; document API |
+| RangeSlider | React shared component | `app/components/ui/RangeSlider.js`; consumes semantic range tokens and shared `.ui-range` styles | Use for numeric ranges such as RGB channels; controlled value, accessible label, min/max/step and disabled state |
 | SearchField | React shared component | `app/components/ui/SearchField.js`; semantic root `.df-search` | Validate all four themes, ID/EN, Mobile Compact UI, and real Help Center consumer |
 | CheckboxField | React shared component | `app/components/ui/CheckboxField.js` | Document native state behavior |
 | RadioGroup | React shared component | `app/components/ui/RadioGroup.js` | Validate keyboard behavior and disabled options |
@@ -758,3 +759,8 @@ Creator Lab uses the existing reusable ConfirmDialog for export and project dele
 - Contributor and task records use the shared card list layout; all disclosure panels remain in-flow and span the available content width.
 - Semantic geometry is defined by `--df-admin-blog-*` tokens and shared typography/layout/component CSS. Mobile uses compact type and one-column content; wider layouts use a bounded two-column record grid.
 - Keep data fetching, authorization, and business actions in the page consumer; the reusable UI only controls presentation and disclosure state.
+
+
+## RangeSlider API
+
+RangeSlider is a controlled numeric range input. Props: `label`, `value`, `onChange(number)`, optional `min` (0), `max` (100), `step` (1), `hint`, `disabled`, `id`, and `className`. It uses shared semantic typography, spacing, focus, track, and thumb tokens. Use it for bounded numeric settings; validation and domain state remain with the consumer.
