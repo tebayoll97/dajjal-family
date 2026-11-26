@@ -45,3 +45,18 @@
 @media(max-width:460px){.df-pixel-result-details{grid-template-columns:1fr}.df-pixel-result-detail{display:flex;align-items:center;justify-content:space-between;gap:.75rem}}
 @media(max-width:760px){.df-pixel-page{width:min(100% - 1.25rem,var(--df-content-width,76rem));padding-top:1rem}.df-pixel-workspace{grid-template-columns:minmax(0,1fr);gap:.75rem}.df-pixel-panel{gap:.8rem}.df-pixel-dropzone{min-height:8rem}.df-pixel-stage{padding:.55rem}}
 @media(prefers-reduced-motion:reduce){.df-pixel-dropzone{transition:none}}
+
+.df-pixel-history-panel{margin-top:1rem;padding:clamp(.9rem,2vw,1.35rem);display:grid;gap:.85rem}
+.df-pixel-history-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.df-pixel-history-heading h2{margin:0;color:var(--df-text);font-size:1rem}
+.df-pixel-history-heading p{margin:.3rem 0 0;color:var(--df-text-muted);font-size:.75rem;line-height:1.45}
+.df-pixel-history-empty{margin:0;padding:1rem;border:1px dashed var(--df-border);border-radius:var(--df-radius-md);color:var(--df-text-muted);font-size:.78rem;text-align:center}
+.df-pixel-history-list{display:grid;gap:.65rem}
+.df-pixel-history-item{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:.8rem;padding:.7rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
+.df-pixel-history-thumb{overflow:hidden;border:1px solid var(--df-border);border-radius:.4rem;background:#080711}
+.df-pixel-history-thumb img{display:block;width:100%;aspect-ratio:193/45;object-fit:cover;image-rendering:pixelated}
+.df-pixel-history-meta{min-width:0;display:grid;gap:.2rem}
+.df-pixel-history-meta strong{color:var(--df-text);font-size:.82rem}
+.df-pixel-history-meta span,.df-pixel-history-meta small{color:var(--df-text-muted);font-size:.7rem;line-height:1.4}
+.df-pixel-history-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.4rem}
+@media(max-width:560px){.df-pixel-history-item{grid-template-columns:64px minmax(0,1fr);gap:.65rem}.df-pixel-history-actions{grid-column:1/-1;justify-content:stretch}.df-pixel-history-actions .ui-button{flex:1}.df-pixel-history-heading{align-items:center}}
