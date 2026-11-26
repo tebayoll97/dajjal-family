@@ -142,7 +142,7 @@ export default function DajjalAICore() {
                   title={id ? "Tiga Jadwal Harian (WIB)" : "Three Daily Schedules (WIB)"}
                   description={id ? "Gunakan format 24 jam. Ketiga waktu harus berbeda." : "Use 24-hour time. All three times must be different."}
                 />
-                <div className="ui-grid-3">
+                <div className="ui-stack">
                   {settings.times.map((time, index) => (
                     <TextField
                       key={index}
