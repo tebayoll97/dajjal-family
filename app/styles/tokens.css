@@ -371,3 +371,7 @@
   --df-admin-blog-card-surface:var(--df-surface-raised);
 }
 @media(min-width:768px){:root{--df-admin-blog-section-gap:var(--df-space-5);--df-admin-blog-card-padding:var(--df-space-5)}}
+
+
+/* Reusable range control semantic sizing roles. */
+:root{--df-range-track-size:.375rem;--df-range-thumb-size:1.125rem;--df-range-label-size:var(--df-text-sm);--df-range-hint-size:var(--df-text-xs)}
