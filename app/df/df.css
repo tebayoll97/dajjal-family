@@ -36,7 +36,7 @@
   max-width: 42rem; margin: 1.2rem auto 0; color: var(--df-text-secondary);
   font-size: clamp(.9rem, 1.5vw, 1.05rem); line-height: 1.75;
 }
-.df-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.8rem; }
+.df-home .df-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.8rem; }
 .df-button {
   display: inline-flex; min-height: 46px; align-items: center; justify-content: center;
   padding: .75rem 1.25rem; border: 1px solid var(--df-primary); border-radius: var(--df-radius-pill);
@@ -81,7 +81,7 @@
   .df-hero { padding: 2.4rem 1rem; border-radius: var(--df-radius-lg); }
   .df-hero h1 { font-size: clamp(1.8rem, 9vw, 2.8rem); }
   .df-hero h1 span { letter-spacing: .16em; }
-  .df-hero-actions { gap: .55rem; }
+  .df-home .df-hero-actions { gap: .55rem; }
   .df-button { flex: 1 1 145px; }
   .df-event-card { align-items: stretch; flex-direction: column; }
   .df-event-card .df-button { width: 100%; }
@@ -97,7 +97,7 @@
   .df-event-card { align-items:flex-start; flex-direction:column; gap:.8rem; padding:1rem; }
   .df-event-card > div { flex:0 1 auto; width:100%; }
   .df-event-card .df-button { align-self:flex-start; width:auto; min-width:0; padding:.62rem .9rem; font-size:.66rem; }
-  .df-hero-actions .ui-button { flex:0 1 auto; }
+  .df-home .df-hero-actions .ui-button { flex:0 1 auto; }
 }
 
 
@@ -123,7 +123,7 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
 .df-section{margin-top:clamp(1.5rem,4vw,2.5rem)}
 .df-section-heading{margin-bottom:.75rem}
 .df-section-subtitle{margin-bottom:.85rem}
-.df-hero-actions{display:none}
+.df-home .df-hero-actions{display:none}
 @media(max-width:800px){
  .df-card-grid{grid-template-columns:minmax(0,1fr);gap:.6rem}
 }
@@ -148,13 +148,13 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
 
 
 /* Restore hero navigation actions; keep the event entry in the compact card system. */
-.df-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1.2rem}
-.df-hero-actions .ui-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.df-home .df-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1.2rem}
+.df-home .df-hero-actions .ui-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 #events{scroll-margin-top:6rem}
 #projects{scroll-margin-top:6rem}
 @media(max-width:560px){
- .df-hero-actions{gap:.5rem;margin-top:1rem}
- .df-hero-actions .ui-button{flex:1 1 0;min-width:0;padding:.65rem .7rem;font-size:.65rem}
+ .df-home .df-hero-actions{gap:.5rem;margin-top:1rem}
+ .df-home .df-hero-actions .ui-button{flex:1 1 0;min-width:0;padding:.65rem .7rem;font-size:.65rem}
 }
 
 
@@ -175,7 +175,7 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
   background: var(--df-surface-overlay);
   border-color: var(--df-accent);
 }
-.df-hero-actions { align-items: center; }
+.df-home .df-hero-actions { align-items: center; }
 @media (max-width: 560px) {
   .df-hero-primary-stack { width: min(100%, 17rem); }
   .df-hero-primary-stack .df-button { flex: 0 0 auto; }
@@ -183,7 +183,7 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
 
 
 /* Responsive hero actions: balanced tap targets with no squeezed labels. */
-.df-hero-actions {
+.df-home .df-hero-actions {
   display: grid;
   width: min(100%, 34rem);
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -191,7 +191,7 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
   gap: var(--df-space-3);
   margin: 1.2rem auto 0;
 }
-.df-hero-actions .ui-button {
+.df-home .df-hero-actions .ui-button {
   width: 100%;
   min-width: 0;
   min-height: 3rem;
@@ -201,7 +201,7 @@ a.df-card:focus-visible{outline:3px solid var(--df-focus);outline-offset:3px}
   text-align: center;
 }
 @media (max-width: 380px) {
-  .df-hero-actions {
+  .df-home .df-hero-actions {
     grid-template-columns: minmax(0, 1fr);
     width: min(100%, 20rem);
     gap: var(--df-space-2);
