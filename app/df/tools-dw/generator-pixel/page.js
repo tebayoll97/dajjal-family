@@ -226,7 +226,7 @@ function encodePixelCanvas(canvas, width = WIDTH, height = HEIGHT) {
       let activeTag = "";
       let runLength = 0;
       for (let x = 0; x < width; x += 1) {
-        const pixel = pixels[y * WIDTH + x];
+        const pixel = pixels[y * width + x];
         let nearest = 0;
         let nearestDistance = Number.POSITIVE_INFINITY;
         for (let colorIndex = 0; colorIndex < palette.length; colorIndex += 1) {
@@ -325,8 +325,8 @@ export default function GeneratorPixelPage() {
   }, []);
 
   const stageHeight = stageWidth * HEIGHT / WIDTH;
-  const backgroundHex="#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>v.toString(16).padStart(2,"0")).join("");
-  const foregroundHex="#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>v.toString(16).padStart(2,"0")).join("");
+  const backgroundHex="#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
+  const foregroundHex="#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
   useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex]);
 
   useEffect(() => {
@@ -558,8 +558,8 @@ export default function GeneratorPixelPage() {
         className="df-pixel-header"
       />
 
-      <Tabs value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null}]} />
-      {mode === "image" ? <div className="df-pixel-workspace">
+      <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null}]} />
+      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : "pixel-mode-tab-1"} tabIndex={0}>{mode === "image" ? <div className="df-pixel-workspace">
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
             <span className="df-pixel-step-number">01</span>
@@ -649,13 +649,13 @@ export default function GeneratorPixelPage() {
           <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
-            <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
+            <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
           </div>
           <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
           {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
           <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
         </Card>
-      )}
+      )}</div>
 
       {result ? (
         <div className="df-pixel-result-anchor" ref={resultPanelRef}>
