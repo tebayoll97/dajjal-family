@@ -396,7 +396,7 @@
 
 /* Admin Shell mobile drawer interaction and scroll correction. */
 #df-admin-shell .df-admin-mobile-drawer{overflow:hidden;}
-#df-admin-shell .df-admin-mobile-drawer .df-admin-nav{display:block;flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+#df-admin-shell .df-admin-mobile-drawer .df-admin-nav{display:block;flex:0 0 auto;min-height:0;overflow:visible;overscroll-behavior:auto;-webkit-overflow-scrolling:auto;}
 #df-admin-shell .df-admin-mobile-drawer .df-admin-sidebar-label{flex:0 0 auto;}
 #df-admin-shell .df-admin-mobile-drawer .df-admin-sidebar-foot{flex:0 0 auto;}
 #df-admin-shell .df-admin-nav-home{margin:0 0 2px;}
@@ -416,3 +416,29 @@
 #df-admin-shell .df-admin-nav-icon{display:grid;place-items:center;}
 #df-admin-shell .df-admin-nav-svg{display:block;width:20px;height:20px;flex:0 0 20px;}
 @media(max-width:820px){#df-admin-shell .df-admin-mobile-drawer{display:flex!important;flex-direction:column;overflow:hidden;}#df-admin-shell .df-admin-mobile-drawer>.df-admin-brand{flex:0 0 auto;}#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;touch-action:pan-y;}#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-foot{flex:0 0 auto;margin-top:0;}}
+
+
+/* Single scroll owner: Home, section label and all admin navigation move together. */
+#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-scroll{
+  display:flex;
+  flex:1 1 0%;
+  flex-direction:column;
+  min-height:0;
+  height:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-scroll>.df-admin-nav{
+  display:block;
+  flex:0 0 auto;
+  min-height:0;
+  height:auto;
+  overflow:visible;
+}
+#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-scroll>.df-admin-nav-home,
+#df-admin-shell .df-admin-mobile-drawer>.df-admin-sidebar-scroll>.df-admin-sidebar-label{
+  flex:0 0 auto;
+}
