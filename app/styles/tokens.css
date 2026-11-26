@@ -358,3 +358,16 @@
   --df-creator-canvas-radius: var(--df-radius-lg);
   --df-creator-template-accent: var(--df-accent);
 }
+
+/* Admin Blog responsive composition tokens — mapped to the active global preset. */
+:root{
+  --df-admin-blog-section-gap:var(--df-space-4);
+  --df-admin-blog-card-gap:var(--df-space-3);
+  --df-admin-blog-card-padding:var(--df-space-4);
+  --df-admin-blog-card-radius:var(--df-radius-lg);
+  --df-admin-blog-section-radius:var(--df-radius-xl);
+  --df-admin-blog-trigger-height:var(--df-touch-target-min);
+  --df-admin-blog-panel-surface:var(--df-surface);
+  --df-admin-blog-card-surface:var(--df-surface-raised);
+}
+@media(min-width:768px){:root{--df-admin-blog-section-gap:var(--df-space-5);--df-admin-blog-card-padding:var(--df-space-5)}}
