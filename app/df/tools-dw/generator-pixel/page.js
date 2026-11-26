@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { Button, Card, Dialog, PageHeader } from "@/app/components/ui";
-import { supabase } from "@/lib/supabase";
 import "./generator-pixel.css";
 
 const WIDTH = 193;
@@ -93,7 +92,6 @@ const COPY = {
     invalidType: "Gunakan gambar JPG, PNG, atau WebP.",
     tooLarge: "File gambar tidak dapat digunakan.",
     noImage: "Pilih gambar terlebih dahulu.",
-    session: "Sesi admin tidak ditemukan. Silakan masuk kembali.",
     uploadError: "Gambar gagal diproses. Silakan coba lagi.",
     processError: "Gambar belum dapat diproses. Coba atur ulang posisi atau gunakan gambar lain.",
     noPreview: "Pratinjau gambar akan muncul di sini.",
@@ -136,7 +134,6 @@ const COPY = {
     invalidType: "Use a JPG, PNG, or WebP image.",
     tooLarge: "This image file cannot be used.",
     noImage: "Choose an image first.",
-    session: "Admin session not found. Please sign in again.",
     uploadError: "The image could not be processed. Please try again.",
     processError: "The image could not be processed. Reset the crop or try another image.",
     noPreview: "Your image preview will appear here.",
@@ -405,16 +402,6 @@ export default function GeneratorPixelPage() {
         throw encodingError;
       }
       if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
-
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !sessionData?.session?.access_token) throw new Error(t.session);
-      const response = await fetch("/api/df/tools-dw/generator-pixel/authorize", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
-        cache: "no-store",
-      });
-      const authorization = await response.json().catch(() => ({}));
-      if (!response.ok || !authorization.success) throw new Error(authorization.error || t.session);
 
       const historyEntry = {
         id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
