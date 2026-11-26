@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, TextField, EditorialByline, ContributorCard, Avatar, AdminPanel } from "../components/ui";
+import { Alert, Badge, Button, Card, TextField, EditorialByline, ContributorCard, Avatar, AdminPanel, SvgIcon } from "../components/ui";
 import ComponentWorkbench from "./ComponentWorkbench";
 import EditorialEditor from "../components/blog/EditorialEditor";
 import EditorialContentRenderer from "../components/blog/EditorialContentRenderer";
@@ -162,15 +162,22 @@ export default function DesignSystemClient() {
           <Card className="ui-stack" style={{ padding: "var(--df-space-5)" }}><DataDisplayPreview /></Card>
         </Section>
 
-        <Section id="09" title="ICONOGRAPHY" headingId="iconography-heading" description="Icon roles, sizing and usage" open={!!expanded["09"]} onToggle={() => toggle("09")}>
+        <Section id="09" title="ICONOGRAPHY" headingId="iconography-heading" description="Reusable SVG line icons, semantic names and sizing" open={!!expanded["09"]} onToggle={() => toggle("09")}>
           <div className={styles.demoCard}>
-            <p className={styles.demoLabel}>ICON ROLES</p>
+            <p className={styles.demoLabel}>REUSABLE SVG ICON LIBRARY</p>
             <div className={styles.iconGrid}>
-              {[["⌂","Home"],["⚙","Settings"],["♙","Profile"],["⌕","Search"],["＋","Add"],["✓","Success"],["!","Warning"],["×","Close"],["↗","External"],["⋯","More"],["♡","Favorite"],["⌁","Community"]].map(([glyph,label]) => <div className={styles.iconSample} key={label}><span aria-hidden="true">{glyph}</span><small>{label}</small></div>)}
+              {[
+                ["home","Home"],["settings","Settings"],["user","Profile"],["search","Search"],
+                ["plus","Add"],["check","Success"],["alert","Warning"],["close","Close"],
+                ["external","External"],["more","More"],["heart","Favorite"],["users","Community"],
+                ["mail","Mail"],["bell","Notifications"],["calendar","Calendar"],["image","Image"],
+                ["file","File"],["music","Music"],["log-out","Sign out"],["shield","Security"],
+                ["globe","Language"],["arrow-left","Back"],["chevron-down","Expand"],
+              ].map(([name,label]) => <div className={styles.iconSample} key={name}><SvgIcon name={name} size={24}/><small>{label}</small><code>{name}</code></div>)}
             </div>
             <p className={styles.demoLabel}>SIZE SCALE</p>
-            <div className={styles.iconSizes}><span style={{fontSize:12}}>✦ 12</span><span style={{fontSize:16}}>✦ 16</span><span style={{fontSize:20}}>✦ 20</span><span style={{fontSize:24}}>✦ 24</span><span style={{fontSize:32}}>✦ 32</span></div>
-            <p className={styles.demoNote}>Use one consistent icon family per interface. Decorative icons should be hidden from assistive technology; functional icons need an accessible label. Keep icon-only controls at least 44 × 44px.</p>
+            <div className={styles.iconSizes}><SvgIcon name="plus" size={14}/><SvgIcon name="plus" size={16}/><SvgIcon name="plus" size={20}/><SvgIcon name="plus" size={24}/><SvgIcon name="plus" size={32}/></div>
+            <p className={styles.demoNote}>Use the shared <code>SvgIcon</code> from <code>app/components/ui</code>. Standard: 24 × 24 viewBox, no fill, currentColor stroke, 1.8 stroke width, round caps and joins. Choose a semantic icon name relevant to its label. Decorative icons are hidden from assistive technology; meaningful standalone icons use an accessible label. Keep icon-only interactive targets at least 44 × 44px.</p>
           </div>
         </Section>
 
