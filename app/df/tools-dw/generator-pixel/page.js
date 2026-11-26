@@ -273,6 +273,7 @@ function normalizePixelGlyph(char) {
   return special[char] || char.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
 function buildTextPixelCanvas(text, background, foreground) {
+  if (text.length > 1024) return {error:"limit",canvas:null,count:text.length};
   if (typeof Intl.Segmenter !== "function") return {error:"unsupported",canvas:null,count:0};
   const segments=Array.from(new Intl.Segmenter(undefined,{granularity:"grapheme"}).segment(text),x=>x.segment);
   const expanded=segments.map(normalizePixelGlyph).flatMap(x=>Array.from(x === "\\t" ? "    " : x));
@@ -668,7 +669,7 @@ export default function GeneratorPixelPage() {
         <Card className="df-pixel-result-panel">
           <div className="df-pixel-result-heading">
             <h2>{t.resultTitle}</h2>
-            <span aria-hidden="true">✓</span>
+            <span aria-hidden="true"><SvgIcon name="check" size={18}/></span>
           </div>
           <div className="df-pixel-result-preview">
             <img src={result.preview} alt={t.resultTitle} />
