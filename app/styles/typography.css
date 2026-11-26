@@ -180,3 +180,7 @@
 .df-admin-blog .ui-section-heading .ui-heading-h2{font-size:var(--df-text-lg);line-height:var(--df-leading-tight)}
 .df-admin-blog .ui-admin-record__identity>strong,.df-admin-blog .ui-admin-article__heading>strong{font-size:var(--df-type-mobile-small);line-height:var(--df-leading-normal)}
 @media(min-width:1024px){.df-admin-blog .ui-heading-h1{font-size:var(--df-type-display-wide)}.df-admin-blog .ui-subtitle{font-size:var(--df-text-base)}.df-admin-blog .ui-section-heading .ui-heading-h2{font-size:var(--df-text-xl)}}
+
+
+/* Reusable range slider typography roles. */
+.ui-range-label{font-family:var(--df-font-sans);font-size:var(--df-range-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}.ui-range-hint{font-family:var(--df-font-sans);font-size:var(--df-range-hint-size);line-height:var(--df-leading-normal);color:var(--df-text-muted)}
