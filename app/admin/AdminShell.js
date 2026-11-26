@@ -85,7 +85,7 @@ export default function AdminShell({ children }) {
     const drawer = mobileDrawerRef.current;
     const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     document.body.style.overflow = "hidden";
-    drawer?.querySelector(focusableSelector)?.focus();
+    drawer?.querySelector(".df-admin-nav-home")?.focus();
     function handleKeyDown(event) {
       if (event.key === "Escape") {
         event.preventDefault();
