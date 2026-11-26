@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog, FeedbackDialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
-  SwitchField, Table, Tabs, TextField, SearchField,
+  SwitchField, Table, Tabs, TextField, SearchField, RangeSlider,
   Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard, SvgIcon,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
@@ -36,6 +36,7 @@ export default function ComponentWorkbench() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [progress, setProgress] = useState(68);
+  const [rangeValue, setRangeValue] = useState(128);
   const theme = themes.find((item) => item.id === themeId) || themes[0];
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
@@ -51,6 +52,7 @@ export default function ComponentWorkbench() {
     ["Alert", "Alert", <Alert key="alert" variant="info" title="Information">Status message example.</Alert>],
     ["TextField", "TextField", <TextField key="field" label="Display name" placeholder="Enter a name" helpText="Helper text example." />],
     ["SearchField", "df-search / SearchField", <SearchField key="search" label="Search the library" name="q" placeholder="Type a keyword…" />],
+    ["RangeSlider", "RangeSlider · semantic RGB / numeric control", <RangeSlider key="range-slider" label="Red channel" min={0} max={255} value={rangeValue} onChange={setRangeValue} hint="Reusable accessible slider · 0–255" />],
     ["CheckboxField", "CheckboxField", <CheckboxField key="checkbox" label="Enable notifications" checked={checked} onChange={setChecked} />],
     ["RadioGroup", "RadioGroup", <RadioGroup key="radio" label="Preview layout" name="workbench-layout" options={[{value:"mobile",label:"Mobile"},{value:"desktop",label:"Desktop"}]} value={choice} onChange={setChoice} direction="row" />],
     ["SwitchField", "SwitchField", <SwitchField key="switch" label="Public profile" description="Controlled switch preview." checked={enabled} onChange={setEnabled} />],
