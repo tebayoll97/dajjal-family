@@ -4,14 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { Badge, Button, Card, PageHeader, SvgIcon, TextField } from "@/app/components/ui";
 import "./creator-lab.css";
+import { TEMPLATES, WIDTH, HEIGHT, MAX_IMAGE_BYTES, createIdentityProject as createProject, makeCreatorId as makeId, validIdentityProject as validProject } from "@/lib/creator-engine/schema";
+import { putProject, listProjects, deleteProject } from "@/lib/creator-engine/projectStore";
+import { drawProject, downloadBlob } from "@/lib/creator-engine/canvasRenderer";
 
-const DB_NAME = "df-creator-engine";
-const STORE = "projects";
-const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
-const MAX_PROJECTS = 5;
-const WIDTH = 1080;
-const HEIGHT = 1350;
-const VERSION = 1;
+;
 
 const COPY = {
   id: {
@@ -56,169 +53,19 @@ const COPY = {
   },
 };
 
-const TEMPLATES = [
-  { id: "crimson-vanguard", label: "templateA", background: "#15101c", accent: "#e13b58", secondary: "#74233c" },
-  { id: "azure-protocol", label: "templateB", background: "#101a2a", accent: "#45b7e8", secondary: "#245b91" },
-  { id: "midnight-ops", label: "templateC", background: "#111318", accent: "#b8a1ff", secondary: "#4b3a72" },
-];
 
-function makeId() {
-  return globalThis.crypto?.randomUUID?.() || ("layer-" + Date.now() + "-" + Math.random().toString(36).slice(2, 9));
-}
 
-function createProject(templateId = TEMPLATES[0].id) {
-  const template = TEMPLATES.find((item) => item.id === templateId) || TEMPLATES[0];
-  return {
-    schemaVersion: VERSION, id: makeId(), name: "Gaming Identity", generator: "gaming-identity",
-    templateId: template.id, width: WIDTH, height: HEIGHT, accent: template.accent,
-    background: template.background, createdAt: Date.now(), updatedAt: Date.now(),
-    layers: [
-      { id: makeId(), type: "shape", name: "background", visible: true, x: 0, y: 0, width: WIDTH, height: HEIGHT, fill: template.background, shape: "background" },
-      { id: makeId(), type: "shape", name: "accent", visible: true, x: 690, y: 90, width: 500, height: 500, fill: template.secondary, shape: "circle", opacity: 0.8 },
-      { id: makeId(), type: "image", name: "avatar", visible: true, x: 345, y: 225, width: 390, height: 390, src: "" },
-      { id: makeId(), type: "text", name: "player", visible: true, x: 540, y: 850, text: "YOUR NAME", fontSize: 88, color: "#ffffff", weight: 800, align: "center" },
-      { id: makeId(), type: "text", name: "role", visible: true, x: 540, y: 930, text: "YOUR GAMING IDENTITY", fontSize: 30, color: "#d8d5e1", weight: 600, align: "center" },
-      { id: makeId(), type: "text", name: "server", visible: true, x: 540, y: 1060, text: "SERVER 278", fontSize: 28, color: template.accent, weight: 700, align: "center" },
-      { id: makeId(), type: "text", name: "alliance", visible: true, x: 540, y: 1120, text: "ALLIANCE", fontSize: 25, color: "#d8d5e1", weight: 600, align: "center" },
-    ],
-  };
-}
 
-function openDb() {
-  return new Promise((resolve, reject) => {
-    if (!("indexedDB" in window)) return reject(new Error("IndexedDB unavailable"));
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onupgradeneeded = () => {
-      if (!request.result.objectStoreNames.contains(STORE)) request.result.createObjectStore(STORE, { keyPath: "id" });
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
 
-async function putProject(project) {
-  const db = await openDb();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE, "readwrite");
-    const store = transaction.objectStore(STORE);
-    const request = store.getAll();
-    request.onsuccess = () => {
-      const existing = (request.result || []).filter((item) => item.id !== project.id).sort((a, b) => b.updatedAt - a.updatedAt);
-      existing.slice(MAX_PROJECTS - 1).forEach((item) => store.delete(item.id));
-      store.put(project);
-    }
-    transaction.oncomplete = () => { db.close(); resolve(); };
-    transaction.onerror = () => { db.close(); reject(transaction.error); };
-    transaction.onabort = () => { db.close(); reject(transaction.error); };
-  });
-}
 
-async function listProjects() {
-  const db = await openDb();
-  return new Promise((resolve, reject) => {
-    const request = db.transaction(STORE, "readonly").objectStore(STORE).getAll();
-    request.onsuccess = () => { db.close(); resolve((request.result || []).sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_PROJECTS)); };
-    request.onerror = () => { db.close(); reject(request.error); };
-  });
-}
 
-async function deleteProject(id) {
-  const db = await openDb();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE, "readwrite");
-    transaction.objectStore(STORE).delete(id);
-    transaction.oncomplete = () => { db.close(); resolve(); };
-    transaction.onerror = () => { db.close(); reject(transaction.error); };
-  });
-}
 
-function validProject(value) {
-  return Boolean(value && value.schemaVersion === VERSION && value.generator === "gaming-identity"
-    && typeof value.name === "string" && value.name.length <= 100
-    && value.width === WIDTH && value.height === HEIGHT
-    && Array.isArray(value.layers) && value.layers.length > 0 && value.layers.length <= 40
-    && new Set(value.layers.map((layer) => layer && layer.id)).size === value.layers.length
-    && value.layers.every((layer) => layer && typeof layer.id === "string"
-      && ["text", "shape", "image"].includes(layer.type)
-      && Number.isFinite(layer.x) && Number.isFinite(layer.y) && typeof layer.visible === "boolean"
-      && (layer.type !== "image" || (typeof layer.src === "string" && (!layer.src || (new RegExp("^data:image/(png|jpeg|webp);base64,", "i").test(layer.src) && layer.src.length <= 11500000))))
-      && (layer.type !== "text" || (typeof layer.text === "string" && layer.text.length <= 120))
-      && (layer.type !== "shape" || (Number.isFinite(layer.width) && Number.isFinite(layer.height)))));
-}
 
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    if (!src) return resolve(null);
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-  });
-}
 
-async function drawProject(canvas, project) {
-  if (!canvas || !project) return;
-  const context = canvas.getContext("2d");
-  if (!context) return;
-  canvas.width = project.width;
-  canvas.height = project.height;
-  context.clearRect(0, 0, project.width, project.height);
-  context.fillStyle = project.background;
-  context.fillRect(0, 0, project.width, project.height);
-  for (const layer of project.layers) {
-    if (!layer.visible) continue;
-    context.save();
-    context.globalAlpha = Number.isFinite(layer.opacity) ? Math.max(0, Math.min(1, layer.opacity)) : 1;
-    if (layer.type === "shape") {
-      context.fillStyle = layer.fill || project.accent;
-      if (layer.shape === "circle") {
-        context.beginPath();
-        context.arc(layer.x + layer.width / 2, layer.y + layer.height / 2, Math.min(layer.width, layer.height) / 2, 0, Math.PI * 2);
-        context.fill();
-      } else if (layer.shape === "line") {
-        context.fillRect(layer.x, layer.y, Math.max(2, layer.width), Math.max(2, layer.height));
-      } else if (layer.shape !== "background") {
-        context.fillRect(layer.x, layer.y, layer.width, layer.height);
-      }
-    } else if (layer.type === "image" && layer.src) {
-      const image = await loadImage(layer.src);
-      const diameter = Math.min(layer.width, layer.height);
-      context.beginPath();
-      context.arc(layer.x + layer.width / 2, layer.y + layer.height / 2, diameter / 2, 0, Math.PI * 2);
-      context.clip();
-      const scale = Math.max(layer.width / image.width, layer.height / image.height);
-      const drawWidth = image.width * scale;
-      const drawHeight = image.height * scale;
-      context.drawImage(image, layer.x + (layer.width - drawWidth) / 2, layer.y + (layer.height - drawHeight) / 2, drawWidth, drawHeight);
-      context.restore();
-      context.save();
-      context.globalAlpha = 1;
-      context.strokeStyle = project.accent;
-      context.lineWidth = 14;
-      context.beginPath();
-      context.arc(layer.x + layer.width / 2, layer.y + layer.height / 2, diameter / 2 + 4, 0, Math.PI * 2);
-      context.stroke();
-    } else if (layer.type === "text") {
-      context.fillStyle = layer.color || "#ffffff";
-      context.font = (layer.weight || 600) + " " + (layer.fontSize || 32) + "px system-ui, sans-serif";
-      context.textAlign = layer.align || "left";
-      context.textBaseline = "middle";
-      context.shadowColor = "rgba(0,0,0,.28)";
-      context.shadowBlur = 8;
-      context.fillText(String(layer.text || "").slice(0, 120), layer.x, layer.y, 940);
-    }
-    context.restore();
-  }
-}
 
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  anchor.click();
-  URL.revokeObjectURL(url);
-}
+
+
+
 
 export default function CreatorLabClient() {
   const { language } = useLanguage();
