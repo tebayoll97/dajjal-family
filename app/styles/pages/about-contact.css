@@ -192,3 +192,31 @@
   .df-help-categories .df-public-button { flex: 0 1 auto; }
   .df-guidelines-card { padding: .82rem; }
 }
+
+
+/* Legal & Trust document pages — shared bilingual public-page composition. */
+.df-legal-page { max-width:1160px; }
+.df-legal-hero { padding-bottom:clamp(1.7rem,4vw,3rem); }
+.df-legal-updated { position:relative; margin:1.2rem 0 0; color:var(--df-text-muted); font-size:.76rem; font-weight:700; letter-spacing:.02em; }
+.df-legal-layout { display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:clamp(1.5rem,4vw,3rem); align-items:start; margin-top:2rem; }
+.df-legal-document { min-width:0; padding:clamp(1.25rem,3vw,2.25rem); border:1px solid var(--df-border); border-radius:var(--df-radius-xl,20px); background:var(--df-surface); }
+.df-legal-section + .df-legal-section { margin-top:2rem; padding-top:1.7rem; border-top:1px solid var(--df-border); }
+.df-legal-section h2 { margin:0; color:var(--df-text); font-size:clamp(1rem,2vw,1.18rem); font-weight:850; letter-spacing:-.02em; line-height:1.4; }
+.df-legal-section p { margin:.8rem 0 0; color:var(--df-text-secondary); font-size:.91rem; line-height:1.85; }
+.df-legal-aside { position:sticky; top:1.5rem; display:grid; gap:1rem; padding:1.25rem; border:1px solid var(--df-border); border-radius:var(--df-radius-xl,20px); background:var(--df-surface-raised); }
+.df-legal-aside nav { display:grid; gap:.55rem; }
+.df-legal-aside nav a { color:var(--df-text-secondary); font-size:.82rem; line-height:1.5; text-decoration:none; }
+.df-legal-aside nav a:hover { color:var(--df-primary-hover); }
+.df-legal-aside nav a:focus-visible,.df-legal-contact:focus-visible { outline:2px solid var(--df-focus); outline-offset:4px; border-radius:3px; }
+.df-legal-contact { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.25rem; padding-top:.9rem; border-top:1px solid var(--df-border); color:var(--df-primary); font-size:.82rem; font-weight:800; text-decoration:none; }
+@media (max-width:760px) {
+  .df-legal-layout { grid-template-columns:1fr; }
+  .df-legal-aside { position:static; grid-row:1; grid-template-columns:1fr; }
+  .df-legal-aside nav { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem 1rem; }
+}
+@media (max-width:420px) {
+  .df-legal-document { padding:1rem; }
+  .df-legal-section + .df-legal-section { margin-top:1.5rem; padding-top:1.35rem; }
+  .df-legal-section p { font-size:.86rem; line-height:1.8; }
+  .df-legal-aside nav { grid-template-columns:1fr; }
+}

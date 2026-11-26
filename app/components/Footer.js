@@ -7,46 +7,68 @@ import { withLocalePrefix } from "@/lib/localePath";
 
 const copy = {
   en: {
-    tagline: "One Account. One Profile. Multiple Experiences. One Universe.",
-    universe: "Family Universe", games: "Games", profile: "Profile", helpCenter: "Help Center", guidelines: "Community Guidelines", rights: "All rights reserved.",
-    statement: "A DIGITAL UNIVERSE BUILT TO GROW.",
+    tagline: "A connected digital universe for gaming, knowledge, creativity, and community.",
+    explore: "Explore", community: "Community & Support", legal: "Legal",
+    games: "Gaming", knowledge: "Knowledge", blog: "Blog", products: "Digital Products", business: "Business", universe: "Family Universe",
+    communityHub: "Community", guidelines: "Community Guidelines", help: "Help Center", contact: "Contact", profile: "Profile",
+    privacy: "Privacy Policy", terms: "Terms & Conditions", cookies: "Cookie Policy", disclaimer: "Disclaimer",
+    rights: "All rights reserved.", statement: "ONE FAMILY. MANY POSSIBILITIES.",
   },
   id: {
-    tagline: "Satu Akun. Satu Profil. Banyak Pengalaman. Satu Universe.",
-    universe: "Universe Keluarga", games: "Game", profile: "Profil", helpCenter: "Pusat Bantuan", guidelines: "Pedoman Komunitas", rights: "Hak cipta dilindungi.",
-    statement: "SEMESTA DIGITAL YANG TERUS BERKEMBANG.",
+    tagline: "Semesta digital yang menghubungkan gaming, pengetahuan, kreativitas, dan komunitas.",
+    explore: "Jelajahi", community: "Komunitas & Bantuan", legal: "Legal",
+    games: "Gaming", knowledge: "Pengetahuan", blog: "Blog", products: "Produk Digital", business: "Bisnis", universe: "Universe Keluarga",
+    communityHub: "Komunitas", guidelines: "Pedoman Komunitas", help: "Pusat Bantuan", contact: "Kontak", profile: "Profil",
+    privacy: "Kebijakan Privasi", terms: "Syarat & Ketentuan", cookies: "Kebijakan Cookie", disclaimer: "Disclaimer",
+    rights: "Hak cipta dilindungi.", statement: "SATU KELUARGA. BANYAK KEMUNGKINAN.",
   },
 };
 
 export default function Footer() {
   const { language } = useLanguage();
   const t = copy[language] || copy.id;
-  const links = [
-    [t.universe, "/df"],
-    [t.games, "/games"],
-    [t.helpCenter, "/help"],
-    [t.guidelines, "/community-guidelines"],
-    [t.profile, "/profile"],
+  const groups = [
+    { id: "explore", title: t.explore, links: [
+      [t.games, "/games"], [t.knowledge, "/knowledge"], [t.blog, "/blog"],
+      [t.products, "/digital-products"], [t.business, "/business"], [t.universe, "/df"],
+    ]},
+    { id: "community", title: t.community, links: [
+      [t.communityHub, "/community"], [t.guidelines, "/community-guidelines"],
+      [t.help, "/help"], [t.contact, "/contact"], [t.profile, "/profile"],
+    ]},
+    { id: "legal", title: t.legal, links: [
+      [t.privacy, "/privacy-policy"], [t.terms, "/terms"],
+      [t.cookies, "/cookie-policy"], [t.disclaimer, "/disclaimer"],
+    ]},
   ];
 
   return (
     <footer className="df-site-footer">
       <div className="df-site-footer-inner">
-        <div className="df-site-footer-brand">
-          <Link href={withLocalePrefix("/", language)} className="df-site-brand">
-            <Image className="df-site-brand-mark" src="/dajjalfamily_icon_192.png" alt="" width={42} height={42} priority />
-            <span className="df-site-brand-copy">
-              <strong>DAJJAL FAMILY</strong>
-              <small>ONE FAMILY. MANY POSSIBILITIES.</small>
-            </span>
-          </Link>
-          <p>{t.tagline}</p>
+        <div className="df-site-footer-main">
+          <div className="df-site-footer-brand">
+            <Link href={withLocalePrefix("/", language)} className="df-site-brand">
+              <Image className="df-site-brand-mark" src="/dajjalfamily_icon_192.png" alt="" width={44} height={44} />
+              <span className="df-site-brand-copy">
+                <strong>DAJJAL FAMILY</strong>
+                <small>ONE FAMILY. MANY POSSIBILITIES.</small>
+              </span>
+            </Link>
+            <p>{t.tagline}</p>
+          </div>
+          <nav className="df-site-footer-groups" aria-label={language === "id" ? "Navigasi footer" : "Footer navigation"}>
+            {groups.map((group) => (
+              <section className="df-site-footer-group" key={group.id} aria-labelledby={"df-footer-" + group.id}>
+                <h2 id={"df-footer-" + group.id}>{group.title}</h2>
+                <ul>
+                  {group.links.map(([label, route]) => (
+                    <li key={route}><Link href={withLocalePrefix(route, language)}>{label}</Link></li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </nav>
         </div>
-        <nav className="df-site-footer-nav" aria-label={language === "id" ? "Navigasi footer" : "Footer navigation"}>
-          {links.map(([label, route]) => (
-            <Link key={route} href={withLocalePrefix(route, language)}>{label}</Link>
-          ))}
-        </nav>
         <div className="df-site-footer-bottom">
           <span>{t.statement}</span>
           <small>© {new Date().getFullYear()} DAJJAL FAMILY. {t.rights}</small>
