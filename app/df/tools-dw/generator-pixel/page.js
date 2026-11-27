@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
-import { Button, Card, Dialog, PageHeader, Tabs, TextField, RangeSlider, SvgIcon } from "@/app/components/ui";
+import { Button, Card, Dialog, ConfirmDialog, PageHeader, Tabs, TextField, RangeSlider, SvgIcon } from "@/app/components/ui";
 import "./generator-pixel.css";
 
 const WIDTH = 193;
@@ -14,8 +14,8 @@ const MAX_CHARACTERS = 32000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const HISTORY_DB = "df-pixel-bio-history";
 const HISTORY_STORE = "results";
-const HISTORY_LIMIT = 10;
-const HISTORY_PAGE_SIZE = 3;
+const HISTORY_LIMIT = 20;
+const HISTORY_PAGE_SIZE = 5;
 const TEXT_THEMES=[{id:"arctic",name:"Arctic",background:"#10182b",foreground:"#a5eaff",ornament:"❄"},{id:"crimson",name:"Crimson",background:"#210d19",foreground:"#ff526e",ornament:"✦"},{id:"nebula",name:"Nebula",background:"#130d2b",foreground:"#d8a5ff",ornament:"☾"},{id:"emerald",name:"Emerald",background:"#09201d",foreground:"#75f2bf",ornament:"❧"},{id:"solar",name:"Solar",background:"#2a1b08",foreground:"#ffd166",ornament:"☼"},{id:"aurora",name:"Aurora",background:"#260f27",foreground:"#ff9de2",ornament:"✧"},{id:"ocean",name:"Ocean",background:"#071c2b",foreground:"#62ddff",ornament:"〰"},{id:"inferno",name:"Inferno",background:"#2b1008",foreground:"#ff9b54",ornament:"♨"},{id:"toxic",name:"Toxic",background:"#142008",foreground:"#c7ff54",ornament:"☣"},{id:"monolith",name:"Monolith",background:"#17191e",foreground:"#e5e7eb",ornament:"✥"}];
 
 function openPixelHistoryDb() {
@@ -61,13 +61,17 @@ async function savePixelHistory(entry) {
   });
 }
 
-async function clearPixelHistory() {
+async function deletePixelHistoryEntry(id) {
   const db = await openPixelHistoryDb();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(HISTORY_STORE, "readwrite");
-    transaction.objectStore(HISTORY_STORE).clear();
-    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.objectStore(HISTORY_STORE).delete(id);
+    transaction.oncomplete = async () => {
+      db.close();
+      try { resolve(await readPixelHistory()); } catch (error) { reject(error); }
+    };
     transaction.onerror = () => { db.close(); reject(transaction.error); };
+    transaction.onabort = () => { db.close(); reject(transaction.error); };
   });
 }
 
@@ -106,13 +110,16 @@ const COPY = {
     detailCharacters: "Jumlah karakter",
     detailColors: "Jumlah warna",
     historyTitle: "Riwayat Generator",
-    historyDescription: "Sepuluh hasil terakhir tersimpan di perangkat ini.",
+    historyDescription: "Hingga 20 hasil tersimpan di perangkat ini.",
     historyEmpty: "Belum ada riwayat. Hasil yang berhasil dibuat akan muncul di sini.",
     historyItem: "Pixel Bio",
     historyCopy: "Salin Kode",
     historyRestore: "Pulihkan",
-    historyDelete: "Hapus Riwayat",
-    historyDeleteConfirm: "Hapus semua riwayat Pixel Bio dari perangkat ini?",
+    historyDelete: "Hapus",
+    historyDeleteTitle: "Hapus riwayat ini?",
+    historyDeleteConfirm: "Riwayat Pixel Bio yang dipilih akan dihapus dari perangkat ini. Tindakan ini tidak dapat dibatalkan.",
+    historyDeleteCancel: "Batal",
+    historyDeleteConfirmAction: "Ya, hapus",
   },
   en: {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
@@ -148,13 +155,16 @@ const COPY = {
     detailCharacters: "Characters",
     detailColors: "Colors",
     historyTitle: "Generator History",
-    historyDescription: "Your ten latest results are saved on this device.",
+    historyDescription: "Up to 20 results are saved on this device.",
     historyEmpty: "No history yet. Successfully generated results will appear here.",
     historyItem: "Pixel Bio",
     historyCopy: "Copy Code",
     historyRestore: "Restore",
-    historyDelete: "Clear History",
-    historyDeleteConfirm: "Delete all Pixel Bio history from this device?",
+    historyDelete: "Delete",
+    historyDeleteTitle: "Delete this history?",
+    historyDeleteConfirm: "The selected Pixel Bio history will be deleted from this device. This action cannot be undone.",
+    historyDeleteCancel: "Cancel",
+    historyDeleteConfirmAction: "Yes, delete",
   },
 };
 
@@ -431,6 +441,8 @@ export default function GeneratorPixelPage() {
   const [successOpen, setSuccessOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [history, setHistory] = useState([]);
+  const [historyDeleteTarget, setHistoryDeleteTarget] = useState(null);
+  const [historyDeleteBusy, setHistoryDeleteBusy] = useState(false);
   const [copiedHistoryId, setCopiedHistoryId] = useState("");
   const resultPanelRef = useRef(null);
   const textCanvasRef = useRef(null);
@@ -729,14 +741,18 @@ export default function GeneratorPixelPage() {
     requestAnimationFrame(() => resultPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
-  const deleteHistory = async () => {
-    if (!window.confirm(t.historyDeleteConfirm)) return;
+  const confirmDeleteHistory = async () => {
+    if (!historyDeleteTarget || historyDeleteBusy) return;
+    setHistoryDeleteBusy(true);
     try {
-      await clearPixelHistory();
-      setHistory([]);
-      setCopiedHistoryId("");
+      setHistory(await deletePixelHistoryEntry(historyDeleteTarget.id));
+      setCopiedHistoryId((current) => current === historyDeleteTarget.id ? "" : current);
+      setHistoryDeleteTarget(null);
+      setHistoryPage(1);
     } catch (historyError) {
-      console.warn("Pixel Bio history could not be cleared:", historyError);
+      console.warn("Pixel Bio history could not be deleted:", historyError);
+    } finally {
+      setHistoryDeleteBusy(false);
     }
   };
 
@@ -932,7 +948,6 @@ export default function GeneratorPixelPage() {
             <h2>{t.historyTitle}</h2>
             <p>{t.historyDescription}</p>
           </div>
-          {history.length > 0 ? <Button variant="ghost" size="sm" onClick={deleteHistory}>{t.historyDelete}</Button> : null}
         </div>
         {history.length === 0 ? (
           <p className="df-pixel-history-empty">{t.historyEmpty}</p>
@@ -944,7 +959,13 @@ export default function GeneratorPixelPage() {
                   <img src={entry.preview} alt={`${t.historyItem} ${history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)}`} />
                 </div>
                 <div className="df-pixel-history-meta">
-                  <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : entry.mode === "intelligence" ? t.tabIntelligence : t.tabImage}</strong>
+                  <div className="df-pixel-history-meta-heading">
+                    <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : entry.mode === "intelligence" ? t.tabIntelligence : t.tabImage}</strong>
+                    <Button className="df-pixel-history-delete" variant="danger" size="sm" onClick={() => setHistoryDeleteTarget(entry)} aria-label={t.historyDelete}>
+                      <SvgIcon name="trash" size={14} />
+                      <span>{t.historyDelete}</span>
+                    </Button>
+                  </div>
                   <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
                   <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
                 </div>
@@ -958,6 +979,17 @@ export default function GeneratorPixelPage() {
         )}
         {history.length>HISTORY_PAGE_SIZE?<div className="df-pixel-history-pagination"><Button size="sm" variant="secondary" disabled={historyPage===1} onClick={()=>setHistoryPage(page=>Math.max(1,page-1))}>Previous</Button><span>{historyPage} / {Math.ceil(history.length/HISTORY_PAGE_SIZE)}</span><Button size="sm" variant="secondary" disabled={historyPage>=Math.ceil(history.length/HISTORY_PAGE_SIZE)} onClick={()=>setHistoryPage(page=>Math.min(Math.ceil(history.length/HISTORY_PAGE_SIZE),page+1))}>Next</Button></div>:null}
       </Card>
+
+      <ConfirmDialog
+        open={Boolean(historyDeleteTarget)}
+        onClose={() => { if (!historyDeleteBusy) setHistoryDeleteTarget(null); }}
+        onConfirm={confirmDeleteHistory}
+        title={t.historyDeleteTitle}
+        description={t.historyDeleteConfirm}
+        confirmLabel={t.historyDeleteConfirmAction}
+        cancelLabel={t.historyDeleteCancel}
+        loading={historyDeleteBusy}
+      />
 
       <Dialog
         open={successOpen}
