@@ -244,3 +244,24 @@ Jika pemeriksaan substantif gagal, jangan menganggap artikel siap hanya karena p
 - Unsplash Attribution Guideline: https://help.unsplash.com/en/articles/2511315-guideline-attribution
 
 Google tidak menentukan jumlah kata/karakter minimum atau ideal yang menjamin peringkat. Target panjang pada SOP ini adalah standar perencanaan editorial internal DAJJAL FAMILY, bukan klaim tentang faktor ranking Google.
+
+
+### 12.4 Prosedur praktis memasang cover Unsplash CDN pada artikel auto
+
+Metode yang telah berhasil diuji pada artikel auto-published DAJJAL FAMILY adalah memilih foto spesifik di halaman Unsplash, membuka gambar aslinya, lalu menggunakan direct image URL dari domain `images.unsplash.com`. Terapkan alur berikut:
+
+1. Cari foto di Unsplash berdasarkan topik artikel. Pilih foto yang benar-benar menggambarkan konteks artikel, bukan sekadar gambar teknologi generik.
+2. Buka halaman foto Unsplash yang spesifik. Periksa judul/deskripsi foto, nama fotografer, status lisensi, dan kecocokan visual.
+3. Buka gambar penuh/original dari halaman foto (tautan gambar yang mengarah ke `images.unsplash.com`). Ambil URL CDN yang benar-benar diberikan Unsplash; jangan menyusun photo ID sendiri.
+4. Pastikan URL langsung mengarah ke file gambar dan dapat dimuat. Gunakan parameter transformasi CDN yang sama polanya dengan cover yang sudah berhasil di Blog, misalnya `?auto=format&fit=crop&fm=jpg&q=85&w=1600`. Parameter hanya mengatur format/kualitas/lebar; jangan mengubah photo ID.
+5. Simpan URL CDN tersebut ke `cover_image_url`, dan tulis `cover_image_alt_id` serta `cover_image_alt_en` yang menggambarkan isi visual secara faktual.
+6. Catat sumber foto (halaman Unsplash), fotografer, dan ketentuan lisensinya. Jika jalur Unsplash API digunakan, tetap wajib mengikuti hotlinking, download endpoint, dan atribusi API; metode membuka direct image URL dari halaman Unsplash tidak boleh diklaim sebagai penggunaan API.
+7. Setelah update, baca kembali row artikel dan pastikan URL cover, alt text, serta status artikel benar. Jangan mengubah `draft` menjadi `published`.
+8. Jika gambar tidak relevan, tidak dapat dibuka, atau URL CDN tidak dapat diperoleh dari halaman foto, jangan gunakan gambar tersebut. Cari foto lain; jangan fallback ke ID tebakan atau URL random.
+
+**Pola URL yang telah terverifikasi pada dua cover auto-post DAJJAL FAMILY:** domain `https://images.unsplash.com/photo-...` dengan parameter CDN seperti `auto=format`, `fit=crop`, `fm=jpg`, `q=85`, dan `w=1600`. Contoh URL yang telah diuji di database adalah milik dua artikel published tanggal 27 November 2026. Contoh ini membuktikan pola rendering, bukan izin untuk memakai ulang foto yang sama pada artikel lain.
+
+### 12.5 Pembedaan metode direct Unsplash dan Unsplash API
+- **Direct Unsplash CDN workflow:** menemukan foto di situs Unsplash, mengambil URL gambar langsung dari halaman foto, lalu menyimpan URL CDN ke cover. Catat sumber/fotografer dan ikuti lisensi foto.
+- **Unsplash API workflow:** gunakan `photo.urls` untuk hotlink, panggil `photo.links.download_location` untuk pemilihan/penggunaan foto, dan tampilkan atribusi fotografer serta Unsplash sesuai ketentuan API.
+- Jangan menyebut workflow direct website sebagai penggunaan API. Jangan menerapkan kewajiban API secara keliru, tetapi tetap transparan mengenai sumber foto dan patuhi lisensi yang berlaku.
