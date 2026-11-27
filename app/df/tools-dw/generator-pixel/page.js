@@ -486,7 +486,8 @@ export default function GeneratorPixelPage() {
   const stageHeight = stageWidth * HEIGHT / WIDTH;
   const activeTheme=TEXT_THEMES.find(theme=>theme.id===themeId)||TEXT_THEMES[0];
   const backgroundHex=colorSystem==="theme"?activeTheme.background:"#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
-  const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");\n  const opticalCode=useMemo(()=>buildOpticalBioCode(opticalText,opticalColors),[opticalText,opticalColors]);
+  const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
+  const opticalCode=useMemo(()=>buildOpticalBioCode(opticalText,opticalColors),[opticalText,opticalColors]);
   useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament]);
 
   useEffect(() => {
