@@ -272,7 +272,7 @@ function normalizePixelGlyph(char) {
   const special={"ß":"SS","Æ":"AE","æ":"ae","Œ":"OE","œ":"oe","Ø":"O","ø":"o","Đ":"D","đ":"d","Ł":"L","ł":"l","Þ":"P","þ":"p","ı":"i"};
   return special[char] || char.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
-function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic", scale = 1) {
+function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic", scale = 1, ornament = "") {
   if (text.length > 1024) return { error: "limit", canvas: null, count: text.length };
   const segments = typeof Intl.Segmenter === "function"
     ? Array.from(new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(text), item => item.segment)
@@ -299,6 +299,18 @@ function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   if (!ctx) return { error: "canvas", canvas: null, count: chars.length };
   ctx.fillStyle = background; ctx.fillRect(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
+  if (ornament) {
+    ctx.save();
+    ctx.fillStyle = foreground;
+    ctx.font = '10px "Noto Serif Symbols", "Segoe UI Symbol", serif';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(ornament, 7, 7);
+    ctx.fillText(ornament, TEXT_WIDTH - 7, 7);
+    ctx.fillText(ornament, 7, TEXT_HEIGHT - 7);
+    ctx.fillText(ornament, TEXT_WIDTH - 7, TEXT_HEIGHT - 7);
+    ctx.restore();
+  }
   const bold = ["Pixel Bold", "Military", "Gothic"].includes(fontStyle);
   const italic = ["Cyber", "Gothic"].includes(fontStyle);
   const shadow = fontStyle === "Arcade";
