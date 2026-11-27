@@ -1,6 +1,14 @@
-export const metadata = {
-  title: "Pixel Bio Generator — Darkwar Survival",
-  description: "Buat kode bio pixel Darkwar Survival dari gambar atau teks. Atur komposisi, bitmap font, dan warna RGB langsung di perangkat.",
+import { headers } from "next/headers";
+
+export async function generateMetadata() {
+  const locale = (await headers()).get("x-df-locale") === "en" ? "en" : "id";
+  const title = "Pixel Bio Generator — Darkwar Survival";
+  const description = locale === "en"
+    ? "Create Darkwar Survival pixel bio codes from images, text, or Intelligence Mode with on-device processing."
+    : "Buat kode bio pixel Darkwar Survival dari gambar, teks, atau Intelligence Mode dengan pemrosesan lokal.";
+  return {
+  title,
+  description,
   alternates: {
     languages: {
       id: "https://dajjalfamily.com/id/df/tools-dw/generator-pixel",
@@ -10,17 +18,18 @@ export const metadata = {
   openGraph: {
     type: "website",
     siteName: "DAJJAL FAMILY",
-    title: "Pixel Bio Generator — Darkwar Survival",
-    description: "Create Darkwar Survival pixel bio codes from images or text with live RGB preview.",
+    title,
+    description,
     images: [{ url: "https://dajjalfamily.com/dajjalfamily_icon_192.png", width: 192, height: 192, alt: "DAJJAL FAMILY" }],
   },
   twitter: {
     card: "summary",
-    title: "Pixel Bio Generator — Darkwar Survival",
-    description: "Create Darkwar Survival pixel bio codes from images or text.",
+    title,
+    description,
     images: ["https://dajjalfamily.com/dajjalfamily_icon_192.png"],
   },
-};
+  };
+}
 
 export default function DarkwarToolsLayout({ children }) {
   return children;
