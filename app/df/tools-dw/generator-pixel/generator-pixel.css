@@ -82,3 +82,13 @@
 .df-pixel-intelligence-controls{display:grid;gap:var(--df-space-3);padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface-raised)}
 .df-pixel-intelligence-controls .df-pixel-step-heading{margin-bottom:var(--df-space-1)}
 @media(max-width:380px){.df-pixel-page .ui-tab{padding-inline:.3rem;font-size:var(--df-text-xs)}}
+
+/* Pixel Vision Engine — local inference feedback. */
+.df-pixel-vision-status{display:grid;gap:var(--df-space-2);padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface);color:var(--df-text-secondary);font-size:var(--df-text-xs)}
+.df-pixel-vision-status--ready{border-color:color-mix(in srgb,var(--df-success) 42%,var(--df-border))}
+.df-pixel-vision-status--error{border-color:color-mix(in srgb,var(--df-danger) 48%,var(--df-border));color:var(--df-danger)}
+.df-pixel-vision-metrics{display:flex;flex-wrap:wrap;gap:var(--df-space-3)}
+.df-pixel-vision-metrics strong{color:var(--df-text);font-variant-numeric:tabular-nums}
+.df-pixel-vision-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.df-pixel-vision-tags span{max-width:100%;padding:.3rem .5rem;border:1px solid var(--df-border);border-radius:999px;background:var(--df-surface-raised);color:var(--df-text);font-size:var(--df-text-xs);overflow-wrap:anywhere}
+.df-pixel-intelligence-controls .ui-button{min-height:44px;width:100%;justify-content:center;gap:.5rem}
