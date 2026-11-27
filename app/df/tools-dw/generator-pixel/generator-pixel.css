@@ -72,3 +72,8 @@
 .df-pixel-studio-controls input[type=color]{width:100%;height:42px;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
 .df-pixel-history-pagination{display:flex;align-items:center;justify-content:center;gap:.75rem;color:var(--df-text-muted);font-size:var(--df-text-xs)}
 @media(max-width:560px){.df-pixel-studio-controls{grid-template-columns:minmax(0,1fr)}}
+
+.df-pixel-theme-settings{display:grid;gap:.65rem;padding:.75rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised);color:var(--df-text-secondary);font-size:var(--df-text-xs)}
+.df-pixel-theme-swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem}
+.df-pixel-theme-swatches button{min-height:34px;border:2px solid var(--df-border);border-radius:var(--df-radius-sm);cursor:pointer}
+.df-pixel-theme-swatches button[aria-pressed=true]{outline:2px solid var(--df-accent);outline-offset:2px}
