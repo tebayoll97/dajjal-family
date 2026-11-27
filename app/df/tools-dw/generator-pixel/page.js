@@ -961,7 +961,7 @@ export default function GeneratorPixelPage() {
                 <div className="df-pixel-history-meta">
                   <div className="df-pixel-history-meta-heading">
                     <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : entry.mode === "intelligence" ? t.tabIntelligence : t.tabImage}</strong>
-                    <Button className="df-pixel-history-delete" variant="danger" size="sm" onClick={() => setHistoryDeleteTarget(entry)} aria-label={t.historyDelete}>
+                    <Button variant="danger" size="sm" onClick={() => setHistoryDeleteTarget(entry)} aria-label={t.historyDelete}>
                       <SvgIcon name="trash" size={14} />
                       <span>{t.historyDelete}</span>
                     </Button>
