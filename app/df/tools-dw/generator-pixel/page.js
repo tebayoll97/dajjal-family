@@ -912,10 +912,10 @@ export default function GeneratorPixelPage() {
               <span>{t.detailCharacters}</span>
               <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
             </div>
-            <div className="df-pixel-result-detail">
-              <span>{mode === "intelligence" ? t.detailDetected : t.detailColors}</span>
-              <strong>{mode === "intelligence" ? ((result.faceCount || 0) + (result.objectCount || 0)) : result.colors}</strong>
-            </div>
+            {result.mode === "intelligence" ? <>
+              <div className="df-pixel-result-detail"><span>{t.scanFaces}</span><strong>{result.faceCount || 0}</strong></div>
+              <div className="df-pixel-result-detail"><span>{t.scanObjects}</span><strong>{result.objectCount || 0}</strong></div>
+            </> : null}
             <div className="df-pixel-result-detail">
               <span>{t.detailColors}</span>
               <strong>{result.colors}</strong>
