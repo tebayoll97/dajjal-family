@@ -76,7 +76,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
-    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Prioritas visual",focusHint:"Atur titik fokus jika perlu. Pixel Vision juga memprioritaskan wajah dan objek yang terdeteksi.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",scanTitle:"Pixel Vision Scan",scanHint:"Analisis wajah, landmark, manusia, hewan, dan objek langsung di perangkat.",scanAction:"Pindai gambar",scanning:"Memindai di perangkat…",scanReady:"Analisis lokal selesai",scanFaces:"Wajah",scanObjects:"Objek",scanLoading:"Memuat model vision lokal…",scanAnalyzing:"Menganalisis gambar…",scanFailure:"Model vision tidak dapat dimuat. Periksa koneksi lalu coba lagi.",intelligenceProcess:"Rekonstruksi Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Prioritas visual",focusHint:"Atur titik fokus jika perlu. Pixel Vision juga memprioritaskan wajah dan objek yang terdeteksi.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",scanTitle:"Pixel Vision Scan",scanHint:"Analisis wajah, landmark, manusia, hewan, dan objek langsung di perangkat.",scanAction:"Pindai gambar",scanning:"Memindai di perangkat…",scanReady:"Analisis lokal selesai",scanFaces:"Wajah",scanObjects:"Objek",detailDetected:"Terdeteksi",scanLoading:"Memuat model vision lokal…",scanAnalyzing:"Menganalisis gambar…",scanFailure:"Model vision tidak dapat dimuat. Periksa koneksi lalu coba lagi.",intelligenceProcess:"Rekonstruksi Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -118,7 +118,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Turn an image or text into Darkwar Survival pixel bio code.",
-    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Visual priority",focusHint:"Adjust the focus point if needed. Pixel Vision also prioritizes detected faces and objects.",focusX:"Horizontal focus",focusY:"Vertical focus",scanTitle:"Pixel Vision Scan",scanHint:"Analyze faces, landmarks, people, animals, and objects directly on this device.",scanAction:"Scan image",scanning:"Scanning on device…",scanReady:"Local analysis complete",scanFaces:"Faces",scanObjects:"Objects",scanLoading:"Loading local vision models…",scanAnalyzing:"Analyzing image…",scanFailure:"Vision models could not be loaded. Check your connection and try again.",intelligenceProcess:"Reconstruct Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
+    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Visual priority",focusHint:"Adjust the focus point if needed. Pixel Vision also prioritizes detected faces and objects.",focusX:"Horizontal focus",focusY:"Vertical focus",scanTitle:"Pixel Vision Scan",scanHint:"Analyze faces, landmarks, people, animals, and objects directly on this device.",scanAction:"Scan image",scanning:"Scanning on device…",scanReady:"Local analysis complete",scanFaces:"Faces",scanObjects:"Objects",detailDetected:"Detected",scanLoading:"Loading local vision models…",scanAnalyzing:"Analyzing image…",scanFailure:"Vision models could not be loaded. Check your connection and try again.",intelligenceProcess:"Reconstruct Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -463,6 +463,12 @@ export default function GeneratorPixelPage() {
   const backgroundHex=colorSystem==="theme"?activeTheme.background:"#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
   const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
   useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament]);
+
+  useEffect(() => {
+    setVisionAnalysis(null);
+    setVisionStatus("idle");
+    setVisionProgress("");
+  }, [zoom, offset]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -907,6 +913,8 @@ export default function GeneratorPixelPage() {
               <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
             </div>
             <div className="df-pixel-result-detail">
+              <span>{mode === "intelligence" ? t.detailDetected : t.detailColors}</span>
+              <strong>{mode === "intelligence" ? ((result.faceCount || 0) + (result.objectCount || 0)) : result.colors}</strong>
             </div>
             <div className="df-pixel-result-detail">
               <span>{t.detailColors}</span>
