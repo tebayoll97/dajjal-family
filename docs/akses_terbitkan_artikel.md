@@ -138,3 +138,109 @@ Publikasi tersebut merupakan bukti bahwa jalur penulisan database pernah berhasi
 Bertindak sebagai editor, penulis, dan operator publikasi yang bertanggung jawab. Kerjakan seluruh pekerjaan yang diizinkan, pastikan setiap artikel memiliki cover valid, verifikasi hasil penyimpanan, dan jujur tentang batas teknis yang benar-benar terjadi.
 
 **Kategori atau batch dari pengguna adalah input utama. Seluruh pekerjaan lainnya menjadi tanggung jawab asisten Prisma (ChatGPT) sampai hasil tersimpan atau hambatan teknis nyata dan spesifik terbukti.**
+
+## 11. Standar editorial berbobot dan people-first — berlaku untuk seluruh artikel baru dan revisi draft
+
+### 11.1 Prinsip utama
+- Artikel dibuat terutama untuk membantu pembaca, bukan untuk mengejar ranking atau memenuhi kuota publikasi.
+- Setiap artikel harus menjawab search intent secara jelas, memberi informasi orisinal, analisis, contoh, atau nilai praktis yang melampaui ringkasan sumber lain.
+- Jangan menulis ulang/menyalin artikel lain dengan perubahan kata minimal. Gunakan sumber untuk verifikasi, lalu susun penjelasan dan analisis sendiri.
+- Jangan mengarang pengalaman langsung, pengujian, keahlian, kutipan, data, statistik, atau hasil riset. Bedakan fakta, analisis, rekomendasi, dan ketidakpastian.
+- Untuk topik sensitif atau berdampak tinggi (kesehatan, keuangan, hukum, keselamatan), gunakan sumber primer/otoritatif dan batasan yang jelas; jangan memberi kepastian melampaui bukti.
+- AI boleh membantu produksi, tetapi otomatisasi massal yang menghasilkan halaman tipis, repetitif, atau tanpa nilai tambah dilarang. Setiap artikel wajib melewati pemeriksaan kualitas substantif.
+
+### 11.2 Panjang artikel — target editorial internal, bukan faktor ranking Google
+Google tidak menetapkan jumlah kata atau karakter minimum/ideal yang menjamin ranking. Angka berikut hanya target perencanaan DAJJAL FAMILY; kedalaman dan kelengkapan jawaban selalu lebih penting daripada mengejar hitungan.
+
+| Jenis | Target karakter termasuk spasi | Perkiraan kata |
+|---|---:|---:|
+| Ringan / jawaban fokus | 4.500–7.000 | 700–1.100 |
+| Standar informatif (default) | 8.000–12.000 | 1.200–1.800 |
+| Mendalam | 12.000–18.000 | 1.800–2.700 |
+| Panduan komprehensif | 18.000–25.000 | 2.700–3.800 |
+
+Hitungan karakter mencakup teks artikel dan spasi, tidak termasuk metadata dan markup. Pilih panjang berdasarkan kompleksitas topik. Jangan menambah paragraf pengisi demi mencapai target; artikel sederhana boleh lebih pendek dan topik kompleks boleh lebih panjang jika dibutuhkan.
+
+### 11.3 Struktur penulisan
+1. H1: judul yang spesifik, deskriptif, akurat, dan selaras dengan maksud pencarian.
+2. Pembukaan: jelaskan kebutuhan/masalah pembaca, konteks, dan manfaat artikel tanpa pengantar bertele-tele.
+3. Jawaban inti: berikan jawaban ringkas sejak awal.
+4. Pembahasan H2/H3: susun urutan logis dari konsep, cara kerja, langkah, contoh, perbandingan, risiko, batasan, hingga penerapan sesuai kebutuhan.
+5. Nilai tambah: sertakan analisis, skenario, contoh konkret, checklist, tabel, atau keputusan praktis yang relevan.
+6. Kesimpulan: rangkum temuan dan langkah yang dapat dilakukan pembaca.
+7. FAQ: gunakan hanya untuk pertanyaan nyata yang belum dijawab memadai di isi utama.
+8. Referensi: tautkan sumber yang benar-benar mendukung klaim, angka, atau instruksi faktual.
+
+Gunakan paragraf yang mudah dibaca, heading yang menjelaskan isi bagian, daftar untuk langkah/opsi, dan tabel hanya saat membantu perbandingan. Hindari paragraf pengisi, repetisi, clickbait, keyword stuffing, klaim absolut, serta pembukaan generik.
+
+### 11.4 Riset, bukti, dan orisinalitas
+- Mulai dari search intent dan pertanyaan pembaca: apa yang ingin diketahui, dilakukan, dibandingkan, atau diputuskan.
+- Utamakan dokumentasi resmi, data primer, pengumuman penyedia, studi asli, dan sumber kredibel yang relevan serta mutakhir.
+- Untuk topik yang cepat berubah, periksa tanggal publikasi/pembaruan dan kondisi terbaru pada saat penulisan.
+- Verifikasi angka, kutipan, nama produk/fitur, persyaratan, harga, tanggal, dan klaim teknis pada sumber aslinya.
+- Jangan mengutip snippet pencarian sebagai satu-satunya bukti. Buka dan periksa sumber.
+- Catat referensi langsung yang mendukung klaim. Jangan mencantumkan sumber yang tidak benar-benar digunakan atau tidak mendukung pernyataan.
+- Tambahkan nilai orisinal melalui sintesis, analisis, contoh penerapan, batasan, trade-off, atau penjelasan yang membantu pembaca mengambil keputusan.
+- Jika bukti tidak cukup, hilangkan klaim atau jelaskan ketidakpastiannya.
+
+### 11.5 SEO on-page
+Angka berikut adalah panduan editorial, bukan batas Google atau jaminan tampilan SERP:
+- SEO title: sasaran sekitar 50–60 karakter; utamakan kejelasan dan relevansi.
+- Meta description: sasaran sekitar 140–160 karakter; ringkas, unik, akurat, dan menjelaskan manfaat halaman.
+- Focus keyword: satu topik/frasa utama berdasarkan intent. Related keywords: sekitar 3–8 variasi/entitas yang benar-benar relevan; jangan dipaksakan.
+- H1: satu judul utama yang konsisten dengan isi. H2/H3: hierarki logis, bukan wadah keyword.
+- Slug: lowercase, deskriptif, ringkas, menggunakan tanda hubung, sesuai bahasa ID dan EN.
+- Alt text: deskripsikan isi/fungsi visual gambar secara spesifik; jangan menumpuk keyword.
+- Internal links: gunakan tautan ke artikel/halaman DAJJAL FAMILY yang relevan dan benar-benar tersedia.
+- External links: prioritaskan sumber primer dan halaman spesifik yang mendukung klaim.
+- Buat title, excerpt, meta description, slug, dan alt text yang unik untuk Bahasa Indonesia dan English. Terjemahan EN harus natural dan setara secara substansi.
+- Jangan menjanjikan ranking, traffic, featured snippet, atau posisi tertentu.
+
+### 11.6 Pemeriksaan mutu sebelum draft disimpan
+- [ ] Search intent dan pembaca sasaran jelas.
+- [ ] Jawaban inti tersedia sejak awal.
+- [ ] Isi lengkap sesuai ruang lingkup dan tidak repetitif.
+- [ ] Ada nilai orisinal/analisis/contoh yang nyata.
+- [ ] Klaim faktual, angka, dan instruksi telah diverifikasi.
+- [ ] Referensi mendukung klaim yang dicantumkan.
+- [ ] Tidak ada fakta, pengalaman, kutipan, atau kredensial rekaan.
+- [ ] Struktur H1/H2/H3 dan keterbacaan baik.
+- [ ] ID dan EN setara secara substansi dan konsisten.
+- [ ] SEO title, meta description, slug, excerpt, keyword, alt text lengkap.
+- [ ] Cover relevan, URL valid, dan atribusi disiapkan bila diwajibkan.
+- [ ] Tidak ada duplikasi substansial dengan artikel lain di Blog.
+
+Jika pemeriksaan substantif gagal, jangan menganggap artikel siap hanya karena panjang atau metadata lengkap. Perbaiki sebelum menyimpan draft.
+
+## 12. Protokol gambar Unsplash CDN untuk artikel AI
+
+### 12.1 Sumber dan penerapan
+- Dua artikel auto-post DAJJAL FAMILY yang sudah published berhasil menampilkan cover dari direct image URL Unsplash CDN (images.unsplash.com). Ini menjadi bukti uji internal bahwa jalur CDN tersebut dapat dirender oleh komponen Blog saat diuji.
+- Untuk artikel AI berikutnya, Unsplash CDN menjadi sumber eksternal pilihan pertama selama foto relevan, URL direct image terverifikasi, dan ketentuan penggunaan dipenuhi.
+- Gunakan URL foto spesifik yang ditemukan dari Unsplash, bukan URL halaman pencarian, URL profil, atau endpoint random yang tidak diverifikasi.
+- Jangan menebak atau membuat photo ID Unsplash. Cari foto yang benar-benar ada dan periksa URL-nya.
+- Gunakan URL CDN yang disediakan Unsplash. Jika integrasi memakai Unsplash API, ikuti kewajiban hotlinking pada photo.urls; jangan mengganti URL dengan salinan lokal untuk penggunaan API yang mensyaratkan hotlink.
+- Untuk foto yang dipilih melalui Unsplash API sebagai bagian dari alur pemilihan/penyisipan gambar, panggil photo.links.download_location sesuai ketentuan Unsplash API.
+- Simpan direct CDN URL pada cover_image_url; gunakan parameter transformasi ukuran/format yang didukung CDN tanpa mengubah identitas foto. Target cover landscape sekitar 1200×675 atau rasio 16:9 jika tersedia.
+
+### 12.2 Validasi dan atribusi
+- Periksa respons URL: status sukses, content type image yang benar, dan gambar dapat dimuat. Jangan hanya mengandalkan bentuk URL.
+- Simpan alt text ID/EN yang menjelaskan foto secara akurat dan terkait dengan konteks artikel.
+- Jika menggunakan Unsplash API, tampilkan atribusi Unsplash dan fotografer, dengan tautan ke profil fotografer serta Unsplash sesuai format referral yang diwajibkan API. Simpan nama fotografer, profil, halaman foto, dan atribusi bersama metadata artikel jika skema mendukungnya.
+- Lisensi Unsplash umum dan persyaratan Unsplash API adalah dua hal yang perlu dibedakan. Walaupun lisensi umum tidak selalu mewajibkan atribusi, penggunaan API mewajibkan atribusi dan hotlinking sesuai pedoman API.
+- Jangan mengklaim gambar bebas dari semua batasan. Patuhi lisensi, API terms, dan hak pihak ketiga yang relevan.
+- Jika Unsplash tidak menyediakan foto yang relevan/valid, coba sumber alternatif yang jelas izin dan atribusinya. Jangan memasang gambar acak atau URL yang belum diuji.
+
+### 12.3 Bukti uji internal
+- Pada 27 November 2026, dua artikel auto-post yang sudah published berhasil menampilkan gambar dari Unsplash CDN setelah URL cover diperbarui.
+- Hasil tersebut membuktikan rendering dua URL yang diuji, bukan jaminan bahwa semua URL Unsplash akan selalu tersedia. Setiap cover baru tetap harus divalidasi.
+
+## 13. Catatan sumber kebijakan editorial
+- Google Search Central, Creating Helpful, Reliable, People-First Content: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- Google Search Central, SEO Starter Guide: https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+- Google Search Essentials: https://developers.google.com/search/docs/essentials
+- Unsplash API Guidelines: https://help.unsplash.com/en/articles/2511245-unsplash-api-guidelines
+- Unsplash Hotlinking Guideline: https://help.unsplash.com/en/articles/2511271-guideline-hotlinking-images
+- Unsplash Attribution Guideline: https://help.unsplash.com/en/articles/2511315-guideline-attribution
+
+Google tidak menentukan jumlah kata/karakter minimum atau ideal yang menjamin peringkat. Target panjang pada SOP ini adalah standar perencanaan editorial internal DAJJAL FAMILY, bukan klaim tentang faktor ranking Google.
