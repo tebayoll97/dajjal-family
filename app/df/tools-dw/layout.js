@@ -4,8 +4,8 @@ export async function generateMetadata() {
   const locale = (await headers()).get("x-df-locale") === "en" ? "en" : "id";
   const title = "Pixel Bio Generator — Darkwar Survival";
   const description = locale === "en"
-    ? "Create Darkwar Survival pixel bio codes from images, text, or Intelligence Mode with on-device processing."
-    : "Buat kode bio pixel Darkwar Survival dari gambar, teks, atau Intelligence Mode dengan pemrosesan lokal.";
+    ? "Create Darkwar Survival pixel bio codes from images or text, with local face landmarks and object detection in Intelligence Mode."
+    : "Buat kode bio pixel Darkwar Survival dari gambar dan teks dengan deteksi wajah, landmark, dan objek langsung di perangkat pada Intelligence Mode.";
   return {
   title,
   description,
