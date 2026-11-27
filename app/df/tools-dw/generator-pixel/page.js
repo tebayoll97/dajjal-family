@@ -467,7 +467,10 @@ export default function GeneratorPixelPage() {
   const [themeId,setThemeId]=useState("arctic");
   const [historyPage,setHistoryPage]=useState(1);
   const [focusX,setFocusX]=useState(0.5);
-  const [focusY,setFocusY]=useState(0.5);\n  const [opticalText,setOpticalText]=useState("DAJJAL FAMILY");\n  const [opticalColors,setOpticalColors]=useState({core:"#FFFFFF",echoA:"#FF3333",echoB:"#33FFFF"});\n  const [opticalCopied,setOpticalCopied]=useState(false);
+  const [focusY,setFocusY]=useState(0.5);
+  const [opticalText,setOpticalText]=useState("DAJJAL FAMILY");
+  const [opticalColors,setOpticalColors]=useState({core:"#FFFFFF",echoA:"#FF3333",echoB:"#33FFFF"});
+  const [opticalCopied,setOpticalCopied]=useState(false);
   const visionWorkerRef = useRef(null);
   const visionRequestRef = useRef(0);
   const [visionAnalysis,setVisionAnalysis] = useState(null);
