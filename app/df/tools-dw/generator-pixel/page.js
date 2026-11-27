@@ -783,7 +783,7 @@ export default function GeneratorPixelPage() {
       />
 
       <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null},{value:"intelligence",label:t.tabIntelligence,content:null},{value:"optical",label:t.tabOptical,content:null}]} />
-      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : mode === "text" ? "pixel-mode-tab-1" : mode === "intelligence" ? "pixel-mode-tab-2" : "pixel-mode-tab-3"} tabIndex={0}>{mode !== "text" && mode !== "optical" ? <div className="df-pixel-workspace">
+      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : mode === "text" ? "pixel-mode-tab-1" : mode === "intelligence" ? "pixel-mode-tab-2" : "pixel-mode-tab-3"} tabIndex={0}>{mode === "image" || mode === "intelligence" ? <div className="df-pixel-workspace">
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
             <span className="df-pixel-step-number">01</span>
@@ -877,7 +877,7 @@ export default function GeneratorPixelPage() {
             {busy ? t.processing : mode === "intelligence" ? t.intelligenceProcess : t.process}
           </Button>
         </Card>
-      </div> : (
+      </div> : mode === "text" ? (
         <Card className="df-pixel-text-panel">
           <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
           <TextField label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} maxLength={TEXT_LIMIT} helpText={t.textHint} />
