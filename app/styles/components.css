@@ -12,7 +12,8 @@
 .ui-button-secondary:hover:not(:disabled){background:var(--df-surface-overlay)}
 .ui-button-ghost{background:transparent;color:var(--df-text-secondary)}
 .ui-button-ghost:hover:not(:disabled){background:var(--df-primary-soft);color:var(--df-text)}
-.ui-button-danger{background:var(--df-danger);color:#fff}
+.ui-button-danger{border-color:color-mix(in srgb,var(--df-danger) 42%,var(--df-border));background:color-mix(in srgb,var(--df-danger) 10%,var(--df-surface));color:var(--df-danger)}
+.ui-button-danger:hover:not(:disabled){border-color:var(--df-danger);background:color-mix(in srgb,var(--df-danger) 16%,var(--df-surface));color:var(--df-danger)}
 .ui-button-sm{min-height:36px;padding:.5rem .75rem;font-size:var(--df-text-sm)}
 .ui-button-lg{min-height:48px;padding:.8rem 1.25rem}.ui-button-wide{width:100%}
 .ui-button:disabled,.ui-button[aria-disabled="true"]{opacity:.52;cursor:not-allowed;transform:none}
