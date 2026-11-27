@@ -76,7 +76,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
-    tabImage:"Mode Gambar",tabText:"Mode Teks",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Titik fokus detail",focusHint:"Posisikan titik fokus pada wajah atau area terpenting. Analisis lokal menjaga detail di sekitarnya.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",intelligenceProcess:"Optimalkan Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -118,7 +118,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Turn an image or text into Darkwar Survival pixel bio code.",
-    tabImage:"Image Mode",tabText:"Text Mode",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
+    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Detail focus point",focusHint:"Place the focus point on the face or most important area. Local analysis preserves nearby detail.",focusX:"Horizontal focus",focusY:"Vertical focus",intelligenceProcess:"Optimize Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -163,8 +163,61 @@ function colorTag(rgb) {
   return `<#${short}>`;
 }
 
-function medianCutPalette(pixels, requestedColors) {
-  const initial = pixels.map((pixel, index) => ({ r: pixel[0], g: pixel[1], b: pixel[2], index }));
+function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5) {
+  const width = source.width;
+  const height = source.height;
+  const input = source.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, width, height);
+  const outputCanvas = document.createElement("canvas");
+  outputCanvas.width = width;
+  outputCanvas.height = height;
+  const outputContext = outputCanvas.getContext("2d", { willReadFrequently: true });
+  const output = outputContext.createImageData(width, height);
+  const importanceMap = new Float32Array(width * height);
+  const radiusX = Math.max(18, width * 0.28);
+  const radiusY = Math.max(10, height * 0.48);
+  const luminance = (index) => input.data[index] * 0.2126 + input.data[index + 1] * 0.7152 + input.data[index + 2] * 0.0722;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const index = y * width + x;
+      const offset = index * 4;
+      const left = (y * width + Math.max(0, x - 1)) * 4;
+      const right = (y * width + Math.min(width - 1, x + 1)) * 4;
+      const up = (Math.max(0, y - 1) * width + x) * 4;
+      const down = (Math.min(height - 1, y + 1) * width + x) * 4;
+      const edge = Math.min(1, (Math.abs(luminance(left) - luminance(right)) + Math.abs(luminance(up) - luminance(down))) / 180);
+      const dx = (x - focusX * (width - 1)) / radiusX;
+      const dy = (y - focusY * (height - 1)) / radiusY;
+      const focus = Math.exp(-2.2 * (dx * dx + dy * dy));
+      const importance = Math.max(0.12, Math.min(1, focus * 0.78 + edge * 0.42));
+      importanceMap[index] = importance;
+
+      let averageR = 0, averageG = 0, averageB = 0, samples = 0;
+      for (let oy = -1; oy <= 1; oy += 1) {
+        for (let ox = -1; ox <= 1; ox += 1) {
+          const nx = Math.max(0, Math.min(width - 1, x + ox));
+          const ny = Math.max(0, Math.min(height - 1, y + oy));
+          const neighbor = (ny * width + nx) * 4;
+          averageR += input.data[neighbor]; averageG += input.data[neighbor + 1]; averageB += input.data[neighbor + 2]; samples += 1;
+        }
+      }
+      const blend = (1 - importance) * 0.48;
+      output.data[offset] = Math.round(input.data[offset] * (1 - blend) + (averageR / samples) * blend);
+      output.data[offset + 1] = Math.round(input.data[offset + 1] * (1 - blend) + (averageG / samples) * blend);
+      output.data[offset + 2] = Math.round(input.data[offset + 2] * (1 - blend) + (averageB / samples) * blend);
+      output.data[offset + 3] = input.data[offset + 3];
+    }
+  }
+  outputContext.putImageData(output, 0, 0);
+  return { canvas: outputCanvas, importanceMap };
+}
+
+function medianCutPalette(pixels, requestedColors, importanceMap = null) {
+  const initial = [];
+  pixels.forEach((pixel, index) => {
+    const weight = importanceMap ? 1 + Math.round(Math.max(0, Math.min(1, importanceMap[index])) * 3) : 1;
+    for (let copy = 0; copy < weight; copy += 1) initial.push({ r: pixel[0], g: pixel[1], b: pixel[2] });
+  });
   const boxes = [initial];
 
   while (boxes.length < requestedColors) {
@@ -207,7 +260,7 @@ function medianCutPalette(pixels, requestedColors) {
   });
 }
 
-function encodePixelCanvas(canvas, width = WIDTH, height = HEIGHT) {
+function encodePixelCanvas(canvas, width = WIDTH, height = HEIGHT, options = {}) {
   const context = canvas.getContext("2d", { willReadFrequently: true });
   if (!context) throw new Error("Canvas is unavailable.");
   const image = context.getImageData(0, 0, width, height);
@@ -219,7 +272,7 @@ function encodePixelCanvas(canvas, width = WIDTH, height = HEIGHT) {
   const candidates = [64, 48, 32, 24, 16, 12, 8, 6, 4, 3, 2];
 
   for (const colorCount of candidates) {
-    const palette = medianCutPalette(pixels, colorCount);
+    const palette = medianCutPalette(pixels, colorCount, options.importanceMap || null);
     const rows = [];
     for (let y = 0; y < height; y += 1) {
       let row = "";
@@ -371,6 +424,8 @@ export default function GeneratorPixelPage() {
   const [colorSystem,setColorSystem]=useState("rgb");
   const [themeId,setThemeId]=useState("arctic");
   const [historyPage,setHistoryPage]=useState(1);
+  const [focusX,setFocusX]=useState(0.5);
+  const [focusY,setFocusY]=useState(0.5);
 
   useEffect(() => {
     let active = true;
@@ -533,7 +588,7 @@ export default function GeneratorPixelPage() {
   };
 
   const createTextPixelBio = async () => {
-    const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex);
+    const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament);
     if(rendered.error){setError(rendered.error==="unsupported"?t.textUnsupported:rendered.error==="limit"?t.textLimit:t.textOverflow);return;}
     setBusy(true);setError("");
     try{
@@ -544,6 +599,24 @@ export default function GeneratorPixelPage() {
       try{setHistory(await savePixelHistory(entry));}catch(historyError){console.warn("Pixel Bio history could not be saved:",historyError);}
       setSuccessOpen(true);
     }catch(caught){setError(caught.message||t.processError);}finally{setBusy(false);}
+  };
+
+  const createIntelligenceBio = async () => {
+    if (!file || !imageRef.current?.complete) { setError(t.noImage); return; }
+    setBusy(true); setError("");
+    try {
+      const cropped = makeCropCanvas();
+      const analyzed = prepareIntelligenceCanvas(cropped, focusX, focusY);
+      const encoded = encodePixelCanvas(analyzed.canvas, WIDTH, HEIGHT, { importanceMap: analyzed.importanceMap });
+      if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
+      const entry = { id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), createdAt: Date.now(), ...encoded, mode: "intelligence", focusX, focusY, width: WIDTH, height: HEIGHT, preview: analyzed.canvas.toDataURL("image/png") };
+      setResult(entry); setCopied(false); setCopiedHistoryId("");
+      try { setHistory(await savePixelHistory(entry)); } catch (historyError) { console.warn("Pixel Bio history could not be saved:", historyError); }
+      setSuccessOpen(true);
+      setFile(null); setImageUrl(""); setImageSize({ width: 0, height: 0 }); setZoom(1); setOffset({ x: 0, y: 0 });
+      if (objectUrlRef.current) { URL.revokeObjectURL(objectUrlRef.current); objectUrlRef.current = null; }
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (caught) { setError(caught.message || t.processError); } finally { setBusy(false); }
   };
 
   const finishSuccess = () => {
@@ -579,7 +652,8 @@ export default function GeneratorPixelPage() {
   };
 
   const restoreHistory = (entry) => {
-    setMode(entry.mode === "text" ? "text" : "image");
+    setMode(entry.mode === "text" ? "text" : entry.mode === "intelligence" ? "intelligence" : "image");
+    if (entry.mode === "intelligence") { setFocusX(Number.isFinite(entry.focusX) ? entry.focusX : 0.5); setFocusY(Number.isFinite(entry.focusY) ? entry.focusY : 0.5); }
     if (entry.mode === "text") {
       setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);setColorSystem(entry.colorSystem||"rgb");setThemeId(entry.themeId||"arctic");
       if (entry.background) { const [r,g,b] = entry.background.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setBackgroundRgb({r,g,b}); }
@@ -618,8 +692,8 @@ export default function GeneratorPixelPage() {
         className="df-pixel-header"
       />
 
-      <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null}]} />
-      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : "pixel-mode-tab-1"} tabIndex={0}>{mode === "image" ? <div className="df-pixel-workspace">
+      <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null},{value:"intelligence",label:t.tabIntelligence,content:null}]} />
+      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : mode === "text" ? "pixel-mode-tab-1" : "pixel-mode-tab-2"} tabIndex={0}>{mode !== "text" ? <div className="df-pixel-workspace">
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
             <span className="df-pixel-step-number">01</span>
@@ -696,9 +770,14 @@ export default function GeneratorPixelPage() {
             <Button variant="ghost" size="sm" onClick={resetCrop} disabled={!file || busy}>{t.reset}</Button>
           </div>
 
+          {mode === "intelligence" ? <div className="df-pixel-intelligence-controls">
+            <div className="df-pixel-step-heading"><span className="df-pixel-step-number">03</span><div><h2>{t.focusTitle}</h2><p>{t.focusHint}</p></div></div>
+            <RangeSlider id="pixel-focus-x" label={t.focusX} min={0} max={1} step={0.01} value={focusX} onChange={setFocusX} disabled={!file || busy}/>
+            <RangeSlider id="pixel-focus-y" label={t.focusY} min={0} max={1} step={0.01} value={focusY} onChange={setFocusY} disabled={!file || busy}/>
+          </div> : null}
           {error ? <p className="df-pixel-error" role="alert">{error}</p> : null}
-          <Button className="df-pixel-create-button" onClick={createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
-            {busy ? t.processing : t.process}
+          <Button className="df-pixel-create-button" onClick={mode === "intelligence" ? createIntelligenceBio : createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
+            {busy ? t.processing : mode === "intelligence" ? t.intelligenceProcess : t.process}
           </Button>
         </Card>
       </div> : (
