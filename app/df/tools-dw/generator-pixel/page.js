@@ -351,13 +351,6 @@ function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic
   if (!ctx) return { error: "canvas", canvas: null, count: chars.length };
   ctx.fillStyle = background; ctx.fillRect(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
   if (ornament) {
-    ctx.save(); ctx.fillStyle = foreground;
-    ctx.font = '10px "Noto Serif Symbols", "Segoe UI Symbol", serif';
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    [[7,7],[TEXT_WIDTH-7,7],[7,TEXT_HEIGHT-7],[TEXT_WIDTH-7,TEXT_HEIGHT-7]].forEach(([x,y]) => ctx.fillText(ornament,x,y));
-    ctx.restore();
-  }
-  if (ornament) {
     ctx.save();
     ctx.fillStyle = foreground;
     ctx.font = '10px "Noto Serif Symbols", "Segoe UI Symbol", serif';
@@ -871,7 +864,7 @@ export default function GeneratorPixelPage() {
                   <img src={entry.preview} alt={`${t.historyItem} ${history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)}`} />
                 </div>
                 <div className="df-pixel-history-meta">
-                  <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : t.tabImage}</strong>
+                  <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : entry.mode === "intelligence" ? t.tabIntelligence : t.tabImage}</strong>
                   <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
                   <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
                 </div>
