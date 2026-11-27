@@ -16,6 +16,7 @@ const HISTORY_DB = "df-pixel-bio-history";
 const HISTORY_STORE = "results";
 const HISTORY_LIMIT = 10;
 const HISTORY_PAGE_SIZE = 3;
+const TEXT_THEMES=[{id:"arctic",name:"Arctic",background:"#10182b",foreground:"#a5eaff"},{id:"crimson",name:"Crimson",background:"#210d19",foreground:"#ff526e"},{id:"nebula",name:"Nebula",background:"#130d2b",foreground:"#d8a5ff"},{id:"emerald",name:"Emerald",background:"#09201d",foreground:"#75f2bf"},{id:"solar",name:"Solar",background:"#2a1b08",foreground:"#ffd166"},{id:"aurora",name:"Aurora",background:"#260f27",foreground:"#ff9de2"},{id:"ocean",name:"Ocean",background:"#071c2b",foreground:"#62ddff"},{id:"inferno",name:"Inferno",background:"#2b1008",foreground:"#ff9b54"},{id:"toxic",name:"Toxic",background:"#142008",foreground:"#c7ff54"},{id:"monolith",name:"Monolith",background:"#17191e",foreground:"#e5e7eb"}];
 
 function openPixelHistoryDb() {
   return new Promise((resolve, reject) => {
@@ -349,6 +350,9 @@ export default function GeneratorPixelPage() {
   const [textValidation,setTextValidation]=useState({error:"",count:14});
   const [fontStyle,setFontStyle]=useState("Classic");
   const [fontScale,setFontScale]=useState(1);
+  const [colorSystem,setColorSystem]=useState("rgb");
+  const [themeId,setThemeId]=useState("arctic");
+  const [themeLocked,setThemeLocked]=useState(true);
   const [historyPage,setHistoryPage]=useState(1);
 
   useEffect(() => {
@@ -358,8 +362,9 @@ export default function GeneratorPixelPage() {
   }, []);
 
   const stageHeight = stageWidth * HEIGHT / WIDTH;
-  const backgroundHex="#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
-  const foregroundHex="#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
+  const activeTheme=TEXT_THEMES.find(theme=>theme.id===themeId)||TEXT_THEMES[0];
+  const backgroundHex=colorSystem==="theme"?activeTheme.background:"#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
+  const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
   useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex,fontStyle,fontScale]);
 
   useEffect(() => {
@@ -517,7 +522,7 @@ export default function GeneratorPixelPage() {
     try{
       const encoded=encodePixelCanvas(rendered.canvas,TEXT_WIDTH,TEXT_HEIGHT);
       if(encoded.characters>MAX_CHARACTERS)throw new Error(t.overLimit);
-      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,fontStyle,fontScale,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
+      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,fontStyle,fontScale,colorSystem,themeId,themeLocked,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
       setResult(entry);setCopied(false);setCopiedHistoryId("");
       try{setHistory(await savePixelHistory(entry));}catch(historyError){console.warn("Pixel Bio history could not be saved:",historyError);}
       setSuccessOpen(true);
@@ -559,7 +564,7 @@ export default function GeneratorPixelPage() {
   const restoreHistory = (entry) => {
     setMode(entry.mode === "text" ? "text" : "image");
     if (entry.mode === "text") {
-      setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);
+      setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);setColorSystem(entry.colorSystem||"rgb");setThemeId(entry.themeId||"arctic");setThemeLocked(entry.themeLocked!==false);
       if (entry.background) { const [r,g,b] = entry.background.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setBackgroundRgb({r,g,b}); }
       if (entry.foreground) { const [r,g,b] = entry.foreground.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setForegroundRgb({r,g,b}); }
     }
@@ -683,12 +688,12 @@ export default function GeneratorPixelPage() {
         <Card className="df-pixel-text-panel">
           <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
           <TextField label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} maxLength={TEXT_LIMIT} helpText={t.textHint} />
-          <div className="df-pixel-studio-controls"><label>Font style<select value={fontStyle} onChange={event=>setFontStyle(event.target.value)}>{["Classic","Pixel Bold","Arcade","Cyber","Terminal","Digital","Military","Rounded","Gothic","Minimal"].map(font=><option key={font}>{font}</option>)}</select></label><label>Font size<select value={fontScale} onChange={event=>setFontScale(Number(event.target.value))}><option value={1}>1×</option><option value={2}>2×</option></select></label></div>
+          <div className="df-pixel-studio-controls"><label>Color system<select value={colorSystem} onChange={event=>setColorSystem(event.target.value)}><option value="rgb">RGB</option><option value="hex">HEX</option><option value="theme">Theme</option></select></label>{colorSystem==="theme"?<label>Theme<select value={themeId} onChange={event=>setThemeId(event.target.value)}>{TEXT_THEMES.map(theme=><option key={theme.id} value={theme.id}>{theme.name}</option>)}</select></label>:null}</div>{colorSystem==="theme"?<div className="df-pixel-theme-settings"><label><input type="checkbox" checked={themeLocked} onChange={event=>setThemeLocked(event.target.checked)}/> Theme locked</label><div className="df-pixel-theme-swatches">{TEXT_THEMES.map(theme=><button type="button" key={theme.id} aria-label={theme.name} aria-pressed={themeId===theme.id} style={{background:`linear-gradient(135deg,${theme.background},${theme.foreground})`}} onClick={()=>setThemeId(theme.id)}/>)}</div></div>:null}{colorSystem==="hex"?<div className="df-pixel-studio-controls"><label>Background HEX<input type="color" value={backgroundHex} onChange={event=>{const v=event.target.value;setBackgroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label><label>Text HEX<input type="color" value={foregroundHex} onChange={event=>{const v=event.target.value;setForegroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label></div>:null}{colorSystem==="rgb"||colorSystem==="theme"&&!themeLocked?<div className="df-pixel-color-grid"><select value={fontStyle} onChange={event=>setFontStyle(event.target.value)}>{["Classic","Pixel Bold","Arcade","Cyber","Terminal","Digital","Military","Rounded","Gothic","Minimal"].map(font=><option key={font}>{font}</option>)}</select></label><label>Font size<select value={fontScale} onChange={event=>setFontScale(Number(event.target.value))}><option value={1}>1×</option><option value={2}>2×</option></select></label></div>
           <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
             <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
-          </div>
+          </div>:null}
           <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
           {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
           <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
