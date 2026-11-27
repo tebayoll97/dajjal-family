@@ -14,7 +14,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "bootstrap": "^5.3.8",
-    "aos": "^2.3.4"
+    "aos": "^2.3.4",
+    "@mediapipe/tasks-vision": "1.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
