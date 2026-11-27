@@ -10,6 +10,7 @@ export async function generateMetadata() {
   title,
   description,
   alternates: {
+    canonical: `https://dajjalfamily.com/${locale}/df/tools-dw/generator-pixel`,
     languages: {
       id: "https://dajjalfamily.com/id/df/tools-dw/generator-pixel",
       en: "https://dajjalfamily.com/en/df/tools-dw/generator-pixel",
