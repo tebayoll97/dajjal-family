@@ -291,7 +291,8 @@ function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic
     row.push(glyph); width += cell;
   }
   if (row.length || !rows.length) rows.push(row);
-  const widths = rows.map(items => items.length * (fontStyle === "Digital" ? 5 : fontStyle === "Minimal" ? 7 : 6) * scale);
+  const advance = 6 * scale;
+  const widths = rows.map(items => items.length * advance);
   const totalHeight = rows.length * 8 * scale;
   if (rows.length > 5 || totalHeight > TEXT_HEIGHT || Math.max(0, ...widths) > TEXT_WIDTH) return { error: "overflow", canvas: null, count: chars.length };
   const canvas = document.createElement("canvas"); canvas.width = TEXT_WIDTH; canvas.height = TEXT_HEIGHT;
@@ -313,7 +314,7 @@ function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic
           if (bold) ctx.fillRect(px + scale, py, scale, scale);
         }
       });
-      x += (fontStyle === "Digital" ? 5 : fontStyle === "Minimal" ? 7 : 6) * scale;
+      x += advance;
     });
   });
   return { error: "", canvas, count: chars.length };
@@ -688,12 +689,43 @@ export default function GeneratorPixelPage() {
         <Card className="df-pixel-text-panel">
           <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
           <TextField label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} maxLength={TEXT_LIMIT} helpText={t.textHint} />
-          <div className="df-pixel-studio-controls"><label>Color system<select value={colorSystem} onChange={event=>setColorSystem(event.target.value)}><option value="rgb">RGB</option><option value="hex">HEX</option><option value="theme">Theme</option></select></label>{colorSystem==="theme"?<label>Theme<select value={themeId} onChange={event=>setThemeId(event.target.value)}>{TEXT_THEMES.map(theme=><option key={theme.id} value={theme.id}>{theme.name}</option>)}</select></label>:null}</div>{colorSystem==="theme"?<div className="df-pixel-theme-settings"><label><input type="checkbox" checked={themeLocked} onChange={event=>setThemeLocked(event.target.checked)}/> Theme locked</label><div className="df-pixel-theme-swatches">{TEXT_THEMES.map(theme=><button type="button" key={theme.id} aria-label={theme.name} aria-pressed={themeId===theme.id} style={{background:`linear-gradient(135deg,${theme.background},${theme.foreground})`}} onClick={()=>setThemeId(theme.id)}/>)}</div></div>:null}{colorSystem==="hex"?<div className="df-pixel-studio-controls"><label>Background HEX<input type="color" value={backgroundHex} onChange={event=>{const v=event.target.value;setBackgroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label><label>Text HEX<input type="color" value={foregroundHex} onChange={event=>{const v=event.target.value;setForegroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label></div>:null}{colorSystem==="rgb"||colorSystem==="theme"&&!themeLocked?<div className="df-pixel-color-grid"><select value={fontStyle} onChange={event=>setFontStyle(event.target.value)}>{["Classic","Pixel Bold","Arcade","Cyber","Terminal","Digital","Military","Rounded","Gothic","Minimal"].map(font=><option key={font}>{font}</option>)}</select></label><label>Font size<select value={fontScale} onChange={event=>setFontScale(Number(event.target.value))}><option value={1}>1×</option><option value={2}>2×</option></select></label></div>
-          <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
-          <div className="df-pixel-color-grid">
+          <div className="df-pixel-studio-controls">
+            <label>Font style
+              <select value={fontStyle} onChange={event=>setFontStyle(event.target.value)}>
+                {["Classic","Pixel Bold","Arcade","Cyber","Terminal","Digital","Military","Rounded","Gothic","Minimal"].map(font=><option key={font} value={font}>{font}</option>)}
+              </select>
+            </label>
+            <label>Font size
+              <select value={fontScale} onChange={event=>setFontScale(Number(event.target.value))}>
+                <option value={1}>1×</option><option value={2}>2×</option>
+              </select>
+            </label>
+          </div>
+          <div className="df-pixel-studio-controls">
+            <label>Color system
+              <select value={colorSystem} onChange={event=>setColorSystem(event.target.value)}>
+                <option value="rgb">RGB</option><option value="hex">HEX</option><option value="theme">Theme</option>
+              </select>
+            </label>
+            {colorSystem==="theme"?<label>Theme
+              <select value={themeId} onChange={event=>setThemeId(event.target.value)}>
+                {TEXT_THEMES.map(theme=><option key={theme.id} value={theme.id}>{theme.name}</option>)}
+              </select>
+            </label>:null}
+          </div>
+          {colorSystem==="theme"?<div className="df-pixel-theme-settings">
+            <label><input type="checkbox" checked={themeLocked} onChange={event=>setThemeLocked(event.target.checked)}/> Theme locked</label>
+            <div className="df-pixel-theme-swatches">{TEXT_THEMES.map(theme=><button type="button" key={theme.id} aria-label={theme.name} aria-pressed={themeId===theme.id} style={{background:`linear-gradient(135deg,${theme.background},${theme.foreground})`}} onClick={()=>setThemeId(theme.id)}/>)}</div>
+          </div>:null}
+          {colorSystem==="hex"?<div className="df-pixel-studio-controls">
+            <label>Background HEX<input type="color" value={backgroundHex} onChange={event=>{const v=event.target.value;setBackgroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label>
+            <label>Text HEX<input type="color" value={foregroundHex} onChange={event=>{const v=event.target.value;setForegroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label>
+          </div>:null}
+          {(colorSystem==="rgb"||(colorSystem==="theme"&&!themeLocked))?<div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
             <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
           </div>:null}
+          <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
           {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
           <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
@@ -743,10 +775,10 @@ export default function GeneratorPixelPage() {
             {history.slice((historyPage-1)*HISTORY_PAGE_SIZE,historyPage*HISTORY_PAGE_SIZE).map((entry, index) => (
               <article className="df-pixel-history-item" key={entry.id}>
                 <div className={`df-pixel-history-thumb ${entry.mode === "text" ? "df-pixel-history-thumb--text" : ""}`}>
-                  <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
+                  <img src={entry.preview} alt={`${t.historyItem} ${history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)}`} />
                 </div>
                 <div className="df-pixel-history-meta">
-                  <strong>{t.historyItem} #{history.length - index} · {entry.mode === "text" ? t.tabText : t.tabImage}</strong>
+                  <strong>{t.historyItem} #{history.length - ((historyPage - 1) * HISTORY_PAGE_SIZE + index)} · {entry.mode === "text" ? t.tabText : t.tabImage}</strong>
                   <span>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(entry.characters)} {language === "en" ? "characters" : "karakter"} · {entry.colors} {language === "en" ? "colors" : "warna"}</span>
                   <small>{new Intl.DateTimeFormat(language === "en" ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }).format(entry.createdAt)}</small>
                 </div>
