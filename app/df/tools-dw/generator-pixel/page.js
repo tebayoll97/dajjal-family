@@ -178,9 +178,9 @@ function compressOpticalHex(hex) {
 }
 
 function buildOpticalBioCode(text, colors) {
-  const safeText = text.replace(/[<>]/g, "").replace(/[\\r\\n]+/g, " ").replace(/\\s+/g, " ").trim();
+  const safeText = text.replace(/[<>]/g, "").replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim();
   if (!safeText) return "";
-  return `<color=${compressOpticalHex(colors.echoA)}><voffset=2>${safeText}\\n<color=${compressOpticalHex(colors.echoB)}><voffset=-2>${safeText}\\n<color=${compressOpticalHex(colors.core)}><voffset=0>${safeText}`;
+  return `<color=${compressOpticalHex(colors.echoA)}><voffset=2>${safeText}\n<color=${compressOpticalHex(colors.echoB)}><voffset=-2>${safeText}\n<color=${compressOpticalHex(colors.core)}><voffset=0>${safeText}`;
 }
 
 function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5, vision = null) {
