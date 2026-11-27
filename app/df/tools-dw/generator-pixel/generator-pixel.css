@@ -37,7 +37,7 @@
 .df-pixel-result-heading>span{width:1.8rem;height:1.8rem;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--df-success) 14%,var(--df-surface));color:var(--df-success);font-weight:800}
 .df-pixel-result-preview{width:100%;overflow:hidden;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-bg)}
 .df-pixel-result-preview img{display:block;width:100%;height:auto;image-rendering:pixelated}
-.df-pixel-result-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
+.df-pixel-result-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
 .df-pixel-result-detail{min-width:0;display:grid;gap:.3rem;padding:.75rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
 .df-pixel-result-detail span{color:var(--df-text-muted);font-size:.7rem}
 .df-pixel-result-detail strong{overflow-wrap:anywhere;color:var(--df-text);font-size:.88rem;font-variant-numeric:tabular-nums}
