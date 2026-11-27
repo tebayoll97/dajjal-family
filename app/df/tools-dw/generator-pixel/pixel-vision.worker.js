@@ -21,7 +21,7 @@ async function getModelBuffer(url, onProgress) {
   if (!response.ok) throw new Error(`Model download failed (${response.status}).`);
   const clone = response.clone();
   const buffer = new Uint8Array(await response.arrayBuffer());
-  if (cache) await cache.put(url, clone);
+  if (cache) { try { await cache.put(url, clone); } catch { /* Inference can continue when local cache quota is unavailable. */ } }
   return buffer;
 }
 
