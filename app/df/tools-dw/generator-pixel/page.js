@@ -76,7 +76,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
-    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Titik fokus detail",focusHint:"Posisikan titik fokus pada wajah atau area terpenting. Analisis lokal menjaga detail di sekitarnya.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",intelligenceProcess:"Optimalkan Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Prioritas visual",focusHint:"Atur titik fokus jika perlu. Pixel Vision juga memprioritaskan wajah dan objek yang terdeteksi.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",scanTitle:"Pixel Vision Scan",scanHint:"Analisis wajah, landmark, manusia, hewan, dan objek langsung di perangkat.",scanAction:"Pindai gambar",scanning:"Memindai di perangkat…",scanReady:"Analisis lokal selesai",scanFaces:"Wajah",scanObjects:"Objek",scanLoading:"Memuat model vision lokal…",scanAnalyzing:"Menganalisis gambar…",scanFailure:"Model vision tidak dapat dimuat. Periksa koneksi lalu coba lagi.",intelligenceProcess:"Rekonstruksi Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -118,7 +118,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Turn an image or text into Darkwar Survival pixel bio code.",
-    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Detail focus point",focusHint:"Place the focus point on the face or most important area. Local analysis preserves nearby detail.",focusX:"Horizontal focus",focusY:"Vertical focus",intelligenceProcess:"Optimize Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
+    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Visual priority",focusHint:"Adjust the focus point if needed. Pixel Vision also prioritizes detected faces and objects.",focusX:"Horizontal focus",focusY:"Vertical focus",scanTitle:"Pixel Vision Scan",scanHint:"Analyze faces, landmarks, people, animals, and objects directly on this device.",scanAction:"Scan image",scanning:"Scanning on device…",scanReady:"Local analysis complete",scanFaces:"Faces",scanObjects:"Objects",scanLoading:"Loading local vision models…",scanAnalyzing:"Analyzing image…",scanFailure:"Vision models could not be loaded. Check your connection and try again.",intelligenceProcess:"Reconstruct Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -163,7 +163,7 @@ function colorTag(rgb) {
   return `<#${short}>`;
 }
 
-function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5) {
+function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5, vision = null) {
   const width = source.width;
   const height = source.height;
   const input = source.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, width, height);
@@ -189,7 +189,34 @@ function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5) {
       const dx = (x - focusX * (width - 1)) / radiusX;
       const dy = (y - focusY * (height - 1)) / radiusY;
       const focus = Math.exp(-2.2 * (dx * dx + dy * dy));
-      const importance = Math.max(0.12, Math.min(1, focus * 0.78 + edge * 0.42));
+      const nx = x / Math.max(1, width - 1);
+      const ny = y / Math.max(1, height - 1);
+      let semantic = 0;
+      (vision?.faces || []).forEach((face) => {
+        const box = face.box;
+        const cx = box.x + box.width / 2;
+        const cy = box.y + box.height / 2;
+        const rx = Math.max(0.035, box.width * 0.72);
+        const ry = Math.max(0.045, box.height * 0.72);
+        const distance = ((nx - cx) / rx) ** 2 + ((ny - cy) / ry) ** 2;
+        semantic = Math.max(semantic, Math.exp(-2.4 * distance));
+        Object.values(face.landmarks || {}).forEach((point) => {
+          if (!point) return;
+          const landmarkDistance = ((nx - point.x) ** 2 + (ny - point.y) ** 2) / 0.0018;
+          semantic = Math.max(semantic, Math.exp(-landmarkDistance));
+        });
+      });
+      (vision?.objects || []).forEach((object) => {
+        const box = object.box;
+        if (!box) return;
+        const cx = (box.x + box.width / 2) / (vision.width || width);
+        const cy = (box.y + box.height / 2) / (vision.height || height);
+        const rw = Math.max(0.04, box.width / (vision.width || width) * 0.68);
+        const rh = Math.max(0.05, box.height / (vision.height || height) * 0.68);
+        const distance = ((nx - cx) / rw) ** 2 + ((ny - cy) / rh) ** 2;
+        semantic = Math.max(semantic, Math.exp(-2.1 * distance) * Math.max(0.35, object.score));
+      });
+      const importance = Math.max(0.12, Math.min(1, focus * 0.48 + semantic * 0.62 + edge * 0.3));
       importanceMap[index] = importance;
 
       let averageR = 0, averageG = 0, averageB = 0, samples = 0;
@@ -419,6 +446,11 @@ export default function GeneratorPixelPage() {
   const [historyPage,setHistoryPage]=useState(1);
   const [focusX,setFocusX]=useState(0.5);
   const [focusY,setFocusY]=useState(0.5);
+  const visionWorkerRef = useRef(null);
+  const visionRequestRef = useRef(0);
+  const [visionAnalysis,setVisionAnalysis] = useState(null);
+  const [visionStatus,setVisionStatus] = useState("idle");
+  const [visionProgress,setVisionProgress] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -450,6 +482,7 @@ export default function GeneratorPixelPage() {
 
   useEffect(() => () => {
     if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    visionWorkerRef.current?.terminate();
   }, []);
 
   const chooseFile = (nextFile) => {
@@ -594,15 +627,47 @@ export default function GeneratorPixelPage() {
     }catch(caught){setError(caught.message||t.processError);}finally{setBusy(false);}
   };
 
+  const analyzeVisionCanvas = useCallback(async (canvas) => {
+    if (typeof Worker === "undefined" || typeof createImageBitmap !== "function") throw new Error(t.scanFailure);
+    let worker = visionWorkerRef.current;
+    if (!worker) {
+      worker = new Worker(new URL("./pixel-vision.worker.js", import.meta.url), { type: "module" });
+      visionWorkerRef.current = worker;
+    }
+    const image = await createImageBitmap(canvas);
+    const id = ++visionRequestRef.current;
+    setVisionStatus("loading");
+    setVisionProgress(t.scanLoading);
+    return new Promise((resolve, reject) => {
+      worker.onmessage = (event) => {
+        const message = event.data || {};
+        if (message.id !== id) return;
+        if (message.type === "progress") { setVisionProgress(message.detail?.stage === "analyzing" ? t.scanAnalyzing : t.scanLoading); return; }
+        if (message.type === "error") { setVisionStatus("error"); setVisionProgress(""); reject(new Error(message.error || t.scanFailure)); return; }
+        if (message.type === "result") { setVisionAnalysis(message.result); setVisionStatus("ready"); setVisionProgress(t.scanReady); resolve(message.result); }
+      };
+      worker.onerror = () => { setVisionStatus("error"); setVisionProgress(""); reject(new Error(t.scanFailure)); };
+      worker.postMessage({ id, image }, [image]);
+    });
+  }, [t.scanFailure, t.scanLoading, t.scanAnalyzing, t.scanReady]);
+
+  const runVisionScan = async () => {
+    if (!file || !imageRef.current?.complete) { setError(t.noImage); return; }
+    setBusy(true); setError("");
+    try { await analyzeVisionCanvas(makeCropCanvas()); }
+    catch (caught) { setError(caught.message || t.scanFailure); }
+    finally { setBusy(false); }
+  };
   const createIntelligenceBio = async () => {
     if (!file || !imageRef.current?.complete) { setError(t.noImage); return; }
     setBusy(true); setError("");
     try {
       const cropped = makeCropCanvas();
-      const analyzed = prepareIntelligenceCanvas(cropped, focusX, focusY);
+      const vision = visionAnalysis || await analyzeVisionCanvas(cropped);
+      const analyzed = prepareIntelligenceCanvas(cropped, focusX, focusY, vision);
       const encoded = encodePixelCanvas(analyzed.canvas, WIDTH, HEIGHT, { importanceMap: analyzed.importanceMap });
       if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
-      const entry = { id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), createdAt: Date.now(), ...encoded, mode: "intelligence", focusX, focusY, width: WIDTH, height: HEIGHT, preview: analyzed.canvas.toDataURL("image/png") };
+      const entry = { id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), createdAt: Date.now(), ...encoded, mode: "intelligence", focusX, focusY, faceCount: vision.faces.length, objectCount: vision.objects.length, width: WIDTH, height: HEIGHT, preview: analyzed.canvas.toDataURL("image/png") };
       setResult(entry); setCopied(false); setCopiedHistoryId("");
       try { setHistory(await savePixelHistory(entry)); } catch (historyError) { console.warn("Pixel Bio history could not be saved:", historyError); }
       setSuccessOpen(true);
@@ -764,12 +829,19 @@ export default function GeneratorPixelPage() {
           </div>
 
           {mode === "intelligence" ? <div className="df-pixel-intelligence-controls">
-            <div className="df-pixel-step-heading"><span className="df-pixel-step-number">03</span><div><h2>{t.focusTitle}</h2><p>{t.focusHint}</p></div></div>
+            <div className="df-pixel-step-heading"><span className="df-pixel-step-number">03</span><div><h2>{t.scanTitle}</h2><p>{t.scanHint}</p></div></div>
+            <Button variant="secondary" onClick={runVisionScan} disabled={!file || busy} loading={busy && visionStatus !== "idle"}><SvgIcon name="eye" size={16}/>{t.scanAction}</Button>
+            {visionStatus !== "idle" ? <div className={"df-pixel-vision-status df-pixel-vision-status--" + visionStatus} role="status" aria-live="polite">
+              <span>{visionProgress}</span>
+              {visionStatus === "ready" ? <div className="df-pixel-vision-metrics"><span>{t.scanFaces}: <strong>{visionAnalysis?.faces?.length || 0}</strong></span><span>{t.scanObjects}: <strong>{visionAnalysis?.objects?.length || 0}</strong></span></div> : null}
+              {visionStatus === "ready" && visionAnalysis?.objects?.length ? <div className="df-pixel-vision-tags">{visionAnalysis.objects.slice(0,6).map((item,index)=><span key={item.label + "-" + index}>{item.label} · {Math.round(item.score*100)}%</span>)}</div> : null}
+            </div> : null}
+            <div className="df-pixel-step-heading"><span className="df-pixel-step-number">04</span><div><h2>{t.focusTitle}</h2><p>{t.focusHint}</p></div></div>
             <RangeSlider id="pixel-focus-x" label={t.focusX} min={0} max={1} step={0.01} value={focusX} onChange={setFocusX} disabled={!file || busy}/>
             <RangeSlider id="pixel-focus-y" label={t.focusY} min={0} max={1} step={0.01} value={focusY} onChange={setFocusY} disabled={!file || busy}/>
           </div> : null}
           {error ? <p className="df-pixel-error" role="alert">{error}</p> : null}
-          <Button className="df-pixel-create-button" onClick={mode === "intelligence" ? createIntelligenceBio : createPixelBio} disabled={!file || !imageSize.width || busy} loading={busy}>
+          <Button className="df-pixel-create-button" onClick={mode === "intelligence" ? createIntelligenceBio : createPixelBio} disabled={!file || !imageSize.width || busy || (mode === "intelligence" && visionStatus === "error")} loading={busy}>
             {busy ? t.processing : mode === "intelligence" ? t.intelligenceProcess : t.process}
           </Button>
         </Card>
