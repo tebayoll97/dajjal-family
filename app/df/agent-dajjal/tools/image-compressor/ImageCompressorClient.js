@@ -52,6 +52,7 @@ export default function ImageCompressorClient() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [result, setResult] = useState(null);
+  const [resultPreview, setResultPreview] = useState("");
   const [format, setFormat] = useState("image/webp");
   const [quality, setQuality] = useState(0.82);
   const [scale, setScale] = useState(1);
@@ -67,8 +68,9 @@ export default function ImageCompressorClient() {
   }, [file]);
 
   useEffect(() => {
-    if (!result?.blob) return;
+    if (!result?.blob) { setResultPreview(""); return; }
     const url = URL.createObjectURL(result.blob);
+    setResultPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [result]);
 
@@ -123,14 +125,14 @@ export default function ImageCompressorClient() {
       <Card className={styles.workspace}>
         {!file ? (
           <button type="button" className={styles.dropzone} onClick={() => inputRef.current?.click()}>
-            <span className={styles.uploadIcon}><SvgIcon name="image-plus" size={26} /></span>
+            <span className={styles.uploadIcon}><SvgIcon name="image" size={26} /></span>
             <strong>{t.drop}</strong><span>{t.hint}</span>
             <span className="ui-button ui-button-primary">{t.choose}</span>
           </button>
         ) : (
           <div className={styles.selected}>
             <div className={styles.fileRow}>
-              <div className={styles.fileName}><SvgIcon name="file-image" size={20} /><span>{file.name}</span></div>
+              <div className={styles.fileName}><SvgIcon name="file" size={20} /><span>{file.name}</span></div>
               <Button variant="secondary" size="sm" onClick={() => inputRef.current?.click()}>{t.change}</Button>
               <Button variant="ghost" size="sm" onClick={() => { setFile(null); setResult(null); setError(""); setNotice(""); }}>{t.reset}</Button>
             </div>
@@ -143,7 +145,7 @@ export default function ImageCompressorClient() {
               <section className={styles.previewPanel}>
                 <h2>{t.result}</h2>
                 <div className={styles.previewFrame}>
-                  {result ? <img src={URL.createObjectURL(result.blob)} alt={t.result} /> : <span>{t.process}</span>}
+                  {result ? <img src={resultPreview} alt={t.result} /> : <span>{t.process}</span>}
                 </div>
                 <p>{result ? formatBytes(result.outputSize) : "—"}</p>
               </section>
@@ -177,7 +179,7 @@ export default function ImageCompressorClient() {
           <div><span>{t.originalSize}</span><strong>{formatBytes(file.size)} → {formatBytes(result.outputSize)}</strong></div>
         </div>}
       </Card>
-      <p className={styles.privacy}><SvgIcon name="shield-check" size={17} />{t.noUpload}</p>
+      <p className={styles.privacy}><SvgIcon name="shield" size={17} />{t.noUpload}</p>
     </main>
   );
 }
