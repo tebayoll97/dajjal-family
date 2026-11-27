@@ -10,7 +10,7 @@ Add actual on-device computer vision to Intelligence Mode while preserving Image
 
 ## Local inference architecture
 
-1. The page crops the selected image to the existing 193×45 Pixel Bio composition.
+1. The page creates a 4×-resolution analysis crop from the selected composition, while reconstruction remains on the existing 193×45 Pixel Bio canvas.
 2. The page transfers an `ImageBitmap` to `pixel-vision.worker.js`. The original File and image pixels are not sent to a server.
 3. The worker initializes MediaPipe Tasks Vision:
    - Face Landmarker: detects up to five faces and returns 478-point face meshes. The engine derives a normalized face box and selected eye, nose, mouth, and chin landmarks.
@@ -40,7 +40,7 @@ Add actual on-device computer vision to Intelligence Mode while preserving Image
 
 - Models initialize lazily only when the user runs Pixel Vision Scan.
 - Worker inference keeps synchronous model calls off the main UI thread.
-- Model buffers are cached locally; model download or initialization errors are surfaced to the user.
+- Model buffers are cached locally when browser storage permits; inference can still proceed if the cache quota is unavailable. Model download or initialization errors are surfaced to the user.
 - Changing the crop/zoom invalidates previous scan results so stale coordinates cannot influence a new composition.
 - Existing Image Mode and Text Mode do not initialize or depend on MediaPipe.
 - No database, Supabase, authentication, storage, or server secrets are involved.
