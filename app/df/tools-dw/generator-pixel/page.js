@@ -14,7 +14,8 @@ const MAX_CHARACTERS = 32000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const HISTORY_DB = "df-pixel-bio-history";
 const HISTORY_STORE = "results";
-const HISTORY_LIMIT = 3;
+const HISTORY_LIMIT = 10;
+const HISTORY_PAGE_SIZE = 3;
 
 function openPixelHistoryDb() {
   return new Promise((resolve, reject) => {
@@ -104,9 +105,8 @@ const COPY = {
     detailCharacters: "Jumlah karakter",
     detailColors: "Jumlah warna",
     detailDimensions: "Dimensi",
-    detailDimensions: "Dimensi",
     historyTitle: "Riwayat Generator",
-    historyDescription: "Tiga hasil generator terakhir tersimpan di perangkat ini.",
+    historyDescription: "Sepuluh hasil terakhir tersimpan di perangkat ini.",
     historyEmpty: "Belum ada riwayat. Hasil yang berhasil dibuat akan muncul di sini.",
     historyItem: "Pixel Bio",
     historyCopy: "Salin Kode",
@@ -148,9 +148,8 @@ const COPY = {
     detailCharacters: "Characters",
     detailColors: "Colors",
     detailDimensions: "Dimensions",
-    detailDimensions: "Dimensions",
     historyTitle: "Generator History",
-    historyDescription: "Your three latest results are saved on this device.",
+    historyDescription: "Your ten latest results are saved on this device.",
     historyEmpty: "No history yet. Successfully generated results will appear here.",
     historyItem: "Pixel Bio",
     historyCopy: "Copy Code",
@@ -272,23 +271,51 @@ function normalizePixelGlyph(char) {
   const special={"ß":"SS","Æ":"AE","æ":"ae","Œ":"OE","œ":"oe","Ø":"O","ø":"o","Đ":"D","đ":"d","Ł":"L","ł":"l","Þ":"P","þ":"p","ı":"i"};
   return special[char] || char.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
-function buildTextPixelCanvas(text, background, foreground) {
-  if (text.length > 1024) return {error:"limit",canvas:null,count:text.length};
-  if (typeof Intl.Segmenter !== "function") return {error:"unsupported",canvas:null,count:0};
-  const segments=Array.from(new Intl.Segmenter(undefined,{granularity:"grapheme"}).segment(text),x=>x.segment);
-  const expanded=segments.map(normalizePixelGlyph).flatMap(x=>Array.from(x === "\\t" ? "    " : x));
-  const unsupported=expanded.find(ch=>!FONT_5X7[ch.toUpperCase()] && ch!=="\n" && ch!=="\r" && ch!=="\t");
-  if(unsupported)return {error:"unsupported",canvas:null,count:expanded.length};
-  if(expanded.length>TEXT_LIMIT)return {error:"limit",canvas:null,count:expanded.length};
-  const rows=[];let row=[];let width=0;
-  for(const ch of expanded){if(ch==="\r")continue;if(ch==="\n"){rows.push(row);row=[];width=0;continue;}const glyph=FONT_5X7[ch.toUpperCase()];if(row.length&&width+6>TEXT_WIDTH){rows.push(row);row=[];width=0;}row.push(glyph);width+=6;}
-  if(row.length||!rows.length)rows.push(row);
-  if(rows.length>5)return {error:"overflow",canvas:null,count:expanded.length};
-  const canvas=document.createElement("canvas");canvas.width=TEXT_WIDTH;canvas.height=TEXT_HEIGHT;
-  const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {error:"canvas",canvas:null,count:expanded.length};
-  ctx.fillStyle=background;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);ctx.fillStyle=foreground;
-  rows.forEach((items,ri)=>{let x=0;items.forEach(glyph=>{glyph.forEach((bits,y)=>{for(let col=0;col<5;col++)if(bits[col]==="1")ctx.fillRect(x+col,ri*8+y,1,1);});x+=6;});});
-  return {error:"",canvas,count:expanded.length};
+function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic", scale = 1) {
+  if (text.length > 1024) return { error: "limit", canvas: null, count: text.length };
+  const segments = typeof Intl.Segmenter === "function"
+    ? Array.from(new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(text), item => item.segment)
+    : Array.from(text);
+  const expanded = segments.map(normalizePixelGlyph).flatMap(value => Array.from(value === "\t" ? "    " : value));
+  const normalized = expanded.join("").replace(/\r\n?/g, "\n");
+  const chars = Array.from(normalized);
+  const unsupported = chars.find(ch => !FONT_5X7[ch.toUpperCase()] && ch !== "\n" && ch !== "\t");
+  if (unsupported) return { error: "unsupported", canvas: null, count: chars.length };
+  if (chars.length > TEXT_LIMIT) return { error: "limit", canvas: null, count: chars.length };
+  const rows = []; let row = []; let width = 0; const cell = 6 * scale;
+  for (const ch of chars) {
+    if (ch === "\n") { rows.push(row); row = []; width = 0; continue; }
+    const glyph = FONT_5X7[ch.toUpperCase()];
+    if (row.length && width + cell > TEXT_WIDTH) { rows.push(row); row = []; width = 0; }
+    row.push(glyph); width += cell;
+  }
+  if (row.length || !rows.length) rows.push(row);
+  const widths = rows.map(items => items.length * (fontStyle === "Digital" ? 5 : fontStyle === "Minimal" ? 7 : 6) * scale);
+  const totalHeight = rows.length * 8 * scale;
+  if (rows.length > 5 || totalHeight > TEXT_HEIGHT || Math.max(0, ...widths) > TEXT_WIDTH) return { error: "overflow", canvas: null, count: chars.length };
+  const canvas = document.createElement("canvas"); canvas.width = TEXT_WIDTH; canvas.height = TEXT_HEIGHT;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return { error: "canvas", canvas: null, count: chars.length };
+  ctx.fillStyle = background; ctx.fillRect(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
+  const bold = ["Pixel Bold", "Military", "Gothic"].includes(fontStyle);
+  const italic = ["Cyber", "Gothic"].includes(fontStyle);
+  const shadow = fontStyle === "Arcade";
+  rows.forEach((items, ri) => {
+    let x = Math.floor((TEXT_WIDTH - widths[ri]) / 2);
+    items.forEach(glyph => {
+      glyph.forEach((bits, y) => {
+        for (let col = 0; col < 5; col++) if (bits[col] === "1") {
+          const px = x + col * scale + (italic ? Math.max(0, 2 - Math.floor(y / 2)) : 0);
+          const py = Math.floor((TEXT_HEIGHT - totalHeight) / 2) + ri * 8 * scale + y * scale;
+          if (shadow) { ctx.fillStyle = "rgba(0,0,0,.65)"; ctx.fillRect(px + scale, py + scale, scale, scale); }
+          ctx.fillStyle = foreground; ctx.fillRect(px, py, scale, scale);
+          if (bold) ctx.fillRect(px + scale, py, scale, scale);
+        }
+      });
+      x += (fontStyle === "Digital" ? 5 : fontStyle === "Minimal" ? 7 : 6) * scale;
+    });
+  });
+  return { error: "", canvas, count: chars.length };
 }
 
 export default function GeneratorPixelPage() {
@@ -320,6 +347,9 @@ export default function GeneratorPixelPage() {
   const [backgroundRgb,setBackgroundRgb]=useState({r:0,g:0,b:0});
   const [foregroundRgb,setForegroundRgb]=useState({r:255,g:255,b:255});
   const [textValidation,setTextValidation]=useState({error:"",count:14});
+  const [fontStyle,setFontStyle]=useState("Classic");
+  const [fontScale,setFontScale]=useState(1);
+  const [historyPage,setHistoryPage]=useState(1);
 
   useEffect(() => {
     let active = true;
@@ -330,7 +360,7 @@ export default function GeneratorPixelPage() {
   const stageHeight = stageWidth * HEIGHT / WIDTH;
   const backgroundHex="#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
   const foregroundHex="#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
-  useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex]);
+  useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex,fontStyle,fontScale]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -487,7 +517,7 @@ export default function GeneratorPixelPage() {
     try{
       const encoded=encodePixelCanvas(rendered.canvas,TEXT_WIDTH,TEXT_HEIGHT);
       if(encoded.characters>MAX_CHARACTERS)throw new Error(t.overLimit);
-      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
+      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,fontStyle,fontScale,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
       setResult(entry);setCopied(false);setCopiedHistoryId("");
       try{setHistory(await savePixelHistory(entry));}catch(historyError){console.warn("Pixel Bio history could not be saved:",historyError);}
       setSuccessOpen(true);
@@ -529,7 +559,7 @@ export default function GeneratorPixelPage() {
   const restoreHistory = (entry) => {
     setMode(entry.mode === "text" ? "text" : "image");
     if (entry.mode === "text") {
-      setBioText(entry.text || "");
+      setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);
       if (entry.background) { const [r,g,b] = entry.background.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setBackgroundRgb({r,g,b}); }
       if (entry.foreground) { const [r,g,b] = entry.foreground.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setForegroundRgb({r,g,b}); }
     }
@@ -652,7 +682,8 @@ export default function GeneratorPixelPage() {
       </div> : (
         <Card className="df-pixel-text-panel">
           <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.textTitle}</h2><p>{t.textHint}</p></div></div>
-          <TextField as="textarea" label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} rows={3} helpText={t.textHint} />
+          <TextField label={t.textTitle} value={bioText} onChange={(event)=>{setBioText(event.target.value);setError("");}} placeholder={t.textPlaceholder} maxLength={TEXT_LIMIT} helpText={t.textHint} />
+          <div className="df-pixel-studio-controls"><label>Font style<select value={fontStyle} onChange={event=>setFontStyle(event.target.value)}>{["Classic","Pixel Bold","Arcade","Cyber","Terminal","Digital","Military","Rounded","Gothic","Minimal"].map(font=><option key={font}>{font}</option>)}</select></label><label>Font size<select value={fontScale} onChange={event=>setFontScale(Number(event.target.value))}><option value={1}>1×</option><option value={2}>2×</option></select></label></div>
           <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
@@ -704,7 +735,7 @@ export default function GeneratorPixelPage() {
           <p className="df-pixel-history-empty">{t.historyEmpty}</p>
         ) : (
           <div className="df-pixel-history-list">
-            {history.map((entry, index) => (
+            {history.slice((historyPage-1)*HISTORY_PAGE_SIZE,historyPage*HISTORY_PAGE_SIZE).map((entry, index) => (
               <article className="df-pixel-history-item" key={entry.id}>
                 <div className={`df-pixel-history-thumb ${entry.mode === "text" ? "df-pixel-history-thumb--text" : ""}`}>
                   <img src={entry.preview} alt={`${t.historyItem} ${history.length - index}`} />
@@ -722,6 +753,7 @@ export default function GeneratorPixelPage() {
             ))}
           </div>
         )}
+        {history.length>HISTORY_PAGE_SIZE?<div className="df-pixel-history-pagination"><Button size="sm" variant="secondary" disabled={historyPage===1} onClick={()=>setHistoryPage(page=>Math.max(1,page-1))}>Previous</Button><span>{historyPage} / {Math.ceil(history.length/HISTORY_PAGE_SIZE)}</span><Button size="sm" variant="secondary" disabled={historyPage>=Math.ceil(history.length/HISTORY_PAGE_SIZE)} onClick={()=>setHistoryPage(page=>Math.min(Math.ceil(history.length/HISTORY_PAGE_SIZE),page+1))}>Next</Button></div>:null}
       </Card>
 
       <Dialog
