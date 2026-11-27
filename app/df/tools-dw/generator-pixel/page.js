@@ -836,7 +836,7 @@ export default function GeneratorPixelPage() {
 
           {mode === "intelligence" ? <div className="df-pixel-intelligence-controls">
             <div className="df-pixel-step-heading"><span className="df-pixel-step-number">03</span><div><h2>{t.scanTitle}</h2><p>{t.scanHint}</p></div></div>
-            <Button variant="secondary" onClick={runVisionScan} disabled={!file || busy} loading={busy && visionStatus !== "idle"}><SvgIcon name="eye" size={16}/>{t.scanAction}</Button>
+            <Button variant="secondary" onClick={runVisionScan} disabled={!file || busy} loading={busy && visionStatus === "loading"}><SvgIcon name="eye" size={16}/>{t.scanAction}</Button>
             {visionStatus !== "idle" ? <div className={"df-pixel-vision-status df-pixel-vision-status--" + visionStatus} role="status" aria-live="polite">
               <span>{visionProgress}</span>
               {visionStatus === "ready" ? <div className="df-pixel-vision-metrics"><span>{t.scanFaces}: <strong>{visionAnalysis?.faces?.length || 0}</strong></span><span>{t.scanObjects}: <strong>{visionAnalysis?.objects?.length || 0}</strong></span></div> : null}
