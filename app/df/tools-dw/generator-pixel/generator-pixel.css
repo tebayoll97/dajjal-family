@@ -95,5 +95,3 @@
 
 .df-pixel-history-meta-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--df-space-2);min-width:0}
 .df-pixel-history-meta-heading>strong{min-width:0;flex:1}
-.df-pixel-history-delete{flex:0 0 auto;display:inline-flex;align-items:center;gap:.3rem;min-height:34px;padding:.3rem .5rem;font-size:var(--df-text-xs);line-height:1.2}
-.df-pixel-history-delete .ui-icon{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm)}
