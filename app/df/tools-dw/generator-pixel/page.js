@@ -80,7 +80,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
-    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",focusTitle:"Prioritas visual",focusHint:"Atur titik fokus jika perlu. Pixel Vision juga memprioritaskan wajah dan objek yang terdeteksi.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",scanTitle:"Pixel Vision Scan",scanHint:"Analisis wajah, landmark, manusia, hewan, dan objek langsung di perangkat.",scanAction:"Pindai gambar",scanning:"Memindai di perangkat…",scanReady:"Analisis lokal selesai",scanFaces:"Wajah",scanObjects:"Objek",detailDetected:"Terdeteksi",scanLoading:"Memuat model vision lokal…",scanAnalyzing:"Menganalisis gambar…",scanFailure:"Model vision tidak dapat dimuat. Periksa koneksi lalu coba lagi.",intelligenceProcess:"Rekonstruksi Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",tabIntelligence:"Intelligence Mode",tabOptical:"Optical Art",opticalTitle:"Holographic Depth",opticalHint:"Buat ilusi kedalaman dari tiga lapisan warna menggunakan tag bio yang sudah teruji.",opticalIdentity:"Teks identitas",opticalPrimary:"Warna inti",opticalEchoA:"Warna bayangan 1",opticalEchoB:"Warna bayangan 2",opticalPreview:"Pratinjau komposisi",opticalCode:"Kode bio Darkwar",opticalCopy:"Salin kode bio",opticalCopied:"Kode berhasil disalin!",opticalEmpty:"Masukkan teks untuk melihat pratinjau.",focusTitle:"Prioritas visual",focusHint:"Atur titik fokus jika perlu. Pixel Vision juga memprioritaskan wajah dan objek yang terdeteksi.",focusX:"Fokus horizontal",focusY:"Fokus vertikal",scanTitle:"Pixel Vision Scan",scanHint:"Analisis wajah, landmark, manusia, hewan, dan objek langsung di perangkat.",scanAction:"Pindai gambar",scanning:"Memindai di perangkat…",scanReady:"Analisis lokal selesai",scanFaces:"Wajah",scanObjects:"Objek",detailDetected:"Terdeteksi",scanLoading:"Memuat model vision lokal…",scanAnalyzing:"Menganalisis gambar…",scanFailure:"Model vision tidak dapat dimuat. Periksa koneksi lalu coba lagi.",intelligenceProcess:"Rekonstruksi Pixel Bio",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -125,7 +125,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Turn an image or text into Darkwar Survival pixel bio code.",
-    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",focusTitle:"Visual priority",focusHint:"Adjust the focus point if needed. Pixel Vision also prioritizes detected faces and objects.",focusX:"Horizontal focus",focusY:"Vertical focus",scanTitle:"Pixel Vision Scan",scanHint:"Analyze faces, landmarks, people, animals, and objects directly on this device.",scanAction:"Scan image",scanning:"Scanning on device…",scanReady:"Local analysis complete",scanFaces:"Faces",scanObjects:"Objects",detailDetected:"Detected",scanLoading:"Loading local vision models…",scanAnalyzing:"Analyzing image…",scanFailure:"Vision models could not be loaded. Check your connection and try again.",intelligenceProcess:"Reconstruct Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
+    tabImage:"Image Mode",tabText:"Text Mode",tabIntelligence:"Intelligence Mode",tabOptical:"Optical Art",opticalTitle:"Holographic Depth",opticalHint:"Create a depth illusion from three color layers using bio tags already tested in-game.",opticalIdentity:"Identity text",opticalPrimary:"Core color",opticalEchoA:"Shadow color 1",opticalEchoB:"Shadow color 2",opticalPreview:"Composition preview",opticalCode:"Darkwar bio code",opticalCopy:"Copy bio code",opticalCopied:"Code copied successfully!",opticalEmpty:"Enter text to see the preview.",focusTitle:"Visual priority",focusHint:"Adjust the focus point if needed. Pixel Vision also prioritizes detected faces and objects.",focusX:"Horizontal focus",focusY:"Vertical focus",scanTitle:"Pixel Vision Scan",scanHint:"Analyze faces, landmarks, people, animals, and objects directly on this device.",scanAction:"Scan image",scanning:"Scanning on device…",scanReady:"Local analysis complete",scanFaces:"Faces",scanObjects:"Objects",detailDetected:"Detected",scanLoading:"Loading local vision models…",scanAnalyzing:"Analyzing image…",scanFailure:"Vision models could not be loaded. Check your connection and try again.",intelligenceProcess:"Reconstruct Pixel Bio",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -171,6 +171,16 @@ const COPY = {
 function colorTag(rgb) {
   const short = rgb.map((channel) => Math.max(0, Math.min(15, Math.round(channel / 17))).toString(16)).join("");
   return `<#${short}>`;
+}
+
+function compressOpticalHex(hex) {
+  return `#${[1, 3, 5].map((index) => Math.max(0, Math.min(15, Math.round(parseInt(hex.slice(index, index + 2), 16) / 17))).toString(16)).join("").toUpperCase()}`;
+}
+
+function buildOpticalBioCode(text, colors) {
+  const safeText = text.replace(/[<>]/g, "").replace(/[\\r\\n]+/g, " ").replace(/\\s+/g, " ").trim();
+  if (!safeText) return "";
+  return `<color=${compressOpticalHex(colors.echoA)}><voffset=2>${safeText}\\n<color=${compressOpticalHex(colors.echoB)}><voffset=-2>${safeText}\\n<color=${compressOpticalHex(colors.core)}><voffset=0>${safeText}`;
 }
 
 function prepareIntelligenceCanvas(source, focusX = 0.5, focusY = 0.5, vision = null) {
@@ -457,7 +467,7 @@ export default function GeneratorPixelPage() {
   const [themeId,setThemeId]=useState("arctic");
   const [historyPage,setHistoryPage]=useState(1);
   const [focusX,setFocusX]=useState(0.5);
-  const [focusY,setFocusY]=useState(0.5);
+  const [focusY,setFocusY]=useState(0.5);\n  const [opticalText,setOpticalText]=useState("DAJJAL FAMILY");\n  const [opticalColors,setOpticalColors]=useState({core:"#FFFFFF",echoA:"#FF3333",echoB:"#33FFFF"});\n  const [opticalCopied,setOpticalCopied]=useState(false);
   const visionWorkerRef = useRef(null);
   const visionRequestRef = useRef(0);
   const [visionAnalysis,setVisionAnalysis] = useState(null);
@@ -473,7 +483,7 @@ export default function GeneratorPixelPage() {
   const stageHeight = stageWidth * HEIGHT / WIDTH;
   const activeTheme=TEXT_THEMES.find(theme=>theme.id===themeId)||TEXT_THEMES[0];
   const backgroundHex=colorSystem==="theme"?activeTheme.background:"#"+[backgroundRgb.r,backgroundRgb.g,backgroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
-  const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");
+  const foregroundHex=colorSystem==="theme"?activeTheme.foreground:"#"+[foregroundRgb.r,foregroundRgb.g,foregroundRgb.b].map(v=>(Math.round(v/17)*17).toString(16).padStart(2,"0")).join("");\n  const opticalCode=useMemo(()=>buildOpticalBioCode(opticalText,opticalColors),[opticalText,opticalColors]);
   useEffect(()=>{const rendered=buildTextPixelCanvas(bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament);setTextValidation({error:rendered.error,count:rendered.count});const target=textCanvasRef.current;if(!target)return;const ctx=target.getContext("2d");ctx.clearRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);if(rendered.canvas)ctx.drawImage(rendered.canvas,0,0);else{ctx.fillStyle=backgroundHex;ctx.fillRect(0,0,TEXT_WIDTH,TEXT_HEIGHT);}},[bioText,backgroundHex,foregroundHex,fontStyle,fontScale,activeTheme.ornament]);
 
   useEffect(() => {
@@ -772,8 +782,8 @@ export default function GeneratorPixelPage() {
         className="df-pixel-header"
       />
 
-      <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null},{value:"intelligence",label:t.tabIntelligence,content:null}]} />
-      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : mode === "text" ? "pixel-mode-tab-1" : "pixel-mode-tab-2"} tabIndex={0}>{mode !== "text" ? <div className="df-pixel-workspace">
+      <Tabs id="pixel-mode" renderPanel={false} value={mode} onChange={(next)=>{setMode(next);setError("");}} ariaLabel={t.title} tabs={[{value:"image",label:t.tabImage,content:null},{value:"text",label:t.tabText,content:null},{value:"intelligence",label:t.tabIntelligence,content:null},{value:"optical",label:t.tabOptical,content:null}]} />
+      <div id="pixel-mode-panel" role="tabpanel" aria-labelledby={mode === "image" ? "pixel-mode-tab-0" : mode === "text" ? "pixel-mode-tab-1" : mode === "intelligence" ? "pixel-mode-tab-2" : "pixel-mode-tab-3"} tabIndex={0}>{mode !== "text" && mode !== "optical" ? <div className="df-pixel-workspace">
         <Card className="df-pixel-panel">
           <div className="df-pixel-step-heading">
             <span className="df-pixel-step-number">01</span>
@@ -910,6 +920,22 @@ export default function GeneratorPixelPage() {
           <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
           {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
           <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
+        </Card>
+      ) : (
+        <Card className="df-pixel-optical-panel">
+          <div className="df-pixel-step-heading"><span className="df-pixel-step-number">01</span><div><h2>{t.opticalTitle}</h2><p>{t.opticalHint}</p></div></div>
+          <TextField label={t.opticalIdentity} value={opticalText} maxLength={30} onChange={(event)=>{setOpticalText(event.target.value.replace(/[<>]/g,""));setOpticalCopied(false);}} placeholder="DAJJAL FAMILY" />
+          <div className="df-pixel-optical-preview-wrap">
+            <div className="df-pixel-text-preview-heading"><strong>{t.opticalPreview}</strong><span>3-layer depth</span></div>
+            <div className="df-pixel-optical-preview" aria-label={t.opticalPreview}>
+              {opticalText.trim() ? <div className="df-pixel-optical-stack"><span style={{color:opticalColors.echoA,transform:"translateY(5px)"}}>{opticalText}</span><span style={{color:opticalColors.echoB,transform:"translateY(-3px)"}}>{opticalText}</span><span style={{color:opticalColors.core}}>{opticalText}</span></div> : <span className="df-pixel-empty-preview">{t.opticalEmpty}</span>}
+            </div>
+          </div>
+          <div className="df-pixel-optical-colors">
+            {[{key:"core",label:t.opticalPrimary},{key:"echoA",label:t.opticalEchoA},{key:"echoB",label:t.opticalEchoB}].map((item)=><label key={item.key}>{item.label}<input type="color" value={opticalColors[item.key]} onChange={(event)=>{setOpticalColors((current)=>({...current,[item.key]:event.target.value}));setOpticalCopied(false);}} /></label>)}
+          </div>
+          <label className="df-pixel-optical-code-label">{t.opticalCode}<textarea readOnly value={opticalCode} rows={4} spellCheck={false}/></label>
+          <Button className="df-pixel-create-button" onClick={async()=>setOpticalCopied(await copyText(opticalCode))} disabled={!opticalCode}>{opticalCopied?t.opticalCopied:t.opticalCopy}</Button>
         </Card>
       )}</div>
 
