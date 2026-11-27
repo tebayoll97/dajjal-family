@@ -9,14 +9,14 @@ const WIDTH = 193;
 const HEIGHT = 45;
 const TEXT_WIDTH = 193;
 const TEXT_HEIGHT = 40;
-const TEXT_LIMIT = 160;
+const TEXT_LIMIT = 30;
 const MAX_CHARACTERS = 32000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const HISTORY_DB = "df-pixel-bio-history";
 const HISTORY_STORE = "results";
 const HISTORY_LIMIT = 10;
 const HISTORY_PAGE_SIZE = 3;
-const TEXT_THEMES=[{id:"arctic",name:"Arctic",background:"#10182b",foreground:"#a5eaff"},{id:"crimson",name:"Crimson",background:"#210d19",foreground:"#ff526e"},{id:"nebula",name:"Nebula",background:"#130d2b",foreground:"#d8a5ff"},{id:"emerald",name:"Emerald",background:"#09201d",foreground:"#75f2bf"},{id:"solar",name:"Solar",background:"#2a1b08",foreground:"#ffd166"},{id:"aurora",name:"Aurora",background:"#260f27",foreground:"#ff9de2"},{id:"ocean",name:"Ocean",background:"#071c2b",foreground:"#62ddff"},{id:"inferno",name:"Inferno",background:"#2b1008",foreground:"#ff9b54"},{id:"toxic",name:"Toxic",background:"#142008",foreground:"#c7ff54"},{id:"monolith",name:"Monolith",background:"#17191e",foreground:"#e5e7eb"}];
+const TEXT_THEMES=[{id:"arctic",name:"Arctic",background:"#10182b",foreground:"#a5eaff",ornament:"❄"},{id:"crimson",name:"Crimson",background:"#210d19",foreground:"#ff526e",ornament:"✦"},{id:"nebula",name:"Nebula",background:"#130d2b",foreground:"#d8a5ff",ornament:"☾"},{id:"emerald",name:"Emerald",background:"#09201d",foreground:"#75f2bf",ornament:"❧"},{id:"solar",name:"Solar",background:"#2a1b08",foreground:"#ffd166",ornament:"☼"},{id:"aurora",name:"Aurora",background:"#260f27",foreground:"#ff9de2",ornament:"✧"},{id:"ocean",name:"Ocean",background:"#071c2b",foreground:"#62ddff",ornament:"〰"},{id:"inferno",name:"Inferno",background:"#2b1008",foreground:"#ff9b54",ornament:"♨"},{id:"toxic",name:"Toxic",background:"#142008",foreground:"#c7ff54",ornament:"☣"},{id:"monolith",name:"Monolith",background:"#17191e",foreground:"#e5e7eb",ornament:"✥"}];
 
 function openPixelHistoryDb() {
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Ubah gambar atau teks menjadi kode bio pixel Darkwar Survival.",
-    tabImage:"Mode Gambar",tabText:"Mode Teks",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Kanvas 193 × 40 px · Maksimal 160 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat di kanvas 193 × 40 px. Kurangi teks atau baris.",textLimit:"Maksimal 160 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
+    tabImage:"Mode Gambar",tabText:"Mode Teks",textTitle:"Tulis bio kamu",textHint:"Font pixel 5×7 · Maksimal 30 glyph.",textPlaceholder:"Ketik teks bio di sini…",textProcess:"Buat Pixel Bio Teks",textUnsupported:"Ada karakter yang belum didukung font pixel.",textOverflow:"Teks tidak muat pada ukuran font ini. Kurangi teks atau pilih ukuran 1×.",textLimit:"Maksimal 30 glyph.",background:"Warna background",foreground:"Warna teks",red:"Merah",green:"Hijau",blue:"Biru",preview:"Pratinjau pixel",
     stepUpload: "Pilih gambar",
     uploadHint: "JPG, PNG, atau WebP",
     choose: "Pilih gambar",
@@ -105,7 +105,6 @@ const COPY = {
     overLimit: "Hasil melebihi batas 32.000 karakter. Coba gunakan gambar yang lebih sederhana.",
     detailCharacters: "Jumlah karakter",
     detailColors: "Jumlah warna",
-    detailDimensions: "Dimensi",
     historyTitle: "Riwayat Generator",
     historyDescription: "Sepuluh hasil terakhir tersimpan di perangkat ini.",
     historyEmpty: "Belum ada riwayat. Hasil yang berhasil dibuat akan muncul di sini.",
@@ -119,7 +118,7 @@ const COPY = {
     eyebrow: "DARKWAR SURVIVAL · COMMUNITY TOOL",
     title: "Pixel Bio Generator",
     description: "Turn an image or text into Darkwar Survival pixel bio code.",
-    tabImage:"Image Mode",tabText:"Text Mode",textTitle:"Write your bio",textHint:"5×7 pixel font · 193 × 40 px canvas · Up to 160 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit the 193 × 40 px canvas. Shorten the text or use fewer lines.",textLimit:"Maximum 160 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
+    tabImage:"Image Mode",tabText:"Text Mode",textTitle:"Write your bio",textHint:"5×7 pixel font · Up to 30 glyphs.",textPlaceholder:"Type your bio text…",textProcess:"Create Text Pixel Bio",textUnsupported:"This text contains a character not supported by the pixel font.",textOverflow:"The text does not fit at this font size. Shorten it or choose 1× size.",textLimit:"Maximum 30 glyphs.",background:"Background color",foreground:"Text color",red:"Red",green:"Green",blue:"Blue",preview:"Pixel preview",
     stepUpload: "Choose an image",
     uploadHint: "JPG, PNG, or WebP",
     choose: "Choose image",
@@ -148,7 +147,6 @@ const COPY = {
     overLimit: "The result exceeds the 32,000-character limit. Try a simpler image.",
     detailCharacters: "Characters",
     detailColors: "Colors",
-    detailDimensions: "Dimensions",
     historyTitle: "Generator History",
     historyDescription: "Your ten latest results are saved on this device.",
     historyEmpty: "No history yet. Successfully generated results will appear here.",
@@ -300,6 +298,13 @@ function buildTextPixelCanvas(text, background, foreground, fontStyle = "Classic
   if (!ctx) return { error: "canvas", canvas: null, count: chars.length };
   ctx.fillStyle = background; ctx.fillRect(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
   if (ornament) {
+    ctx.save(); ctx.fillStyle = foreground;
+    ctx.font = '10px "Noto Serif Symbols", "Segoe UI Symbol", serif';
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    [[7,7],[TEXT_WIDTH-7,7],[7,TEXT_HEIGHT-7],[TEXT_WIDTH-7,TEXT_HEIGHT-7]].forEach(([x,y]) => ctx.fillText(ornament,x,y));
+    ctx.restore();
+  }
+  if (ornament) {
     ctx.save();
     ctx.fillStyle = foreground;
     ctx.font = '10px "Noto Serif Symbols", "Segoe UI Symbol", serif';
@@ -365,7 +370,6 @@ export default function GeneratorPixelPage() {
   const [fontScale,setFontScale]=useState(1);
   const [colorSystem,setColorSystem]=useState("rgb");
   const [themeId,setThemeId]=useState("arctic");
-  const [themeLocked,setThemeLocked]=useState(true);
   const [historyPage,setHistoryPage]=useState(1);
 
   useEffect(() => {
@@ -535,7 +539,7 @@ export default function GeneratorPixelPage() {
     try{
       const encoded=encodePixelCanvas(rendered.canvas,TEXT_WIDTH,TEXT_HEIGHT);
       if(encoded.characters>MAX_CHARACTERS)throw new Error(t.overLimit);
-      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,fontStyle,fontScale,colorSystem,themeId,themeLocked,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
+      const entry={id:typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():String(Date.now()),createdAt:Date.now(),...encoded,mode:"text",text:bioText,background:backgroundHex,foreground:foregroundHex,fontStyle,fontScale,colorSystem,themeId,width:TEXT_WIDTH,height:TEXT_HEIGHT,preview:rendered.canvas.toDataURL("image/png")};
       setResult(entry);setCopied(false);setCopiedHistoryId("");
       try{setHistory(await savePixelHistory(entry));}catch(historyError){console.warn("Pixel Bio history could not be saved:",historyError);}
       setSuccessOpen(true);
@@ -577,7 +581,7 @@ export default function GeneratorPixelPage() {
   const restoreHistory = (entry) => {
     setMode(entry.mode === "text" ? "text" : "image");
     if (entry.mode === "text") {
-      setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);setColorSystem(entry.colorSystem||"rgb");setThemeId(entry.themeId||"arctic");setThemeLocked(entry.themeLocked!==false);
+      setBioText(entry.text || "");setFontStyle(entry.fontStyle||"Classic");setFontScale(entry.fontScale||1);setColorSystem(entry.colorSystem||"rgb");setThemeId(entry.themeId||"arctic");
       if (entry.background) { const [r,g,b] = entry.background.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setBackgroundRgb({r,g,b}); }
       if (entry.foreground) { const [r,g,b] = entry.foreground.match(/[0-9a-f]{2}/gi).map((part) => parseInt(part,16)); setForegroundRgb({r,g,b}); }
     }
@@ -726,18 +730,17 @@ export default function GeneratorPixelPage() {
             </label>:null}
           </div>
           {colorSystem==="theme"?<div className="df-pixel-theme-settings">
-            <label><input type="checkbox" checked={themeLocked} onChange={event=>setThemeLocked(event.target.checked)}/> Theme locked</label>
             <div className="df-pixel-theme-swatches">{TEXT_THEMES.map(theme=><button type="button" key={theme.id} aria-label={theme.name} aria-pressed={themeId===theme.id} style={{background:`linear-gradient(135deg,${theme.background},${theme.foreground})`}} onClick={()=>setThemeId(theme.id)}/>)}</div>
           </div>:null}
           {colorSystem==="hex"?<div className="df-pixel-studio-controls">
             <label>Background HEX<input type="color" value={backgroundHex} onChange={event=>{const v=event.target.value;setBackgroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label>
             <label>Text HEX<input type="color" value={foregroundHex} onChange={event=>{const v=event.target.value;setForegroundRgb({r:parseInt(v.slice(1,3),16),g:parseInt(v.slice(3,5),16),b:parseInt(v.slice(5,7),16)});}}/></label>
           </div>:null}
-          {(colorSystem==="rgb"||(colorSystem==="theme"&&!themeLocked))?<div className="df-pixel-color-grid">
+          {colorSystem==="rgb"?<div className="df-pixel-color-grid">
             <section className="df-pixel-color-group"><h3>{t.background}</h3>{["r","g","b"].map(channel=><RangeSlider key={"bg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={backgroundRgb[channel]} onChange={value=>setBackgroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{backgroundHex.toUpperCase()}</output></section>
             <section className="df-pixel-color-group"><h3>{t.foreground}</h3>{["r","g","b"].map(channel=><RangeSlider key={"fg-"+channel} label={t[channel==="r"?"red":channel==="g"?"green":"blue"]} min={0} max={255} value={foregroundRgb[channel]} onChange={value=>setForegroundRgb(current=>({...current,[channel]:value}))}/>)}<output className="df-pixel-color-value">{foregroundHex.toUpperCase()}</output></section>
           </div>:null}
-          <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong><span>193 × 40 px</span></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
+          <div className="df-pixel-text-preview"><div className="df-pixel-text-preview-heading"><strong>{t.preview}</strong></div><canvas ref={textCanvasRef} width={TEXT_WIDTH} height={TEXT_HEIGHT} aria-label={t.preview}/></div>
           <div className="df-pixel-text-validation" aria-live="polite"><span>{textValidation.count} / {TEXT_LIMIT}</span>{textValidation.error?<span role="alert">{textValidation.error==="unsupported"?t.textUnsupported:textValidation.error==="limit"?t.textLimit:t.textOverflow}</span>:null}</div>
           {error?<p className="df-pixel-error" role="alert">{error}</p>:null}
           <Button className="df-pixel-create-button" onClick={createTextPixelBio} disabled={busy||Boolean(textValidation.error)||!bioText.length} loading={busy}>{busy?t.processing:t.textProcess}</Button>
@@ -760,7 +763,6 @@ export default function GeneratorPixelPage() {
               <strong>{new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(result.characters)} / {new Intl.NumberFormat(language === "en" ? "en-US" : "id-ID").format(MAX_CHARACTERS)}</strong>
             </div>
             <div className="df-pixel-result-detail">
-              <span>{t.detailDimensions}</span><strong>{result.width || WIDTH} × {result.height || HEIGHT} px</strong>
             </div>
             <div className="df-pixel-result-detail">
               <span>{t.detailColors}</span>
