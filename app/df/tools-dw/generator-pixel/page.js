@@ -542,7 +542,7 @@ export default function GeneratorPixelPage() {
     dragRef.current = null;
   };
 
-  const makeCropCanvas = useCallback(() => {
+  const makeCropCanvas = useCallback((resolutionScale = 1) => {
     const image = imageRef.current;
     const stage = stageRef.current;
     if (!image || !stage || !image.naturalWidth || !image.naturalHeight) throw new Error("Image is not ready.");
@@ -558,13 +558,13 @@ export default function GeneratorPixelPage() {
     const sw = Math.min(image.naturalWidth - sx, width / scale);
     const sh = Math.min(image.naturalHeight - sy, height / scale);
     const canvas = document.createElement("canvas");
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
+    canvas.width = WIDTH * resolutionScale;
+    canvas.height = HEIGHT * resolutionScale;
     const context = canvas.getContext("2d");
     if (!context || sw <= 0 || sh <= 0) throw new Error("Unable to create crop.");
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = "high";
-    context.drawImage(image, sx, sy, sw, sh, 0, 0, WIDTH, HEIGHT);
+    context.drawImage(image, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
     return canvas;
   }, [zoom, offset]);
 
@@ -660,7 +660,7 @@ export default function GeneratorPixelPage() {
   const runVisionScan = async () => {
     if (!file || !imageRef.current?.complete) { setError(t.noImage); return; }
     setBusy(true); setError("");
-    try { await analyzeVisionCanvas(makeCropCanvas()); }
+    try { await analyzeVisionCanvas(makeCropCanvas(4)); }
     catch (caught) { setError(caught.message || t.scanFailure); }
     finally { setBusy(false); }
   };
@@ -668,8 +668,8 @@ export default function GeneratorPixelPage() {
     if (!file || !imageRef.current?.complete) { setError(t.noImage); return; }
     setBusy(true); setError("");
     try {
+      const vision = visionAnalysis || await analyzeVisionCanvas(makeCropCanvas(4));
       const cropped = makeCropCanvas();
-      const vision = visionAnalysis || await analyzeVisionCanvas(cropped);
       const analyzed = prepareIntelligenceCanvas(cropped, focusX, focusY, vision);
       const encoded = encodePixelCanvas(analyzed.canvas, WIDTH, HEIGHT, { importanceMap: analyzed.importanceMap });
       if (encoded.characters > MAX_CHARACTERS) throw new Error(t.overLimit);
