@@ -95,3 +95,17 @@
 
 .df-pixel-history-meta-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--df-space-2);min-width:0}
 .df-pixel-history-meta-heading>strong{min-width:0;flex:1}
+
+/* Optical Art — verified Darkwar tag composition with a live layered preview. */
+.df-pixel-page .ui-tab-list{grid-template-columns:repeat(4,minmax(0,1fr))}
+.df-pixel-optical-panel{display:grid;gap:var(--df-space-4);padding:clamp(.875rem,2vw,1.35rem);min-width:0}
+.df-pixel-optical-preview-wrap{display:grid;gap:var(--df-space-2);min-width:0;padding:var(--df-space-3);border:1px solid var(--df-border);border-radius:var(--df-radius-lg);background:var(--df-surface-raised)}
+.df-pixel-optical-preview{position:relative;display:grid;place-items:center;min-height:132px;overflow:hidden;border:1px solid var(--df-border-strong);border-radius:var(--df-radius-md);background:var(--df-bg);padding:1rem}
+.df-pixel-optical-stack{position:relative;display:grid;justify-items:center;max-width:100%;font-size:clamp(1.35rem,6vw,2.5rem);font-weight:900;letter-spacing:.08em;line-height:1.05;white-space:nowrap}
+.df-pixel-optical-stack span{grid-area:1/1;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.df-pixel-optical-colors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--df-space-3)}
+.df-pixel-optical-colors label{display:grid;gap:.45rem;min-width:0;color:var(--df-text-secondary);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
+.df-pixel-optical-colors input[type=color]{width:100%;height:42px;padding:3px;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-surface-raised)}
+.df-pixel-optical-code-label{display:grid;gap:.45rem;color:var(--df-text-secondary);font-size:var(--df-text-xs);font-weight:var(--df-weight-semibold)}
+.df-pixel-optical-code-label textarea{width:100%;min-width:0;resize:vertical;padding:.75rem;border:1px solid var(--df-border);border-radius:var(--df-radius-md);background:var(--df-bg);color:var(--df-text);font:var(--df-weight-medium) var(--df-text-xs)/1.6 var(--df-font-mono);overflow-wrap:anywhere}
+@media(max-width:560px){.df-pixel-optical-colors{grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}.df-pixel-optical-colors label{font-size:var(--df-text-xs)}}
