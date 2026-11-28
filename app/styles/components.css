@@ -439,7 +439,7 @@
 
 
 /* Shared modern SVG icon component. */
-.ui-icon{display:block;width:var(--df-icon-size-md);height:var(--df-icon-size-md);flex:0 0 auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.ui-icon{display:inline-block;width:var(--df-icon-size-md);height:var(--df-icon-size-md);flex:0 0 auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .ui-icon--xs{width:var(--df-icon-size-xs);height:var(--df-icon-size-xs)}
 .ui-icon--sm{width:var(--df-icon-size-sm);height:var(--df-icon-size-sm)}
 .ui-icon--lg{width:var(--df-icon-size-lg);height:var(--df-icon-size-lg)}
