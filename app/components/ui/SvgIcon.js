@@ -38,5 +38,5 @@ const iconPaths = {
 export default function SvgIcon({ name, size = "var(--df-icon-size-md)", strokeWidth = "var(--df-icon-stroke)", className = "", label }) {
   const paths = iconPaths[name];
   if (!paths) return null;
-  return <svg className={("ui-icon " + className).trim()} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden={label ? undefined : "true"} aria-label={label || undefined} role={label ? "img" : undefined} focusable="false">{paths}</svg>;
+  return <svg className={("ui-icon " + className).trim()} viewBox="0 0 24 24" style={{ width: size, height: size, flex: "0 0 auto" }} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden={label ? undefined : "true"} aria-label={label || undefined} role={label ? "img" : undefined} focusable="false">{paths}</svg>;
 }
