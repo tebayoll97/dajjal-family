@@ -53,3 +53,11 @@
 - Added `--df-primary-text` to all four global theme maps, using the existing focus-color values as a high-contrast foreground accent while preserving `--df-primary` for filled controls and borders.
 - Updated shared empty-state/avatar text and Design System preview accent text to use the new foreground token.
 - Catalog documents the semantic distinction. Ratios are source-token calculations; browser-rendered contrast and component QA remain pending.
+
+
+## 2026-11-28 — Local image workspace components
+
+- Added reusable `ImageDropzone` and `ImagePreview` React components, exported through the shared UI index.
+- Added semantic local-image spacing and preview geometry tokens, typography role, responsive layout primitives, and theme-aware component styles across the four global CSS foundations.
+- Added both production components to the live Design System Component Workbench and reconciled the inventory to 39 exports.
+- No global theme palette was added or changed.
