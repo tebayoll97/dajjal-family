@@ -5,7 +5,7 @@ import {
   Alert, Avatar, Badge, Breadcrumbs, Button, Card, CheckboxField, Dialog, FeedbackDialog,
   DropdownMenu, EmptyState, ErrorState, Pagination, RadioGroup, Skeleton,
   SwitchField, Table, Tabs, TextField, SearchField, RangeSlider,
-  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard, SvgIcon,
+  Accordion, BottomNavigation, ConfirmDialog, EditorialByline, IconButton, Link, PageHeader, ProgressBar, SectionHeader, StatCard, Tooltip, VerificationState, BlogArticleNavigation, BlogArticleCard, ContactChannelCard, SvgIcon, ImageDropzone, ImagePreview,
 } from "../components/ui";
 import { THEME_TOKEN_MAPS } from "../theme/themeTokens";
 import styles from "./ComponentWorkbench.module.css";
@@ -47,6 +47,8 @@ export default function ComponentWorkbench() {
       <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div><Button wide>Full-width action</Button>
     </div>],
     ["Card", "Card", <Card key="card" className={styles.cardSample}><strong>Card surface</strong><span>Content container</span></Card>],
+    ["ImageDropzone", "ImageDropzone · local image file selection with keyboard and drag/drop support", <ImageDropzone key="image-dropzone" label="Choose an image" description="JPG, PNG, WebP or AVIF · local file picker preview" actionLabel="Choose image" onFiles={() => {}} />],
+    ["ImagePreview", "ImagePreview · shared original/result surface with transparent checkerboard", <ImagePreview key="image-preview" label="Processed image" emptyLabel="Preview appears here after processing" />],
     ["ContactChannelCard", "ContactChannelCard · WhatsApp / Telegram", <div key="contact-channel" className={styles.stack}><ContactChannelCard channel="whatsapp" locale="id" href="https://wa.me/6285141320943" /><ContactChannelCard channel="telegram" locale="id" href="https://t.me/dajjalf4mily" /></div>],
     ["Badge", "Badge", <div key="badge" className={styles.inline}><Badge>Neutral</Badge><Badge variant="success">Success</Badge><Badge variant="warning">Warning</Badge></div>],
     ["Alert", "Alert", <Alert key="alert" variant="info" title="Information">Status message example.</Alert>],
@@ -88,7 +90,7 @@ export default function ComponentWorkbench() {
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
-        <div><strong>37 shared React components</strong><small>Production exports · live component instances</small></div>
+        <div><strong>39 shared React components</strong><small>Production exports · live component instances</small></div>
         <label className={styles.themeControl}>Preview theme
           <select value={themeId} onChange={(event) => setThemeId(event.target.value)}>
             {themes.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
