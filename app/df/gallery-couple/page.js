@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 
 const COPY = {
   id: {
@@ -96,7 +97,7 @@ export default function CoupleGalleryPage() {
             <p>{t.specialText}</p>
             <div className="df-couple-gallery__actions">
               <Link href={`/${locale}/df/couple`} className="df-couple-gallery__action df-couple-gallery__action-primary">{t.openSpecial}<span aria-hidden="true">↗</span></Link>
-              <Link href={`/${locale}/app/create-profile-couple`} className="df-couple-gallery__action df-couple-gallery__action-secondary">{locale === "en" ? "CREATE COUPLE PROFILE" : "BUAT PROFIL PASANGAN"}<span aria-hidden="true">↗</span></Link>
+              <Link href={withLocalePrefix("/df/profile-couple-maker", locale)} className="df-couple-gallery__action df-couple-gallery__action-secondary">{locale === "en" ? "CREATE COUPLE PROFILE" : "BUAT PROFIL PASANGAN"}<span aria-hidden="true">↗</span></Link>
             </div>
           </div>
         </section>

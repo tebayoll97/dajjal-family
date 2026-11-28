@@ -4,6 +4,7 @@ export const revalidate = 300;
 
 const origin = "https://dajjalfamily.com";
 const locales = ["id", "en"];
+// Couple Profile Maker is an authenticated editor (noindex); intentionally excluded from the public sitemap.
 const publicRoutes = [
   "", "/games", "/knowledge", "/blog", "/contributors", "/digital-products", "/business",
   "/community", "/community-guidelines", "/about", "/contact", "/help", "/df/tools-dw/generator-pixel",

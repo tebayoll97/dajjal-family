@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 import { COUPLE_CONTENT_DEFAULTS } from "@/lib/coupleProfileDefaults";
 import CoupleProfileView from "@/app/components/CoupleProfileView";
 import { Skeleton } from "@/app/components/ui/Skeleton";
@@ -54,6 +55,8 @@ export default function CoupleProfileEditorPage() {
   const router = useRouter();
   const { language } = useLanguage();
   const locale = language === "en" ? "en" : "id";
+  const editorBasePath = withLocalePrefix("/df/profile-couple-maker", locale);
+  const editorPath = `${editorBasePath}/${encodeURIComponent(slug)}`;
   const [profile, setProfile] = useState(null);
   const [content, setContent] = useState(COUPLE_CONTENT_DEFAULTS[locale]);
   const [media, setMedia] = useState([]);
@@ -65,7 +68,7 @@ export default function CoupleProfileEditorPage() {
 
   const load = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { setRedirecting(true); router.replace("/login?next=" + encodeURIComponent("/app/create-profile-couple/" + slug)); return; }
+    if (!session) { setRedirecting(true); router.replace("/login?next=" + encodeURIComponent(editorPath)); return; }
     const [ownerResponse, response] = await Promise.all([
       fetch("/api/couple", {
         headers: { Authorization: `Bearer ${session.access_token}` },
@@ -76,18 +79,18 @@ export default function CoupleProfileEditorPage() {
     const ownerData = await ownerResponse.json();
     if (ownerResponse.status === 401) {
       setRedirecting(true);
-      router.replace("/login?next=" + encodeURIComponent("/app/create-profile-couple/" + slug));
+      router.replace("/login?next=" + encodeURIComponent(editorPath));
       return;
     }
     if (ownerResponse.status === 404 || (ownerResponse.ok && !ownerData.profile)) {
       setRedirecting(true);
-      router.replace("/app/create-profile-couple");
+      router.replace(editorBasePath);
       return;
     }
     if (!ownerResponse.ok) throw new Error(ownerData.error || "Unable to verify profile ownership.");
     if (ownerData.profile.slug !== slug) {
       setRedirecting(true);
-      router.replace("/app/create-profile-couple/" + ownerData.profile.slug);
+      router.replace(`${editorBasePath}/${encodeURIComponent(ownerData.profile.slug)}`);
       return;
     }
     const data = await response.json();
@@ -95,7 +98,7 @@ export default function CoupleProfileEditorPage() {
     setProfile(data.profile);
     setContent({ ...COUPLE_CONTENT_DEFAULTS[locale], ...(data.content?.content || {}) });
     setMedia(data.media || []);
-  }, [slug, locale, router]);
+  }, [editorBasePath, editorPath, slug, locale, router]);
 
   useEffect(() => {
     let active = true;
@@ -117,7 +120,7 @@ export default function CoupleProfileEditorPage() {
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Unable to reset Couple Profile.");
-        router.replace("/app/create-profile-couple");
+        router.replace(editorBasePath);
         return;
       }
       const body = { locale };
@@ -142,7 +145,7 @@ export default function CoupleProfileEditorPage() {
     } finally {
       setSaving(false);
     }
-  }, [content, load, locale, media, router, slug]);
+  }, [content, editorBasePath, load, locale, media, router, slug]);
 
   const uploadMedia = useCallback(async (slotKey, file) => {
     setSaving(true);

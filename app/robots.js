@@ -9,6 +9,8 @@ const privatePathPrefixes = [
   "/register",
   "/design-system",
   "/character-test",
+  "/df/profile-couple-maker",
+  "/app/create-profile-couple",
 ];
 
 const privateExactPaths = [];

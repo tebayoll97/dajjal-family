@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 import "./CoupleCreatePromo.css";
 
 export default function CoupleCreatePromo({ profileSlug = "", locale = "id" } = {}) {
@@ -45,7 +46,7 @@ export default function CoupleCreatePromo({ profileSlug = "", locale = "id" } = 
         <p>{en ? "Create a personal page to keep your story and favorite moments together." : "Buat halaman pribadi untuk menyimpan cerita dan momen spesial kalian bersama."}</p>
       </div>
       <div className="df-couple-create-promo-actions">
-        <Link className="df-couple-create-promo-primary" href="/app/create-profile-couple">
+        <Link className="df-couple-create-promo-primary" href={withLocalePrefix("/df/profile-couple-maker", language)}>
           {en ? "Create Couple Profile" : "Buat Profil Pasangan"}
         </Link>
         <button className="df-couple-create-promo-share" type="button" onClick={shareProfile}>

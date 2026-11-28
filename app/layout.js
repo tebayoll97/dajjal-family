@@ -16,6 +16,8 @@ const NO_INDEX_PATHS = [
   "/register",
   "/design-system",
   "/character-test",
+  "/df/profile-couple-maker",
+  "/app/create-profile-couple",
 ];
 
 function isPrivatePath(pathname) {
