@@ -68,7 +68,7 @@ export default function BackgroundRemoverClient() {
     const next = files?.[0];
     if (!next) return;
     setError(""); setNotice(""); setResultBlob(null);
-    if (!/^image\/(jpeg|png|webp|avif)$/i.test(next.type)) { setError(t.invalid); return; }
+    if (!/^image\/(jpeg|png|webp|avif)$/i.test(next.type)) { setFile(null); setError(t.invalid); return; }
     if (next.size > MAX_BYTES) { setError(t.large); return; }
     setFile(next);
   };
