@@ -214,7 +214,7 @@
   --df-verification-error: var(--df-danger);
   --df-verification-motion: var(--df-motion-standard);
   --df-verification-duration: 1.4s;
-  --df-type-display-wide: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);
+  --df-type-display-wide: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);\n  --df-local-tool-panel-padding: var(--df-space-4);\n  --df-file-dropzone-gap: var(--df-space-3);\n  --df-file-dropzone-min-height: 15rem;\n  --df-image-preview-aspect: 4 / 3;\n  --df-image-preview-max-height: 32rem;
   --df-type-mobile-small: var(--df-type-admin-small-size);
 }
 
