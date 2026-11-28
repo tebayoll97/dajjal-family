@@ -380,3 +380,5 @@
 
 /* Reusable range control semantic sizing roles. */
 :root{--df-range-track-size:.375rem;--df-range-thumb-size:1.125rem;--df-range-label-size:var(--df-text-sm);--df-range-hint-size:var(--df-text-xs)}
+
+@media(max-width:639px){:root{--df-local-tool-panel-padding:var(--df-space-3);--df-file-dropzone-min-height:13rem}}
