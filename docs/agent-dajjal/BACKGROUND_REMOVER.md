@@ -1,7 +1,7 @@
 # Agent Dajjal — Background Remover
 
 ## Product behavior
-- Public route: `/id/df/agent-dajjal/tools/background-remover` and its `/en` equivalent.
+- Public route: `/id/tools/background-remover` and `/en/tools/background-remover`. Legacy `/df/agent-dajjal/tools/background-remover` URLs redirect to the matching localized route.
 - Processing is browser-local. The selected image is passed to a dedicated Web Worker as an ImageBitmap and is never sent to an application API.
 - Input: JPEG, PNG, WebP, AVIF, max 20 MiB and max 16 megapixels.
 - Output: transparent PNG, downloaded only after an explicit user action.

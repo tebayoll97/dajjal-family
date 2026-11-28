@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { redirectLocalizedRoute } from "@/lib/redirectLocalizedRoute";
 
-export default function AgentDajjalPage() {
-  redirect("/df/agent-dajjal/tools");
+export default function LegacyRoute({ searchParams }) {
+  return redirectLocalizedRoute("/tools", searchParams);
 }

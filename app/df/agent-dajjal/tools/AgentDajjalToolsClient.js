@@ -31,7 +31,7 @@ export default function AgentDajjalToolsClient() {
   const t = COPY[language] || COPY.id;
   const tools = [
     { id: "compressor", icon: "image", title: t.compressor, description: t.compressorDesc, href: "/df/agent-dajjal/tools/image-compressor", ready: true },
-    { id: "remover", icon: "image", title: t.remover, description: t.removerDesc, href: "/df/agent-dajjal/tools/background-remover", ready: true },
+    { id: "remover", icon: "image", title: t.remover, description: t.removerDesc, href: withLocalePrefix("/tools/background-remover", language), ready: true },
     { id: "separator", icon: "music", title: t.separator, description: t.separatorDesc, ready: false },
   ];
   return (

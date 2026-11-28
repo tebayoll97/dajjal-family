@@ -131,7 +131,7 @@ export default function BackgroundRemoverClient() {
   return (
     <main className="ui-page ui-stack-lg df-local-image-tool">
       <div className="ui-cluster df-local-tool-topbar">
-        <Link className="ui-link" href="/df/agent-dajjal/tools"><SvgIcon name="arrow-left" />{t.back}</Link>
+        <Link className="ui-link" href={withLocalePrefix("/tools", language)}><SvgIcon name="arrow-left" />{t.back}</Link>
         <Badge variant="success"><SvgIcon name="shield" />{t.modelReady && modelReady ? t.modelReady : "100% local"}</Badge>
       </div>
       <header className="ui-page-heading">

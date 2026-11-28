@@ -111,7 +111,7 @@ export default function ImageCompressorClient() {
   return (
     <main className={styles.page}>
       <div className={styles.topbar}>
-        <Link href="/df/agent-dajjal/tools" className={styles.back}><SvgIcon name="arrow-left" size={16} />{t.back}</Link>
+        <Link href={withLocalePrefix("/tools", language)} className={styles.back}><SvgIcon name="arrow-left" size={16} />{t.back}</Link>
         <span className={styles.localBadge}><span />{t.local}</span>
       </div>
       <header className="ui-page-heading">
