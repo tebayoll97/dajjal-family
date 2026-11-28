@@ -347,3 +347,11 @@ Status: **diimplementasikan pada `main`; menunggu build, deployment, dan verifik
 - Contact recruitment entry points use the existing official WhatsApp and Telegram channels on the Contact page; never invent replacement contact URLs.
 
 - Final data cleanup checkpoint (2026-11-25): after verifying all existing contributor IDs and article ownership, the legacy `df_blog_contributors` table and its slug trigger function were dropped. The active registry is `df_contributors` only.
+
+
+## Implementasi Agent Dajjal — Background Remover — 2026-11-28
+
+- Background Remover menggunakan MediaPipe Selfie Segmenter lokal di Web Worker; foto pengguna tidak dikirim ke API website.
+- Model publik diverifikasi dengan ukuran byte dan SHA-256 sebelum dipakai dan disimpan di Cache Storage.
+- Model ini ditujukan untuk segmentasi manusia/person, bukan pemisahan objek arbitrer. Batas ini wajib disampaikan pada UI dan dokumentasi produk.
+- Reusable `ImageDropzone` dan `ImagePreview` harus dipakai untuk alur pemilihan dan pratinjau gambar; komponen dipublikasikan melalui Design System Workbench dan Component Catalog.
