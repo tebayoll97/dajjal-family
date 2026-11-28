@@ -155,16 +155,17 @@ export default function BackgroundRemoverClient() {
         if (message.type === "result") {
           clearTimer();
           try {
-            if (!message.image) throw new Error("IMAGE_EXPORT_FAILED");
+            const image = message.image;
+            if (!image) throw new Error("IMAGE_EXPORT_FAILED");
             const canvas = document.createElement("canvas");
             canvas.width = message.width;
             canvas.height = message.height;
-            const context = canvas.getContext("2d");
-            if (!context) throw new Error("CANVAS_UNAVAILABLE");
             try {
-              context.drawImage(message.image, 0, 0);
+              const context = canvas.getContext("2d");
+              if (!context) throw new Error("CANVAS_UNAVAILABLE");
+              context.drawImage(image, 0, 0);
             } finally {
-              message.image.close?.();
+              image.close?.();
             }
             const blob = await new Promise((resolve, reject) => {
               canvas.toBlob((value) => value ? resolve(value) : reject(new Error("IMAGE_EXPORT_FAILED")), "image/png");
