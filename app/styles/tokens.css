@@ -219,7 +219,7 @@
   --df-file-dropzone-gap: var(--df-space-3);
   --df-file-dropzone-min-height: 15rem;
   --df-image-preview-aspect: 4 / 3;
-  --df-image-preview-max-height: 32rem;\n  --df-local-tool-panel-padding: var(--df-space-4);\n  --df-file-dropzone-gap: var(--df-space-3);\n  --df-file-dropzone-min-height: 15rem;\n  --df-image-preview-aspect: 4 / 3;\n  --df-image-preview-max-height: 32rem;
+  --df-image-preview-max-height: 32rem;
   --df-type-mobile-small: var(--df-type-admin-small-size);
 }
 
