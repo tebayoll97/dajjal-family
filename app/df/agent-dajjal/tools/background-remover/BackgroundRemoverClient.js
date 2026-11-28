@@ -138,7 +138,7 @@ export default function BackgroundRemoverClient() {
       <header className="ui-page-heading">
         <div className="ui-page-heading-copy">
           <p className="ui-eyebrow">{t.eyebrow}</p>
-          <h1 className="ui-heading-h1 ui-text-display-wide">{t.title}</h1>
+          <h1 className="ui-heading-h1 ui-text-local-tool-title">{t.title}</h1>
           <p className="ui-subtitle">{t.intro}</p>
         </div>
       </header>
