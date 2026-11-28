@@ -669,3 +669,12 @@ The standard public Contact page uses the reusable `ContactChannelCard` componen
 ## Reusable SVG Icon contract
 
 The shared `SvgIcon` is the canonical line-icon API. New interface icons and icon-bearing labels must use a semantically relevant icon from the central library, inherit `currentColor`, and follow the 24 × 24 outline geometry with 1.8 stroke, round caps and joins. The real component is previewed in section 09 and Component Workbench. New names must be added centrally and documented in Component Catalog; avoid Unicode glyph substitutes and page-local duplicate SVGs.
+
+
+## 16.5 Local image workspace components — 2026-11-28
+
+The shared UI inventory includes two production components for local image workflows:
+- `ImageDropzone`: accessible image file selection with keyboard activation, drag-and-drop, accept filtering, and disabled state.
+- `ImagePreview`: consistent original/result surface with semantic transparent checkerboard and empty state.
+
+Their spacing, preview geometry, surface colors, borders, focus behavior, and responsive layout are defined through semantic tokens and the four global CSS foundations. Both production components are previewed in Component Workbench section 14. Use these components rather than building page-local file-picker or preview markup.
