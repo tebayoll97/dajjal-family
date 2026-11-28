@@ -61,11 +61,10 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t);
 }
 
-async function removeBackground(image, threshold, feather) {
+async function removeBackground(image, segmenter, threshold, feather) {
   const width = image.width;
   const height = image.height;
   if (!width || !height || width * height > MAX_OUTPUT_PIXELS) throw new Error("IMAGE_PIXEL_LIMIT");
-  const segmenter = await getSegmenter(activeId);
   const result = segmenter.segment(image);
   const mask = result.confidenceMasks?.[0];
   if (!mask) throw new Error("SEGMENTATION_MASK_MISSING");
@@ -103,21 +102,18 @@ async function removeBackground(image, threshold, feather) {
   return await createImageBitmap(output);
 }
 
-let activeId = null;
 self.onmessage = async (event) => {
   const { id, image, threshold = 0.48, feather = 0.16 } = event.data || {};
   if (!image || !id) return;
-  activeId = id;
   try {
     post(id, "progress", { stage: "loading" });
-    await getSegmenter(id);
+    const segmenter = await getSegmenter(id);
     post(id, "progress", { stage: "segmenting" });
-    const output = await removeBackground(image, threshold, feather);
+    const output = await removeBackground(image, segmenter, threshold, feather);
     post(id, "result", { image: output, width: output.width, height: output.height }, [output]);
   } catch (error) {
     post(id, "error", { error: error?.message || "PROCESSING_FAILED" });
   } finally {
     image.close?.();
-    activeId = null;
   }
 };
