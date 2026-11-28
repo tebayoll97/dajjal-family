@@ -8,7 +8,7 @@ const publicRoutes = [
   "", "/games", "/knowledge", "/blog", "/contributors", "/digital-products", "/business",
   "/community", "/community-guidelines", "/about", "/contact", "/help", "/df/tools-dw/generator-pixel",
   "/privacy-policy", "/terms", "/cookies", "/disclaimer",
-  "/music", "/df", "/df/creator-lab", "/df/agent-dajjal", "/df/agent-dajjal/tools", "/df/agent-dajjal/tools/image-compressor", "/df/couple", "/df/wedding-anak-dajjal",
+  "/music", "/df", "/df/creator-lab", "/df/agent-dajjal", "/df/agent-dajjal/tools", "/df/agent-dajjal/tools/image-compressor", "/df/agent-dajjal/tools/background-remover", "/df/couple", "/df/wedding-anak-dajjal",
 ];
 
 export default async function sitemap() {
