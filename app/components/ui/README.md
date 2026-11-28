@@ -26,3 +26,10 @@ Use `BottomNavigation` for compact fixed or inline navigation with up to four de
 
 ## AdminPanel
 Use `AdminPanel` for a semantic administrative content surface. It only provides the shared surface contract; data fetching, authorization, validation, and interaction state remain in the page. Supports an alternate semantic root through `as` and forwards native props.
+
+
+### ImageDropzone
+Use `ImageDropzone` for local image selection. Provide localized `label`, `actionLabel`, optional `description`, accepted MIME types, and an `onFiles` callback. The callback receives a one-item array by default or an array when `multiple` is enabled. The component does not upload or persist files.
+
+### ImagePreview
+Use `ImagePreview` for original and processed image previews. Pass a blob/object URL through `src`, a localized `label` and `alt`, and an optional localized `emptyLabel`. The component only renders the preview; lifecycle and URL revocation remain with the consumer.
