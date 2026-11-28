@@ -62,7 +62,7 @@ Status meanings:
 | Language switching | Provider/context exists; dedicated switcher not confirmed | `app/components/LanguageProvider.js`; navigation uses locale-aware routing | Search and document current header control before creating another switcher |
 | Tooltip | Not found in audited shared UI scope | No export or matching primitive identified | Defer until a concrete repeated use case exists |
 
-The `app/components/ui/index.js` entry point currently exports 36 React components. This table documents the audited component contracts in scope; the Design System Workbench previews the actual production implementations. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
+The `app/components/ui/index.js` entry point currently exports 39 React components. This table documents the audited component contracts in scope; the Design System Workbench previews the actual production implementations. Preview helpers such as `DialogPreview`, `ControlsPreview`, and `DataDisplayPreview` are not production UI primitives.
 
 ## 3. CANONICAL TOKEN CONTRACT
 
