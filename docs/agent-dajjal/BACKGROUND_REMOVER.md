@@ -15,7 +15,7 @@
 - Expected bytes: 249,537.
 - SHA-256: `191ac9529ae506ee0beefa6b2c945a172dab9d07d1e802a290a4e4038226658b`.
 - License: Apache-2.0. Attribution: MediaPipe Selfie Segmentation — Google.
-- The worker verifies byte length and SHA-256 before model initialization and before adding the model to Cache Storage. A corrupt cached model is deleted and downloaded again.
+- The worker verifies byte length and SHA-256 before model initialization and before adding the model to Cache Storage. A corrupt cached model is deleted and downloaded again. Verified model bytes are passed to MediaPipe as a `Uint8Array`, matching `BaseOptions.modelAssetBuffer`; the model-ready state is emitted only after `ImageSegmenter.createFromOptions()` succeeds.
 - MediaPipe WASM runtime is loaded from the version-pinned jsDelivr package path; model is downloaded on demand and browser-cached.
 
 ## Resource and privacy controls
@@ -23,8 +23,8 @@
 - Worker owns segmentation and alpha-mask compositing; the main thread only renders the returned bitmap and encodes the PNG.
 - The app does not persist source or output images. Closing the tab discards unsaved in-memory work.
 - Cache Storage holds only the public, integrity-verified model asset; it does not hold user images.
-- Browser storage failure does not block a verified in-memory model from processing.
-- Worker is terminated after each job and on component unmount.
+- Browser storage failure does not block a verified in-memory model from processing. Cache open/read/write failures are best-effort and do not block an integrity-verified in-memory model. Model downloads have a bounded timeout.
+- Worker is terminated after each job and on component unmount. The UI also stops a worker that produces no progress/result within the processing timeout and reports localized runtime, model, segmentation, and export errors. The confidence mask is converted to a small alpha mask and scaled by the Canvas `destination-in` compositor, avoiding a second full-resolution pixel buffer.
 
 ## Limitations
 - The upstream selfie model targets people; object-only images may not segment correctly.
