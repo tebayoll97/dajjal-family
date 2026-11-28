@@ -72,33 +72,32 @@ async function removeBackground(image, threshold, feather) {
   const maskWidth = mask.width;
   const maskHeight = mask.height;
   const confidence = mask.getAsFloat32Array();
-  const maskCanvas = new OffscreenCanvas(maskWidth, maskHeight);
-  const maskContext = maskCanvas.getContext("2d", { willReadFrequently: true });
-  const maskPixels = maskContext.createImageData(maskWidth, maskHeight);
-  const low = clamp(threshold - feather, 0.01, 0.98);
-  const high = clamp(threshold + feather, low + 0.01, 1);
-  for (let i = 0; i < confidence.length; i++) {
-    const alpha = Math.round(smoothstep(low, high, confidence[i]) * 255);
-    const offset = i * 4;
-    maskPixels.data[offset] = alpha;
-    maskPixels.data[offset + 1] = alpha;
-    maskPixels.data[offset + 2] = alpha;
-    maskPixels.data[offset + 3] = 255;
-  }
-  maskContext.putImageData(maskPixels, 0, 0);
-
   const output = new OffscreenCanvas(width, height);
   const context = output.getContext("2d", { alpha: true, willReadFrequently: true });
   if (!context) throw new Error("CANVAS_UNAVAILABLE");
   context.drawImage(image, 0, 0, width, height);
   const pixels = context.getImageData(0, 0, width, height);
-  const scaledMask = new OffscreenCanvas(width, height);
-  const scaledContext = scaledMask.getContext("2d", { willReadFrequently: true });
-  scaledContext.imageSmoothingEnabled = true;
-  scaledContext.imageSmoothingQuality = "high";
-  scaledContext.drawImage(maskCanvas, 0, 0, width, height);
-  const maskData = scaledContext.getImageData(0, 0, width, height).data;
-  for (let i = 0; i < pixels.data.length; i += 4) pixels.data[i + 3] = Math.round(pixels.data[i + 3] * maskData[i] / 255);
+  const low = clamp(threshold - feather, 0.01, 0.98);
+  const high = clamp(threshold + feather, low + 0.01, 1);
+  const scaleX = maskWidth / width;
+  const scaleY = maskHeight / height;
+  for (let y = 0; y < height; y++) {
+    const sourceY = clamp((y + 0.5) * scaleY - 0.5, 0, maskHeight - 1);
+    const y0 = Math.floor(sourceY);
+    const y1 = Math.min(maskHeight - 1, y0 + 1);
+    const fy = sourceY - y0;
+    for (let x = 0; x < width; x++) {
+      const sourceX = clamp((x + 0.5) * scaleX - 0.5, 0, maskWidth - 1);
+      const x0 = Math.floor(sourceX);
+      const x1 = Math.min(maskWidth - 1, x0 + 1);
+      const fx = sourceX - x0;
+      const top = confidence[y0 * maskWidth + x0] * (1 - fx) + confidence[y0 * maskWidth + x1] * fx;
+      const bottom = confidence[y1 * maskWidth + x0] * (1 - fx) + confidence[y1 * maskWidth + x1] * fx;
+      const alpha = Math.round(smoothstep(low, high, top * (1 - fy) + bottom * fy) * 255);
+      const offset = (y * width + x) * 4 + 3;
+      pixels.data[offset] = Math.round(pixels.data[offset] * alpha / 255);
+    }
+  }
   context.putImageData(pixels, 0, 0);
   result.close?.();
   return await createImageBitmap(output);
@@ -111,7 +110,7 @@ self.onmessage = async (event) => {
   activeId = id;
   try {
     post(id, "progress", { stage: "loading" });
-    const segmenter = await getSegmenter(id);
+    await getSegmenter(id);
     post(id, "progress", { stage: "segmenting" });
     const output = await removeBackground(image, threshold, feather);
     post(id, "result", { image: output, width: output.width, height: output.height }, [output]);
