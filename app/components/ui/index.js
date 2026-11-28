@@ -47,4 +47,6 @@ export { ContributorCard } from "./ContributorCard";
 export { AdminPanel } from "./AdminPanel";
 
 export { default as SvgIcon } from "./SvgIcon";
-\nexport { ImageDropzone } from "./ImageDropzone";\nexport { ImagePreview } from "./ImagePreview";\n
+
+export { ImageDropzone } from "./ImageDropzone";
+export { ImagePreview } from "./ImagePreview";
