@@ -184,4 +184,7 @@
 
 /* Reusable range slider typography roles. */
 .ui-range-label{font-family:var(--df-font-sans);font-size:var(--df-range-label-size);font-weight:var(--df-weight-semibold);line-height:var(--df-leading-normal)}.ui-range-hint{font-family:var(--df-font-sans);font-size:var(--df-range-hint-size);line-height:var(--df-leading-normal);color:var(--df-text-muted)}
-\n/* Local image tools: compact mobile labels with wide-display title scaling. */\n.ui-text-local-tool-title{font-size:var(--df-type-mobile-heading);line-height:var(--df-leading-tight);letter-spacing:-.035em}\n@media(min-width:1024px){.ui-text-local-tool-title{font-size:var(--df-type-display-wide)}}\n
+
+/* Local image tools: compact mobile labels with wide-display title scaling. */
+.ui-text-local-tool-title{font-size:var(--df-type-mobile-heading);line-height:var(--df-leading-tight);letter-spacing:-.035em}
+@media(min-width:1024px){.ui-text-local-tool-title{font-size:var(--df-type-display-wide)}}
