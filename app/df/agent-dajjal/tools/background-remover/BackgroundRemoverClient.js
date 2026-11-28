@@ -152,8 +152,8 @@ export default function BackgroundRemoverClient() {
             </div>
           </div>}
         {file && <div className="ui-stack">
-          <RangeSlider label={`${t.threshold} · ${threshold}%`} value={threshold} onChange={setThreshold} min={20} max={80} step={1} disabled={busy} hint={language === "id" ? "Atur batas pemisahan subjek dan latar." : "Adjust the subject/background separation threshold."} />
-          <RangeSlider label={`${t.feather} · ${feather}%`} value={feather} onChange={setFeather} min={0} max={35} step={1} disabled={busy} hint={language === "id" ? "Lunakkan transisi di sekitar tepi subjek." : "Soften the transition around subject edges."} />
+          <RangeSlider label={`${t.threshold} · ${threshold}%`} value={threshold} onChange={(value) => { setThreshold(value); setResultBlob(null); setNotice(""); }} min={20} max={80} step={1} disabled={busy} hint={language === "id" ? "Atur batas pemisahan subjek dan latar." : "Adjust the subject/background separation threshold."} />
+          <RangeSlider label={`${t.feather} · ${feather}%`} value={feather} onChange={(value) => { setFeather(value); setResultBlob(null); setNotice(""); }} min={0} max={35} step={1} disabled={busy} hint={language === "id" ? "Lunakkan transisi di sekitar tepi subjek." : "Soften the transition around subject edges."} />
           <Button onClick={process} loading={busy} disabled={busy} wide><SvgIcon name="layers" />{busy ? t.processing : t.process}</Button>
           {busy ? <ProgressBar value={progress} label={stage} showValue /> : null}
           {resultBlob ? <Button variant="secondary" onClick={download} wide><SvgIcon name="download" />{t.download}</Button> : null}
