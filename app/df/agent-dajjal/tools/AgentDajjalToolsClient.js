@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 import { Card, SvgIcon } from "@/app/components/ui";
 import styles from "./agent-dajjal-tools.module.css";
 
@@ -30,7 +31,7 @@ export default function AgentDajjalToolsClient() {
   const { language } = useLanguage();
   const t = COPY[language] || COPY.id;
   const tools = [
-    { id: "compressor", icon: "image", title: t.compressor, description: t.compressorDesc, href: "/df/agent-dajjal/tools/image-compressor", ready: true },
+    { id: "compressor", icon: "image", title: t.compressor, description: t.compressorDesc, href: withLocalePrefix("/tools/image-compressor", language), ready: true },
     { id: "remover", icon: "image", title: t.remover, description: t.removerDesc, href: withLocalePrefix("/tools/background-remover", language), ready: true },
     { id: "separator", icon: "music", title: t.separator, description: t.separatorDesc, ready: false },
   ];

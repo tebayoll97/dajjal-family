@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 import { Button, Card, SvgIcon } from "@/app/components/ui";
 import { compressImage } from "@/lib/agent-dajjal/tools/image-compressor";
 import styles from "./image-compressor.module.css";

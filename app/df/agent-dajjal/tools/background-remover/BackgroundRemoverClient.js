@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
+import { withLocalePrefix } from "@/lib/localePath";
 import { Alert, Badge, Button, Card, ImageDropzone, ImagePreview, ProgressBar, RangeSlider, SvgIcon } from "@/app/components/ui";
 
 const COPY = {
