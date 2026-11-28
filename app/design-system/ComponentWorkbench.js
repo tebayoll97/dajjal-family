@@ -37,6 +37,7 @@ export default function ComponentWorkbench() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [progress, setProgress] = useState(68);
   const [rangeValue, setRangeValue] = useState(128);
+  const [dropzoneFile, setDropzoneFile] = useState("");
   const theme = themes.find((item) => item.id === themeId) || themes[0];
   const themeStyle = THEME_TOKEN_MAPS[theme.preset][theme.mode];
 
@@ -47,7 +48,7 @@ export default function ComponentWorkbench() {
       <div className={styles.inline}><Button loading>Loading</Button><Button disabled>Disabled</Button></div><Button wide>Full-width action</Button>
     </div>],
     ["Card", "Card", <Card key="card" className={styles.cardSample}><strong>Card surface</strong><span>Content container</span></Card>],
-    ["ImageDropzone", "ImageDropzone · local image file selection with keyboard and drag/drop support", <ImageDropzone key="image-dropzone" label="Choose an image" description="JPG, PNG, WebP or AVIF · local file picker preview" actionLabel="Choose image" onFiles={() => {}} />],
+    ["ImageDropzone", "ImageDropzone · local image file selection with keyboard and drag/drop support", <div key="image-dropzone" className={styles.stack}><ImageDropzone label="Choose an image" description="JPG, PNG, WebP or AVIF · local file picker preview" actionLabel="Choose image" onFiles={(files) => setDropzoneFile(files[0]?.name || "")} />{dropzoneFile ? <Badge variant="success">{dropzoneFile}</Badge> : null}</div>],
     ["ImagePreview", "ImagePreview · shared original/result surface with transparent checkerboard", <ImagePreview key="image-preview" label="Processed image" emptyLabel="Preview appears here after processing" />],
     ["ContactChannelCard", "ContactChannelCard · WhatsApp / Telegram", <div key="contact-channel" className={styles.stack}><ContactChannelCard channel="whatsapp" locale="id" href="https://wa.me/6285141320943" /><ContactChannelCard channel="telegram" locale="id" href="https://t.me/dajjalf4mily" /></div>],
     ["Badge", "Badge", <div key="badge" className={styles.inline}><Badge>Neutral</Badge><Badge variant="success">Success</Badge><Badge variant="warning">Warning</Badge></div>],
