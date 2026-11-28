@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import { Alert, Badge, Button, Card, ImageDropzone, ImagePreview, ProgressBar, RangeSlider, SvgIcon } from "@/app/components/ui";
-import { BACKGROUND_MODEL } from "@/lib/agent-dajjal/background-remover/model-manifest";
 
 const COPY = {
   id: {
