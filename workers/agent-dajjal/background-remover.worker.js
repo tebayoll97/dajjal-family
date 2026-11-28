@@ -8,7 +8,7 @@ const MAX_OUTPUT_PIXELS = 16000000;
 let runtimePromise;
 let segmenterPromise;
 
-function post(id, type, detail = {}) { self.postMessage({ id, type, ...detail }); }
+function post(id, type, detail = {}, transfer = []) { self.postMessage({ id, type, ...detail }, transfer); }
 
 async function verifiedModel(id) {
   const cache = "caches" in self ? await caches.open(CACHE_NAME) : null;
