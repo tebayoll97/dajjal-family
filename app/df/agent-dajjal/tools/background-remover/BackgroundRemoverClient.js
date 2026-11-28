@@ -16,7 +16,7 @@ const COPY = {
     decode:"Browser tidak dapat membaca gambar ini.",failed:"Pemrosesan gagal. Coba foto lain atau muat ulang halaman.",
     modelDownload:"Mengunduh model AI…",modelLoad:"Menyiapkan model AI…",segment:"Menganalisis subjek…",ready:"Background berhasil dihapus.",reset:"Ganti foto",
     attribution:"Model MediaPipe Selfie Segmentation oleh Google · Apache-2.0",portraitOnly:"Model ini dirancang untuk memisahkan orang dari latar, bukan semua jenis objek.",
-    modelError:"Model AI tidak dapat dimuat. Periksa koneksi internet lalu coba lagi.",integrity:"Verifikasi keamanan model gagal. Unduhan dibatalkan.",
+    modelError:"Model AI tidak dapat diunduh. Periksa koneksi internet lalu coba lagi.",runtimeError:"Runtime AI tidak dapat dimuat. Periksa koneksi internet dan dukungan browser.",initError:"Model AI gagal diinisialisasi. Muat ulang halaman lalu coba lagi.",segmentError:"Subjek tidak dapat dianalisis pada foto ini. Coba foto lain yang menampilkan orang dengan jelas.",timeout:"Proses terlalu lama dan dihentikan agar perangkat tetap responsif. Coba foto yang lebih kecil atau muat ulang halaman.",exportError:"Hasil transparan gagal dibuat. Coba lagi dengan foto lain.",integrity:"Verifikasi keamanan model gagal. Unduhan dibatalkan.",local:"100% lokal",
   },
   en: {
     eyebrow:"AGENT DAJJAL · LOCAL PROCESSING",title:"Background Remover",intro:"Remove a person's photo background directly on your device using local AI. Your photo is never uploaded.",
@@ -27,7 +27,7 @@ const COPY = {
     decode:"This browser could not read the image.",failed:"Processing failed. Try another photo or reload the page.",
     modelDownload:"Downloading AI model…",modelLoad:"Preparing AI model…",segment:"Analyzing subject…",ready:"Background removed successfully.",reset:"Change photo",
     attribution:"MediaPipe Selfie Segmentation by Google · Apache-2.0",portraitOnly:"This model is designed to separate people from backgrounds, not arbitrary objects.",
-    modelError:"The AI model could not be loaded. Check your internet connection and try again.",integrity:"Model security verification failed. Download canceled.",
+    modelError:"The AI model could not be downloaded. Check your internet connection and try again.",runtimeError:"The AI runtime could not be loaded. Check your connection and browser support.",initError:"The AI model could not be initialized. Reload the page and try again.",segmentError:"The subject could not be analyzed in this photo. Try a photo that clearly shows a person.",timeout:"Processing took too long and was stopped to keep your device responsive. Try a smaller photo or reload the page.",exportError:"The transparent result could not be created. Try another photo.",integrity:"Model security verification failed. Download canceled.",local:"100% local",
   },
 };
 const MAX_BYTES = 20 * 1024 * 1024;
@@ -40,6 +40,7 @@ export default function BackgroundRemoverClient() {
   const t = COPY[language] || COPY.id;
   const workerRef = useRef(null);
   const sequenceRef = useRef(0);
+  const workerTimeoutRef = useRef(null);
   const [file, setFile] = useState(null);
   const [originalUrl, setOriginalUrl] = useState("");
   const [resultUrl, setResultUrl] = useState("");
@@ -63,64 +64,139 @@ export default function BackgroundRemoverClient() {
     const url = URL.createObjectURL(resultBlob); setResultUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [resultBlob]);
-  useEffect(() => () => { workerRef.current?.terminate(); }, []);
+  useEffect(() => () => {
+    if (workerTimeoutRef.current !== null) window.clearTimeout(workerTimeoutRef.current);
+    workerRef.current?.terminate();
+  }, []);
 
   const chooseFile = (files) => {
     const next = files?.[0];
     if (!next) return;
     setError(""); setNotice(""); setResultBlob(null);
-    if (!/^image\/(jpeg|png|webp|avif)$/i.test(next.type)) { setFile(null); setError(t.invalid); return; }
-    if (next.size > MAX_BYTES) { setError(t.large); return; }
-    setFile(next);
+    if (!/^image\/(jpeg|png|webp|avif)$/i.test(next.type)) { setFile(null); setResultBlob(null); setModelReady(false); setError(t.invalid); return; }
+    if (next.size > MAX_BYTES) { setFile(null); setResultBlob(null); setModelReady(false); setError(t.large); return; }
+    setFile(next); setModelReady(false);
   };
 
   const process = async () => {
     if (!file || busy) return;
-    setBusy(true); setError(""); setNotice(""); setResultBlob(null); setProgress(5); setStage(t.modelLoad);
+    setBusy(true); setError(""); setNotice(""); setResultBlob(null); setModelReady(false); setProgress(5); setStage(t.modelLoad);
     let bitmap;
+    let worker = null;
+    let timeoutId = null;
+    const clearTimer = () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      if (workerTimeoutRef.current === timeoutId) workerTimeoutRef.current = null;
+      timeoutId = null;
+    };
+    const stopWorker = () => {
+      clearTimer();
+      worker?.terminate();
+      if (workerRef.current === worker) workerRef.current = null;
+    };
+    const fail = (message) => {
+      stopWorker();
+      setBusy(false);
+      setStage("");
+      setError(message);
+    };
+    const armTimeout = () => {
+      clearTimer();
+      timeoutId = window.setTimeout(() => fail(t.timeout), 180000);
+      workerTimeoutRef.current = timeoutId;
+    };
+
     try {
       bitmap = await createImageBitmap(file);
       if (bitmap.width * bitmap.height > MAX_PIXELS) throw new Error("IMAGE_PIXEL_LIMIT");
       const id = ++sequenceRef.current;
-      const worker = new Worker(new URL("../../../../../workers/agent-dajjal/background-remover.worker.js", import.meta.url), { type: "module" });
-      workerRef.current?.terminate(); workerRef.current = worker;
+      worker = new Worker(new URL("../../../../../workers/agent-dajjal/background-remover.worker.js", import.meta.url), { type: "module" });
+      workerRef.current?.terminate();
+      workerRef.current = worker;
+
       worker.onmessage = async (event) => {
         const message = event.data || {};
         if (message.id !== id) { message.image?.close?.(); return; }
+
         if (message.type === "progress") {
-          if (message.stage === "model-download") { setStage(t.modelDownload); setProgress(25); }
-          else if (message.stage === "model-ready") { setModelReady(true); setStage(t.segment); setProgress(65); }
-          else if (message.stage === "segmenting") { setStage(t.segment); setProgress(78); }
-          else if (message.stage === "loading") { setStage(t.modelLoad); setProgress(12); }
+          armTimeout();
+          if (message.stage === "model-download") {
+            setStage(t.modelDownload); setProgress(25);
+          } else if (message.stage === "model-verified") {
+            setStage(t.modelLoad); setProgress(45);
+          } else if (message.stage === "model-ready") {
+            setModelReady(true); setStage(t.segment); setProgress(65);
+          } else if (message.stage === "segmenting") {
+            setStage(t.segment); setProgress(78);
+          } else if (message.stage === "loading") {
+            setStage(t.modelLoad); setProgress(12);
+          }
+          return;
         }
+
         if (message.type === "error") {
-          setBusy(false);
-          const messages = { IMAGE_PIXEL_LIMIT:t.dimensions, MODEL_INTEGRITY_FAILED:t.integrity, MODEL_SIZE_MISMATCH:t.integrity };
-          setError(messages[message.error] || (message.error?.startsWith("MODEL_DOWNLOAD") ? t.modelError : t.failed));
-          worker.terminate(); if (workerRef.current === worker) workerRef.current = null;
+          const code = String(message.error || "");
+          const messages = {
+            IMAGE_PIXEL_LIMIT: t.dimensions,
+            MODEL_INTEGRITY_FAILED: t.integrity,
+            MODEL_SIZE_MISMATCH: t.integrity,
+            WASM_RUNTIME_FAILED: t.runtimeError,
+            MODEL_INIT_FAILED: t.initError,
+            SEGMENTATION_FAILED: t.segmentError,
+            SEGMENTATION_MASK_MISSING: t.segmentError,
+            SEGMENTATION_MASK_INVALID: t.segmentError,
+            CANVAS_UNAVAILABLE: t.exportError,
+            IMAGE_EXPORT_FAILED: t.exportError,
+          };
+          fail(messages[code] || (code.startsWith("MODEL_DOWNLOAD_") ? t.modelError : t.failed));
+          return;
         }
+
         if (message.type === "result") {
+          clearTimer();
           try {
-            const canvas = document.createElement("canvas"); canvas.width = message.width; canvas.height = message.height;
+            if (!message.image) throw new Error("IMAGE_EXPORT_FAILED");
+            const canvas = document.createElement("canvas");
+            canvas.width = message.width;
+            canvas.height = message.height;
             const context = canvas.getContext("2d");
             if (!context) throw new Error("CANVAS_UNAVAILABLE");
-            context.drawImage(message.image, 0, 0); message.image.close?.();
-            const blob = await new Promise((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("ENCODE_FAILED")), "image/png"));
-            setResultBlob(blob); setProgress(100); setStage(""); setNotice(t.ready);
-          } catch { setError(t.failed); }
-          finally { setBusy(false); worker.terminate(); if (workerRef.current === worker) workerRef.current = null; }
+            try {
+              context.drawImage(message.image, 0, 0);
+            } finally {
+              message.image.close?.();
+            }
+            const blob = await new Promise((resolve, reject) => {
+              canvas.toBlob((value) => value ? resolve(value) : reject(new Error("IMAGE_EXPORT_FAILED")), "image/png");
+            });
+            setResultBlob(blob);
+            setProgress(100);
+            setStage("");
+            setNotice(t.ready);
+          } catch {
+            setError(t.exportError);
+          } finally {
+            stopWorker();
+            setBusy(false);
+          }
         }
       };
-      worker.onerror = () => { setBusy(false); setError(t.failed); worker.terminate(); if (workerRef.current === worker) workerRef.current = null; };
+
+      worker.onerror = () => fail(t.failed);
+      worker.onmessageerror = () => fail(t.failed);
+      armTimeout();
       worker.postMessage({ id, image: bitmap, threshold: threshold / 100, feather: feather / 100 }, [bitmap]);
       bitmap = null;
     } catch (cause) {
-      const messages = { IMAGE_PIXEL_LIMIT:t.dimensions, InvalidStateError:t.decode };
+      stopWorker();
+      const messages = { IMAGE_PIXEL_LIMIT: t.dimensions, InvalidStateError: t.decode };
       setError(messages[cause?.message] || (cause?.name === "InvalidStateError" ? t.decode : t.failed));
       setBusy(false);
-    } finally { bitmap?.close?.(); }
+      setStage("");
+    } finally {
+      bitmap?.close?.();
+    }
   };
-
   const download = () => {
     if (!resultBlob) return;
     const url = URL.createObjectURL(resultBlob);
@@ -133,7 +209,7 @@ export default function BackgroundRemoverClient() {
     <main className="ui-page ui-stack-lg df-local-image-tool">
       <div className="ui-cluster df-local-tool-topbar">
         <Link className="ui-link" href={withLocalePrefix("/tools", language)}><SvgIcon name="arrow-left" />{t.back}</Link>
-        <Badge variant="success"><SvgIcon name="shield" />{t.modelReady && modelReady ? t.modelReady : "100% local"}</Badge>
+        <Badge variant="success"><SvgIcon name="shield" />{modelReady ? t.modelReady : t.local}</Badge>
       </div>
       <header className="ui-page-heading">
         <div className="ui-page-heading-copy">
