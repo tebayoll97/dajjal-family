@@ -668,7 +668,7 @@ The standard public Contact page uses the reusable `ContactChannelCard` componen
 
 ## Reusable SVG Icon contract
 
-The shared `SvgIcon` is the canonical line-icon API. New interface icons and icon-bearing labels must use a semantically relevant icon from the central library, inherit `currentColor`, and follow the 24 × 24 outline geometry with 1.8 stroke, round caps and joins. The real component is previewed in section 09 and Component Workbench. New names must be added centrally and documented in Component Catalog; avoid Unicode glyph substitutes and page-local duplicate SVGs.
+The shared `SvgIcon` is the canonical line-icon API. New interface icons and icon-bearing labels must use a semantically relevant icon from the central library, inherit `currentColor`, and follow the 24 × 24 outline geometry with 1.8 stroke, round caps and joins. The real component is previewed in section 09 and Component Workbench. New names must be added centrally and documented in Component Catalog; avoid Unicode glyph substitutes and page-local duplicate SVGs. Icon dimensions must be applied as CSS styles (not CSS custom-property values in SVG width/height presentation attributes), with a fixed flex basis so icons cannot stretch inside labels, buttons, badges, or grid cells. The Workbench size scale is the visual regression reference.
 
 
 ## 16.5 Local image workspace components — 2026-11-28
