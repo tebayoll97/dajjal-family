@@ -32,7 +32,9 @@ Status meanings:
 | Component / pattern | Current status | Source / evidence | Next action |
 |---|---|---|---|
 | Button | React shared component | `app/components/ui/Button.js`; supports primary, secondary, ghost, danger, size, loading, disabled, and `wide` full-width layout; primary label uses `--df-button-primary-text` | Validate all variants, full-width layout, loading, and disabled states across all four themes |
-| Card | React shared component | `app/components/ui/Card.js` | Document supported surface variants; do not invent unused variants |
+| Card | React shared component | `app/components/ui/Card.js` |
+| ImageDropzone | React shared component | `app/components/ui/ImageDropzone.js`; accessible local image input with keyboard activation, drag/drop, accept filtering, and disabled state | Validate file-selection and drag/drop behavior on touch and desktop browsers |
+| ImagePreview | React shared component | `app/components/ui/ImagePreview.js`; shared original/result preview with transparent checkerboard and accessible empty state | Validate aspect ratio, large images, and all four theme combinations | Document supported surface variants; do not invent unused variants |
 | Badge | React shared component | `app/components/ui/Badge.js` | Validate semantic status contrast |
 | Alert | React shared component | `app/components/ui/Alert.js` | Document announcement semantics and variants |
 | TextField | React shared component | `app/components/ui/TextField.js` | Covers input, textarea and select through `as`; document API |
