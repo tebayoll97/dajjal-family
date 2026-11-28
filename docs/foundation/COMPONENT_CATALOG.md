@@ -718,10 +718,10 @@ The Admin Shell is an application-level composition, not a replacement for the r
 ## SvgIcon — shared modern SVG icon system
 
 - **Source:** `app/components/ui/SvgIcon.js`; export: `SvgIcon` from `app/components/ui`.
-- **API:** `SvgIcon({ name, size = 20, strokeWidth = 1.8, className = "", label })`.
+- **API:** `SvgIcon({ name, size = "var(--df-icon-size-md)", strokeWidth = "var(--df-icon-stroke)", className = "", label })`; `size` accepts a numeric pixel size or a CSS length/token string.
 - **Purpose:** central reusable SVG line-icon library for navigation, actions, labels, status and common interface semantics.
 - **Names:** `home`, `user`, `settings`, `search`, `plus`, `check`, `alert`, `close`, `external`, `more`, `heart`, `users`, `mail`, `bell`, `calendar`, `image`, `file`, `music`, `log-out`, `arrow-left`, `chevron-down`, `shield`, and `globe`.
-- **Visual contract:** 24 × 24 viewBox, `fill="none"`, `stroke="currentColor"`, round caps/joins, default stroke width 1.8; sizing and color follow global icon tokens and the active theme.
+- **Visual contract:** 24 × 24 viewBox, `fill="none"`, `stroke="currentColor"`, round caps/joins, default stroke width 1.8; sizing and color follow global icon tokens and the active theme. Width and height are applied through the SVG element's CSS `style` so semantic CSS variables resolve reliably; the base `.ui-icon` also defines a fixed token size and `flex: 0 0 auto` to prevent flex/grid stretching.
 - **Accessibility:** decorative by default (`aria-hidden`); pass `label` for a meaningful standalone image. Icon-only controls still require an accessible control name and minimum 44 × 44px target.
 - **Workbench:** live preview is available in Design System section 09 and Component Workbench. Add new semantic icon names centrally; do not create page-local duplicate SVGs.
 
