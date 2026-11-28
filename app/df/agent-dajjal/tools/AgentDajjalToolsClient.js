@@ -11,7 +11,7 @@ const COPY = {
     intro: "Kumpulan tools yang berjalan langsung di perangkatmu. File pribadi tidak perlu dikirim ke server.",
     available: "Tersedia", planned: "Segera hadir", open: "Buka tool",
     compressor: "Kompres Gambar", compressorDesc: "Kecilkan ukuran JPG, PNG, dan WebP dengan kontrol kualitas dan dimensi.",
-    remover: "Background Remover", removerDesc: "Hapus latar gambar dengan pemrosesan AI lokal.",
+    remover: "Background Remover", removerDesc: "Hapus latar foto orang dengan AI yang berjalan langsung di perangkat.",
     separator: "Instrument Separator", separatorDesc: "Pisahkan vokal dan instrumen dari audio secara lokal.",
     local: "Pemrosesan lokal", privacy: "File tetap di perangkatmu.",
   },
@@ -20,7 +20,7 @@ const COPY = {
     intro: "A collection of tools that run directly on your device. Your private files do not need to be uploaded.",
     available: "Available", planned: "Coming soon", open: "Open tool",
     compressor: "Image Compressor", compressorDesc: "Reduce JPG, PNG, and WebP file sizes with quality and dimension controls.",
-    remover: "Background Remover", removerDesc: "Remove image backgrounds with on-device AI processing.",
+    remover: "Background Remover", removerDesc: "Remove portrait backgrounds with AI running directly on your device.",
     separator: "Instrument Separator", separatorDesc: "Separate vocals and instruments from audio locally.",
     local: "Local processing", privacy: "Your files stay on your device.",
   },
@@ -31,7 +31,7 @@ export default function AgentDajjalToolsClient() {
   const t = COPY[language] || COPY.id;
   const tools = [
     { id: "compressor", icon: "image", title: t.compressor, description: t.compressorDesc, href: "/df/agent-dajjal/tools/image-compressor", ready: true },
-    { id: "remover", icon: "image", title: t.remover, description: t.removerDesc, ready: false },
+    { id: "remover", icon: "image", title: t.remover, description: t.removerDesc, href: "/df/agent-dajjal/tools/background-remover", ready: true },
     { id: "separator", icon: "music", title: t.separator, description: t.separatorDesc, ready: false },
   ];
   return (
